@@ -1,6 +1,6 @@
 # Contributing to spgci-python
 
-Thanks for contributing!
+Thanks for contributing! Read below for instructions on getting started
 
 ## Setup
 
