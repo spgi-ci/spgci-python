@@ -1,0 +1,33 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+
+/.vs/spgci/FileContentIndex
+
+/.idea
+/.vs
+/.vscode
+
+.DS_store
+
+config.ini
+.env
+
+.pytest_cache/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+*.log
+
+
+*.tmp
+
+
+.ipynb_checkpoints/
+
+
+dist

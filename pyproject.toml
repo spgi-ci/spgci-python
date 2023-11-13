@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "spgci"
+version = "0.0.31"
+description = "SPGCI is an API Client for the S&P Commodity Insights REST API"
+authors = ["S&P Global Commodity Insights <pl_api_support@spglobal.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/spgi-ci/spgci-python"
+homepage = "https://github.com/spgi-ci/spgci-python"
+documentation = "https://developer.spglobal.com/commodityinsights/tools/notebooks"
+
+[tool.poetry.dependencies]
+python = "^3.7.0"
+pandas = "^1.1.5"
+requests = "^2.27.1"
+tqdm = "^4.64.1"
+typing-extensions = "^4.4.0"
+tenacity = "^8.2.2"
+urllib3 = "1.26.15"
+
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+pytest = "^7.2.1"
+pytest-cov = "^4.0.0"
+notebook = "^6.5.2"
+ruff = "^0.0.275"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+markers = [
+    "integtest",
+]
