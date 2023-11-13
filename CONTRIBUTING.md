@@ -8,6 +8,7 @@ Thanks for contributing!
 2. Clone the spgci-python respository
 3. Run `poetry shell` to create a virtual environment
 4. Run `poetry install` to install all dependencies
+5. Run `python` and then `import spgci as ci` and `ci.version` to ensure it's installed correctly.
 
 ## Executing Tests
 
