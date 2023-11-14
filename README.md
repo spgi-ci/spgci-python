@@ -1,4 +1,4 @@
-# SPGCI
+# SPGCI Python Library
 
 Python Client for the [S&P Global Commodity Insights API](https://developer.platts.com).
 
@@ -286,9 +286,3 @@ ca.get_country_total_scores()
 # DataFrame of aggregated scores, supply and capacity per date.
 
 ```
-
-## Disclaimer
-
-Please note that by using this Alpha offering, you agree that you are participating in a prototype to develop these software development kits (“Alpha SDKs”) and that your participation and use of the Alpha SDKs is at your own risk. You will be liable for all activities by anyone using your application in connection with the Alpha SDKs.
-
-If you are dissatisfied with the Alpha SDKs, your sole remedy is to stop using it, and S&P Global Commodity Insights (“SPGCI”) will not pay you any damages (direct, indirect, special, or consequential) in connection with your use of the Alpha SDKs. Commodity Insights SPGCI disclaims any and all representations and warranties, express or implied, including but not limited to any warranties of merchantability or fitness for a particular purpose or use as to the Alpha SDKs, and does not guarantee the adequacy, accuracy, timeliness or completeness of the Alpha SDKs or any component of them.
