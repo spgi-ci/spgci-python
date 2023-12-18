@@ -38,6 +38,7 @@ from .crude_supply_risk import CrudeAnalytics
 from .giem import GlobalIntegratedEnergyModel
 from .lng_analytics import LNGGlobalAnalytics
 from .arbflow import Arbflow
+from .structured_heards import StructuredHeards
 
 
 from .config import username, password, set_credentials, appkey, version
@@ -64,4 +65,5 @@ __all__ = [
     "CrudeAnalytics",
     "Arbflow",
     "GlobalIntegratedEnergyModel",
+     "StructuredHeards"
 ]
