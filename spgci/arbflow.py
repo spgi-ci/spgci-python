@@ -200,6 +200,10 @@ class Arbflow:
         *,
         margin_id: Optional[Union[int, list[int], "Series[int]"]] = None,
         margin_date: Optional[date] = None,
+        margin_date_gt: Optional[date] = None,
+        margin_date_gte: Optional[date] = None,
+        margin_date_lt: Optional[date] = None,
+        margin_date_lte: Optional[date] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 1000,
@@ -217,6 +221,14 @@ class Arbflow:
             filter by frequencyId - 1 = Daily, 2 = Monthly, 3 = Annual, by default 1
         margin_date: Optional[date] = None,
             filter by marginDate, by default None
+        margin_date_lt : Optional[date], optional
+            filter by ``marginDate < x``, by default None
+        margin_date_lte : Optional[date], optional
+            filter by ``marginDate <= x``, by default None
+        margin_date_gt : Optional[date], optional
+            filter by ``marginDate > x``, by default None
+        margin_date_gte : Optional[date], optional
+            filter by ``marginDate >= x``, by default None
         filter_exp : Optional[str], optional
             pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
         page : int, optional
@@ -250,7 +262,16 @@ class Arbflow:
         filter_param: List[str] = []
 
         filter_param.append(list_to_filter("marginId", margin_id))
-        filter_param.append(list_to_filter("marginDate", margin_date))
+        if margin_date:
+            filter_param.append(f'marginDate: "{margin_date}"')
+        if margin_date_gt:
+            filter_param.append(f'marginDate > "{margin_date_gt}"')
+        if margin_date_gte:
+            filter_param.append(f'marginDate >= "{margin_date_gte}"')
+        if margin_date_lt:
+            filter_param.append(f'marginDate < "{margin_date_lt}"')
+        if margin_date_lte:
+            filter_param.append(f'marginDate <= "{margin_date_lte}"')
 
         filter_param = [fp for fp in filter_param if fp != ""]
 

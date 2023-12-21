@@ -69,3 +69,17 @@ class CrudeArbitrageTest(unittest.TestCase):
         for t in self.arbflow.RefTypes:
             df = cast(DataFrame, self.arbflow.get_reference_data(type=t))
             self.assertGreater(len(df), 1)
+
+    @pytest.mark.integtest
+    def test_get_margins_data_with_dates(self):
+        df = cast(
+            DataFrame,
+            self.arbflow.get_margins_data(
+                frequency_id=1,
+                margin_id=229,
+                margin_date_lte=date(2023, 12, 31),
+                margin_date_gte=date(2023, 8, 16),
+                page_size=100,
+            ),
+        )
+        self.assertGreater(len(df), 1)
