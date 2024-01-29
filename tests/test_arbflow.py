@@ -33,7 +33,7 @@ class CrudeArbitrageTest(unittest.TestCase):
     @pytest.mark.integtest
     def test_paging(self):
         paged = self.arbflow.get_margins_data(
-            frequency_id=3, page_size=100, paginate=True
+            frequency_id=3, page_size=500, paginate=True
         )
         df = self.arbflow.get_margins_data(frequency_id=3, paginate=True)
         self.assertEqual(len(df), len(paged))  # type: ignore

@@ -302,6 +302,8 @@ class Arbflow:
         frequency_id: Literal[1, 2, 3] = 1,
         *,
         base_margin_date: Optional[date] = None,
+        start_date: Optional[date] = None,
+        end_date: Optional[date] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 1000,
@@ -321,6 +323,10 @@ class Arbflow:
             filter by frequencyId - 1 = Daily, 2 = Monthly, 3 = Annual, by default 1 (required field)
         base_margin_date: Optional[datetime] = None,
             filter by marginDate, by default None
+        start_date: Optional[datetime] = None,
+            filter by startDate, by default None
+        end_date: Optional[datetime] = None,
+            filter by endDate, by default None
         filter_exp : Optional[str], optional
             pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
         page : int, optional
@@ -347,6 +353,8 @@ class Arbflow:
         **Get Arbitrage Data Based On Multiple Comparison Margin Id's **
         >>> ci.Arbflow().get_arbitrage(margin_id=[220,330], base_margin_id =330, frequency_id=1)
 
+        **Using Date Range**
+        >>> ci.Arbflow().get_arbitrage(frequency_id=1, margin_id=261, base_margin_id=1380, start_date="2024-01-01", end_date="2024-01-31")
         """
 
         endpoint_path = "arbitrage"
@@ -378,6 +386,12 @@ class Arbflow:
             "filter": filter_exp,
             "page": page,
         }
+
+        if start_date is not None:
+            params["startDate"] = start_date
+        if end_date is not None:
+            params["endDate"] = end_date
+
         return get_data(
             path=f"{self._path}{endpoint_path}",
             params=params,
