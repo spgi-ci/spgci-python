@@ -22,6 +22,29 @@ class LNGTendersTest(unittest.TestCase):
     lg = LNGGlobalAnalytics()
 
     @pytest.mark.integtest
+    def test_netbacks(self):
+        lg = self.lg.get_netbacks(
+            page_size=10,
+        )
+        self.assertGreater(len(lg), 1)  # type: ignore
+
+    @pytest.mark.integtest
+    def test_netbacks_paging(self):
+        lg = self.lg.get_netbacks(
+            export_geography="Belgium",
+            date_gte="2024-01-01",
+            page_size=100,
+            paginate=True,
+        )
+
+        lg2 = self.lg.get_netbacks(
+            export_geography="Belgium", date_gte="2024-01-01", paginate=True
+        )
+
+        self.assertGreater(len(lg), 1)  # type: ignore
+        self.assertEqual(len(lg), len(lg2))  # type: ignore
+
+    @pytest.mark.integtest
     def test_tenders_All(self):
         lg = self.lg.get_tenders(
             page_size=10,

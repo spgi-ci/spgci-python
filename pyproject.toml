@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spgci"
-version = "0.0.35"
+version = "0.0.37"
 description = "SPGCI is an API Client for the S&P Commodity Insights REST API"
 authors = ["S&P Global Commodity Insights <pl_api_support@spglobal.com>"]
 license = "Apache-2.0"
@@ -11,7 +11,7 @@ documentation = "https://developer.spglobal.com/commodityinsights/tools/notebook
 
 [tool.poetry.dependencies]
 python = "^3.7.0"
-pandas = "> 2.0, >= 1.1.5"
+pandas = ">= 1.1.5"
 requests = "^2.27.1"
 tqdm = "^4.64.1"
 typing-extensions = "^4.4.0"
