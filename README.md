@@ -267,6 +267,9 @@ lng.get_reference_data(type=lng.RefTypes.LiquefactionProjects)
 lng.get_outages(liquefaction_project_name="ADNOC LNG")
 # DataFrame of all LNG outages tied to "ADNOC LNG".
 
+lng.get_netbacks(date_gt="2024-01-01", import_geography="Brazil")
+# DataFrame of all LNG Netbacks where import geography is 'Brazil' since Jan 1, 2024.
+
 ```
 
 ### Crude Analytics
