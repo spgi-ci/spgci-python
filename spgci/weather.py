@@ -4,7 +4,8 @@ from requests import Response
 from spgci.api_client import get_data
 from spgci.utilities import list_to_filter
 from pandas import DataFrame, Series
-from datetime import date
+from datetime import date, datetime
+from distutils.version import LooseVersion
 import pandas as pd
 
 
@@ -19,11 +20,13 @@ class Weather:
         weather_date_gt: Optional[date] = None,
         weather_date_lte: Optional[date] = None,
         weather_date_lt: Optional[date] = None,
-        modified_date: Optional[Union[list[date], Series[date], date]] = None,
-        modified_date_gte: Optional[date] = None,
-        modified_date_gt: Optional[date] = None,
-        modified_date_lte: Optional[date] = None,
-        modified_date_lt: Optional[date] = None,
+        modified_date: Optional[
+            Union[list[datetime], Series[datetime], datetime]
+        ] = None,
+        modified_date_gte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 1000,
@@ -44,23 +47,23 @@ class Weather:
             Weather station which provides Differentiator between country weather data and city weather data., be default None
         weather_date: Optional[Union[list[date], Series[date], date]]
             The date for which the weather data is recorded or forecasted., be default None
-        weather_date_gte: Optional[Union[list[date], Series[date], date]]
+        weather_date_gte: Optional[date]
             filter by ``weatherDate >= x`` , by default None
-        weather_date_gt: Optional[Union[list[date], Series[date], date]]
+        weather_date_gt: Optional[date]
             filter by ``weatherDate > x`` , by default None
-        weather_date_lte: Optional[Union[list[date], Series[date], date]]
+        weather_date_lte: Optional[date]
             filter by ``weatherDate <= x`` , by default None
-        weather_date_lt: Optional[Union[list[date], Series[date], date]]
+        weather_date_lt: Optional[date]
             filter by ``weatherDate < x`` , by default None
-        modified_date: Optional[Union[list[str], Series[str], str]]
+        modified_date: Optional[Union[list[datetime], Series[datetime], datetime]]
             The latest date of modification for the Weather Actual., be default None
-        modified_date_gte: Optional[Union[list[date], Series[date], date]]
+        modified_date_gte: Optional[datetime]
             filter by ``modifiedDate >= x`` , by default None
-        modified_date_gt: Optional[Union[list[date], Series[date], date]]
+        modified_date_gt: Optional[datetime]
             filter by ``modifiedDate > x`` , by default None
-        modified_date_lte: Optional[Union[list[date], Series[date], date]]
+        modified_date_lte: Optional[datetime]
             filter by ``modifiedDate <= x`` , by default None
-        modified_date_lt: Optional[Union[list[date], Series[date], date]]
+        modified_date_lt: Optional[datetime]
             filter by ``modifiedDate < x`` , by default None
         filter_exp : Optional[str], optional
             pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
@@ -148,11 +151,13 @@ class Weather:
         weather_date_gt: Optional[date] = None,
         weather_date_lte: Optional[date] = None,
         weather_date_lt: Optional[date] = None,
-        modified_date: Optional[Union[list[date], Series[date], date]] = None,
-        modified_date_gte: Optional[date] = None,
-        modified_date_gt: Optional[date] = None,
-        modified_date_lte: Optional[date] = None,
-        modified_date_lt: Optional[date] = None,
+        modified_date: Optional[
+            Union[list[datetime], Series[datetime], datetime]
+        ] = None,
+        modified_date_gte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 1000,
@@ -173,33 +178,33 @@ class Weather:
             Weather station which provides Differentiator between country weather data and city weather data., be default None
         recorded_date: Optional[Union[list[date], Series[date], date]]
             Recorded Date refers to the specific date on which weather updateds are recorded., be default None
-        recorded_date_gte: Optional[Union[list[date], Series[date], date]]
+        recorded_date_gte: Optional[date]
             filter by ``recordedDate >= x`` , by default None
-        recorded_date_gt: Optional[Union[list[date], Series[date], date]]
+        recorded_date_gt: Optional[date]
             filter by ``recordedDate > x`` , by default None
-        recorded_date_lte: Optional[Union[list[date], Series[date], date]]
+        recorded_date_lte: Optional[date]
             filter by ``recordedDate <= x`` , by default None
-        recorded_date_lt: Optional[Union[list[date], Series[date], date]]
+        recorded_date_lt: Optional[date]
             filter by ``recordedDate < x`` , by default None
         weather_date: Optional[Union[list[date], Series[date], date]]
             The date for which the weather data is recorded or forecasted., be default None
-        weather_date_gte: Optional[Union[list[date], Series[date], date]]
+        weather_date_gte: Optional[date]
             filter by ``weatherDate >= x`` , by default None
-        weather_date_gt: Optional[Union[list[date], Series[date], date]]
+        weather_date_gt: Optional[date]
             filter by ``weatherDate > x`` , by default None
-        weather_date_lte: Optional[Union[list[date], Series[date], date]]
+        weather_date_lte: Optional[date]
             filter by ``weatherDate <= x`` , by default None
-        weather_date_lt: Optional[Union[list[date], Series[date], date]]
+        weather_date_lt: Optional[date]
             filter by ``weatherDate < x`` , by default None
-        modified_date: Optional[Union[list[date], Series[date], date]]
+        modified_date: Optional[datetime]
             The latest date of modification for the Weather Forecast., be default None
-        modified_date_gte: Optional[Union[list[date], Series[date], date]]
+        modified_date_gte: Optional[datetime]
             filter by ``modifiedDate >= x`` , by default None
-        modified_date_gt: Optional[Union[list[date], Series[date], date]]
+        modified_date_gt: Optional[datetime]
             filter by ``modifiedDate > x`` , by default None
-        modified_date_lte: Optional[Union[list[date], Series[date], date]]
+        modified_date_lte: Optional[datetime]
             filter by ``modifiedDate <= x`` , by default None
-        modified_date_lt: Optional[Union[list[date], Series[date], date]]
+        modified_date_lt: Optional[datetime]
             filter by ``modifiedDate < x`` , by default None
         filter_exp : Optional[str], optional
             pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
@@ -288,11 +293,24 @@ class Weather:
         df = pd.json_normalize(j["results"])  # type: ignore
 
         if "weatherDate" in df.columns:
-            df["weatherDate"] = pd.to_datetime(df["weatherDate"])  # type: ignore
+            if LooseVersion(pd.__version__) >= LooseVersion("2"):
+                df["weatherDate"] = pd.to_datetime(df["weatherDate"], format="ISO8601")
+            else:
+                df["weatherDate"] = pd.to_datetime(df["weatherDate"])
 
         if "modifiedDate" in df.columns:
-            df["modifiedDate"] = pd.to_datetime(df["modifiedDate"])  # type: ignore
+            if LooseVersion(pd.__version__) >= LooseVersion("2"):
+                df["modifiedDate"] = pd.to_datetime(
+                    df["modifiedDate"], format="ISO8601"
+                )
+            else:
+                df["modifiedDate"] = pd.to_datetime(df["modifiedDate"])
 
         if "recordedDate" in df.columns:
-            df["recordedDate"] = pd.to_datetime(df["recordedDate"])  # type: ignore
+            if LooseVersion(pd.__version__) >= LooseVersion("2"):
+                df["recordedDate"] = pd.to_datetime(
+                    df["recordedDate"], format="ISO8601"
+                )
+            else:
+                df["recordedDate"] = pd.to_datetime(df["recordedDate"])
         return df

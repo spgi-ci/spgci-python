@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import unittest
-from datetime import date
+from datetime import date, timedelta
 import pytest
 from spgci import Weather
 
@@ -52,13 +52,13 @@ class WeatherTest(unittest.TestCase):
     def test_paginate_forecast(self):
         df = self.w.get_forecast(
             market="Hong Kong",
-            recorded_date="2024-01-01",
+            recorded_date=date.today() - timedelta(days=1),
             paginate=True,
             page_size=5,
         )
         df_nopage = self.w.get_forecast(
             market="Hong Kong",
-            recorded_date="2024-01-01",
+            recorded_date=date.today() - timedelta(days=1),
         )
         self.assertGreater(len(df), 0)  # type: ignore
         self.assertEqual(len(df), len(df_nopage))  # type: ignore
