@@ -7,7 +7,7 @@ license = "Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/spgi-ci/spgci-python"
 homepage = "https://github.com/spgi-ci/spgci-python"
-documentation = "https://developer.spglobal.com/commodityinsights/tools/notebooks"
+documentation = "https://developer.spglobal.com/commodityinsights/servicecatalog#/TokenGeneration/v1/"
 
 [tool.poetry.dependencies]
 python = "^3.7.0"
