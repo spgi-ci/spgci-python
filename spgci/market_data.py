@@ -40,7 +40,7 @@ class MarketData:
 
     _path = "market-data/v3/value/"
     _ref_path = "market-data/reference-data/v3/search"
-    _mdd_fields = "deltaPrice, deltaPercent, pValue, pDate"
+    _mdd_fields = "deltaPrice,deltaPercent,pValue,pDate"
 
     class ContractType(Enum):
         """Contract Type"""
