@@ -58,7 +58,73 @@ class LNGGlobalAnalytics:
         return Paginator(True, "page", total_pages)
 
     @staticmethod
-    def _convert_to_df(resp: Response) -> DataFrame:
+    def _convert_to_df(resp: Response) -> pd.DataFrame:
+        j = resp.json()
+        df = pd.json_normalize(j["results"])  # type: ignore
+
+        if "opening_date" in df.columns:
+            df["opening_date"] = pd.to_datetime(df["opening_date"])  # type: ignore
+
+        if "closing_date" in df.columns:
+            df["closing_date"] = pd.to_datetime(df["closing_date"])  # type: ignore
+
+        if "validity_date" in df.columns:
+            df["validity_date"] = pd.to_datetime(df["validity_date"])  # type: ignore
+
+        if "lifting_delivery_period_from" in df.columns:
+            df["lifting_delivery_period_from"] = pd.to_datetime(df["lifting_delivery_period_from"])  # type: ignore
+
+        if "lifting_delivery_period_to" in df.columns:
+            df["lifting_delivery_period_to"] = pd.to_datetime(df["lifting_delivery_period_to"])  # type: ignore
+
+        if "last_modified_date" in df.columns:
+            df["last_modified_date"] = pd.to_datetime(df["last_modified_date"])  # type: ignore
+
+        if "month" in df.columns:
+            df["month"] = pd.to_datetime(df["month"])  # type: ignore
+
+        if "pointInTimeMonth" in df.columns:
+            df["pointInTimeMonth"] = pd.to_datetime(df["pointInTimeMonth"])  # type: ignore
+
+        if "modifiedDate" in df.columns:
+            df["modifiedDate"] = pd.to_datetime(df["modifiedDate"])  # type: ignore
+
+        if "monthArrived" in df.columns:
+            df["monthArrived"] = pd.to_datetime(df["monthArrived"])  # type: ignore
+
+        if "dateLoaded" in df.columns:
+            df["dateLoaded"] = pd.to_datetime(df["dateLoaded"])  # type: ignore
+
+        if "dateArrived" in df.columns:
+            df["dateArrived"] = pd.to_datetime(df["dateArrived"])  # type: ignore
+
+        if "ballastStartDate" in df.columns:
+            df["ballastStartDate"] = pd.to_datetime(df["ballastStartDate"])  # type: ignore
+
+        if "ballastEndDate" in df.columns:
+            df["ballastEndDate"] = pd.to_datetime(df["ballastEndDate"])  # type: ignore
+
+        if "transshipmentDate" in df.columns:
+            df["transshipmentDate"] = pd.to_datetime(df["transshipmentDate"])  # type: ignore
+
+        if "createdDate" in df.columns:
+            df["createdDate"] = pd.to_datetime(df["createdDate"])  # type: ignore
+
+        if "dateValue" in df.columns:
+            df["dateValue"] = pd.to_datetime(df["dateValue"])  # type: ignore
+
+        if "loadDate" in df.columns:
+            df["loadDate"] = pd.to_datetime(df["loadDate"])  # type: ignore
+
+        if "arrivalDate" in df.columns:
+            df["arrivalDate"] = pd.to_datetime(df["arrivalDate"])  # type: ignore
+
+        if "reexportDate" in df.columns:
+            df["reexportDate"] = pd.to_datetime(df["reexportDate"])  # type: ignore
+        return df
+
+    @staticmethod
+    def _convert_to_df_old(resp: Response) -> DataFrame:
         j = resp.json()
         df = DataFrame(j["results"])
 
@@ -531,3 +597,519 @@ class LNGGlobalAnalytics:
             raw=raw,
             paginate_fn=self._paginate_outages,
         )
+
+    def get_demand_forecast_current(
+        self,
+        *,
+        import_market: Optional[Union[list[str], "Series[str]", str]] = None,
+        month: Optional[Union[list[date], "Series[date]", date]] = None,
+        month_gte: Optional[date] = None,
+        month_gt: Optional[date] = None,
+        month_lte: Optional[date] = None,
+        month_lt: Optional[date] = None,
+        point_in_time_month: Optional[Union[list[date], "Series[date]", date]] = None,
+        modified_date: Optional[
+            Union[list[datetime], "Series[datetime]", datetime]
+        ] = None,
+        modified_date_gte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        The latest demand forecast for LNG.
+
+        Parameters
+        ----------
+
+        import_market: Optional[Union[list[str], Series[str], str]]
+             The specific country where LNG is imported., by default None
+        month: Optional[Union[list[date], Series[date], date]]
+             A unit of time representing a period of approximately 30 days, by default None
+        month_gte: Optional[date]
+            filter by ``month >= x`` , by default None
+        month_gt: Optional[Union[list[date], Series[date], date]]
+            filter by ``month > x`` , by default None
+        month_lte: Optional[Union[list[date], Series[date], date]]
+            filter by ``month <= x`` , by default None
+        month_lt: Optional[Union[list[date], Series[date], date]]
+            filter by ``month < x`` , by default None
+        point_in_time_month: Optional[Union[list[date], Series[date], date]]
+             A specific moment within a given month, often used for precise data or event references., by default None
+        modified_date: Optional[Union[list[datetime], Series[datetime], datetime]]
+             The latest date of modification for the current demand forecast, by default None
+        modified_date_gte: Optional[datetime]
+            filter by ``modifiedDate >= x`` , by default None
+        modified_date_gt: Optional[datetime]
+            filter by ``modifiedDate > x`` , by default None
+        modified_date_lte: Optional[datetime]
+            filter by ``modifiedDate <= x`` , by default None
+        modified_date_lt: Optional[datetime]
+            filter by ``modifiedDate < x`` , by default None
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("importMarket", import_market))
+        filter_params.append(list_to_filter("month", month))
+        filter_params.append(list_to_filter("pointInTimeMonth", point_in_time_month))
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+
+        filter_params = convert_date_to_filter_exp(
+            "month",
+            month_gt,
+            month_gte,
+            month_lt,
+            month_lte,
+            filter_params,
+        )
+        filter_params = convert_date_to_filter_exp(
+            "modifiedDate",
+            modified_date_gt,
+            modified_date_gte,
+            modified_date_lt,
+            modified_date_lte,
+            filter_params,
+        )
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path="/lng/v1/demand-forecast/current",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_supply_forecast_current(
+        self,
+        *,
+        export_project: Optional[Union[list[str], "Series[str]", str]] = None,
+        export_market: Optional[Union[list[str], "Series[str]", str]] = None,
+        month: Optional[Union[list[date], "Series[date]", date]] = None,
+        month_gte: Optional[date] = None,
+        month_gt: Optional[date] = None,
+        month_lte: Optional[date] = None,
+        month_lt: Optional[date] = None,
+        point_in_time_month: Optional[Union[list[date], "Series[date]", date]] = None,
+        modified_date: Optional[
+            Union[list[datetime], "Series[datetime]", datetime]
+        ] = None,
+        modified_date_gte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        The latest supply forecast for LNG.
+
+        Parameters
+        ----------
+
+        export_project: Optional[Union[list[str], Series[str], str]]
+            A specific venture or initiative focused on exporting LNG supply  to international markets., by default None
+        export_market: Optional[Union[list[str], Series[str], str]]
+            The specific country where LNG supply are being sold and shipped from a particular location., by default None
+        month: Optional[Union[list[date], Series[date], date]]
+            A unit of time representing a period of approximately 30 days, by default None
+        month_gte: Optional[date]
+            filter by ``month >= x`` , by default None
+        month_gt: Optional[date]
+            filter by ``month > x`` , by default None
+        month_lte: Optional[date]
+            filter by ``month <= x`` , by default None
+        month_lt: Optional[date]
+            filter by ``month < x`` , by default None
+        point_in_time_month: Optional[Union[list[date], Series[date], date]]
+            A specific moment within a given month, often used for precise data or event references., by default None
+        modified_date: Optional[Union[list[datetime], Series[datetime], datetime]]
+            The latest date of modification for the current supply forecast, by default None
+        modified_date_gte: Optional[datetime]
+            filter by ``modifiedDate >= x`` , by default None
+        modified_date_gt: Optional[datetime]
+            filter by ``modifiedDate > x`` , by default None
+        modified_date_lte: Optional[datetime]
+            filter by ``modifiedDate <= x`` , by default None
+        modified_date_lt: Optional[datetime]
+            filter by ``modifiedDate < x`` , by default None
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("exportProject", export_project))
+        filter_params.append(list_to_filter("exportMarket", export_market))
+        filter_params.append(list_to_filter("month", month))
+        filter_params.append(list_to_filter("pointInTimeMonth", point_in_time_month))
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+
+        filter_params = convert_date_to_filter_exp(
+            "month",
+            month_gt,
+            month_gte,
+            month_lt,
+            month_lte,
+            filter_params,
+        )
+        filter_params = convert_date_to_filter_exp(
+            "modifiedDate",
+            modified_date_gt,
+            modified_date_gte,
+            modified_date_lt,
+            modified_date_lte,
+            filter_params,
+        )
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path="/lng/v1/supply-forecast/current",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_demand_forecast_history(
+        self,
+        *,
+        import_market: Optional[Union[list[str], "Series[str]", str]] = None,
+        month: Optional[Union[list[date], "Series[date]", date]] = None,
+        month_gte: Optional[date] = None,
+        month_gt: Optional[date] = None,
+        month_lte: Optional[date] = None,
+        month_lt: Optional[date] = None,
+        point_in_time_month: Optional[Union[list[date], "Series[date]", date]] = None,
+        modified_date: Optional[
+            Union[list[datetime], "Series[datetime]", datetime]
+        ] = None,
+        modified_date_gte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Historical Demand Forecasts for LNG
+
+        Parameters
+        ----------
+
+        import_market: Optional[Union[list[str], Series[str], str]]
+             The specific country where LNG is imported., by default None
+        month: Optional[Union[list[date], Series[date], date]]
+             A unit of time representing a period of approximately 30 days, by default None
+        month_gte: Optional[date]
+            filter by ``month >= x`` , by default None
+        month_gt: Optional[Union[list[date], Series[date], date]]
+            filter by ``month > x`` , by default None
+        month_lte: Optional[Union[list[date], Series[date], date]]
+            filter by ``month <= x`` , by default None
+        month_lt: Optional[Union[list[date], Series[date], date]]
+            filter by ``month < x`` , by default None
+        point_in_time_month: Optional[Union[list[date], Series[date], date]]
+             A specific moment within a given month, often used for precise data or event references., by default None
+        modified_date: Optional[Union[list[datetime], Series[datetime], datetime]]
+             The latest date of modification for the current demand forecast, by default None
+        modified_date_gte: Optional[datetime]
+            filter by ``modifiedDate >= x`` , by default None
+        modified_date_gt: Optional[datetime]
+            filter by ``modifiedDate > x`` , by default None
+        modified_date_lte: Optional[datetime]
+            filter by ``modifiedDate <= x`` , by default None
+        modified_date_lt: Optional[datetime]
+            filter by ``modifiedDate < x`` , by default None
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("importMarket", import_market))
+        filter_params.append(list_to_filter("month", month))
+        filter_params.append(list_to_filter("pointInTimeMonth", point_in_time_month))
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+
+        filter_params = convert_date_to_filter_exp(
+            "month",
+            month_gt,
+            month_gte,
+            month_lt,
+            month_lte,
+            filter_params,
+        )
+        filter_params = convert_date_to_filter_exp(
+            "modifiedDate",
+            modified_date_gt,
+            modified_date_gte,
+            modified_date_lt,
+            modified_date_lte,
+            filter_params,
+        )
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path="/lng/v1/demand-forecast/history",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_supply_forecast_history(
+        self,
+        *,
+        export_project: Optional[Union[list[str], "Series[str]", str]] = None,
+        export_market: Optional[Union[list[str], "Series[str]", str]] = None,
+        month: Optional[Union[list[date], "Series[date]", date]] = None,
+        month_gte: Optional[date] = None,
+        month_gt: Optional[date] = None,
+        month_lte: Optional[date] = None,
+        month_lt: Optional[date] = None,
+        point_in_time_month: Optional[Union[list[date], "Series[date]", date]] = None,
+        modified_date: Optional[
+            Union[list[datetime], "Series[datetime]", datetime]
+        ] = None,
+        modified_date_gte: Optional[date] = None,
+        modified_date_gt: Optional[date] = None,
+        modified_date_lte: Optional[date] = None,
+        modified_date_lt: Optional[date] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Historical Supply Forecasts for LNG
+
+        Parameters
+        ----------
+
+        export_project: Optional[Union[list[str], Series[str], str]]
+            A specific venture or initiative focused on exporting LNG supply  to international markets., by default None
+        export_market: Optional[Union[list[str], Series[str], str]]
+            The specific country where LNG supply are being sold and shipped from a particular location., by default None
+        month: Optional[Union[list[date], Series[date], date]]
+            A unit of time representing a period of approximately 30 days, by default None
+        month_gte: Optional[date]
+            filter by ``month >= x`` , by default None
+        month_gt: Optional[date]
+            filter by ``month > x`` , by default None
+        month_lte: Optional[date]
+            filter by ``month <= x`` , by default None
+        month_lt: Optional[date]
+            filter by ``month < x`` , by default None
+        point_in_time_month: Optional[Union[list[date], Series[date], date]]
+            A specific moment within a given month, often used for precise data or event references., by default None
+        modified_date: Optional[Union[list[datetime], Series[datetime], datetime]]
+            The latest date of modification for the current supply forecast, by default None
+        modified_date_gte: Optional[datetime]
+            filter by ``modifiedDate >= x`` , by default None
+        modified_date_gt: Optional[datetime]
+            filter by ``modifiedDate > x`` , by default None
+        modified_date_lte: Optional[datetime]
+            filter by ``modifiedDate <= x`` , by default None
+        modified_date_lt: Optional[datetime]
+            filter by ``modifiedDate < x`` , by default None
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("exportProject", export_project))
+        filter_params.append(list_to_filter("exportMarket", export_market))
+        filter_params.append(list_to_filter("month", month))
+        filter_params.append(list_to_filter("pointInTimeMonth", point_in_time_month))
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+
+        filter_params = convert_date_to_filter_exp(
+            "month",
+            month_gt,
+            month_gte,
+            month_lt,
+            month_lte,
+            filter_params,
+        )
+        filter_params = convert_date_to_filter_exp(
+            "modifiedDate",
+            modified_date_gt,
+            modified_date_gte,
+            modified_date_lt,
+            modified_date_lte,
+            filter_params,
+        )
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path="/lng/v1/supply-forecast/history",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_cargo_historical_bilateral_trade_flows(
+        self,
+        *,
+        export_market: Optional[Union[list[str], "Series[str]", str]] = None,
+        import_market: Optional[Union[list[str], "Series[str]", str]] = None,
+        month_arrived: Optional[Union[list[date], "Series[date]", date]] = None,
+        month_arrived_gte: Optional[date] = None,
+        month_arrived_gt: Optional[date] = None,
+        month_arrived_lte: Optional[date] = None,
+        month_arrived_lt: Optional[date] = None,
+        modified_date: Optional[
+            Union[list[datetime], "Series[datetime]", datetime]
+        ] = None,
+        modified_date_gte: Optional[date] = None,
+        modified_date_gt: Optional[date] = None,
+        modified_date_lte: Optional[date] = None,
+        modified_date_lt: Optional[date] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Fetch the data based on the filter expression.
+
+        Parameters
+        ----------
+
+        export_market: Optional[Union[list[str], Series[str], str]]
+             The specific country where LNG supply are being sold and shipped., by default None
+        import_market: Optional[Union[list[str], Series[str], str]]
+             The specific country where LNG supply are being bought., by default None
+        month_arrived: Optional[Union[list[date], Series[date], date]]
+             A unit of time representing a period of approximately 30 days., by default None
+        month_arrived_gte: Optional[date]
+            filter by ``monthArrived >= x`` , by default None
+        month_arrived_gt: Optional[date]
+            filter by ``monthArrived > x`` , by default None
+        month_arrived_lte: Optional[date]
+            filter by ``monthArrived <= x`` , by default None
+        month_arrived_lt: Optional[date]
+            filter by ``monthArrived < x`` , by default None
+        modified_date: Optional[Union[list[datetime], Series[datetime], datetime]]
+             The latest date that this record was modified., by default None
+        modified_date_gte: Optional[datetime]
+            filter by ``modifiedDate >= x`` , by default None
+        modified_date_gt: Optional[datetime]
+            filter by ``modifiedDate > x`` , by default None
+        modified_date_lte: Optional[datetime]
+            filter by ``modifiedDate <= x`` , by default None
+        modified_date_lt: Optional[datetime]
+            filter by ``modifiedDate < x`` , by default None
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("exportMarket", export_market))
+        filter_params.append(list_to_filter("importMarket", import_market))
+        filter_params.append(list_to_filter("monthArrived", month_arrived))
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+
+        filter_params = convert_date_to_filter_exp(
+            "monthArrived",
+            month_arrived_gt,
+            month_arrived_gte,
+            month_arrived_lt,
+            month_arrived_lte,
+            filter_params,
+        )
+        filter_params = convert_date_to_filter_exp(
+            "modifiedDate",
+            modified_date_gt,
+            modified_date_gte,
+            modified_date_lt,
+            modified_date_lte,
+            filter_params,
+        )
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path="/lng/v1/cargo/historical-bilateral-trade-flows",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
