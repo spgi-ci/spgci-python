@@ -27,8 +27,15 @@ class StructuredHeardsTest(unittest.TestCase):
     def test_heards_markets_data(self):
         sh = self.sh.get_data(
             page_size=10,
-            filter_exp='Market IN ("US DDGS") and rtpTimestamp: "2023-12-18T10:24:14.161Z"',
+            filter_exp='Market IN ("Americas crude oil") and rtpTimestamp: "2024-05-29T14:14:09.985Z"',
         )
-        self.assertEqual(len(sh), 1)  # type: ignore
+        self.assertEqual(len(sh), 3)  # type: ignore
 
+    @pytest.mark.integtest
+    def test_heards_markets_data_heard_type(self):
+        sh = self.sh.get_data(
+            page_size=10,
+            filter_exp='Market IN ("Americas crude oil") and heard_type: "Trade"',
+        )
+        self.assertGreater(len(sh), 1)  # type: ignore
 
