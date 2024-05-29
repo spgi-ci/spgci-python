@@ -267,6 +267,9 @@ lng.get_reference_data(type=lng.RefTypes.LiquefactionProjects)
 lng.get_outages(liquefaction_project_name="ADNOC LNG")
 # DataFrame of all LNG outages tied to "ADNOC LNG".
 
+lng.get_netbacks(date_gt="2024-01-01", import_geography="Brazil")
+# DataFrame of all LNG Netbacks where import geography is 'Brazil' since Jan 1, 2024.
+
 ```
 
 ### Crude Analytics
@@ -274,7 +277,7 @@ lng.get_outages(liquefaction_project_name="ADNOC LNG")
 ```python
 import spgci as ci
 
-ca = ci.CrudeAnalytics
+ca = ci.CrudeAnalytics()
 
 ca.get_country_scores(status="Current")
 # DataFrame of latest scores for all countries.
@@ -284,5 +287,24 @@ ca.get_country_scores(country="United States")
 
 ca.get_country_total_scores()
 # DataFrame of aggregated scores, supply and capacity per date.
+
+```
+
+### Weather
+
+```python
+import spgci as ci
+
+w = ci.Weather()
+
+w.get_forecast(city="Boston")
+# DataFrame of forecasts for Boston
+
+w.get_forecast(market="United States", weather_date_gte="2024-01-01", weather_date_lte="2024-01-31")
+# DateFrame of forecasts in the United States in January 2024.
+
+w.get_actual(market="Hong Kong", paginate=True)
+# DataFrame of actual weather in Hong Kong, paginate=True to get full history.
+
 
 ```

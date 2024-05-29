@@ -47,8 +47,18 @@ def _to_df(resp: requests.Response) -> DataFrame:
     return DataFrame(j["results"])
 
 
-def _paginate(resp: requests.Response) -> Paginator:
+def _nop_paginate(resp: requests.Response) -> Paginator:
     return Paginator(False, "page", 1)
+
+
+def _paginate(resp: requests.Response) -> Paginator:
+    j = resp.json()
+    total_pages = j["metadata"]["totalPages"]
+
+    if total_pages <= 1:
+        return Paginator(False, "page", 1)
+
+    return Paginator(True, "page", total_pages=total_pages)
 
 
 _session = requests.Session()

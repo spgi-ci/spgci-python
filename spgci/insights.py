@@ -17,7 +17,8 @@ from .api_client import get_data, Paginator
 from .utilities import list_to_filter
 from typing import Union, Optional
 from pandas import DataFrame, Series, to_datetime, json_normalize  # type: ignore
-from typing import Union
+import pandas as pd
+from distutils.version import LooseVersion
 from requests import Response
 from datetime import datetime
 from enum import Enum
@@ -95,7 +96,12 @@ class Insights:
         df = DataFrame(j["results"])
 
         if len(df) > 0:
-            df["updatedDate"] = to_datetime(df["updatedDate"], utc=True)
+            if LooseVersion(pd.__version__) >= LooseVersion("2"):
+                df["updatedDate"] = to_datetime(
+                    df["updatedDate"], utc=True, format="ISO8601"
+                )
+            else:
+                df["updatedDate"] = to_datetime(df["updatedDate"], utc=True)
 
         if strip_html:
             if "headline" in df.columns:

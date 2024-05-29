@@ -646,6 +646,7 @@ class EnergyPriceForecast:
             path=f"{self._path}{path}",
             params=params,
             paginate=True,
+            paginate_fn=self._paginate,
             raw=raw,
         )
 

@@ -14,7 +14,7 @@
 
 from __future__ import annotations
 from spgci.utilities import list_to_filter
-from spgci.api_client import get_data, Paginator
+from spgci.api_client import get_data, Paginator, _nop_paginate
 from typing import List, Optional, Union
 import pandas as pd
 from pandas import Series
@@ -689,5 +689,8 @@ class MarketData:
         params = {"subscribed_only": subscribed_only}
 
         return get_data(
-            path="market-data/reference-data/v3/mdc", params=params, raw=raw
+            path="market-data/reference-data/v3/mdc",
+            params=params,
+            raw=raw,
+            paginate_fn=_nop_paginate,
         )
