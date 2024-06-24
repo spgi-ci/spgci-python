@@ -5,7 +5,7 @@ from spgci.api_client import get_data
 from spgci.utilities import list_to_filter
 from pandas import DataFrame, Series
 from datetime import date, datetime
-from distutils.version import LooseVersion
+from packaging.version import parse
 import pandas as pd
 
 
@@ -293,13 +293,13 @@ class Weather:
         df = pd.json_normalize(j["results"])  # type: ignore
 
         if "weatherDate" in df.columns:
-            if LooseVersion(pd.__version__) >= LooseVersion("2"):
+            if parse(pd.__version__) >= parse("2"):
                 df["weatherDate"] = pd.to_datetime(df["weatherDate"], format="ISO8601")
             else:
                 df["weatherDate"] = pd.to_datetime(df["weatherDate"])
 
         if "modifiedDate" in df.columns:
-            if LooseVersion(pd.__version__) >= LooseVersion("2"):
+            if parse(pd.__version__) >= parse("2"):
                 df["modifiedDate"] = pd.to_datetime(
                     df["modifiedDate"], format="ISO8601"
                 )
@@ -307,7 +307,7 @@ class Weather:
                 df["modifiedDate"] = pd.to_datetime(df["modifiedDate"])
 
         if "recordedDate" in df.columns:
-            if LooseVersion(pd.__version__) >= LooseVersion("2"):
+            if parse(pd.__version__) >= parse("2"):
                 df["recordedDate"] = pd.to_datetime(
                     df["recordedDate"], format="ISO8601"
                 )

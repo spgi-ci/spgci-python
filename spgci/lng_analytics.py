@@ -19,7 +19,7 @@ from spgci.api_client import get_data, Paginator
 from spgci.utilities import list_to_filter, convert_date_to_filter_exp
 from pandas import Series, DataFrame, to_datetime  # type: ignore
 import pandas as pd
-from distutils.version import LooseVersion
+from packaging.version import parse
 from datetime import date, datetime
 from enum import Enum
 
@@ -109,7 +109,7 @@ class LNGGlobalAnalytics:
         df = DataFrame(j["results"])
 
         if "modifiedDate" in df.columns:
-            if LooseVersion(pd.__version__) >= LooseVersion("2"):
+            if parse(pd.__version__) >= parse("2"):
                 df["modifiedDate"] = pd.to_datetime(
                     df["modifiedDate"], format="ISO8601"
                 )
@@ -117,7 +117,7 @@ class LNGGlobalAnalytics:
                 df["modifiedDate"] = pd.to_datetime(df["modifiedDate"])
 
         if "date" in df.columns:
-            if LooseVersion(pd.__version__) >= LooseVersion("2"):
+            if parse(pd.__version__) >= parse("2"):
                 df["date"] = pd.to_datetime(df["date"], format="ISO8601")
             else:
                 df["date"] = pd.to_datetime(df["date"])
