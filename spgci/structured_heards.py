@@ -14,7 +14,7 @@ class StructuredHeards:
     Includes
     --------
 
-    ``get_data()`` to fetch market data.\n
+    ``get_heards()`` to fetch structured heards.\n
     ``get_markets()`` to fetch market and attributes associated with it.\n
 
     """
@@ -58,58 +58,58 @@ class StructuredHeards:
 
         return Paginator(True, "page", total_pages=total_pages)
 
-    def get_data(
-            self,
-            *,
-            geography: Optional[Union[list[str], "Series[str]", str]] = None,
-            commodity: Optional[Union[list[str], "Series[str]", str]] = None,
-            location: Optional[Union[list[str], "Series[str]", str]] = None,
-            market: Optional[Union[list[str], "Series[str]", str]] = None,
-            version_label: Optional[Union[list[str], "Series[str]", str]] = None,
-            updated_date_from_lt: Optional[date] = None,
-            updated_date_from_lte: Optional[date] = None,
-            updated_date_from_gt: Optional[date] = None,
-            updated_date_from_gte: Optional[date] = None,
-            rtp_timestamp_from_lt: Optional[date] = None,
-            rtp_timestamp_from_lte: Optional[date] = None,
-            rtp_timestamp_from_gt: Optional[date] = None,
-            rtp_timestamp_from_gte: Optional[date] = None,
-            filter_exp: Optional[str] = None,
-            page: int = 1,
-            page_size: int = 1000,
-            raw: bool = False,
-            paginate: bool = False,
+    def get_heards(
+        self,
+        market: Union[list[str], "Series[str]", str],
+        *,
+        geography: Optional[Union[list[str], "Series[str]", str]] = None,
+        commodity: Optional[Union[list[str], "Series[str]", str]] = None,
+        location: Optional[Union[list[str], "Series[str]", str]] = None,
+        heard_type: Optional[Union[list[str], "Series[str]", str]] = None,
+        updated_date_lt: Optional[date] = None,
+        updated_date_lte: Optional[date] = None,
+        updated_date_gt: Optional[date] = None,
+        updated_date_gte: Optional[date] = None,
+        rtp_timestamp_lt: Optional[date] = None,
+        rtp_timestamp_lte: Optional[date] = None,
+        rtp_timestamp_gt: Optional[date] = None,
+        rtp_timestamp_gte: Optional[date] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
     ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
 
         Parameters
         ----------
+        market : Optional[Union[list[str], Series[str], str]]
+            filter by market
         geography : Optional[Union[list[str], Series[str], str]], optional
             filter by geography, by default None
         commodity : Optional[Union[list[str], Series[str], str]], optional
             filter by commodity, by default None
         location : Optional[Union[list[str], Series[str], str]], optional
             filter by location, by default None
-        market : Optional[Union[list[str], Series[str], str]], optional
-            filter by market, by default None
-        version_label : Optional[Union[list[str], Series[str], str]], optional
-            filter by versionLabel, by default None
-        updated_date_from_lt : Optional[date], optional
+        heard_type : Optional[Union[list[str], Series[str], str]], optional
+            filter by heard_type, by default None
+        updated_date_lt: Optional[date], optional
             filter by ``updatedDate < x``, by default None
-        updated_date_from_lte : Optional[date], optional
+        updated_date_lte : Optional[date], optional
             filter by ``updatedDate <= x``, by default None
-        updated_date_from_gt : Optional[date], optional
+        updated_date_gt : Optional[date], optional
             filter by ``updatedDate > x``, by default None
-        updated_date_from_gte : Optional[date], optional
+        updated_date_gte : Optional[date], optional
             filter by ``updatedDate >= x``, by default None
-        rtp_timestamp_from_lt : Optional[date], optional
+        rtp_timestamp_lt : Optional[date], optional
             filter by ``rtpTimestamp < x``, by default None
-        rtp_timestamp_from_lte : Optional[date], optional
+        rtp_timestamp_lte : Optional[date], optional
             filter by ``rtpTimestamp <= x``, by default None
-        rtp_timestamp_from_gt : Optional[date], optional
+        rtp_timestamp_gt : Optional[date], optional
             filter by ``rtpTimestamp > x``, by default None
-        rtp_timestamp_from_gte : Optional[date], optional
+        rtp_timestamp_gte : Optional[date], optional
             filter by ``rtpTimestamp >= x``, by default None
         raw : bool, optional
             return a ``requests.Response`` instead of a ``DataFrame``, by default False
@@ -133,7 +133,7 @@ class StructuredHeards:
         Examples
         --------
         **Simple**
-        >>> ci.StructuredHeards().get_data()
+        >>> ci.StructuredHeards().get_heards(market="Americas crude oil")
         """
         endpoint_path = "data"
         filter_params: List[str] = []
@@ -141,22 +141,22 @@ class StructuredHeards:
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("location", location))
         filter_params.append(list_to_filter("market", market))
-        filter_params.append(list_to_filter("versionLabel", version_label))
+        filter_params.append(list_to_filter("heard_type", heard_type))
 
         filter_params = convert_date_to_filter_exp(
             "updatedDate",
-            updated_date_from_gt,
-            updated_date_from_gte,
-            updated_date_from_lt,
-            updated_date_from_lte,
+            updated_date_gt,
+            updated_date_gte,
+            updated_date_lt,
+            updated_date_lte,
             filter_params,
         )
         filter_params = convert_date_to_filter_exp(
             "rtpTimeStamp",
-            rtp_timestamp_from_gt,
-            rtp_timestamp_from_gte,
-            rtp_timestamp_from_lt,
-            rtp_timestamp_from_lte,
+            rtp_timestamp_gt,
+            rtp_timestamp_gte,
+            rtp_timestamp_lt,
+            rtp_timestamp_lte,
             filter_params,
         )
 
@@ -180,15 +180,15 @@ class StructuredHeards:
         return response
 
     def get_markets(
-            self,
-            *,
-            market: Optional[Union[list[str], "Series[str]", str]] = None,
-            attributes: Optional[Union[list[str], "Series[str]", str]] = None,
-            filter_exp: Optional[str] = None,
-            page: int = 1,
-            page_size: int = 1000,
-            raw: bool = False,
-            paginate: bool = False,
+        self,
+        *,
+        market: Optional[Union[list[str], "Series[str]", str]] = None,
+        attributes: Optional[Union[list[str], "Series[str]", str]] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
     ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
@@ -246,5 +246,3 @@ class StructuredHeards:
             paginate=paginate,
         )
         return response
-
-

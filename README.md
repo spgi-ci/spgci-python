@@ -308,3 +308,18 @@ w.get_actual(market="Hong Kong", paginate=True)
 
 
 ```
+
+### Structured Heards
+
+```python
+import spgci as ci
+
+sh = ci.StructuredHeards()
+
+sh.get_markets()
+# DataFrame of the list of markets that have structured heards.
+
+sh.get_heards(market="Americas crude oil", heard_type="trade")
+# DateFrame of heards in the Americas crude oil market that are of type 'trade'.
+
+```
