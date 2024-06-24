@@ -6,7 +6,7 @@ Looking for more examples? Check out our [Notebook Gallery](https://developer.sp
 
 ## Installation
 
-Requires Python >= 3.7.0.
+Requires Python >= 3.9.0.
 
 ```bash
 pip install spgci
