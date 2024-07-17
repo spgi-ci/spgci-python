@@ -5,7 +5,8 @@ from requests import Response
 from spgci.api_client import get_data
 from spgci.utilities import list_to_filter
 from pandas import DataFrame, Series
-from datetime import date
+from datetime import date, datetime
+from packaging.version import parse
 import pandas as pd
 
 class Weather:
@@ -187,12 +188,22 @@ class Weather:
         df = pd.json_normalize(j["results"])  # type: ignore
         
         if "weatherDate" in df.columns:
-            df["weatherDate"] = pd.to_datetime(df["weatherDate"])  # type: ignore
+            if parse(pd.__version__) >= parse("2"):
+                df["weatherDate"] = pd.to_datetime(df["weatherDate"], format="ISO8601")
+            else:
+                df["weatherDate"] = pd.to_datetime(df["weatherDate"])
 
         if "modifiedDate" in df.columns:
-            df["modifiedDate"] = pd.to_datetime(df["modifiedDate"])  # type: ignore
+            if parse(pd.__version__) >= parse("2"):
+                df["modifiedDate"] = pd.to_datetime(df["modifiedDate"], format="ISO8601")
+            else:
+                df["modifiedDate"] = pd.to_datetime(df["modifiedDate"])
 
         if "recordedDate" in df.columns:
-            df["recordedDate"] = pd.to_datetime(df["recordedDate"])  # type: ignore
+            if parse(pd.__version__) >= parse("2"):
+                df["recordedDate"] = pd.to_datetime(df["recordedDate"], format="ISO8601")
+            else:
+                df["recordedDate"] = pd.to_datetime(df["recordedDate"])
+
         return df
-    
+   

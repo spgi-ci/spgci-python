@@ -6,7 +6,7 @@ Looking for more examples? Check out our [Notebook Gallery](https://developer.sp
 
 ## Installation
 
-Requires Python >= 3.7.0.
+Requires Python >= 3.9.0.
 
 ```bash
 pip install spgci
@@ -306,5 +306,20 @@ w.get_forecast(market="United States", weather_date_gte="2024-01-01", weather_da
 w.get_actual(market="Hong Kong", paginate=True)
 # DataFrame of actual weather in Hong Kong, paginate=True to get full history.
 
+
+```
+
+### Structured Heards
+
+```python
+import spgci as ci
+
+sh = ci.StructuredHeards()
+
+sh.get_markets()
+# DataFrame of the list of markets that have structured heards.
+
+sh.get_heards(market="Americas crude oil", heard_type="trade")
+# DateFrame of heards in the Americas crude oil market that are of type 'trade'.
 
 ```

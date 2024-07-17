@@ -5,8 +5,10 @@ from requests import Response
 from spgci.api_client import get_data
 from spgci.utilities import list_to_filter
 from pandas import DataFrame, Series
-from datetime import date
 import pandas as pd
+from packaging.version import parse
+from datetime import date, datetime
+from enum import Enum
 
 class Lng_analytics:
     _endpoint = "api/v1/"
@@ -178,6 +180,7 @@ class Lng_analytics:
 
         """
 
+
         filter_params: List[str] = []
         filter_params.append(list_to_filter("month", month))
         filter_params.append(list_to_filter("importMarket", importMarket))
@@ -193,6 +196,21 @@ class Lng_analytics:
             filter_exp = " AND ".join(filter_params)
         elif len(filter_params) > 0:
             filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        if "modifiedDate" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["modifiedDate"] = pd.to_datetime(
+                    df["modifiedDate"], format="ISO8601"
+                )
+            else:
+                df["modifiedDate"] = pd.to_datetime(df["modifiedDate"])
+
+        if "date" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["date"] = pd.to_datetime(df["date"], format="ISO8601")
+            else:
+                df["date"] = pd.to_datetime(df["date"])
+
 
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 

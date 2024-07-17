@@ -18,7 +18,7 @@ from .utilities import list_to_filter
 from typing import Union, Optional
 from pandas import DataFrame, Series, to_datetime, json_normalize  # type: ignore
 import pandas as pd
-from distutils.version import LooseVersion
+from packaging.version import parse
 from requests import Response
 from datetime import datetime
 from enum import Enum
@@ -96,7 +96,7 @@ class Insights:
         df = DataFrame(j["results"])
 
         if len(df) > 0:
-            if LooseVersion(pd.__version__) >= LooseVersion("2"):
+            if parse(pd.__version__) >= parse("2"):
                 df["updatedDate"] = to_datetime(
                     df["updatedDate"], utc=True, format="ISO8601"
                 )
