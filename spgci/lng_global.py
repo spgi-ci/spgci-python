@@ -12,15 +12,16 @@ class Lng_global:
     _endpoint = "api/v1/"
     _reference_endpoint = "reference/v1/"
     _tender_details_endpoint = "/tenders"
-    _v_current_fc_demand_endpoint = "/demand-forecast/current"
-    _v_current_fc_supply_endpoint = "/supply-forecast/current"
-    _v_platts_demand_endpoint = "/demand-forecast/history"
-    _v_platts_supply_endpoint = "/supply-forecast/history"
+    _current_fc_demand_mv_endpoint = "/demand-forecast/current"
+    _current_fc_supply_mv_endpoint = "/supply-forecast/current"
+    _platts_demand_mv_endpoint = "/demand-forecast/history"
+    _platts_supply_mv_endpoint = "/supply-forecast/history"
     _bilateral_trade_endpoint = "/cargo/historical-bilateral-trade-flows"
     _trips_endpoint = "/cargo/trips"
     _event_partial_load_endpoint = "/cargo/events/partial-load"
     _event_partial_unload_endpoint = "/cargo/events/partial-unload"
     _event_partial_reexport_endpoint = "/cargo/events/partial-reexport"
+    _waterborne_trade_endpoint = "/cargo/waterborne-trade"
 
 
     def get_tenders(
@@ -865,6 +866,149 @@ class Lng_global:
         return response
 
 
+    def get_cargo_waterborne_trade(
+        self, id: Optional[Union[list[str], Series[str], str]] = None, dateLoaded: Optional[Union[list[date], Series[date], date]] = None, dateArrived: Optional[Union[list[date], Series[date], date]] = None, deliveryVesselName: Optional[Union[list[str], Series[str], str]] = None, imoNumber: Optional[Union[list[str], Series[str], str]] = None, supplyMarket: Optional[Union[list[str], Series[str], str]] = None, supplyPlant: Optional[Union[list[str], Series[str], str]] = None, supplyProject: Optional[Union[list[str], Series[str], str]] = None, tradeRoute: Optional[Union[list[str], Series[str], str]] = None, reexportPort: Optional[Union[list[str], Series[str], str]] = None, receivingPort: Optional[Union[list[str], Series[str], str]] = None, receivingMarket: Optional[Union[list[str], Series[str], str]] = None, participant1Charterer: Optional[Union[list[str], Series[str], str]] = None, participant1Parent: Optional[Union[list[str], Series[str], str]] = None, participant2Buyer: Optional[Union[list[str], Series[str], str]] = None, participant2Parent: Optional[Union[list[str], Series[str], str]] = None, participants3Other: Optional[Union[list[str], Series[str], str]] = None, participant3Parent: Optional[Union[list[str], Series[str], str]] = None, participants4Other: Optional[Union[list[str], Series[str], str]] = None, participant4Parent: Optional[Union[list[str], Series[str], str]] = None, participants5Other: Optional[Union[list[str], Series[str], str]] = None, participant5Parent: Optional[Union[list[str], Series[str], str]] = None, participants6Other: Optional[Union[list[str], Series[str], str]] = None, participant6Parent: Optional[Union[list[str], Series[str], str]] = None, participants7Other: Optional[Union[list[str], Series[str], str]] = None, participant7Parent: Optional[Union[list[str], Series[str], str]] = None, isSpotOrShortTerm: Optional[Union[list[str], Series[str], str]] = None, initialVesselName: Optional[Union[list[str], Series[str], str]] = None, transshipmentPort: Optional[Union[list[str], Series[str], str]] = None, transshipmentDate: Optional[Union[list[date], Series[date], date]] = None, capacityOrVolumeType: Optional[Union[list[str], Series[str], str]] = None, capacityOrVolumeUom: Optional[Union[list[str], Series[str], str]] = None, capacityOrVolume: Optional[Union[list[str], Series[str], str]] = None, createdDate: Optional[Union[list[str], Series[str], str]] = None, modifiedDate: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
+    ) -> Union[DataFrame, Response]:
+        """
+        Fetch the data based on the filter expression.
+
+        Parameters
+        ----------
+        
+         id: Optional[Union[list[str], Series[str], str]]
+             Unique identifier for each trade, be default None
+         dateLoaded: Optional[Union[list[date], Series[date], date]]
+             The date when the LNG cargo was loaded onto the vessel, be default None
+         dateArrived: Optional[Union[list[date], Series[date], date]]
+             The date when the vessel arrived at its destination, be default None
+         deliveryVesselName: Optional[Union[list[str], Series[str], str]]
+             The name of the vessel used for delivery, be default None
+         imoNumber: Optional[Union[list[str], Series[str], str]]
+             The International Maritime Organization number of the vessel, be default None
+         supplyMarket: Optional[Union[list[str], Series[str], str]]
+             The market or country where the LNG was supplied from, be default None
+         supplyPlant: Optional[Union[list[str], Series[str], str]]
+             The LNG plant from which the LNG was supplied, be default None
+         supplyProject: Optional[Union[list[str], Series[str], str]]
+             The LNG project from which the LNG was supplied, be default None
+         tradeRoute: Optional[Union[list[str], Series[str], str]]
+             The route taken by the vessel for the trade, be default None
+         reexportPort: Optional[Union[list[str], Series[str], str]]
+             The port where the LNG was re-exported, if applicable, be default None
+         receivingPort: Optional[Union[list[str], Series[str], str]]
+             The port where the LNG was received, be default None
+         receivingMarket: Optional[Union[list[str], Series[str], str]]
+             The market or country where the LNG was received, be default None
+         participant1Charterer: Optional[Union[list[str], Series[str], str]]
+             The charterer of the vessel, be default None
+         participant1Parent: Optional[Union[list[str], Series[str], str]]
+             The parent company of Participant_1_charterer, be default None
+         participant2Buyer: Optional[Union[list[str], Series[str], str]]
+             The buyer of the LNG, be default None
+         participant2Parent: Optional[Union[list[str], Series[str], str]]
+             The parent company of Participant_2_buyer, be default None
+         participants3Other: Optional[Union[list[str], Series[str], str]]
+             Additional participants involved in the trade, be default None
+         participant3Parent: Optional[Union[list[str], Series[str], str]]
+             The parent company of Participants_3_other, be default None
+         participants4Other: Optional[Union[list[str], Series[str], str]]
+             Additional participants involved in the trade, be default None
+         participant4Parent: Optional[Union[list[str], Series[str], str]]
+             The parent company of Participants_4_other, be default None
+         participants5Other: Optional[Union[list[str], Series[str], str]]
+             Additional participants involved in the trade, be default None
+         participant5Parent: Optional[Union[list[str], Series[str], str]]
+             The parent company of Participants_5_other, be default None
+         participants6Other: Optional[Union[list[str], Series[str], str]]
+             Additional participants involved in the trade, be default None
+         participant6Parent: Optional[Union[list[str], Series[str], str]]
+             The parent company of Participants_6_other, be default None
+         participants7Other: Optional[Union[list[str], Series[str], str]]
+             Additional participants involved in the trade, be default None
+         participant7Parent: Optional[Union[list[str], Series[str], str]]
+             The parent company of Participants_7_other, be default None
+         isSpotOrShortTerm: Optional[Union[list[str], Series[str], str]]
+             Indicates whether the trade was spot or short-term, long-term, or unknown, be default None
+         initialVesselName: Optional[Union[list[str], Series[str], str]]
+             The original name of the vessel before any transshipment, be default None
+         transshipmentPort: Optional[Union[list[str], Series[str], str]]
+             The port where transshipment occurred, if applicable, be default None
+         transshipmentDate: Optional[Union[list[date], Series[date], date]]
+             The date when transshipment occurred, if applicable, be default None
+         capacityOrVolumeType: Optional[Union[list[str], Series[str], str]]
+             Indicates different cargo volume types or the capacity of the vessel for a specific cargo, be default None
+         capacityOrVolumeUom: Optional[Union[list[str], Series[str], str]]
+             Unit of measure for the cargo volume type or the capacity of the vessel, be default None
+         capacityOrVolume: Optional[Union[list[str], Series[str], str]]
+             Numeric values of different cargo volume types or the capacity of the vessel, be default None
+         createdDate: Optional[Union[list[str], Series[str], str]]
+             The date when the trade record was created, be default None
+         modifiedDate: Optional[Union[list[str], Series[str], str]]
+             The date when the trade record was last modified, be default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 1000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("id", id))
+        filter_params.append(list_to_filter("dateLoaded", dateLoaded))
+        filter_params.append(list_to_filter("dateArrived", dateArrived))
+        filter_params.append(list_to_filter("deliveryVesselName", deliveryVesselName))
+        filter_params.append(list_to_filter("imoNumber", imoNumber))
+        filter_params.append(list_to_filter("supplyMarket", supplyMarket))
+        filter_params.append(list_to_filter("supplyPlant", supplyPlant))
+        filter_params.append(list_to_filter("supplyProject", supplyProject))
+        filter_params.append(list_to_filter("tradeRoute", tradeRoute))
+        filter_params.append(list_to_filter("reexportPort", reexportPort))
+        filter_params.append(list_to_filter("receivingPort", receivingPort))
+        filter_params.append(list_to_filter("receivingMarket", receivingMarket))
+        filter_params.append(list_to_filter("participant1Charterer", participant1Charterer))
+        filter_params.append(list_to_filter("participant1Parent", participant1Parent))
+        filter_params.append(list_to_filter("participant2Buyer", participant2Buyer))
+        filter_params.append(list_to_filter("participant2Parent", participant2Parent))
+        filter_params.append(list_to_filter("participants3Other", participants3Other))
+        filter_params.append(list_to_filter("participant3Parent", participant3Parent))
+        filter_params.append(list_to_filter("participants4Other", participants4Other))
+        filter_params.append(list_to_filter("participant4Parent", participant4Parent))
+        filter_params.append(list_to_filter("participants5Other", participants5Other))
+        filter_params.append(list_to_filter("participant5Parent", participant5Parent))
+        filter_params.append(list_to_filter("participants6Other", participants6Other))
+        filter_params.append(list_to_filter("participant6Parent", participant6Parent))
+        filter_params.append(list_to_filter("participants7Other", participants7Other))
+        filter_params.append(list_to_filter("participant7Parent", participant7Parent))
+        filter_params.append(list_to_filter("isSpotOrShortTerm", isSpotOrShortTerm))
+        filter_params.append(list_to_filter("initialVesselName", initialVesselName))
+        filter_params.append(list_to_filter("transshipmentPort", transshipmentPort))
+        filter_params.append(list_to_filter("transshipmentDate", transshipmentDate))
+        filter_params.append(list_to_filter("capacityOrVolumeType", capacityOrVolumeType))
+        filter_params.append(list_to_filter("capacityOrVolumeUom", capacityOrVolumeUom))
+        filter_params.append(list_to_filter("capacityOrVolume", capacityOrVolume))
+        filter_params.append(list_to_filter("createdDate", createdDate))
+        filter_params.append(list_to_filter("modifiedDate", modifiedDate))
+        
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/lng/v1/cargo/waterborne-trade",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+
     @staticmethod
     def _convert_to_df(resp: Response) -> pd.DataFrame:
         j = resp.json()
@@ -929,5 +1073,14 @@ class Lng_global:
 
         if "reexportDate" in df.columns:
             df["reexportDate"] = pd.to_datetime(df["reexportDate"])  # type: ignore
+
+        if "dateLoaded" in df.columns:
+            df["dateLoaded"] = pd.to_datetime(df["dateLoaded"])  # type: ignore
+
+        if "dateArrived" in df.columns:
+            df["dateArrived"] = pd.to_datetime(df["dateArrived"])  # type: ignore
+
+        if "transshipmentDate" in df.columns:
+            df["transshipmentDate"] = pd.to_datetime(df["transshipmentDate"])  # type: ignore
         return df
     
