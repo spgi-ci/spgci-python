@@ -11,12 +11,12 @@ import pandas as pd
 class Chemicals_price_forecast:
     _endpoint = "api/v1/"
     _reference_endpoint = "reference/v1/"
-    _price_forecast_lt_endpoint = "/long-term-prices"
-    _price_forecast_st_endpoint = "/short-term-prices"
+    _price_forecast_lt_api_endpoint = "/long-term-prices"
+    _price_forecast_st_api_endpoint = "/short-term-prices"
 
 
     def get_long_term_prices(
-        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, series_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, commodity_grade: Optional[Union[list[str], Series[str], str]] = None, associated_platts_symbol: Optional[Union[list[str], Series[str], str]] = None, delivery_region: Optional[Union[list[str], Series[str], str]] = None, shipping_terms: Optional[Union[list[str], Series[str], str]] = None, currency: Optional[Union[list[str], Series[str], str]] = None, contract_type: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, dataType: Optional[Union[list[str], Series[str], str]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, publish_date: Optional[Union[list[str], Series[str], str]] = None, year: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[str], Series[str], str]] = None, valid_from: Optional[Union[list[str], Series[str], str]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
+        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, series_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, commodity_grade: Optional[Union[list[str], Series[str], str]] = None, associated_platts_symbol: Optional[Union[list[str], Series[str], str]] = None, delivery_region: Optional[Union[list[str], Series[str], str]] = None, shipping_terms: Optional[Union[list[str], Series[str], str]] = None, currency: Optional[Union[list[str], Series[str], str]] = None, contract_type: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, dataType: Optional[Union[list[str], Series[str], str]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, publish_date: Optional[Union[list[str], Series[str], str]] = None, year: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[str], Series[str], str]] = None, valid_from: Optional[Union[list[str], Series[str], str]] = None, modifiedDate: Optional[Union[list[str], Series[str], str]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
     ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
@@ -60,8 +60,12 @@ class Chemicals_price_forecast:
              End Date of Record Validity, be default None
          valid_from: Optional[Union[list[str], Series[str], str]]
              As of date for when the data is updated, be default None
+         modifiedDate: Optional[Union[list[str], Series[str], str]]
+             Date when the data is last modified, be default None
          is_active: Optional[Union[list[str], Series[str], str]]
              If the record is active, be default None
+         region: Optional[Union[list[str], Series[str], str]]
+             Name for Region (geography), be default None
          filter_exp: Optional[str] = None,
          page: int = 1,
          page_size: int = 1000,
@@ -89,7 +93,9 @@ class Chemicals_price_forecast:
         filter_params.append(list_to_filter("year", year))
         filter_params.append(list_to_filter("valid_to", valid_to))
         filter_params.append(list_to_filter("valid_from", valid_from))
+        filter_params.append(list_to_filter("modifiedDate", modifiedDate))
         filter_params.append(list_to_filter("is_active", is_active))
+        filter_params.append(list_to_filter("region", region))
         
         filter_params = [fp for fp in filter_params if fp != ""]
 
@@ -111,7 +117,7 @@ class Chemicals_price_forecast:
 
 
     def get_short_term_prices(
-        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, series_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, commodity_grade: Optional[Union[list[str], Series[str], str]] = None, associated_platts_symbol: Optional[Union[list[str], Series[str], str]] = None, delivery_region: Optional[Union[list[str], Series[str], str]] = None, shipping_terms: Optional[Union[list[str], Series[str], str]] = None, currency: Optional[Union[list[str], Series[str], str]] = None, contract_type: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, dataType: Optional[Union[list[str], Series[str], str]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, publish_date: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, valid_to: Optional[Union[list[str], Series[str], str]] = None, valid_from: Optional[Union[list[str], Series[str], str]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
+        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, series_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, commodity_grade: Optional[Union[list[str], Series[str], str]] = None, associated_platts_symbol: Optional[Union[list[str], Series[str], str]] = None, delivery_region: Optional[Union[list[str], Series[str], str]] = None, shipping_terms: Optional[Union[list[str], Series[str], str]] = None, currency: Optional[Union[list[str], Series[str], str]] = None, contract_type: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, dataType: Optional[Union[list[str], Series[str], str]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, publish_date: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, valid_to: Optional[Union[list[str], Series[str], str]] = None, valid_from: Optional[Union[list[str], Series[str], str]] = None, modifiedDate: Optional[Union[list[str], Series[str], str]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
     ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
@@ -155,8 +161,12 @@ class Chemicals_price_forecast:
              End Date of Record Validity, be default None
          valid_from: Optional[Union[list[str], Series[str], str]]
              As of date for when the data is updated, be default None
+         modifiedDate: Optional[Union[list[str], Series[str], str]]
+             Date when the data is last modified, be default None
          is_active: Optional[Union[list[str], Series[str], str]]
              If the record is active, be default None
+         region: Optional[Union[list[str], Series[str], str]]
+             Name for Region (geography), be default None
          filter_exp: Optional[str] = None,
          page: int = 1,
          page_size: int = 1000,
@@ -184,7 +194,9 @@ class Chemicals_price_forecast:
         filter_params.append(list_to_filter("date", date))
         filter_params.append(list_to_filter("valid_to", valid_to))
         filter_params.append(list_to_filter("valid_from", valid_from))
+        filter_params.append(list_to_filter("modifiedDate", modifiedDate))
         filter_params.append(list_to_filter("is_active", is_active))
+        filter_params.append(list_to_filter("region", region))
         
         filter_params = [fp for fp in filter_params if fp != ""]
 
@@ -219,7 +231,22 @@ class Chemicals_price_forecast:
         if "valid_from" in df.columns:
             df["valid_from"] = pd.to_datetime(df["valid_from"])  # type: ignore
 
+        if "modifiedDate" in df.columns:
+            df["modifiedDate"] = pd.to_datetime(df["modifiedDate"])  # type: ignore
+
         if "date" in df.columns:
             df["date"] = pd.to_datetime(df["date"])  # type: ignore
+
+        if "created_date" in df.columns:
+            df["created_date"] = pd.to_datetime(df["created_date"])  # type: ignore
+
+        if "modified_date" in df.columns:
+            df["modified_date"] = pd.to_datetime(df["modified_date"])  # type: ignore
+
+        if "validFrom" in df.columns:
+            df["validFrom"] = pd.to_datetime(df["validFrom"])  # type: ignore
+
+        if "validTo" in df.columns:
+            df["validTo"] = pd.to_datetime(df["validTo"])  # type: ignore
         return df
     
