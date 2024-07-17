@@ -23,7 +23,7 @@ class Chemicals_supply_demand:
 
 
     def get_capacity(
-        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, production_route: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
+        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, production_route: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, modifiedDate: Optional[Union[list[str], Series[str], str]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
     ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
@@ -57,6 +57,8 @@ class Chemicals_supply_demand:
              End Date of Record Validity, be default None
          valid_from: Optional[Union[list[date], Series[date], date]]
              As of date for when the data is updated, be default None
+         modifiedDate: Optional[Union[list[str], Series[str], str]]
+             Date when the data is last modified, be default None
          is_active: Optional[Union[list[str], Series[str], str]]
              If the record is active, be default None
          filter_exp: Optional[str] = None,
@@ -81,6 +83,7 @@ class Chemicals_supply_demand:
         filter_params.append(list_to_filter("data_type", data_type))
         filter_params.append(list_to_filter("valid_to", valid_to))
         filter_params.append(list_to_filter("valid_from", valid_from))
+        filter_params.append(list_to_filter("modifiedDate", modifiedDate))
         filter_params.append(list_to_filter("is_active", is_active))
         
         filter_params = [fp for fp in filter_params if fp != ""]
@@ -103,7 +106,7 @@ class Chemicals_supply_demand:
 
 
     def getproduction(
-        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, production_route: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
+        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, production_route: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, modifiedDate: Optional[Union[list[str], Series[str], str]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
     ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
@@ -137,6 +140,8 @@ class Chemicals_supply_demand:
              End Date of Record Validity, be default None
          valid_from: Optional[Union[list[date], Series[date], date]]
              As of date for when the data is updated, be default None
+         modifiedDate: Optional[Union[list[str], Series[str], str]]
+             Date when the data is last modified, be default None
          is_active: Optional[Union[list[str], Series[str], str]]
              If the record is active, be default None
          filter_exp: Optional[str] = None,
@@ -161,6 +166,7 @@ class Chemicals_supply_demand:
         filter_params.append(list_to_filter("data_type", data_type))
         filter_params.append(list_to_filter("valid_to", valid_to))
         filter_params.append(list_to_filter("valid_from", valid_from))
+        filter_params.append(list_to_filter("modifiedDate", modifiedDate))
         filter_params.append(list_to_filter("is_active", is_active))
         
         filter_params = [fp for fp in filter_params if fp != ""]
@@ -183,7 +189,7 @@ class Chemicals_supply_demand:
 
 
     def getcapacity_utilization(
-        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, production_route: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
+        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, production_route: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, modifiedDate: Optional[Union[list[str], Series[str], str]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
     ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
@@ -217,6 +223,8 @@ class Chemicals_supply_demand:
              End Date of Record Validity, be default None
          valid_from: Optional[Union[list[date], Series[date], date]]
              As of date for when the data is updated, be default None
+         modifiedDate: Optional[Union[list[str], Series[str], str]]
+             Date when the data is last modified, be default None
          is_active: Optional[Union[list[str], Series[str], str]]
              If the record is active, be default None
          filter_exp: Optional[str] = None,
@@ -241,6 +249,7 @@ class Chemicals_supply_demand:
         filter_params.append(list_to_filter("data_type", data_type))
         filter_params.append(list_to_filter("valid_to", valid_to))
         filter_params.append(list_to_filter("valid_from", valid_from))
+        filter_params.append(list_to_filter("modifiedDate", modifiedDate))
         filter_params.append(list_to_filter("is_active", is_active))
         
         filter_params = [fp for fp in filter_params if fp != ""]
@@ -263,7 +272,7 @@ class Chemicals_supply_demand:
 
 
     def getdemand_by_derivative(
-        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, application: Optional[Union[list[str], Series[str], str]] = None, derivative_product: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
+        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, modifiedDate: Optional[Union[list[str], Series[str], str]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, application: Optional[Union[list[str], Series[str], str]] = None, derivative_product: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
     ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
@@ -295,6 +304,8 @@ class Chemicals_supply_demand:
              End Date of Record Validity, be default None
          valid_from: Optional[Union[list[date], Series[date], date]]
              As of date for when the data is updated, be default None
+         modifiedDate: Optional[Union[list[str], Series[str], str]]
+             Date when the data is last modified, be default None
          is_active: Optional[Union[list[str], Series[str], str]]
              If the record is active, be default None
          application: Optional[Union[list[str], Series[str], str]]
@@ -322,6 +333,7 @@ class Chemicals_supply_demand:
         filter_params.append(list_to_filter("data_type", data_type))
         filter_params.append(list_to_filter("valid_to", valid_to))
         filter_params.append(list_to_filter("valid_from", valid_from))
+        filter_params.append(list_to_filter("modifiedDate", modifiedDate))
         filter_params.append(list_to_filter("is_active", is_active))
         filter_params.append(list_to_filter("application", application))
         filter_params.append(list_to_filter("derivative_product", derivative_product))
@@ -346,7 +358,7 @@ class Chemicals_supply_demand:
 
 
     def getdemand_by_end_use(
-        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, end_use: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
+        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, modifiedDate: Optional[Union[list[str], Series[str], str]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, end_use: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
     ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
@@ -378,6 +390,8 @@ class Chemicals_supply_demand:
              End Date of Record Validity, be default None
          valid_from: Optional[Union[list[date], Series[date], date]]
              As of date for when the data is updated, be default None
+         modifiedDate: Optional[Union[list[str], Series[str], str]]
+             Date when the data is last modified, be default None
          is_active: Optional[Union[list[str], Series[str], str]]
              If the record is active, be default None
          end_use: Optional[Union[list[str], Series[str], str]]
@@ -403,6 +417,7 @@ class Chemicals_supply_demand:
         filter_params.append(list_to_filter("data_type", data_type))
         filter_params.append(list_to_filter("valid_to", valid_to))
         filter_params.append(list_to_filter("valid_from", valid_from))
+        filter_params.append(list_to_filter("modifiedDate", modifiedDate))
         filter_params.append(list_to_filter("is_active", is_active))
         filter_params.append(list_to_filter("end_use", end_use))
         
@@ -426,7 +441,7 @@ class Chemicals_supply_demand:
 
 
     def gettrade(
-        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
+        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, modifiedDate: Optional[Union[list[str], Series[str], str]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
     ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
@@ -458,6 +473,8 @@ class Chemicals_supply_demand:
              End Date of Record Validity, be default None
          valid_from: Optional[Union[list[date], Series[date], date]]
              As of date for when the data is updated, be default None
+         modifiedDate: Optional[Union[list[str], Series[str], str]]
+             Date when the data is last modified, be default None
          is_active: Optional[Union[list[str], Series[str], str]]
              If the record is active, be default None
          filter_exp: Optional[str] = None,
@@ -481,6 +498,7 @@ class Chemicals_supply_demand:
         filter_params.append(list_to_filter("data_type", data_type))
         filter_params.append(list_to_filter("valid_to", valid_to))
         filter_params.append(list_to_filter("valid_from", valid_from))
+        filter_params.append(list_to_filter("modifiedDate", modifiedDate))
         filter_params.append(list_to_filter("is_active", is_active))
         
         filter_params = [fp for fp in filter_params if fp != ""]
@@ -503,7 +521,7 @@ class Chemicals_supply_demand:
 
 
     def get_inventory_change(
-        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
+        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, modifiedDate: Optional[Union[list[str], Series[str], str]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
     ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
@@ -535,6 +553,8 @@ class Chemicals_supply_demand:
              End Date of Record Validity, be default None
          valid_from: Optional[Union[list[date], Series[date], date]]
              As of date for when the data is updated, be default None
+         modifiedDate: Optional[Union[list[str], Series[str], str]]
+             Date when the data is last modified, be default None
          is_active: Optional[Union[list[str], Series[str], str]]
              If the record is active, be default None
          filter_exp: Optional[str] = None,
@@ -558,6 +578,7 @@ class Chemicals_supply_demand:
         filter_params.append(list_to_filter("data_type", data_type))
         filter_params.append(list_to_filter("valid_to", valid_to))
         filter_params.append(list_to_filter("valid_from", valid_from))
+        filter_params.append(list_to_filter("modifiedDate", modifiedDate))
         filter_params.append(list_to_filter("is_active", is_active))
         
         filter_params = [fp for fp in filter_params if fp != ""]
@@ -580,7 +601,7 @@ class Chemicals_supply_demand:
 
 
     def gettotal_supply(
-        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
+        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, modifiedDate: Optional[Union[list[str], Series[str], str]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
     ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
@@ -612,6 +633,8 @@ class Chemicals_supply_demand:
              End Date of Record Validity, be default None
          valid_from: Optional[Union[list[date], Series[date], date]]
              As of date for when the data is updated, be default None
+         modifiedDate: Optional[Union[list[str], Series[str], str]]
+             Date when the data is last modified, be default None
          is_active: Optional[Union[list[str], Series[str], str]]
              If the record is active, be default None
          filter_exp: Optional[str] = None,
@@ -635,6 +658,7 @@ class Chemicals_supply_demand:
         filter_params.append(list_to_filter("data_type", data_type))
         filter_params.append(list_to_filter("valid_to", valid_to))
         filter_params.append(list_to_filter("valid_from", valid_from))
+        filter_params.append(list_to_filter("modifiedDate", modifiedDate))
         filter_params.append(list_to_filter("is_active", is_active))
         
         filter_params = [fp for fp in filter_params if fp != ""]
@@ -657,7 +681,7 @@ class Chemicals_supply_demand:
 
 
     def gettotal_demand(
-        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
+        self, scenario_id: Optional[Union[list[str], Series[str], str]] = None, scenario_description: Optional[Union[list[str], Series[str], str]] = None, commodity: Optional[Union[list[str], Series[str], str]] = None, country: Optional[Union[list[str], Series[str], str]] = None, region: Optional[Union[list[str], Series[str], str]] = None, concept: Optional[Union[list[str], Series[str], str]] = None, date: Optional[Union[list[date], Series[date], date]] = None, value: Optional[Union[list[str], Series[str], str]] = None, uom: Optional[Union[list[str], Series[str], str]] = None, data_type: Optional[Union[list[str], Series[str], str]] = None, valid_to: Optional[Union[list[date], Series[date], date]] = None, valid_from: Optional[Union[list[date], Series[date], date]] = None, modifiedDate: Optional[Union[list[str], Series[str], str]] = None, is_active: Optional[Union[list[str], Series[str], str]] = None, filter_exp: Optional[str] = None, page: int = 1, page_size: int = 1000, raw: bool = False, paginate: bool = False
     ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
@@ -689,6 +713,8 @@ class Chemicals_supply_demand:
              End Date of Record Validity, be default None
          valid_from: Optional[Union[list[date], Series[date], date]]
              As of date for when the data is updated, be default None
+         modifiedDate: Optional[Union[list[str], Series[str], str]]
+             Date when the data is last modified, be default None
          is_active: Optional[Union[list[str], Series[str], str]]
              If the record is active, be default None
          filter_exp: Optional[str] = None,
@@ -712,6 +738,7 @@ class Chemicals_supply_demand:
         filter_params.append(list_to_filter("data_type", data_type))
         filter_params.append(list_to_filter("valid_to", valid_to))
         filter_params.append(list_to_filter("valid_from", valid_from))
+        filter_params.append(list_to_filter("modifiedDate", modifiedDate))
         filter_params.append(list_to_filter("is_active", is_active))
         
         filter_params = [fp for fp in filter_params if fp != ""]
@@ -746,5 +773,8 @@ class Chemicals_supply_demand:
 
         if "valid_from" in df.columns:
             df["valid_from"] = pd.to_datetime(df["valid_from"])  # type: ignore
+
+        if "modifiedDate" in df.columns:
+            df["modifiedDate"] = pd.to_datetime(df["modifiedDate"])  # type: ignore
         return df
     
