@@ -18,6 +18,7 @@ Configure SPGCI settings
 import os
 from typing import Dict, Union
 from requests.auth import AuthBase
+import contextvars
 
 # from requests import _Auth
 
@@ -27,6 +28,20 @@ username: str = os.getenv("SPGCI_USERNAME", "")
 password: str = os.getenv("SPGCI_PASSWORD", "")
 #: Appkey to use with the SPGCI API
 appkey: str = os.getenv("SPGCI_APPKEY", "")
+
+#: Token context var
+token_ctx = contextvars.ContextVar("token", default=None)
+
+
+def set_token(token: str):
+    """set token"""
+    token_ctx.set(token)
+
+
+def get_token() -> str:
+    """get token"""
+    return token_ctx.get()
+
 
 #: Set the base url used when making HTTP calls
 base_url = "https://api.platts.com"
@@ -42,7 +57,7 @@ proxies: Dict[str, str] = {
 auth: Union[AuthBase, None] = None
 
 #: Version of the SPGCI Pkg
-version = "0.0.37"
+version = "0.0.40"
 
 #: time to sleep between api calls
 sleep_time = 0

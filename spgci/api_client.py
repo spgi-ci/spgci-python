@@ -15,14 +15,14 @@
 """Module to handle api request"""
 import requests
 import spgci.config
-from .auth import get_token
+from spgci.auth import get_token
 from typing import Callable, Dict, Any, NamedTuple, Union
 from pandas import DataFrame
 import pandas as pd
 from tqdm import tqdm
 import warnings
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_fixed
-from .exceptions import AuthError, PerSecondLimitError, DailyLimitError
+from spgci.exceptions import AuthError, PerSecondLimitError, DailyLimitError
 from time import sleep
 from urllib.parse import urlparse, parse_qsl, urlencode, quote
 
@@ -80,12 +80,16 @@ def _get(
     }
 
     if include_auth_header:
-        token = get_token(
-            spgci.config.username,
-            spgci.config.password,
-            spgci.config.appkey,
-            spgci.config.base_url,
-        )
+        if spgci.config.get_token() is not None:
+            token = spgci.config.get_token()
+        else:
+            token = spgci.auth.get_token(
+                spgci.config.username,
+                spgci.config.password,
+                spgci.config.appkey,
+                spgci.config.base_url,
+            )
+
         headers["Authorization"] = f"Bearer {token}"
 
     # should remove at some point..

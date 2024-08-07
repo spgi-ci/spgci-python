@@ -323,3 +323,20 @@ sh.get_heards(market="Americas crude oil", heard_type="trade")
 # DateFrame of heards in the Americas crude oil market that are of type 'trade'.
 
 ```
+
+### Chemicals Analysis and Forecasts
+
+```python
+import spgci as ci
+
+chem = ci.Chemicals()
+
+chem.get_capacity_events(
+    event_begin_date_gt="2023-01-01", country="China", event_type=["expand", "startup"]
+)
+# DataFrame of capacity events in plants in China, that are either "expand" or "startup" since 2023-01-01
+
+chem.get_capacity_to_consume(is_active=[True, False], commodity="Polybutadiene rubber")
+# DateFrame of capacities to consume. Setting `is_active` to [True, False] allows you to include records that were corrected or removed which is useful for Point-In-Time analysis.
+
+```

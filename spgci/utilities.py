@@ -29,7 +29,9 @@ def list_to_filter(
             Collection[float],
             Collection[T],
             Collection[date],
+            Collection[bool],
             str,
+            bool,
             date,
             float,
             T,
@@ -44,9 +46,11 @@ def list_to_filter(
     if isinstance(items, Series):
         return convert_series_to_filterexp(field_name, items, quote)
 
-    if not items:
+    if not isinstance(items, (bool)) and not items:
         return ""
 
+    if isinstance(items, bool):
+        return f"{field_name}{delim} {items}"
     if isinstance(items, str):
         return f"{field_name}{delim} {quote}{items}{quote}"
     if isinstance(items, Enum):
@@ -64,6 +68,8 @@ def list_to_filter(
         n_items = [f"{quote}{x}{quote}" for x in n_items]
     elif is_str_list(items):
         n_items = [f"{quote}{x}{quote}" for x in items]
+    elif is_bool_list(items):
+        n_items = [f"{x}" for x in items]
     elif is_int_list(items):
         n_items = [str(x) for x in items]
     elif is_date_list(items):
@@ -134,6 +140,10 @@ def is_enum_list(lst: Collection[Any]) -> TypeGuard[List[Enum]]:
 
 def is_str_list(lst: Collection[Any]) -> TypeGuard[List[str]]:
     return all(isinstance(x, str) for x in lst)
+
+
+def is_bool_list(lst: Collection[Any]) -> TypeGuard[List[bool]]:
+    return all(isinstance(x, bool) for x in lst)
 
 
 def is_date_list(lst: Collection[Any]) -> TypeGuard[List[date]]:
