@@ -339,4 +339,14 @@ chem.get_capacity_events(
 chem.get_capacity_to_consume(is_active=[True, False], commodity="Polybutadiene rubber")
 # DateFrame of capacities to consume. Setting `is_active` to [True, False] allows you to include records that were corrected or removed which is useful for Point-In-Time analysis.
 
+chem.get_short_term_prices(commodity="Acetone", delivery_region="US Gulf Coast")
+# DataFrame of short-term (monthly) price forecasts for Acetone delivered to the US Gulf Coast.
+
+chem.get_outages(
+    start_date_gte="2023-01-01",
+    capacity_gte=500,
+    alert_status=['Confirmed']
+)
+# DataFrame of chemical plant outages since Jan 1, 2023 where the capacity impacted is >= 500 and the status is `Confirmed`.
+
 ```
