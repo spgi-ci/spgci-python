@@ -172,7 +172,7 @@ class Chemicals:
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
         filter_params.append(list_to_filter("owner", owner))
-        filter_params.append(list_to_filter("outage_type", outage_type))
+        filter_params.append(list_to_filter("outageType", outage_type))
         filter_params.append(list_to_filter("uom", uom))
         filter_params.append(list_to_filter("capacity", capacity))
         if capacity_gt is not None:
