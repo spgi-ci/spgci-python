@@ -270,6 +270,18 @@ lng.get_outages(liquefaction_project_name="ADNOC LNG")
 lng.get_netbacks(date_gt="2024-01-01", import_geography="Brazil")
 # DataFrame of all LNG Netbacks where import geography is 'Brazil' since Jan 1, 2024.
 
+lng.get_supply_forecast_current(export_market="Indonesia")
+# DataFrame of the current supply forecast for Indonesia
+
+lng.get_demand_forecast_history(import_market="Japan", month="2024-12-01")
+# DataFrame of all historical forecasts (one per month) of the LNG demand for Japan in December 2024.
+
+lng.get_cargo_trips(trade_route="Suez Canal", date_loaded_gte="2024-01-01")
+# DataFrame of trips through the Suez Canaal that loaded since 2024.
+
+lng.get_cargo_events_partial_reexport()
+# DataFrame of partial re-exports (a fraction of the delivered LNG is re-exported during transportation)
+
 ```
 
 ### Crude Analytics
