@@ -261,11 +261,11 @@ lng.get_tenders(country_name="United States", paginate=True)
 lng.get_tenders(contract_type="FOB", contract_option="Sell")
 # DataFrame of tenders with ContractType = "FOB" and ContractOption = "Sell".
 
-lng.get_reference_data(type=lng.RefTypes.LiquefactionProjects)
+lng.get_liquefaction_projects()
 # DataFrame of liquefaction projects.
 
 lng.get_outages(liquefaction_project_name="ADNOC LNG")
-# DataFrame of all LNG outages tied to "ADNOC LNG".
+# DataFrame of all LNG outages tied to the liquefaction project "ADNOC LNG".
 
 lng.get_netbacks(date_gt="2024-01-01", import_geography="Brazil")
 # DataFrame of all LNG Netbacks where import geography is 'Brazil' since Jan 1, 2024.
@@ -281,6 +281,12 @@ lng.get_cargo_trips(trade_route="Suez Canal", date_loaded_gte="2024-01-01")
 
 lng.get_cargo_events_partial_reexport()
 # DataFrame of partial re-exports (a fraction of the delivered LNG is re-exported during transportation)
+
+lng.get_assets_contracts_offtake_contracts(assumed_destination="Japan")
+# DataFrame of offtake contracts headed to 'Japan'
+
+lng.get_assets_contracts_liquefaction_trains(train_status=["Existing","Under Construction"])
+# DataFrame of liquefaction trains which are either 'Existing' or 'Under Construction'
 
 ```
 

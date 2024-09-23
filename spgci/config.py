@@ -57,7 +57,7 @@ proxies: Dict[str, str] = {
 auth: Union[AuthBase, None] = None
 
 #: Version of the SPGCI Pkg
-version = "0.0.44"
+version = "0.0.45"
 
 #: time to sleep between api calls
 sleep_time = 0
