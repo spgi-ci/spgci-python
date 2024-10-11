@@ -30,7 +30,6 @@ _throttle_retry = retry(
 def get_token(
     username: str = config.username,
     password: str = config.password,
-    appkey: str = config.appkey,
     url: str = config.base_url,
 ) -> str:
     """
@@ -64,7 +63,6 @@ def get_token(
         "password": password,
     }
     headers = {
-        "appkey": appkey,
         "User-Agent": f"spgci-py/{config.version}",
     }
 

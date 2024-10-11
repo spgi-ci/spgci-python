@@ -34,7 +34,7 @@ class GlobalIntegratedEnergyModel:
 
     """
 
-    _path = "giem/v1/"
+    _path = "giem/v1.2/"
 
     class RefTypes(Enum):
         """Global Integrated Energy Model Reference Data Types"""
@@ -174,7 +174,6 @@ class GlobalIntegratedEnergyModel:
             paginate=paginate,
             paginate_fn=self._paginate,
             raw=raw,
-            include_auth_header=False,
         )
 
     def get_demand_archive(
@@ -293,7 +292,6 @@ class GlobalIntegratedEnergyModel:
             paginate=paginate,
             paginate_fn=self._paginate,
             raw=raw,
-            include_auth_header=False,
         )
 
     def get_reference_data(
@@ -331,5 +329,4 @@ class GlobalIntegratedEnergyModel:
             paginate=True,
             paginate_fn=self._paginate,
             raw=raw,
-            include_auth_header=False,
         )

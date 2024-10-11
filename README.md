@@ -19,7 +19,7 @@ pip install spgci
 ```python
     import spgci as ci
 
-    ci.set_credentials(<username>, <password>, <appkey>)
+    ci.set_credentials(<username>, <password>)
     mdd = ci.MarketData()
 
     symbols = ["PCAAS00", "PCAAT00"]
@@ -35,7 +35,6 @@ Alternatively, you can set your credentials via Environment Variables and _omit_
 | :------------------- | :----------------|
 | SPGCI_USERNAME | Your Username |
 | SPGCI_PASSWORD | Your Password |
-| SPGCI_APPKEY | Your AppKey |
 
 ## Features
 
@@ -366,5 +365,39 @@ chem.get_outages(
     alert_status=['Confirmed']
 )
 # DataFrame of chemical plant outages since Jan 1, 2023 where the capacity impacted is >= 500 and the status is `Confirmed`.
+
+```
+
+### European Gas Analytics
+
+```python
+import spgci as ci
+
+egp = ci.EUGasAnalytics()
+
+egp.get_daily_flow_point_selection(
+    from_country="Norway",
+    gas_day_gte="2024-10-01",
+    gas_day_lte="2024-10-31",
+    uom="MCM",
+    direction="Net",
+)
+# DataFrame of all net flows out of Norway in October 2024 in Million Cubic Meters.
+
+
+df = egp.get_overview_hub_balance(
+    gas_day_gte="2024-10-01",
+    gas_day_lte="2024-10-31",
+    average_type="Daily value",
+    hub="PEG",
+    uom="MCM",
+)
+df.pivot_table(
+    index=["hubFlowType", "hubSubFlowType"],
+    columns="dayMonthOrdinal",
+    values="quantity",
+)
+# DataFrame of hub balances for October 2024 for PEG in Million Cubic Meters
+# Pivot Table shows this grouped by FlowType (demand, supply, storage, etc...) and +/- N Days.
 
 ```

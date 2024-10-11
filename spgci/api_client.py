@@ -70,27 +70,23 @@ def _get(
     url: str,
     params: Dict[Any, Any],
     session: requests.Session,
-    include_auth_header: bool = True,
     # token_fn: Callable[[str, str, str, str], str] = get_token,
 ) -> requests.Response:
     headers = {
         "User-Agent": f"spgci-py/{spgci.config.version}",
         # "Authorization": f"Bearer {token}",
-        "appkey": spgci.config.appkey,
     }
 
-    if include_auth_header:
-        if spgci.config.get_token() is not None:
-            token = spgci.config.get_token()
-        else:
-            token = spgci.auth.get_token(
-                spgci.config.username,
-                spgci.config.password,
-                spgci.config.appkey,
-                spgci.config.base_url,
-            )
+    if spgci.config.get_token() is not None:
+        token = spgci.config.get_token()
+    else:
+        token = spgci.auth.get_token(
+            spgci.config.username,
+            spgci.config.password,
+            spgci.config.base_url,
+        )
 
-        headers["Authorization"] = f"Bearer {token}"
+    headers["Authorization"] = f"Bearer {token}"
 
     # should remove at some point..
     sleep(spgci.config.sleep_time)
@@ -131,12 +127,9 @@ def get_data(
     paginate_fn: Callable[[requests.Response], Paginator] = _paginate,
     raw: bool = False,
     paginate: bool = False,
-    include_auth_header: bool = True,
 ) -> Union[DataFrame, requests.Response]:
     url = f"{spgci.config.base_url}/{path}"
-    response = _get(
-        url, params=params, include_auth_header=include_auth_header, session=_session
-    )
+    response = _get(url, params=params, session=_session)
 
     if raw:
         if paginate:
@@ -181,7 +174,6 @@ def get_data(
             resp = _get(
                 url,
                 params=params,
-                include_auth_header=include_auth_header,
                 session=_session,
             )
 

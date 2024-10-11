@@ -722,13 +722,12 @@ class WorldRefineryData:
             params["filter"] = filter_exp
 
         return get_data(
-            path=f"refinery-data/v1/{endpoint}",
+            path=f"refinery-data/v1.2/{endpoint}",
             params=params,
             paginate=paginate,
             raw=raw,
             df_fn=self._outage_alerts_to_df,
             paginate_fn=self._outage_alert_pg_fn,
-            include_auth_header=False,
         )
 
     def get_outages(

@@ -26,8 +26,6 @@ import contextvars
 username: str = os.getenv("SPGCI_USERNAME", "")
 #: Password to use with the SPGCI API
 password: str = os.getenv("SPGCI_PASSWORD", "")
-#: Appkey to use with the SPGCI API
-appkey: str = os.getenv("SPGCI_APPKEY", "")
 
 #: Token context var
 token_ctx = contextvars.ContextVar("token", default=None)
@@ -57,20 +55,19 @@ proxies: Dict[str, str] = {
 auth: Union[AuthBase, None] = None
 
 #: Version of the SPGCI Pkg
-version = "0.0.45"
+version = "0.0.46"
 
 #: time to sleep between api calls
 sleep_time = 0
 
 
-def set_credentials(un: str, pw: str, apikey: str) -> None:
+def set_credentials(un: str, pw: str) -> None:
     """
     Set credentials to use when calling the SPGCI API.
 
     You can avoid calling `set_credentials` by setting environment variables or creating a ``.env`` file with the following structure:\n
     SPGCI_USERNAME=``username``\n
     SPGCI_PASSWORD=``password``\n
-    SPGCI_APPKEY=``appkey``\n
 
     Parameters
     ----------
@@ -78,10 +75,7 @@ def set_credentials(un: str, pw: str, apikey: str) -> None:
         username
     pw : str
         password
-    apikey : str
-        appkey
     """
     global username, password, appkey
     username = un
     password = pw
-    appkey = apikey

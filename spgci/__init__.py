@@ -19,7 +19,7 @@ More details available here: https://developer.platts.com
 Getting Started
 ---------------
 >>> import spgci as ci
->>> ci.set_credentials(``username``, ``password``, ``appkey``)
+>>> ci.set_credentials(``username``, ``password``)
 >>> ci.MarketData().get_assessments_by_symbol(symbol="PCAAS00")
 \n
 """
@@ -41,6 +41,7 @@ from .arbflow import Arbflow
 from .structured_heards import StructuredHeards
 from .weather import Weather
 from .chemicals import Chemicals
+from .eu_gas_analytics import EUGasAnalytics
 
 
 from .config import username, password, set_credentials, appkey, version
@@ -70,4 +71,5 @@ __all__ = [
     "StructuredHeards",
     "Weather",
     "Chemicals",
+    "EUGasAnalytics",
 ]
