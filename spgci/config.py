@@ -16,7 +16,7 @@
 Configure SPGCI settings
 """
 import os
-from typing import Dict, Union
+from typing import Dict, Union, Optional
 from requests.auth import AuthBase
 import contextvars
 
@@ -61,7 +61,7 @@ version = "0.0.46"
 sleep_time = 0
 
 
-def set_credentials(un: str, pw: str) -> None:
+def set_credentials(un: str, pw: str, apikey: Optional[str] = "") -> None:
     """
     Set credentials to use when calling the SPGCI API.
 
