@@ -26,6 +26,8 @@ import contextvars
 username: str = os.getenv("SPGCI_USERNAME", "")
 #: Password to use with the SPGCI API
 password: str = os.getenv("SPGCI_PASSWORD", "")
+#: Appkey to use with the SPGCI API. DEPRECATED
+appkey: str = os.getenv("SPGCI_APPKEY", "")
 
 #: Token context var
 token_ctx = contextvars.ContextVar("token", default=None)
@@ -75,6 +77,12 @@ def set_credentials(un: str, pw: str, apikey: Optional[str] = "") -> None:
         username
     pw : str
         password
+    apikey: Optional[str]
+        Deprecated. This parameter is ignored and will be removed in a future version.
+
+    Deprecated:
+    ----------
+    The `apikey` parameter is deprecated and is no longer required. It will be removed in future versions.
     """
     global username, password, appkey
     username = un
