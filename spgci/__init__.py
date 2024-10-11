@@ -44,7 +44,7 @@ from .chemicals import Chemicals
 from .eu_gas_analytics import EUGasAnalytics
 
 
-from .config import username, password, set_credentials, appkey, version
+from .config import username, password, set_credentials, version
 
 __version__ = version
 
@@ -53,7 +53,6 @@ __all__ = [
     "MarketData",
     "username",
     "password",
-    "appkey",
     "set_credentials",
     "ForwardCurves",
     "EWindowMarketData",
