@@ -287,6 +287,17 @@ lng.get_assets_contracts_offtake_contracts(assumed_destination="Japan")
 lng.get_assets_contracts_liquefaction_trains(train_status=["Existing","Under Construction"])
 # DataFrame of liquefaction trains which are either 'Existing' or 'Under Construction'
 
+lng.get_gas_demand(market=["United States", "Mexico"], period_type="Monthly")
+# DataFrame of gas demand for the different categories in the U.S. and Mexico on a monthly basis.
+
+lng.get_power_generation(
+    market=["India", "Pakistan", "Bangladesh"],
+    source="Power Generation By Fuel",
+    period_type="Monthly",
+    paginate=True,
+)
+# DataFrame of power generation for India, Pakistan, Bangladesh by fuel type on a monthly basis.
+
 ```
 
 ### Crude Analytics
