@@ -8561,3 +8561,556 @@ class LNGGlobalAnalytics:
             paginate=paginate,
         )
         return response
+
+    def get_price_charter_rate_forecast(
+        self,
+        *,
+        month: Optional[date] = None,
+        month_lt: Optional[date] = None,
+        month_lte: Optional[date] = None,
+        month_gt: Optional[date] = None,
+        month_gte: Optional[date] = None,
+        point_in_time_date: Optional[date] = None,
+        point_in_time_date_lt: Optional[date] = None,
+        point_in_time_date_lte: Optional[date] = None,
+        point_in_time_date_gt: Optional[date] = None,
+        point_in_time_date_gte: Optional[date] = None,
+        charter_rate_type: Optional[Union[list[str], Series[str], str]] = None,
+        charter_rate_currency: Optional[Union[list[str], Series[str], str]] = None,
+        charter_rate_frequency: Optional[Union[list[str], Series[str], str]] = None,
+        modified_date: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_gte: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        This dataset provides a forecast for LNG shipping charter rates for key charter markets
+
+        Parameters
+        ----------
+
+         month: Optional[date], optional
+             The month in which the forecast is applied to, by default None
+         month_gt: Optional[date], optional
+             filter by `month > x`, by default None
+         month_gte: Optional[date], optional
+             filter by `month >= x`, by default None
+         month_lt: Optional[date], optional
+             filter by `month < x`, by default None
+         month_lte: Optional[date], optional
+             filter by `month <= x`, by default None
+         point_in_time_date: Optional[date], optional
+             The date when the forecast was published. This can be used as a reference date to compare forecasts at different points in time., by default None
+         point_in_time_date_gt: Optional[date], optional
+             filter by `point_in_time_date > x`, by default None
+         point_in_time_date_gte: Optional[date], optional
+             filter by `point_in_time_date >= x`, by default None
+         point_in_time_date_lt: Optional[date], optional
+             filter by `point_in_time_date < x`, by default None
+         point_in_time_date_lte: Optional[date], optional
+             filter by `point_in_time_date <= x`, by default None
+         charter_rate_type: Optional[Union[list[str], Series[str], str]]
+             The specific charter rate type for each forecast, by default None
+         charter_rate_currency: Optional[Union[list[str], Series[str], str]]
+              The currency of the corresponding charter rate, by default None
+         charter_rate_frequency: Optional[Union[list[str], Series[str], str]]
+              The frequency of the value for the charter rate, by default None
+         modified_date: Optional[datetime], optional
+             Forecast annual prices record latest modified date, by default None
+         modified_date_gt: Optional[datetime], optional
+             filter by `modified_date > x`, by default None
+         modified_date_gte: Optional[datetime], optional
+             filter by `modified_date >= x`, by default None
+         modified_date_lt: Optional[datetime], optional
+             filter by `modified_date < x`, by default None
+         modified_date_lte: Optional[datetime], optional
+             filter by `modified_date <= x`, by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 1000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("month", month))
+        if month_gt is not None:
+            filter_params.append(f'month > "{month_gt}"')
+        if month_gte is not None:
+            filter_params.append(f'month >= "{month_gte}"')
+        if month_lt is not None:
+            filter_params.append(f'month < "{month_lt}"')
+        if month_lte is not None:
+            filter_params.append(f'month <= "{month_lte}"')
+        filter_params.append(list_to_filter("pointInTimeDate", point_in_time_date))
+        if point_in_time_date_gt is not None:
+            filter_params.append(f'pointInTimeDate > "{point_in_time_date_gt}"')
+        if point_in_time_date_gte is not None:
+            filter_params.append(f'pointInTimeDate >= "{point_in_time_date_gte}"')
+        if point_in_time_date_lt is not None:
+            filter_params.append(f'pointInTimeDate < "{point_in_time_date_lt}"')
+        if point_in_time_date_lte is not None:
+            filter_params.append(f'pointInTimeDate <= "{point_in_time_date_lte}"')
+        filter_params.append(list_to_filter("charterRateType", charter_rate_type))
+        filter_params.append(
+            list_to_filter("charterRateCurrency", charter_rate_currency)
+        )
+        filter_params.append(
+            list_to_filter("charterRateFrequency", charter_rate_frequency)
+        )
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+        if modified_date_gt is not None:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/lng/v1/analytics/price/charter-rate-forecast",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_price_annual_forecast(
+        self,
+        *,
+        year: Optional[int] = None,
+        year_lt: Optional[int] = None,
+        year_lte: Optional[int] = None,
+        year_gt: Optional[int] = None,
+        year_gte: Optional[int] = None,
+        price_marker_name: Optional[Union[list[str], Series[str], str]] = None,
+        price_marker_uom: Optional[Union[list[str], Series[str], str]] = None,
+        price_marker_currency: Optional[Union[list[str], Series[str], str]] = None,
+        modified_date: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_gte: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Price forecast for select gas and LNG price marker. Annual figures in US dollar per million British thermal units
+
+        Parameters
+        ----------
+
+         year: Optional[int], optional
+             The date for which the price forecast is provided, by default None
+         year_gt: Optional[int], optional
+             filter by `year > x`, by default None
+         year_gte: Optional[int], optional
+             filter by `year >= x`, by default None
+         year_lt: Optional[int], optional
+             filter by `year < x`, by default None
+         year_lte: Optional[int], optional
+             filter by `year <= x`, by default None
+         price_marker_name: Optional[Union[list[str], Series[str], str]]
+             The name of the price marker, by default None
+         price_marker_uom: Optional[Union[list[str], Series[str], str]]
+             The unit of measure for a given price for the indicated time period, by default None
+         price_marker_currency: Optional[Union[list[str], Series[str], str]]
+             The currency for a given price for the indicated time period, by default None
+         modified_date: Optional[datetime], optional
+             Forecast annual prices record latest modified date, by default None
+         modified_date_gt: Optional[datetime], optional
+             filter by `modified_date > x`, by default None
+         modified_date_gte: Optional[datetime], optional
+             filter by `modified_date >= x`, by default None
+         modified_date_lt: Optional[datetime], optional
+             filter by `modified_date < x`, by default None
+         modified_date_lte: Optional[datetime], optional
+             filter by `modified_date <= x`, by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 1000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("year", year))
+        if year_gt is not None:
+            filter_params.append(f'year > "{year_gt}"')
+        if year_gte is not None:
+            filter_params.append(f'year >= "{year_gte}"')
+        if year_lt is not None:
+            filter_params.append(f'year < "{year_lt}"')
+        if year_lte is not None:
+            filter_params.append(f'year <= "{year_lte}"')
+        filter_params.append(list_to_filter("priceMarkerName", price_marker_name))
+        filter_params.append(list_to_filter("priceMarkerUom", price_marker_uom))
+        filter_params.append(
+            list_to_filter("priceMarkerCurrency", price_marker_currency)
+        )
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+        if modified_date_gt is not None:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/lng/v1/analytics/price/annual-forecast",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_price_monthly_forecast(
+        self,
+        *,
+        date: Optional[date] = None,
+        date_lt: Optional[date] = None,
+        date_lte: Optional[date] = None,
+        date_gt: Optional[date] = None,
+        date_gte: Optional[date] = None,
+        price_marker_name: Optional[Union[list[str], Series[str], str]] = None,
+        price_marker_uom: Optional[Union[list[str], Series[str], str]] = None,
+        price_marker_currency: Optional[Union[list[str], Series[str], str]] = None,
+        modified_date: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_gte: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Price forecast for select gas and LNG price markers for next few years. Monthly figures in US dollar per million British thermal units
+
+        Parameters
+        ----------
+
+         date: Optional[date], optional
+             The date for which the price forecast is provided, by default None
+         date_gt: Optional[date], optional
+             filter by `date > x`, by default None
+         date_gte: Optional[date], optional
+             filter by `date >= x`, by default None
+         date_lt: Optional[date], optional
+             filter by `date < x`, by default None
+         date_lte: Optional[date], optional
+             filter by `date <= x`, by default None
+         price_marker_name: Optional[Union[list[str], Series[str], str]]
+             The name of the price marker, by default None
+         price_marker_uom: Optional[Union[list[str], Series[str], str]]
+             The unit of measure for a given price for the indicated time period, by default None
+         price_marker_currency: Optional[Union[list[str], Series[str], str]]
+             The currency for a given price for the indicated time period, by default None
+         modified_date: Optional[datetime], optional
+             Forecast monthly prices record latest modified date, by default None
+         modified_date_gt: Optional[datetime], optional
+             filter by `modified_date > x`, by default None
+         modified_date_gte: Optional[datetime], optional
+             filter by `modified_date >= x`, by default None
+         modified_date_lt: Optional[datetime], optional
+             filter by `modified_date < x`, by default None
+         modified_date_lte: Optional[datetime], optional
+             filter by `modified_date <= x`, by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 1000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("date", date))
+        if date_gt is not None:
+            filter_params.append(f'date > "{date_gt}"')
+        if date_gte is not None:
+            filter_params.append(f'date >= "{date_gte}"')
+        if date_lt is not None:
+            filter_params.append(f'date < "{date_lt}"')
+        if date_lte is not None:
+            filter_params.append(f'date <= "{date_lte}"')
+        filter_params.append(list_to_filter("priceMarkerName", price_marker_name))
+        filter_params.append(list_to_filter("priceMarkerUom", price_marker_uom))
+        filter_params.append(
+            list_to_filter("priceMarkerCurrency", price_marker_currency)
+        )
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+        if modified_date_gt is not None:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/lng/v1/analytics/price/monthly-forecast",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_price_historical_bilateral_custom(
+        self,
+        *,
+        month: Optional[date] = None,
+        month_lt: Optional[date] = None,
+        month_lte: Optional[date] = None,
+        month_gt: Optional[date] = None,
+        month_gte: Optional[date] = None,
+        import_market: Optional[Union[list[str], Series[str], str]] = None,
+        supply_source: Optional[Union[list[str], Series[str], str]] = None,
+        uom: Optional[Union[list[str], Series[str], str]] = None,
+        currency: Optional[Union[list[str], Series[str], str]] = None,
+        modified_date: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_gte: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Historical bilateral prices of select markets and their LNG supply sources. The data is primarily sourced from customs reporting agencies
+
+        Parameters
+        ----------
+
+         month: Optional[date], optional
+             The month for which the price data is recorded, by default None
+         month_gt: Optional[date], optional
+             filter by `month > x`, by default None
+         month_gte: Optional[date], optional
+             filter by `month >= x`, by default None
+         month_lt: Optional[date], optional
+             filter by `month < x`, by default None
+         month_lte: Optional[date], optional
+             filter by `month <= x`, by default None
+         import_market: Optional[Union[list[str], Series[str], str]]
+             The market or country where the LNG is being imported, by default None
+         supply_source: Optional[Union[list[str], Series[str], str]]
+             The source or country from which the LNG is being supplied, by default None
+         uom: Optional[Union[list[str], Series[str], str]]
+             The unit of measure for a given price for the indicated time period, by default None
+         currency: Optional[Union[list[str], Series[str], str]]
+             The currency for a given price for the indicated time period, by default None
+         modified_date: Optional[datetime], optional
+             Historical bilateral customs prices record latest modified date, by default None
+         modified_date_gt: Optional[datetime], optional
+             filter by `modified_date > x`, by default None
+         modified_date_gte: Optional[datetime], optional
+             filter by `modified_date >= x`, by default None
+         modified_date_lt: Optional[datetime], optional
+             filter by `modified_date < x`, by default None
+         modified_date_lte: Optional[datetime], optional
+             filter by `modified_date <= x`, by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 1000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("month", month))
+        if month_gt is not None:
+            filter_params.append(f'month > "{month_gt}"')
+        if month_gte is not None:
+            filter_params.append(f'month >= "{month_gte}"')
+        if month_lt is not None:
+            filter_params.append(f'month < "{month_lt}"')
+        if month_lte is not None:
+            filter_params.append(f'month <= "{month_lte}"')
+        filter_params.append(list_to_filter("importMarket", import_market))
+        filter_params.append(list_to_filter("supplySource", supply_source))
+        filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("currency", currency))
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+        if modified_date_gt is not None:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/lng/v1/analytics/price/historical/bilateral-custom",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_price_historical_monthly(
+        self,
+        *,
+        date: Optional[date] = None,
+        date_lt: Optional[date] = None,
+        date_lte: Optional[date] = None,
+        date_gt: Optional[date] = None,
+        date_gte: Optional[date] = None,
+        price_marker_name: Optional[Union[list[str], Series[str], str]] = None,
+        price_marker_uom: Optional[Union[list[str], Series[str], str]] = None,
+        price_marker_currency: Optional[Union[list[str], Series[str], str]] = None,
+        modified_date: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_gte: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Historical prices for several gas and LNG price markers. Monthly figures in US dollar per million British thermal units
+
+        Parameters
+        ----------
+
+         date: Optional[date], optional
+             The date for which the price data is recorded, by default None
+         date_gt: Optional[date], optional
+             filter by `date > x`, by default None
+         date_gte: Optional[date], optional
+             filter by `date >= x`, by default None
+         date_lt: Optional[date], optional
+             filter by `date < x`, by default None
+         date_lte: Optional[date], optional
+             filter by `date <= x`, by default None
+         price_marker_name: Optional[Union[list[str], Series[str], str]]
+             The name of the price marker, by default None
+         price_marker_uom: Optional[Union[list[str], Series[str], str]]
+             The unit of measure for a given price for the indicated time period, by default None
+         price_marker_currency: Optional[Union[list[str], Series[str], str]]
+             The currency for a given price for the indicated time period, by default None
+         modified_date: Optional[datetime], optional
+             Historical monthly prices record latest modified date, by default None
+         modified_date_gt: Optional[datetime], optional
+             filter by `modified_date > x`, by default None
+         modified_date_gte: Optional[datetime], optional
+             filter by `modified_date >= x`, by default None
+         modified_date_lt: Optional[datetime], optional
+             filter by `modified_date < x`, by default None
+         modified_date_lte: Optional[datetime], optional
+             filter by `modified_date <= x`, by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 1000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("date", date))
+        if date_gt is not None:
+            filter_params.append(f'date > "{date_gt}"')
+        if date_gte is not None:
+            filter_params.append(f'date >= "{date_gte}"')
+        if date_lt is not None:
+            filter_params.append(f'date < "{date_lt}"')
+        if date_lte is not None:
+            filter_params.append(f'date <= "{date_lte}"')
+        filter_params.append(list_to_filter("priceMarkerName", price_marker_name))
+        filter_params.append(list_to_filter("priceMarkerUom", price_marker_uom))
+        filter_params.append(
+            list_to_filter("priceMarkerCurrency", price_marker_currency)
+        )
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+        if modified_date_gt is not None:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/lng/v1/analytics/price/historical/monthly",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response

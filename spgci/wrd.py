@@ -40,7 +40,7 @@ class WorldRefineryData:
     ``get_margins()`` to get margin data.
     """
 
-    _endpoint = "odata/refinery-data/v2/"
+    _endpoint = "odata/refinery-data/v2.2/"
 
     class RefTypes(Enum):
         """World Refinery Database Reference Data Type"""
