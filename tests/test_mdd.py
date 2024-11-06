@@ -65,3 +65,8 @@ class MddTest(unittest.TestCase):
             symbol=sym["symbol"], page_size=10  # type: ignore
         )
         self.assertGreater(len(df), 0)  # type: ignore
+        
+    @pytest.mark.integtest
+    def test_symbols_with_modifieddate(self):
+        sym = self.mdd.get_symbols(q="PCAAT00", page_size=10, modified_date="2024-11-02T02:22:30.437632")
+        self.assertGreater(len(sym), 0)  # type: ignore
