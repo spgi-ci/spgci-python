@@ -564,6 +564,11 @@ class MarketData:
                 AssessmentFrequency,
             ]
         ] = None,
+        modified_date: Optional[date] = None,
+        modified_date_lt: Optional[date] = None,
+        modified_date_lte: Optional[date] = None,
+        modified_date_gt: Optional[date] = None,
+        modified_date_gte: Optional[date] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 1000,
@@ -595,6 +600,16 @@ class MarketData:
             filter by Market Data Category, by default None
         assessment_frequency: Optional[Union[list[str], list[AssessmentFrequency], Series[str], str, AssessmentFrequency]], optional
             filter by Assessment Frequency, by default None
+        modified_date : Optional[date], optional
+            filter by ``modified_date = x`` , by default None
+        modified_date_lt: Optional[date], optional
+            filter by ``modified_date < x``, by default None
+        modified_date_lte : Optional[date], optional
+            filter by ``modified_date <= x``, by default None
+        modified_date_gt : Optional[date], optional
+            filter by ``modified_date > x``, by default None
+        modified_date_gte : Optional[date], optional
+            filter by ``modified_date >= x``, by default None
         filter_exp : Optional[str], optional
             pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
         page : int, optional
@@ -642,6 +657,16 @@ class MarketData:
         filter_params.append(
             list_to_filter("assessment_frequency", assessment_frequency)
         )
+        if modified_date != None:
+            filter_params.append(f'modified_date: "{modified_date}"')
+        if modified_date_gt != None:
+            filter_params.append(f'modified_date > "{modified_date_gt}"')
+        if modified_date_gte != None:
+            filter_params.append(f'modified_date >= "{modified_date_gte}"')
+        if modified_date_lt != None:
+            filter_params.append(f'modified_date < "{modified_date_lt}"')
+        if modified_date_lte != None:
+            filter_params.append(f'modified_date <= "{modified_date_lte}"')
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
