@@ -148,3 +148,25 @@ class InsightsTest(unittest.TestCase):
         )
         self.assertGreater(len(df), 0)
         self.assertGreater(len(df2), 0)
+
+    @pytest.mark.integtest
+    def test_sector(self):
+        df = cast(
+            DataFrame,
+            self.ni.get_heards(
+                sector='Agriculture',
+                strip_html=True,
+            ),
+        )
+        self.assertGreater(len(df), 0)
+
+    @pytest.mark.integtest
+    def test_sector_list(self):
+        df = cast(
+            DataFrame,
+            self.ni.get_heards(
+                sector=['Agriculture','Coal','EnergyTransition'],
+                strip_html=True,
+            ),
+        )
+        self.assertGreater(len(df), 0)
