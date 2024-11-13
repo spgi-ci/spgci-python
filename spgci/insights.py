@@ -38,7 +38,7 @@ class Insights:
     ``get_top_news`` get articles that are considered "Top News".\n
     ``get_latest_news`` get articles that are considered "Latest News".\n
     ``get_spotlights`` get articles that are considered "Spotlights".\n
-    ``get_heards`` get heards, assessments summaries, market information summaries and tenders.\n
+   ``get_heards`` get heards, assessments summaries, market information summaries and tenders.\n
     ``get_subscriber_notes`` get subscriber notes.\n
     ``get_content`` get insights by ID.\n
 
@@ -133,6 +133,7 @@ class Insights:
         page_number: Optional[Union[list[str], "Series[str]", str]] = None,
         pricing_region: Optional[Union[list[str], "Series[str]", str]] = None,
         publication: Optional[Union[list[str], "Series[str]", str]] = None,
+        sector: Optional[Union[list[str], "Series[str]", str]] = None,
         content_type: Optional[
             Union[
                 list[str],
@@ -175,6 +176,8 @@ class Insights:
             filter by pricingRegion, by default None
         publication : Optional[Union[list[str], Series[str], str]], optional
             filter by publication, by default None
+        sector : Optional[Union[list[str], Series[str], str]], optional
+            filter by sector, by default None
         content_type : Optional[Union[list[str], Series[str], list[HeardsContentType], str, HeardsContentType]], optional
             filter by contentType, by default None
         company : Optional[Union[list[str], Series[str], str]], optional
@@ -246,6 +249,7 @@ class Insights:
         filter_params.append(list_to_filter("pageNumber", page_number))
         filter_params.append(list_to_filter("pricingRegion", pricing_region))
         filter_params.append(list_to_filter("publication", publication))
+        filter_params.append(list_to_filter("sector", sector))
         filter_params.append(list_to_filter("contentType", content_type))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("company", company))
@@ -284,6 +288,7 @@ class Insights:
         page_number: Optional[Union[list[str], "Series[str]", str]] = None,
         pricing_region: Optional[Union[list[str], "Series[str]", str]] = None,
         publication: Optional[Union[list[str], "Series[str]", str]] = None,
+        sector: Optional[Union[list[str], "Series[str]", str]] = None,
         content_type: Optional[
             Union[list[str], "Series[str]", list[ContentType], str, ContentType]
         ] = None,
@@ -321,6 +326,8 @@ class Insights:
             filter by pricingRegion, by default None
         publication : Optional[Union[list[str], Series[str], str]], optional
             filter by publication, by default None
+             sector : Optional[Union[list[str], Series[str], str]], optional
+            filter by sector, by default None
         content_type : Optional[Union[list[str], Series[str], list[ContentType], str, ContentType]], optional
             filter by contentType, by default None
         subject_area : Optional[Union[list[str], Series[str], str]], optional
@@ -391,6 +398,7 @@ class Insights:
         filter_params.append(list_to_filter("pageNumber", page_number))
         filter_params.append(list_to_filter("pricingRegion", pricing_region))
         filter_params.append(list_to_filter("publication", publication))
+        filter_params.append(list_to_filter("sector", sector))
         filter_params.append(list_to_filter("contentType", content_type))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("company", company))
@@ -430,6 +438,7 @@ class Insights:
         page_number: Optional[Union[list[str], "Series[str]", str]] = None,
         pricing_region: Optional[Union[list[str], "Series[str]", str]] = None,
         publication: Optional[Union[list[str], "Series[str]", str]] = None,
+        sector: Optional[Union[list[str], "Series[str]", str]] = None,
         content_type: Optional[
             Union[list[str], "Series[str]", list[ContentType], str, ContentType]
         ] = None,
@@ -467,6 +476,8 @@ class Insights:
             filter by pricingRegion, by default None
         publication : Optional[Union[list[str], Series[str], str]], optional
             filter by publication, by default None
+             sector : Optional[Union[list[str], Series[str], str]], optional
+            filter by sector, by default None
         content_type : Optional[Union[list[str], Series[str], list[ContentType], str, ContentType]], optional
             filter by contentType, by default None
         subject_area : Optional[Union[list[str], Series[str], str]], optional
@@ -537,6 +548,7 @@ class Insights:
         filter_params.append(list_to_filter("pageNumber", page_number))
         filter_params.append(list_to_filter("pricingRegion", pricing_region))
         filter_params.append(list_to_filter("publication", publication))
+        filter_params.append(list_to_filter("sector", sector))
         filter_params.append(list_to_filter("contentType", content_type))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("subjectArea", subject_area))
@@ -576,6 +588,7 @@ class Insights:
         page_number: Optional[Union[list[str], "Series[str]", str]] = None,
         pricing_region: Optional[Union[list[str], "Series[str]", str]] = None,
         publication: Optional[Union[list[str], "Series[str]", str]] = None,
+        sector: Optional[Union[list[str], "Series[str]", str]] = None,
         content_type: Optional[
             Union[list[str], "Series[str]", list[ContentType], str, ContentType]
         ] = None,
@@ -613,6 +626,8 @@ class Insights:
             filter by pricingRegion, by default None
         publication : Optional[Union[list[str], Series[str], str]], optional
             filter by publication, by default None
+        sector : Optional[Union[list[str], Series[str], str]], optional
+            filter by sector, by default None
         content_type : Optional[Union[list[str], Series[str], list[ContentType], str, ContentType]], optional
             filter by contentType, by default None
         subject_area : Optional[Union[list[str], Series[str], str]], optional
@@ -683,6 +698,7 @@ class Insights:
         filter_params.append(list_to_filter("pageNumber", page_number))
         filter_params.append(list_to_filter("pricingRegion", pricing_region))
         filter_params.append(list_to_filter("publication", publication))
+        filter_params.append(list_to_filter("sector", sector))
         filter_params.append(list_to_filter("contentType", content_type))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("subjectArea", subject_area))
@@ -722,6 +738,7 @@ class Insights:
         page_number: Optional[Union[list[str], "Series[str]", str]] = None,
         pricing_region: Optional[Union[list[str], "Series[str]", str]] = None,
         publication: Optional[Union[list[str], "Series[str]", str]] = None,
+        sector: Optional[Union[list[str], "Series[str]", str]] = None,
         content_type: Optional[
             Union[list[str], "Series[str]", list[ContentType], str, ContentType]
         ] = None,
@@ -759,6 +776,8 @@ class Insights:
             filter by pricingRegion, by default None
         publication : Optional[Union[list[str], Series[str], str]], optional
             filter by publication, by default None
+         sector : Optional[Union[list[str], Series[str], str]], optional
+            filter by sector, by default None
         content_type : Optional[Union[list[str], Series[str], list[ContentType], str, ContentType]], optional
             filter by contentType, by default None
         subject_area : Optional[Union[list[str], Series[str], str]], optional
@@ -829,6 +848,7 @@ class Insights:
         filter_params.append(list_to_filter("pageNumber", page_number))
         filter_params.append(list_to_filter("pricingRegion", pricing_region))
         filter_params.append(list_to_filter("publication", publication))
+        filter_params.append(list_to_filter("sector", sector))
         filter_params.append(list_to_filter("contentType", content_type))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("subjectArea", subject_area))
@@ -868,6 +888,7 @@ class Insights:
         page_number: Optional[Union[list[str], "Series[str]", str]] = None,
         pricing_region: Optional[Union[list[str], "Series[str]", str]] = None,
         publication: Optional[Union[list[str], "Series[str]", str]] = None,
+        sector: Optional[Union[list[str], "Series[str]", str]] = None,
         content_type: Optional[
             Union[
                 list[str],
@@ -911,6 +932,8 @@ class Insights:
             filter by pricingRegion, by default None
         publication : Optional[Union[list[str], Series[str], str]], optional
             filter by publication, by default None
+        sector : Optional[Union[list[str], Series[str], str]], optional
+            filter by sector, by default None
         content_type : Optional[Union[list[str], Series[str], list[ContentType], str, ContentType]], optional
             filter by contentType, by default None
         subject_area : Optional[Union[list[str], Series[str], str]], optional
@@ -981,6 +1004,7 @@ class Insights:
         filter_params.append(list_to_filter("pageNumber", page_number))
         filter_params.append(list_to_filter("pricingRegion", pricing_region))
         filter_params.append(list_to_filter("publication", publication))
+        filter_params.append(list_to_filter("sector", sector))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("subjectArea", subject_area))
         filter_params.append(list_to_filter("company", company))
@@ -1047,3 +1071,4 @@ class Insights:
             raw=raw,
             df_fn=self._content_to_df,
         )
+
