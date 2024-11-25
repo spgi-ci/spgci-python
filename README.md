@@ -412,3 +412,17 @@ df.pivot_table(
 # Pivot Table shows this grouped by FlowType (demand, supply, storage, etc...) and +/- N Days.
 
 ```
+
+### Oil and NGL Analytics
+
+```python
+import spgci as ci
+
+rp = ci.OilNGLAnalytics()
+
+rp.get_arbflow_arbitrage(from_region="Persian Gulf", to_region="Japan")
+# DataFrame of arbitrage opportunities for commodities from the Persian Gulf to Japan by concept, commodity and date.
+
+rp.get_arbflow_arbitrage(commodity="Jet Fuel", concept="incentive")
+# DataFrame of arbitrage opportunities for Jet Fuel using the `incentive` concept.
+```

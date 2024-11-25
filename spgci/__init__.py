@@ -42,6 +42,7 @@ from .structured_heards import StructuredHeards
 from .weather import Weather
 from .chemicals import Chemicals
 from .eu_gas_analytics import EUGasAnalytics
+from .oil_ngl_analytics import OilNGLAnalytics
 
 
 from .config import username, password, set_credentials, version
@@ -71,4 +72,5 @@ __all__ = [
     "Weather",
     "Chemicals",
     "EUGasAnalytics",
+    "OilNGLAnalytics",
 ]
