@@ -359,6 +359,9 @@ import spgci as ci
 
 chem = ci.Chemicals()
 
+chem.get_unique_values(dataset="production", columns=["commodity"])
+# See the unique values for each field per dataset. Useful for finding out the exact values to fitler on for fields like commodity, region, etc..
+
 chem.get_capacity_events(
     event_begin_date_gt="2023-01-01", country="China", event_type=["expand", "startup"]
 )
