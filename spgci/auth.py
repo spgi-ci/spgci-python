@@ -12,13 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from functools import lru_cache
+
 import spgci.config as config
 import requests
 from requests.exceptions import HTTPError, SSLError
 import warnings
 from tenacity import retry, retry_if_exception_type, wait_fixed
 from spgci.exceptions import AuthError, PerSecondLimitError, DailyLimitError
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from typing import TypeVar
+
+
+    _CachedFn = TypeVar("_CachedFn", bound=Callable)
+
+    def lru_cache() -> Callable[[_CachedFn], _CachedFn]:
+        """Ensure that the type hints still work after calling the lru_cache decorator."""
+        pass
+
+else:
+    from functools import lru_cache
+
 
 _throttle_retry = retry(
     retry=retry_if_exception_type(PerSecondLimitError), reraise=True, wait=wait_fixed(1)
