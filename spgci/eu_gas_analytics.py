@@ -1263,6 +1263,472 @@ class EUGasAnalytics:
         )
         return response
 
+    def get_outages_event(
+        self,
+        *,
+        flow_item_id: Optional[int] = None,
+        flow_item_id_lt: Optional[int] = None,
+        flow_item_id_lte: Optional[int] = None,
+        flow_item_id_gt: Optional[int] = None,
+        flow_item_id_gte: Optional[int] = None,
+        flow_field_id: Optional[int] = None,
+        flow_field_id_lt: Optional[int] = None,
+        flow_field_id_lte: Optional[int] = None,
+        flow_field_id_gt: Optional[int] = None,
+        flow_field_id_gte: Optional[int] = None,
+        start_date: Optional[datetime] = None,
+        start_date_lt: Optional[datetime] = None,
+        start_date_lte: Optional[datetime] = None,
+        start_date_gt: Optional[datetime] = None,
+        start_date_gte: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
+        end_date_lt: Optional[datetime] = None,
+        end_date_lte: Optional[datetime] = None,
+        end_date_gt: Optional[datetime] = None,
+        end_date_gte: Optional[datetime] = None,
+        point_name: Optional[Union[list[str], Series[str], str]] = None,
+        reported_date: Optional[datetime] = None,
+        reported_date_lt: Optional[datetime] = None,
+        reported_date_lte: Optional[datetime] = None,
+        reported_date_gt: Optional[datetime] = None,
+        reported_date_gte: Optional[datetime] = None,
+        last_modified: Optional[datetime] = None,
+        last_modified_lt: Optional[datetime] = None,
+        last_modified_lte: Optional[datetime] = None,
+        last_modified_gt: Optional[datetime] = None,
+        last_modified_gte: Optional[datetime] = None,
+        from_country: Optional[Union[list[str], Series[str], str]] = None,
+        to_country: Optional[Union[list[str], Series[str], str]] = None,
+        from_system_operator: Optional[Union[list[str], Series[str], str]] = None,
+        to_system_operator: Optional[Union[list[str], Series[str], str]] = None,
+        uom: Optional[Union[list[str], Series[str], str]] = None,
+        flow_item_type: Optional[Union[list[str], Series[str], str]] = None,
+        is_current_revision: Optional[Union[list[str], Series[str], str]] = None,
+        infrastructure_type: Optional[Union[list[str], Series[str], str]] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Access current and historical version of Eugas Outage Events data.
+
+        Parameters
+        ----------
+
+         flow_item_id: Optional[int], optional
+             A unique identificator of the flow item for the EU gas outages., by default None
+         flow_item_id_gt: Optional[int], optional
+             filter by `flow_item_id > x`, by default None
+         flow_item_id_gte: Optional[int], optional
+             filter by `flow_item_id >= x`, by default None
+         flow_item_id_lt: Optional[int], optional
+             filter by `flow_item_id < x`, by default None
+         flow_item_id_lte: Optional[int], optional
+             filter by `flow_item_id <= x`, by default None
+         flow_field_id: Optional[int], optional
+             A unique identificator of the flow field for the EU gas outages., by default None
+         flow_field_id_gt: Optional[int], optional
+             filter by `flow_field_id > x`, by default None
+         flow_field_id_gte: Optional[int], optional
+             filter by `flow_field_id >= x`, by default None
+         flow_field_id_lt: Optional[int], optional
+             filter by `flow_field_id < x`, by default None
+         flow_field_id_lte: Optional[int], optional
+             filter by `flow_field_id <= x`, by default None
+         start_date: Optional[datetime], optional
+             The start date of the outage., by default None
+         start_date_gt: Optional[datetime], optional
+             filter by `start_date > x`, by default None
+         start_date_gte: Optional[datetime], optional
+             filter by `start_date >= x`, by default None
+         start_date_lt: Optional[datetime], optional
+             filter by `start_date < x`, by default None
+         start_date_lte: Optional[datetime], optional
+             filter by `start_date <= x`, by default None
+         end_date: Optional[datetime], optional
+             The end date of the outage., by default None
+         end_date_gt: Optional[datetime], optional
+             filter by `end_date > x`, by default None
+         end_date_gte: Optional[datetime], optional
+             filter by `end_date >= x`, by default None
+         end_date_lt: Optional[datetime], optional
+             filter by `end_date < x`, by default None
+         end_date_lte: Optional[datetime], optional
+             filter by `end_date <= x`, by default None
+         point_name: Optional[Union[list[str], Series[str], str]]
+             Name of the European gas outages point., by default None
+         reported_date: Optional[datetime], optional
+             The Date when outage was reported., by default None
+         reported_date_gt: Optional[datetime], optional
+             filter by `reported_date > x`, by default None
+         reported_date_gte: Optional[datetime], optional
+             filter by `reported_date >= x`, by default None
+         reported_date_lt: Optional[datetime], optional
+             filter by `reported_date < x`, by default None
+         reported_date_lte: Optional[datetime], optional
+             filter by `reported_date <= x`, by default None
+         last_modified: Optional[datetime], optional
+             The Date when outage event was last changed., by default None
+         last_modified_gt: Optional[datetime], optional
+             filter by `last_modified > x`, by default None
+         last_modified_gte: Optional[datetime], optional
+             filter by `last_modified >= x`, by default None
+         last_modified_lt: Optional[datetime], optional
+             filter by `last_modified < x`, by default None
+         last_modified_lte: Optional[datetime], optional
+             filter by `last_modified <= x`, by default None
+         from_country: Optional[Union[list[str], Series[str], str]]
+             Name of the country from which the outage is happening., by default None
+         to_country: Optional[Union[list[str], Series[str], str]]
+             Name of the country to which the outage is happening., by default None
+         from_system_operator: Optional[Union[list[str], Series[str], str]]
+             Name of the operator from which the outage is happening., by default None
+         to_system_operator: Optional[Union[list[str], Series[str], str]]
+             Name of the operator to which the gas outage is happening., by default None
+         uom: Optional[Union[list[str], Series[str], str]]
+             The unit of measurement used for quantifying gas flow., by default None
+         flow_item_type: Optional[Union[list[str], Series[str], str]]
+             Type of the flow item for EU gas outages., by default None
+         is_current_revision: Optional[Union[list[str], Series[str], str]]
+             Indicates if the current entry for an outage is the active record., by default None
+         infrastructure_type: Optional[Union[list[str], Series[str], str]]
+             The type of infrastructure associated with the outage., by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 1000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("flowItemId", flow_item_id))
+        if flow_item_id_gt is not None:
+            filter_params.append(f'flowItemId > "{flow_item_id_gt}"')
+        if flow_item_id_gte is not None:
+            filter_params.append(f'flowItemId >= "{flow_item_id_gte}"')
+        if flow_item_id_lt is not None:
+            filter_params.append(f'flowItemId < "{flow_item_id_lt}"')
+        if flow_item_id_lte is not None:
+            filter_params.append(f'flowItemId <= "{flow_item_id_lte}"')
+        filter_params.append(list_to_filter("flowFieldId", flow_field_id))
+        if flow_field_id_gt is not None:
+            filter_params.append(f'flowFieldId > "{flow_field_id_gt}"')
+        if flow_field_id_gte is not None:
+            filter_params.append(f'flowFieldId >= "{flow_field_id_gte}"')
+        if flow_field_id_lt is not None:
+            filter_params.append(f'flowFieldId < "{flow_field_id_lt}"')
+        if flow_field_id_lte is not None:
+            filter_params.append(f'flowFieldId <= "{flow_field_id_lte}"')
+        filter_params.append(list_to_filter("startDate", start_date))
+        if start_date_gt is not None:
+            filter_params.append(f'startDate > "{start_date_gt}"')
+        if start_date_gte is not None:
+            filter_params.append(f'startDate >= "{start_date_gte}"')
+        if start_date_lt is not None:
+            filter_params.append(f'startDate < "{start_date_lt}"')
+        if start_date_lte is not None:
+            filter_params.append(f'startDate <= "{start_date_lte}"')
+        filter_params.append(list_to_filter("endDate", end_date))
+        if end_date_gt is not None:
+            filter_params.append(f'endDate > "{end_date_gt}"')
+        if end_date_gte is not None:
+            filter_params.append(f'endDate >= "{end_date_gte}"')
+        if end_date_lt is not None:
+            filter_params.append(f'endDate < "{end_date_lt}"')
+        if end_date_lte is not None:
+            filter_params.append(f'endDate <= "{end_date_lte}"')
+        filter_params.append(list_to_filter("pointName", point_name))
+        filter_params.append(list_to_filter("reportedDate", reported_date))
+        if reported_date_gt is not None:
+            filter_params.append(f'reportedDate > "{reported_date_gt}"')
+        if reported_date_gte is not None:
+            filter_params.append(f'reportedDate >= "{reported_date_gte}"')
+        if reported_date_lt is not None:
+            filter_params.append(f'reportedDate < "{reported_date_lt}"')
+        if reported_date_lte is not None:
+            filter_params.append(f'reportedDate <= "{reported_date_lte}"')
+        filter_params.append(list_to_filter("lastModified", last_modified))
+        if last_modified_gt is not None:
+            filter_params.append(f'lastModified > "{last_modified_gt}"')
+        if last_modified_gte is not None:
+            filter_params.append(f'lastModified >= "{last_modified_gte}"')
+        if last_modified_lt is not None:
+            filter_params.append(f'lastModified < "{last_modified_lt}"')
+        if last_modified_lte is not None:
+            filter_params.append(f'lastModified <= "{last_modified_lte}"')
+        filter_params.append(list_to_filter("fromCountry", from_country))
+        filter_params.append(list_to_filter("toCountry", to_country))
+        filter_params.append(list_to_filter("fromSystemOperator", from_system_operator))
+        filter_params.append(list_to_filter("toSystemOperator", to_system_operator))
+        filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("flowItemType", flow_item_type))
+        filter_params.append(list_to_filter("isCurrentRevision", is_current_revision))
+        filter_params.append(list_to_filter("infrastructureType", infrastructure_type))
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/eugas/v2/outages/event",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_outages_time_series(
+        self,
+        *,
+        flow_item_id: Optional[int] = None,
+        flow_item_id_lt: Optional[int] = None,
+        flow_item_id_lte: Optional[int] = None,
+        flow_item_id_gt: Optional[int] = None,
+        flow_item_id_gte: Optional[int] = None,
+        flow_field_id: Optional[int] = None,
+        flow_field_id_lt: Optional[int] = None,
+        flow_field_id_lte: Optional[int] = None,
+        flow_field_id_gt: Optional[int] = None,
+        flow_field_id_gte: Optional[int] = None,
+        gas_day: Optional[datetime] = None,
+        gas_day_lt: Optional[datetime] = None,
+        gas_day_lte: Optional[datetime] = None,
+        gas_day_gt: Optional[datetime] = None,
+        gas_day_gte: Optional[datetime] = None,
+        start_date: Optional[datetime] = None,
+        start_date_lt: Optional[datetime] = None,
+        start_date_lte: Optional[datetime] = None,
+        start_date_gt: Optional[datetime] = None,
+        start_date_gte: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
+        end_date_lt: Optional[datetime] = None,
+        end_date_lte: Optional[datetime] = None,
+        end_date_gt: Optional[datetime] = None,
+        end_date_gte: Optional[datetime] = None,
+        point_name: Optional[Union[list[str], Series[str], str]] = None,
+        reported_date: Optional[datetime] = None,
+        reported_date_lt: Optional[datetime] = None,
+        reported_date_lte: Optional[datetime] = None,
+        reported_date_gt: Optional[datetime] = None,
+        reported_date_gte: Optional[datetime] = None,
+        last_modified: Optional[datetime] = None,
+        last_modified_lt: Optional[datetime] = None,
+        last_modified_lte: Optional[datetime] = None,
+        last_modified_gt: Optional[datetime] = None,
+        last_modified_gte: Optional[datetime] = None,
+        from_country: Optional[Union[list[str], Series[str], str]] = None,
+        to_country: Optional[Union[list[str], Series[str], str]] = None,
+        from_system_operator: Optional[Union[list[str], Series[str], str]] = None,
+        to_system_operator: Optional[Union[list[str], Series[str], str]] = None,
+        uom: Optional[Union[list[str], Series[str], str]] = None,
+        flow_item_type: Optional[Union[list[str], Series[str], str]] = None,
+        infrastructure_type: Optional[Union[list[str], Series[str], str]] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Access Eugas Outage events data in Time Series format.
+
+        Parameters
+        ----------
+
+         flow_item_id: Optional[int], optional
+             A unique identificator of the flow item for the EU gas outages., by default None
+         flow_item_id_gt: Optional[int], optional
+             filter by `flow_item_id > x`, by default None
+         flow_item_id_gte: Optional[int], optional
+             filter by `flow_item_id >= x`, by default None
+         flow_item_id_lt: Optional[int], optional
+             filter by `flow_item_id < x`, by default None
+         flow_item_id_lte: Optional[int], optional
+             filter by `flow_item_id <= x`, by default None
+         flow_field_id: Optional[int], optional
+             A unique identificator of the flow field for the EU gas outages., by default None
+         flow_field_id_gt: Optional[int], optional
+             filter by `flow_field_id > x`, by default None
+         flow_field_id_gte: Optional[int], optional
+             filter by `flow_field_id >= x`, by default None
+         flow_field_id_lt: Optional[int], optional
+             filter by `flow_field_id < x`, by default None
+         flow_field_id_lte: Optional[int], optional
+             filter by `flow_field_id <= x`, by default None
+         gas_day: Optional[datetime], optional
+             The date or gasday for which the outage data is applicable., by default None
+         gas_day_gt: Optional[datetime], optional
+             filter by `gas_day > x`, by default None
+         gas_day_gte: Optional[datetime], optional
+             filter by `gas_day >= x`, by default None
+         gas_day_lt: Optional[datetime], optional
+             filter by `gas_day < x`, by default None
+         gas_day_lte: Optional[datetime], optional
+             filter by `gas_day <= x`, by default None
+         start_date: Optional[datetime], optional
+             The start date of the outage., by default None
+         start_date_gt: Optional[datetime], optional
+             filter by `start_date > x`, by default None
+         start_date_gte: Optional[datetime], optional
+             filter by `start_date >= x`, by default None
+         start_date_lt: Optional[datetime], optional
+             filter by `start_date < x`, by default None
+         start_date_lte: Optional[datetime], optional
+             filter by `start_date <= x`, by default None
+         end_date: Optional[datetime], optional
+             The end date of the outage., by default None
+         end_date_gt: Optional[datetime], optional
+             filter by `end_date > x`, by default None
+         end_date_gte: Optional[datetime], optional
+             filter by `end_date >= x`, by default None
+         end_date_lt: Optional[datetime], optional
+             filter by `end_date < x`, by default None
+         end_date_lte: Optional[datetime], optional
+             filter by `end_date <= x`, by default None
+         point_name: Optional[Union[list[str], Series[str], str]]
+             Name of the European gas outages point., by default None
+         reported_date: Optional[datetime], optional
+             The Date when outage was reported., by default None
+         reported_date_gt: Optional[datetime], optional
+             filter by `reported_date > x`, by default None
+         reported_date_gte: Optional[datetime], optional
+             filter by `reported_date >= x`, by default None
+         reported_date_lt: Optional[datetime], optional
+             filter by `reported_date < x`, by default None
+         reported_date_lte: Optional[datetime], optional
+             filter by `reported_date <= x`, by default None
+         last_modified: Optional[datetime], optional
+             The Date when outage event was last changed., by default None
+         last_modified_gt: Optional[datetime], optional
+             filter by `last_modified > x`, by default None
+         last_modified_gte: Optional[datetime], optional
+             filter by `last_modified >= x`, by default None
+         last_modified_lt: Optional[datetime], optional
+             filter by `last_modified < x`, by default None
+         last_modified_lte: Optional[datetime], optional
+             filter by `last_modified <= x`, by default None
+         from_country: Optional[Union[list[str], Series[str], str]]
+             Name of the country from which the outage is happening., by default None
+         to_country: Optional[Union[list[str], Series[str], str]]
+             Name of the country to which the outage is happening., by default None
+         from_system_operator: Optional[Union[list[str], Series[str], str]]
+             Name of the operator from which the outage is happening., by default None
+         to_system_operator: Optional[Union[list[str], Series[str], str]]
+             Name of the operator to which the gas outage is happening., by default None
+         uom: Optional[Union[list[str], Series[str], str]]
+             The unit of measurement used for quantifying gas flow., by default None
+         flow_item_type: Optional[Union[list[str], Series[str], str]]
+             Type of the flow item for EU gas outages., by default None
+         infrastructure_type: Optional[Union[list[str], Series[str], str]]
+             The type of infrastructure associated with the outage., by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 1000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("flowItemId", flow_item_id))
+        if flow_item_id_gt is not None:
+            filter_params.append(f'flowItemId > "{flow_item_id_gt}"')
+        if flow_item_id_gte is not None:
+            filter_params.append(f'flowItemId >= "{flow_item_id_gte}"')
+        if flow_item_id_lt is not None:
+            filter_params.append(f'flowItemId < "{flow_item_id_lt}"')
+        if flow_item_id_lte is not None:
+            filter_params.append(f'flowItemId <= "{flow_item_id_lte}"')
+        filter_params.append(list_to_filter("flowFieldId", flow_field_id))
+        if flow_field_id_gt is not None:
+            filter_params.append(f'flowFieldId > "{flow_field_id_gt}"')
+        if flow_field_id_gte is not None:
+            filter_params.append(f'flowFieldId >= "{flow_field_id_gte}"')
+        if flow_field_id_lt is not None:
+            filter_params.append(f'flowFieldId < "{flow_field_id_lt}"')
+        if flow_field_id_lte is not None:
+            filter_params.append(f'flowFieldId <= "{flow_field_id_lte}"')
+        filter_params.append(list_to_filter("gasDay", gas_day))
+        if gas_day_gt is not None:
+            filter_params.append(f'gasDay > "{gas_day_gt}"')
+        if gas_day_gte is not None:
+            filter_params.append(f'gasDay >= "{gas_day_gte}"')
+        if gas_day_lt is not None:
+            filter_params.append(f'gasDay < "{gas_day_lt}"')
+        if gas_day_lte is not None:
+            filter_params.append(f'gasDay <= "{gas_day_lte}"')
+        filter_params.append(list_to_filter("startDate", start_date))
+        if start_date_gt is not None:
+            filter_params.append(f'startDate > "{start_date_gt}"')
+        if start_date_gte is not None:
+            filter_params.append(f'startDate >= "{start_date_gte}"')
+        if start_date_lt is not None:
+            filter_params.append(f'startDate < "{start_date_lt}"')
+        if start_date_lte is not None:
+            filter_params.append(f'startDate <= "{start_date_lte}"')
+        filter_params.append(list_to_filter("endDate", end_date))
+        if end_date_gt is not None:
+            filter_params.append(f'endDate > "{end_date_gt}"')
+        if end_date_gte is not None:
+            filter_params.append(f'endDate >= "{end_date_gte}"')
+        if end_date_lt is not None:
+            filter_params.append(f'endDate < "{end_date_lt}"')
+        if end_date_lte is not None:
+            filter_params.append(f'endDate <= "{end_date_lte}"')
+        filter_params.append(list_to_filter("pointName", point_name))
+        filter_params.append(list_to_filter("reportedDate", reported_date))
+        if reported_date_gt is not None:
+            filter_params.append(f'reportedDate > "{reported_date_gt}"')
+        if reported_date_gte is not None:
+            filter_params.append(f'reportedDate >= "{reported_date_gte}"')
+        if reported_date_lt is not None:
+            filter_params.append(f'reportedDate < "{reported_date_lt}"')
+        if reported_date_lte is not None:
+            filter_params.append(f'reportedDate <= "{reported_date_lte}"')
+        filter_params.append(list_to_filter("lastModified", last_modified))
+        if last_modified_gt is not None:
+            filter_params.append(f'lastModified > "{last_modified_gt}"')
+        if last_modified_gte is not None:
+            filter_params.append(f'lastModified >= "{last_modified_gte}"')
+        if last_modified_lt is not None:
+            filter_params.append(f'lastModified < "{last_modified_lt}"')
+        if last_modified_lte is not None:
+            filter_params.append(f'lastModified <= "{last_modified_lte}"')
+        filter_params.append(list_to_filter("fromCountry", from_country))
+        filter_params.append(list_to_filter("toCountry", to_country))
+        filter_params.append(list_to_filter("fromSystemOperator", from_system_operator))
+        filter_params.append(list_to_filter("toSystemOperator", to_system_operator))
+        filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("flowItemType", flow_item_type))
+        filter_params.append(list_to_filter("infrastructureType", infrastructure_type))
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/eugas/v2/outages/time-series",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
     @staticmethod
     def _convert_to_df(resp: Response) -> pd.DataFrame:
         j = resp.json()
@@ -1274,6 +1740,11 @@ class EUGasAnalytics:
             "applicableAt",
             "gasFlowTime",
             "productionMonth",
+            "reportedDate",
+            "endDate",
+            "createDate",
+            "startDate",
+            "lastModified",
         ]
 
         for column in date_columns:

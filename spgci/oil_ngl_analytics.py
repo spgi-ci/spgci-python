@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Literal
 from requests import Response
 from spgci.api_client import get_data
 from spgci.utilities import list_to_filter
@@ -11,6 +11,36 @@ import pandas as pd
 class OilNGLAnalytics:
     _endpoint = "api/v1/"
     _vw_arbflow_refined_product_arbitrage_endpoint = "/arbflow/arbitrage"
+
+    _datasets = Literal["arbflow-arbitrage"]
+
+    def get_unique_values(
+        self,
+        dataset: _datasets,
+        columns: Optional[list[str], str],
+    ) -> DataFrame:
+        dataset_to_path = {
+            "arbflow-arbitrage": "analytics/fuels-refining/v1/arbflow/arbitrage",
+        }
+
+        if dataset not in dataset_to_path:
+            valid = "\n".join(dataset_to_path.keys())
+            print(f"Dataset '{dataset}' not found. Valid Datasets:\n", valid)
+            raise ValueError(
+                f"dataset '{dataset}' not found ",
+            )
+            return
+        else:
+            path = dataset_to_path[dataset]
+
+        col_value = ", ".join(columns) if isinstance(columns, list) else columns or ""
+        params = {"GroupBy": col_value, "pageSize": 5000}
+
+        def to_df(resp: Response):
+            j = resp.json()
+            return DataFrame(j["aggResultValue"])
+
+        return get_data(path, params, to_df, paginate=True)
 
     def get_arbflow_arbitrage(
         self,
