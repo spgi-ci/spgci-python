@@ -21,6 +21,8 @@ from spgci.utilities import list_to_filter
 from enum import Enum
 from datetime import date
 from typing_extensions import Literal
+import pandas as pd
+from packaging.version import parse
 
 
 class Arbflow:
@@ -69,16 +71,16 @@ class Arbflow:
         j = resp.json()
         df = DataFrame(j["results"])
 
-        # make date fields the correct datatype
+        date_columns = ["modifiedDate", "marginDate", "baseMarginDate"]
 
-        if "modifiedDate" in df.columns:
-            df["modifiedDate"] = to_datetime(df["modifiedDate"])
-
-        if "marginDate" in df.columns:
-            df["marginDate"] = to_datetime(df["marginDate"])
-
-        if "baseMarginDate" in df.columns:
-            df["baseMarginDate"] = to_datetime(df["baseMarginDate"])
+        for column in date_columns:
+            if column in df.columns:
+                if parse(pd.__version__) >= parse("2"):
+                    df[column] = pd.to_datetime(
+                        df[column], format="ISO8601", errors="coerce"
+                    )
+                else:
+                    df[column] = pd.to_datetime(df[column], errors="coerce")  # type: ignore
 
         return df
 
