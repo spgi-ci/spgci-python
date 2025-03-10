@@ -429,3 +429,17 @@ rp.get_arbflow_arbitrage(from_region="Persian Gulf", to_region="Japan")
 rp.get_arbflow_arbitrage(commodity="Jet Fuel", concept="incentive")
 # DataFrame of arbitrage opportunities for Jet Fuel using the `incentive` concept.
 ```
+
+### Integrated Energy Scenarios
+
+```python
+import spgci as ci
+
+ies = ci.IntegratedEnergyScenarios()
+
+ies.get_gdp(country="United States", scenario="Inflections 2024", year=2030)
+# DataFrame of GDP forecasts for 2030, using the Inflections 2024 scenario, in both Nominal and Real and a PPP basis and not.
+
+ies.get_unique_values(dataset="gdp", columns="scenario")
+# DataFrame of unique values for `scenario` in the `get_gdp` method.
+```
