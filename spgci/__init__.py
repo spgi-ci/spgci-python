@@ -43,6 +43,7 @@ from .weather import Weather
 from .chemicals import Chemicals
 from .eu_gas_analytics import EUGasAnalytics
 from .oil_ngl_analytics import OilNGLAnalytics
+from .integrated_energy_scenarios import IntegratedEnergyScenarios
 
 
 from .config import username, password, set_credentials, version
@@ -73,4 +74,5 @@ __all__ = [
     "Chemicals",
     "EUGasAnalytics",
     "OilNGLAnalytics",
+    "IntegratedEnergyScenarios",
 ]

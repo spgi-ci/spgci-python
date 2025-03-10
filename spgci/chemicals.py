@@ -42,7 +42,7 @@ class Chemicals:
     def get_unique_values(
         self,
         dataset: _datasets,
-        columns: Optional[list[str], str],
+        columns: Optional[Union[list[str], str]],
     ) -> DataFrame:
         dataset_to_path = {
             "capacity": "analytics/v1/chemicals/capacity",
