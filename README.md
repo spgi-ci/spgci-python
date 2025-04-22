@@ -428,6 +428,17 @@ rp.get_arbflow_arbitrage(from_region="Persian Gulf", to_region="Japan")
 
 rp.get_arbflow_arbitrage(commodity="Jet Fuel", concept="incentive")
 # DataFrame of arbitrage opportunities for Jet Fuel using the `incentive` concept.
+
+rp.get_refinery_runs_latest(outlook_horizon="Short-Term", region="Latin America", report_for_date='2026-04-01')
+# DataFrame of forecast monthly runs per country in Latin America for April 2026 for the most recent forecast.
+
+rp.get_oil_inventory(
+    commodity="Naphtha",
+    outlook_horizon="Short-Term",
+    geography="Amsterdam, Rotterdam and Antwerp",
+    frequency='Monthly',
+)
+# DataFrame of oil inventory for ARA for Naptha, including the latest and historical forecasts.
 ```
 
 ### Integrated Energy Scenarios
