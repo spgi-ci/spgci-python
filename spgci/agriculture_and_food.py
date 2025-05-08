@@ -24,6 +24,27 @@ class AgriAndFood:
         "price-purchase-forecast",
     ]
 
+    @staticmethod
+    def _convert_to_df(resp: Response) -> pd.DataFrame:
+        """
+        Converts the API response to a pandas DataFrame and ensures proper datetime conversion
+        for all relevant date/time fields.
+        """
+        j = resp.json()
+        df = pd.json_normalize(j["results"])
+
+        datetime_fields = [
+            "modifiedDate",
+            "reportForDate",
+            "historicalEdgeDate",
+        ]
+
+        for field in datetime_fields:
+            if field in df.columns:
+                df[field] = pd.to_datetime(df[field], errors="coerce")
+
+        return df
+
     def get_unique_values(
         self,
         dataset: _datasets,
@@ -52,7 +73,6 @@ class AgriAndFood:
             "global-long-term-forecast": "analytics/agri-food/v1/global-long-term-forecast",
             "price-purchase-forecast": "analytics/agri-food/v1/price-purchase-forecast",
         }
-
 
         if dataset not in dataset_to_path:
             valid = "\n".join(dataset_to_path.keys())
@@ -100,7 +120,7 @@ class AgriAndFood:
         modified_date_gte: Optional[datetime] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -154,7 +174,7 @@ class AgriAndFood:
              filter by `modified_date <= x`, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -209,24 +229,13 @@ class AgriAndFood:
         )
         return response
 
-    @staticmethod
-    def _convert_to_df(resp: Response) -> pd.DataFrame:
-        j = resp.json()
-        df = pd.json_normalize(j["results"])  # type: ignore
-
-        if "modifiedDate" in df.columns:
-            df["modifiedDate"] = pd.to_datetime(df["modifiedDate"])  # type: ignore
-        return df
-    
-
-
     def get_publicpolicy(
         self,
         *,
         country: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -240,7 +249,7 @@ class AgriAndFood:
              Country name, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -274,7 +283,7 @@ class AgriAndFood:
         primary_industry_ciq_gics: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -290,7 +299,7 @@ class AgriAndFood:
              Primary Industry Ciq Gics, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -319,13 +328,6 @@ class AgriAndFood:
             paginate=paginate,
         )
         return response
-
-    @staticmethod
-    def _convert_to_df(resp: Response) -> pd.DataFrame:
-        j = resp.json()
-        df = pd.json_normalize(j["results"])  # type: ignore
-
-        return df
 
     def get_global_long_term_forecast(
         self,
@@ -356,7 +358,7 @@ class AgriAndFood:
         is_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -416,7 +418,7 @@ class AgriAndFood:
              For point in time data, indicator if this record is currently an active record., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -510,7 +512,7 @@ class AgriAndFood:
         is_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -574,7 +576,7 @@ class AgriAndFood:
              For point in time data, indicator if this record is currently an active record., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
