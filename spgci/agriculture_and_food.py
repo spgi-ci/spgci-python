@@ -12,14 +12,9 @@ class AgriAndFood:
     _endpoint = "api/v1/"
     _reference_endpoint = "reference/v1/"
     _cop_forecast_data_mv_endpoint = "/cost-of-production"
-    _tbl_sustainable_agri_policy_endpoint = "/publicpolicy"
-    _tbl_corporate_carbon_pledges_endpoint = "/corporate-carbon-pledges"
-    _tbl_agri_food_short_term_forecast_endpoint = "/short-term-forecast"
+
     _datasets = Literal[
         "cost-of-production",
-        "publicpolicy",
-        "corporate-carbon-pledges",
-        "short-term-forecast",
         "global-long-term-forecast",
         "price-purchase-forecast",
     ]
@@ -67,9 +62,6 @@ class AgriAndFood:
         """
         dataset_to_path = {
             "cost-of-production": "analytics/agri-food/v1/cost-of-production",
-            "publicpolicy": "analytics/sustainability-compass/v1/publicpolicy",
-            "corporate-carbon-pledges": "analytics/sustainability-compass/v1/corporate-carbon-pledges",
-            "short-term-forecast": "analytics/agri-food/v1/short-term-forecast",
             "global-long-term-forecast": "analytics/agri-food/v1/global-long-term-forecast",
             "price-purchase-forecast": "analytics/agri-food/v1/price-purchase-forecast",
         }
@@ -229,105 +221,6 @@ class AgriAndFood:
         )
         return response
 
-    def get_publicpolicy(
-        self,
-        *,
-        country: Optional[Union[list[str], Series[str], str]] = None,
-        filter_exp: Optional[str] = None,
-        page: int = 1,
-        page_size: int = 5000,
-        raw: bool = False,
-        paginate: bool = False,
-    ) -> Union[DataFrame, Response]:
-        """
-        Public agriculture policies defined by countries
-
-        Parameters
-        ----------
-
-         country: Optional[Union[list[str], Series[str], str]]
-             Country name, by default None
-         filter_exp: Optional[str] = None,
-         page: int = 1,
-         page_size: int = 5000,
-         raw: bool = False,
-         paginate: bool = False
-
-        """
-
-        filter_params: List[str] = []
-        filter_params.append(list_to_filter("country", country))
-
-        filter_params = [fp for fp in filter_params if fp != ""]
-
-        if filter_exp is None:
-            filter_exp = " AND ".join(filter_params)
-        elif len(filter_params) > 0:
-            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
-
-        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
-
-        response = get_data(
-            path=f"/analytics/sustainability-compass/v1/publicpolicy",
-            params=params,
-            df_fn=self._convert_to_df,
-            raw=raw,
-            paginate=paginate,
-        )
-        return response
-
-    def get_corporate_carbon_pledges(
-        self,
-        *,
-        company_name: Optional[Union[list[str], Series[str], str]] = None,
-        primary_industry_ciq_gics: Optional[Union[list[str], Series[str], str]] = None,
-        filter_exp: Optional[str] = None,
-        page: int = 1,
-        page_size: int = 5000,
-        raw: bool = False,
-        paginate: bool = False,
-    ) -> Union[DataFrame, Response]:
-        """
-        Corporate Carbon Pledges defined by company
-
-        Parameters
-        ----------
-
-         company_name: Optional[Union[list[str], Series[str], str]]
-             Company Name Details, by default None
-         primary_industry_ciq_gics: Optional[Union[list[str], Series[str], str]]
-             Primary Industry Ciq Gics, by default None
-         filter_exp: Optional[str] = None,
-         page: int = 1,
-         page_size: int = 5000,
-         raw: bool = False,
-         paginate: bool = False
-
-        """
-
-        filter_params: List[str] = []
-        filter_params.append(list_to_filter("company_name", company_name))
-        filter_params.append(
-            list_to_filter("primary_industry_ciq_gics", primary_industry_ciq_gics)
-        )
-
-        filter_params = [fp for fp in filter_params if fp != ""]
-
-        if filter_exp is None:
-            filter_exp = " AND ".join(filter_params)
-        elif len(filter_params) > 0:
-            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
-
-        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
-
-        response = get_data(
-            path=f"/analytics/sustainability-compass/v1/corporate-carbon-pledges",
-            params=params,
-            df_fn=self._convert_to_df,
-            raw=raw,
-            paginate=paginate,
-        )
-        return response
 
     def get_global_long_term_forecast(
         self,
