@@ -454,3 +454,21 @@ ies.get_gdp(country="United States", scenario="Inflections 2024", year=2030)
 ies.get_unique_values(dataset="gdp", columns="scenario")
 # DataFrame of unique values for `scenario` in the `get_gdp` method.
 ```
+
+### Agri and Food
+
+```python
+import spgci as ci
+
+agri = ci.AgriAndFood()
+
+agri.get_cost_of_production(commodity="wheat",geography="India", year=2025)
+# DataFrame of the cost of production of wheat in India for the year 2025.
+
+agri.get_unique_values(dataset="cost-of-production", columns="commodity")
+# DataFrame of unique values for `commodity` in the `get_cost_of_production` method.
+
+agri.get_price_purchase_forecast(commodity="corn", reporting_region="United States", currency="USD",report_for_date_gte="2023-01-01", report_for_date_lte="2024-12-31")
+# DataFrame of the price purchase forecast for corn in the United States in USD for the period from January 1, 2023 to December 31, 2024.
+```
+
