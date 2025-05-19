@@ -44,28 +44,28 @@ class AmericasGas:
         last_modified_date_gt: Optional[datetime] = None,
         last_modified_date_gte: Optional[datetime] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         gulfcoast_substate: Optional[Union[list[str], Series[str], str]] = None,
-        gulfcoast_substate_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        gulfcoast_substate_id: Optional[Union[list[str], Series[str], str]] = None,
         state_abbreviation: Optional[Union[list[str], Series[str], str]] = None,
         state: Optional[Union[list[str], Series[str], str]] = None,
-        state_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        state_id: Optional[Union[list[str], Series[str], str]] = None,
         county: Optional[Union[list[str], Series[str], str]] = None,
-        county_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        county_id: Optional[Union[list[str], Series[str], str]] = None,
         producing_area: Optional[Union[list[str], Series[str], str]] = None,
-        producing_area_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        producing_area_id: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
         """
-        A relationship table expressing the heirarchy from county and state up through subregion, region and domain levels such as the US lower 48, Canada and Mexico.
+        A relationship table expressing the hierarchy from county and state up through subregion, region and domain levels such as the US lower 48, Canada and Mexico.
 
         Parameters
         ----------
@@ -82,37 +82,37 @@ class AmericasGas:
              filter by `last_modified_date <= x`, by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada and Mexico., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          gulfcoast_substate: Optional[Union[list[str], Series[str], str]]
              The name of substate region or special area within the Gulf Coast region., by default None
-         gulfcoast_substate_i_d: Optional[Union[list[str], Series[str], str]]
+         gulfcoast_substate_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic substate regions within the Gulf Coast area., by default None
          state_abbreviation: Optional[Union[list[str], Series[str], str]]
              Abbreviation for a state or province within country., by default None
          state: Optional[Union[list[str], Series[str], str]]
              The political boundaries that define a state or province within country., by default None
-         state_i_d: Optional[Union[list[str], Series[str], str]]
+         state_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the state or province utilizes legacy Bentek IDs., by default None
          county: Optional[Union[list[str], Series[str], str]]
              The political boundaries of a defined county within a US state in which a meter or point resides., by default None
-         county_i_d: Optional[Union[list[str], Series[str], str]]
+         county_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the county within a US state in which a meter or point resides, utilizes legacy Bentek IDs., by default None
          producing_area: Optional[Union[list[str], Series[str], str]]
              Defined aggregation of counties within a state that is a best fit representation of prominent oil and gas plays and basins., by default None
-         producing_area_i_d: Optional[Union[list[str], Series[str], str]]
+         producing_area_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for a defined Producing Area utilizes legacy PointLogic IDs., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -129,22 +129,22 @@ class AmericasGas:
         if last_modified_date_lte is not None:
             filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(list_to_filter("gulfcoastSubstate", gulfcoast_substate))
         filter_params.append(
-            list_to_filter("gulfcoastSubstateID", gulfcoast_substate_i_d)
+            list_to_filter("gulfcoastSubstateId", gulfcoast_substate_id)
         )
         filter_params.append(list_to_filter("stateAbbreviation", state_abbreviation))
         filter_params.append(list_to_filter("state", state))
-        filter_params.append(list_to_filter("stateID", state_i_d))
+        filter_params.append(list_to_filter("stateId", state_id))
         filter_params.append(list_to_filter("county", county))
-        filter_params.append(list_to_filter("countyID", county_i_d))
+        filter_params.append(list_to_filter("countyId", county_id))
         filter_params.append(list_to_filter("producingArea", producing_area))
-        filter_params.append(list_to_filter("producingAreaID", producing_area_i_d))
+        filter_params.append(list_to_filter("producingAreaId", producing_area_id))
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
@@ -172,46 +172,44 @@ class AmericasGas:
         last_modified_date_lte: Optional[datetime] = None,
         last_modified_date_gt: Optional[datetime] = None,
         last_modified_date_gte: Optional[datetime] = None,
-        legacy_point_logic_point_i_d: Optional[
+        legacy_point_logic_point_id: Optional[
             Union[list[str], Series[str], str]
         ] = None,
-        legacy_point_logic_l_c_i_i_d: Optional[
-            Union[list[str], Series[str], str]
-        ] = None,
-        legacy_bentek_point_i_d: Optional[Union[list[str], Series[str], str]] = None,
-        component_point_i_d: Optional[Union[list[str], Series[str], str]] = None,
-        pipeline_operator_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        legacy_point_logic_lci_id: Optional[Union[list[str], Series[str], str]] = None,
+        legacy_bentek_point_id: Optional[Union[list[str], Series[str], str]] = None,
+        component_point_id: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_operator_id: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_operator_name: Optional[Union[list[str], Series[str], str]] = None,
-        pipeline_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_name: Optional[Union[list[str], Series[str], str]] = None,
         point_name: Optional[Union[list[str], Series[str], str]] = None,
         meter_type_primary: Optional[Union[list[str], Series[str], str]] = None,
-        meter_type_i_d_primary: Optional[Union[list[str], Series[str], str]] = None,
-        meter_type_i_d_secondary: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_id_primary: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_id_secondary: Optional[Union[list[str], Series[str], str]] = None,
         meter_type_secondary: Optional[Union[list[str], Series[str], str]] = None,
         flow_direction: Optional[Union[list[str], Series[str], str]] = None,
         flow_direction_code: Optional[Union[list[str], Series[str], str]] = None,
-        flow_direction_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        flow_direction_id: Optional[Union[list[str], Series[str], str]] = None,
         zone: Optional[Union[list[str], Series[str], str]] = None,
-        company_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        company_id: Optional[Union[list[str], Series[str], str]] = None,
         connecting_party: Optional[Union[list[str], Series[str], str]] = None,
         loc_prop: Optional[Union[list[str], Series[str], str]] = None,
         point_is_active: Optional[Union[list[str], Series[str], str]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        state_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        state_id: Optional[Union[list[str], Series[str], str]] = None,
         state: Optional[Union[list[str], Series[str], str]] = None,
-        county_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        county_id: Optional[Union[list[str], Series[str], str]] = None,
         county: Optional[Union[list[str], Series[str], str]] = None,
         producing_area: Optional[Union[list[str], Series[str], str]] = None,
-        producing_area_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        producing_area_id: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -231,19 +229,19 @@ class AmericasGas:
              filter by `last_modified_date < x`, by default None
          last_modified_date_lte: Optional[datetime], optional
              filter by `last_modified_date <= x`, by default None
-         legacy_point_logic_point_i_d: Optional[Union[list[str], Series[str], str]]
+         legacy_point_logic_point_id: Optional[Union[list[str], Series[str], str]]
              Point ID for a meter used by the legacy PointLogic service., by default None
-         legacy_point_logic_l_c_i_i_d: Optional[Union[list[str], Series[str], str]]
+         legacy_point_logic_lci_id: Optional[Union[list[str], Series[str], str]]
              Alternative point ID for a meter used by the legacy PointLogic service., by default None
-         legacy_bentek_point_i_d: Optional[Union[list[str], Series[str], str]]
+         legacy_bentek_point_id: Optional[Union[list[str], Series[str], str]]
              Point ID for a meter used by the legacy Bentek service., by default None
-         component_point_i_d: Optional[Union[list[str], Series[str], str]]
+         component_point_id: Optional[Union[list[str], Series[str], str]]
              Point ID for a meter used by the Americas Gas service., by default None
-         pipeline_operator_i_d: Optional[Union[list[str], Series[str], str]]
+         pipeline_operator_id: Optional[Union[list[str], Series[str], str]]
              ID associated with the common parent owner or operator of a pipeline system., by default None
          pipeline_operator_name: Optional[Union[list[str], Series[str], str]]
              The name of the common parent owner or operator of a pipeline system., by default None
-         pipeline_i_d: Optional[Union[list[str], Series[str], str]]
+         pipeline_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a pipeline system, utilizes legacy Bentek pipeline ids when applicable., by default None
          pipeline_name: Optional[Union[list[str], Series[str], str]]
              The display name of a pipeline system, utilizes legacy Bentek names when applicable., by default None
@@ -251,9 +249,9 @@ class AmericasGas:
              The display name of a meter or point, utilizes legacy Bentek point name when applicable., by default None
          meter_type_primary: Optional[Union[list[str], Series[str], str]]
              The primary type of classification and purpose of a meter or point, utilizes legacy PointLogic definitions., by default None
-         meter_type_i_d_primary: Optional[Union[list[str], Series[str], str]]
+         meter_type_id_primary: Optional[Union[list[str], Series[str], str]]
              An ID for the primary type of classification and purpose of a meter or point, utilizes legacy PointLogic definitions and ID., by default None
-         meter_type_i_d_secondary: Optional[Union[list[str], Series[str], str]]
+         meter_type_id_secondary: Optional[Union[list[str], Series[str], str]]
              A secondary type classification and purpose of a meter or point, meant to provide an extra level of detail and utilizes legacy Bentek ids., by default None
          meter_type_secondary: Optional[Union[list[str], Series[str], str]]
              A secondary type classification and purpose of a meter or point, meant to provide an extra level of detail, utilizes legacy Bentek definitions., by default None
@@ -261,11 +259,11 @@ class AmericasGas:
              Flow direction indicates the orientation of a point such as receipt, delivery, bi-directional or the reported flow direction of segment or compressor. Attribute is sourced from legacy PointLogic. Flow direction is primary to the similar and secondary attribute of Location Type., by default None
          flow_direction_code: Optional[Union[list[str], Series[str], str]]
              A one letter code for Flow Direction such as ‘R’ for receipt or ‘D’ for delivery. Attribute is sourced from legacy PointLogic. Flow direction is primary to the similar and secondary attribute of Location Type., by default None
-         flow_direction_i_d: Optional[Union[list[str], Series[str], str]]
+         flow_direction_id: Optional[Union[list[str], Series[str], str]]
              Flow direction identification number for the orientation of a point such as receipt, delivery, bi-directional or the reported flow direction of segment or compressor. Attribute is sourced from legacy PointLogic. Flow direction is primary to the similar and secondary attribute of Location Type., by default None
          zone: Optional[Union[list[str], Series[str], str]]
              A designation for where on the pipeline system the point is located, corresponding to a pipeline’s operational and market design. Zonal information is sourced from the legacy Bentek service., by default None
-         company_i_d: Optional[Union[list[str], Series[str], str]]
+         company_id: Optional[Union[list[str], Series[str], str]]
              An ID sourced from the legacy Bentek service used to identify the connecting business or company name of a meter., by default None
          connecting_party: Optional[Union[list[str], Series[str], str]]
              The downstream connecting business name of a meter as reported by the pipeline, utilizes legacy Bentek service., by default None
@@ -275,31 +273,31 @@ class AmericasGas:
              A true or false return if a point or meter is active and in use within the Americas Gas service., by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada and Mexico., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         state_i_d: Optional[Union[list[str], Series[str], str]]
+         state_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the state or province utilizes legacy Bentek IDs., by default None
          state: Optional[Union[list[str], Series[str], str]]
              The political boundaries that define a state or province within country., by default None
-         county_i_d: Optional[Union[list[str], Series[str], str]]
+         county_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the county within a US state in which a meter or point resides, utilizes legacy Bentek IDs., by default None
          county: Optional[Union[list[str], Series[str], str]]
              The political boundaries of a defined county within a US state in which a meter or point resides., by default None
          producing_area: Optional[Union[list[str], Series[str], str]]
              Defined aggregation of counties within a state that is a best fit representation of prominent oil and gas plays and basins., by default None
-         producing_area_i_d: Optional[Union[list[str], Series[str], str]]
+         producing_area_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for a defined Producing Area utilizes legacy PointLogic IDs., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -316,52 +314,50 @@ class AmericasGas:
         if last_modified_date_lte is not None:
             filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
         filter_params.append(
-            list_to_filter("legacyPointLogicPointID", legacy_point_logic_point_i_d)
+            list_to_filter("legacyPointLogicPointId", legacy_point_logic_point_id)
         )
         filter_params.append(
-            list_to_filter("legacyPointLogicLCIID", legacy_point_logic_l_c_i_i_d)
+            list_to_filter("legacyPointLogicLciId", legacy_point_logic_lci_id)
         )
         filter_params.append(
-            list_to_filter("legacyBentekPointID", legacy_bentek_point_i_d)
+            list_to_filter("legacyBentekPointId", legacy_bentek_point_id)
         )
-        filter_params.append(list_to_filter("componentPointID", component_point_i_d))
-        filter_params.append(
-            list_to_filter("pipelineOperatorID", pipeline_operator_i_d)
-        )
+        filter_params.append(list_to_filter("componentPointId", component_point_id))
+        filter_params.append(list_to_filter("pipelineOperatorId", pipeline_operator_id))
         filter_params.append(
             list_to_filter("pipelineOperatorName", pipeline_operator_name)
         )
-        filter_params.append(list_to_filter("pipelineID", pipeline_i_d))
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
         filter_params.append(list_to_filter("pipelineName", pipeline_name))
         filter_params.append(list_to_filter("pointName", point_name))
         filter_params.append(list_to_filter("meterTypePrimary", meter_type_primary))
         filter_params.append(
-            list_to_filter("meterTypeIDPrimary", meter_type_i_d_primary)
+            list_to_filter("meterTypeIdPrimary", meter_type_id_primary)
         )
         filter_params.append(
-            list_to_filter("meterTypeIDSecondary", meter_type_i_d_secondary)
+            list_to_filter("meterTypeIdSecondary", meter_type_id_secondary)
         )
         filter_params.append(list_to_filter("meterTypeSecondary", meter_type_secondary))
         filter_params.append(list_to_filter("flowDirection", flow_direction))
         filter_params.append(list_to_filter("flowDirectionCode", flow_direction_code))
-        filter_params.append(list_to_filter("flowDirectionID", flow_direction_i_d))
+        filter_params.append(list_to_filter("flowDirectionId", flow_direction_id))
         filter_params.append(list_to_filter("zone", zone))
-        filter_params.append(list_to_filter("companyID", company_i_d))
+        filter_params.append(list_to_filter("companyId", company_id))
         filter_params.append(list_to_filter("connectingParty", connecting_party))
         filter_params.append(list_to_filter("locProp", loc_prop))
         filter_params.append(list_to_filter("pointIsActive", point_is_active))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("stateID", state_i_d))
+        filter_params.append(list_to_filter("stateId", state_id))
         filter_params.append(list_to_filter("state", state))
-        filter_params.append(list_to_filter("countyID", county_i_d))
+        filter_params.append(list_to_filter("countyId", county_id))
         filter_params.append(list_to_filter("county", county))
         filter_params.append(list_to_filter("producingArea", producing_area))
-        filter_params.append(list_to_filter("producingAreaID", producing_area_i_d))
+        filter_params.append(list_to_filter("producingAreaId", producing_area_id))
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
@@ -396,29 +392,29 @@ class AmericasGas:
         last_modified_date_gte: Optional[datetime] = None,
         date_frequency: Optional[Union[list[str], Series[str], str]] = None,
         date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
-        model_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        model_id: Optional[Union[list[str], Series[str], str]] = None,
         model_type: Optional[Union[list[str], Series[str], str]] = None,
-        model_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        model_type_id: Optional[Union[list[str], Series[str], str]] = None,
         market_type: Optional[Union[list[str], Series[str], str]] = None,
-        market_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        market_type_id: Optional[Union[list[str], Series[str], str]] = None,
         function_type: Optional[Union[list[str], Series[str], str]] = None,
-        function_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        function_type_id: Optional[Union[list[str], Series[str], str]] = None,
         point_of_view: Optional[Union[list[str], Series[str], str]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         state: Optional[Union[list[str], Series[str], str]] = None,
-        state_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        state_id: Optional[Union[list[str], Series[str], str]] = None,
         producing_area: Optional[Union[list[str], Series[str], str]] = None,
-        producing_area_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        producing_area_id: Optional[Union[list[str], Series[str], str]] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
         volume: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -452,41 +448,41 @@ class AmericasGas:
              Daily, Weekly, Monthly, Seasonal, Annual., by default None
          date_frequency_desc: Optional[Union[list[str], Series[str], str]]
              The time period averages of the dataset such as Daily, Weekly, Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
-         model_i_d: Optional[Union[list[str], Series[str], str]]
+         model_id: Optional[Union[list[str], Series[str], str]]
              Internal use, Model ID value., by default None
          model_type: Optional[Union[list[str], Series[str], str]]
              Model types can vary among supply, demand and other market fundamentals. The type describes the fundamentals the model output represents., by default None
-         model_type_i_d: Optional[Union[list[str], Series[str], str]]
+         model_type_id: Optional[Union[list[str], Series[str], str]]
              ID associated with Model type., by default None
          market_type: Optional[Union[list[str], Series[str], str]]
              Market Type name, actual or forecast., by default None
-         market_type_i_d: Optional[Union[list[str], Series[str], str]]
+         market_type_id: Optional[Union[list[str], Series[str], str]]
              ID associated with Market type., by default None
          function_type: Optional[Union[list[str], Series[str], str]]
              The name of the Function Type such as prediction, aggregation, allocation, ten year average., by default None
-         function_type_i_d: Optional[Union[list[str], Series[str], str]]
+         function_type_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a Function Type such as 1 is prediction, 2 is aggregation, 3 is allocation, 4 is ten year average., by default None
          point_of_view: Optional[Union[list[str], Series[str], str]]
              Point of View for the values. Point of view based on a geographic hierarchy of country, region, subregion, or producing area., by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada and Mexico., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          state: Optional[Union[list[str], Series[str], str]]
              The political boundaries that define a state or province within country., by default None
-         state_i_d: Optional[Union[list[str], Series[str], str]]
+         state_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the state or province utilizes legacy Bentek IDs., by default None
          producing_area: Optional[Union[list[str], Series[str], str]]
              Defined aggregation of counties within a state that is a best fit representation of prominent oil and gas plays and basins., by default None
-         producing_area_i_d: Optional[Union[list[str], Series[str], str]]
+         producing_area_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for a defined Producing Area utilizes legacy PointLogic IDs., by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Unit of measure., by default None
@@ -494,14 +490,14 @@ class AmericasGas:
              Volume., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
         """
 
         filter_params: List[str] = []
-        filter_params.append("flowDate", flow_date)
+        filter_params.append(list_to_filter("flowDate", flow_date))
         if flow_date_gt is not None:
             filter_params.append(f'flowDate > "{flow_date_gt}"')
         if flow_date_gte is not None:
@@ -521,24 +517,24 @@ class AmericasGas:
             filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
         filter_params.append(list_to_filter("dateFrequency", date_frequency))
         filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
-        filter_params.append(list_to_filter("modelID", model_i_d))
+        filter_params.append(list_to_filter("modelId", model_id))
         filter_params.append(list_to_filter("modelType", model_type))
-        filter_params.append(list_to_filter("modelTypeID", model_type_i_d))
+        filter_params.append(list_to_filter("modelTypeId", model_type_id))
         filter_params.append(list_to_filter("marketType", market_type))
-        filter_params.append(list_to_filter("marketTypeID", market_type_i_d))
+        filter_params.append(list_to_filter("marketTypeId", market_type_id))
         filter_params.append(list_to_filter("functionType", function_type))
-        filter_params.append(list_to_filter("functionTypeID", function_type_i_d))
+        filter_params.append(list_to_filter("functionTypeId", function_type_id))
         filter_params.append(list_to_filter("pointOfView", point_of_view))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(list_to_filter("state", state))
-        filter_params.append(list_to_filter("stateID", state_i_d))
+        filter_params.append(list_to_filter("stateId", state_id))
         filter_params.append(list_to_filter("producingArea", producing_area))
-        filter_params.append(list_to_filter("producingAreaID", producing_area_i_d))
+        filter_params.append(list_to_filter("producingAreaId", producing_area_id))
         filter_params.append(list_to_filter("uom", uom))
         filter_params.append(list_to_filter("volume", volume))
 
@@ -580,30 +576,30 @@ class AmericasGas:
         forecast_date_gte: Optional[datetime] = None,
         date_frequency: Optional[Union[list[str], Series[str], str]] = None,
         date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
-        model_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        model_id: Optional[Union[list[str], Series[str], str]] = None,
         model_type: Optional[Union[list[str], Series[str], str]] = None,
-        model_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        model_type_id: Optional[Union[list[str], Series[str], str]] = None,
         market_type: Optional[Union[list[str], Series[str], str]] = None,
-        market_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        market_type_id: Optional[Union[list[str], Series[str], str]] = None,
         function_type: Optional[Union[list[str], Series[str], str]] = None,
-        function_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        function_type_id: Optional[Union[list[str], Series[str], str]] = None,
         point_of_view: Optional[Union[list[str], Series[str], str]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
         volume: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
         """
-        Daily natural gas modeled at a sector level for power, industrial, residential & commerical, fuel losses and total demand in the US lower 48 across all geographies. Canada and Mexico is included, but sector-level details may vary.
+        Daily natural gas modeled at a sector level for power, industrial, residential & commercial, fuel losses and total demand in the US lower 48 across all geographies. Canada and Mexico is included, but sector-level details may vary.
 
         Parameters
         ----------
@@ -642,33 +638,33 @@ class AmericasGas:
              Daily, Weekly, Monthly, Seasonal, Annual., by default None
          date_frequency_desc: Optional[Union[list[str], Series[str], str]]
              The time period averages of the dataset such as Daily, Weekly, Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
-         model_i_d: Optional[Union[list[str], Series[str], str]]
+         model_id: Optional[Union[list[str], Series[str], str]]
              Internal use, Model ID value., by default None
          model_type: Optional[Union[list[str], Series[str], str]]
              Model types can vary among supply, demand and other market fundamentals. The type describes the fundamentals the model output represents., by default None
-         model_type_i_d: Optional[Union[list[str], Series[str], str]]
+         model_type_id: Optional[Union[list[str], Series[str], str]]
              ID associated with Model type., by default None
          market_type: Optional[Union[list[str], Series[str], str]]
              Market Type name, actual or forecast., by default None
-         market_type_i_d: Optional[Union[list[str], Series[str], str]]
+         market_type_id: Optional[Union[list[str], Series[str], str]]
              ID associated with Market type., by default None
          function_type: Optional[Union[list[str], Series[str], str]]
              The name of the Function Type such as prediction, aggregation, allocation, ten year average., by default None
-         function_type_i_d: Optional[Union[list[str], Series[str], str]]
+         function_type_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a Function Type such as 1 is prediction, 2 is aggregation, 3 is allocation, 4 is ten year average., by default None
          point_of_view: Optional[Union[list[str], Series[str], str]]
              Point of View for the values. Point of view based on a geographic hierarchy of country, region, subregion, or producing area., by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada and Mexico., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Unit of measure., by default None
@@ -676,14 +672,14 @@ class AmericasGas:
              Volume., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
         """
 
         filter_params: List[str] = []
-        filter_params.append("flowDate", flow_date)
+        filter_params.append(list_to_filter("flowDate", flow_date))
         if flow_date_gt is not None:
             filter_params.append(f'flowDate > "{flow_date_gt}"')
         if flow_date_gte is not None:
@@ -712,20 +708,20 @@ class AmericasGas:
             filter_params.append(f'forecastDate <= "{forecast_date_lte}"')
         filter_params.append(list_to_filter("dateFrequency", date_frequency))
         filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
-        filter_params.append(list_to_filter("modelID", model_i_d))
+        filter_params.append(list_to_filter("modelId", model_id))
         filter_params.append(list_to_filter("modelType", model_type))
-        filter_params.append(list_to_filter("modelTypeID", model_type_i_d))
+        filter_params.append(list_to_filter("modelTypeId", model_type_id))
         filter_params.append(list_to_filter("marketType", market_type))
-        filter_params.append(list_to_filter("marketTypeID", market_type_i_d))
+        filter_params.append(list_to_filter("marketTypeId", market_type_id))
         filter_params.append(list_to_filter("functionType", function_type))
-        filter_params.append(list_to_filter("functionTypeID", function_type_i_d))
+        filter_params.append(list_to_filter("functionTypeId", function_type_id))
         filter_params.append(list_to_filter("pointOfView", point_of_view))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(list_to_filter("uom", uom))
         filter_params.append(list_to_filter("volume", volume))
 
@@ -763,46 +759,49 @@ class AmericasGas:
         date_frequency: Optional[Union[list[str], Series[str], str]] = None,
         date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
         nomination_cycle: Optional[Union[list[str], Series[str], str]] = None,
-        legacy_point_logic_point_i_d: Optional[
+        legacy_point_logic_point_id: Optional[
             Union[list[str], Series[str], str]
         ] = None,
-        legacy_point_logic_l_c_i_i_d: Optional[
-            Union[list[str], Series[str], str]
-        ] = None,
-        legacy_bentek_point_i_d: Optional[Union[list[str], Series[str], str]] = None,
-        component_point_i_d: Optional[Union[list[str], Series[str], str]] = None,
-        pipeline_operator_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        legacy_point_logic_lci_id: Optional[Union[list[str], Series[str], str]] = None,
+        legacy_bentek_point_id: Optional[Union[list[str], Series[str], str]] = None,
+        component_point_id: Optional[Union[list[str], Series[str], str]] = None,
+        component_create_date: Optional[datetime] = None,
+        component_create_date_lt: Optional[datetime] = None,
+        component_create_date_lte: Optional[datetime] = None,
+        component_create_date_gt: Optional[datetime] = None,
+        component_create_date_gte: Optional[datetime] = None,
+        pipeline_operator_id: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_operator_name: Optional[Union[list[str], Series[str], str]] = None,
-        pipeline_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_name: Optional[Union[list[str], Series[str], str]] = None,
         point_name: Optional[Union[list[str], Series[str], str]] = None,
         meter_type_primary: Optional[Union[list[str], Series[str], str]] = None,
-        meter_type_i_d_primary: Optional[Union[list[str], Series[str], str]] = None,
-        meter_type_i_d_secondary: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_id_primary: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_id_secondary: Optional[Union[list[str], Series[str], str]] = None,
         meter_type_secondary: Optional[Union[list[str], Series[str], str]] = None,
         location_type_code: Optional[Union[list[str], Series[str], str]] = None,
         location_description: Optional[Union[list[str], Series[str], str]] = None,
-        location_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        location_type_id: Optional[Union[list[str], Series[str], str]] = None,
         flow_direction: Optional[Union[list[str], Series[str], str]] = None,
         flow_direction_code: Optional[Union[list[str], Series[str], str]] = None,
-        flow_direction_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        flow_direction_id: Optional[Union[list[str], Series[str], str]] = None,
         zone: Optional[Union[list[str], Series[str], str]] = None,
-        company_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        company_id: Optional[Union[list[str], Series[str], str]] = None,
         connecting_party: Optional[Union[list[str], Series[str], str]] = None,
         loc_prop: Optional[Union[list[str], Series[str], str]] = None,
         point_is_active: Optional[Union[list[bool], Series[bool], bool]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        state_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        state_id: Optional[Union[list[str], Series[str], str]] = None,
         state: Optional[Union[list[str], Series[str], str]] = None,
-        county_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        county_id: Optional[Union[list[str], Series[str], str]] = None,
         county: Optional[Union[list[str], Series[str], str]] = None,
         producing_area: Optional[Union[list[str], Series[str], str]] = None,
-        producing_area_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        producing_area_id: Optional[Union[list[str], Series[str], str]] = None,
         design_capacity: Optional[str] = None,
         design_capacity_lt: Optional[str] = None,
         design_capacity_lte: Optional[str] = None,
@@ -827,12 +826,12 @@ class AmericasGas:
         best_available: Optional[Union[list[bool], Series[bool], bool]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
         """
-        Daily natural gas pipeline flows in the US lower 48, Canada and Mexico that is accompanied with an array of metadata attributes. Provides last 10 year data for all scenarios.
+        Daily natural gas pipeline flows in the US lower 48, Canada and Mexico that is accompanied with an array of metadata attributes.
 
         Parameters
         ----------
@@ -863,19 +862,29 @@ class AmericasGas:
              The time period averages of the dataset such as Daily, Weekly, Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
          nomination_cycle: Optional[Union[list[str], Series[str], str]]
              Standard NAESB defined nomination cycles for timely (T), evening (E), intraday 1 (I1), intraday 2 (I2) or intraday 3 (I3)., by default None
-         legacy_point_logic_point_i_d: Optional[Union[list[str], Series[str], str]]
+         legacy_point_logic_point_id: Optional[Union[list[str], Series[str], str]]
              Point ID for a meter used by the legacy PointLogic service., by default None
-         legacy_point_logic_l_c_i_i_d: Optional[Union[list[str], Series[str], str]]
+         legacy_point_logic_lci_id: Optional[Union[list[str], Series[str], str]]
              Alternative point ID for a meter used by the legacy PointLogic service., by default None
-         legacy_bentek_point_i_d: Optional[Union[list[str], Series[str], str]]
+         legacy_bentek_point_id: Optional[Union[list[str], Series[str], str]]
              Point ID for a meter used by the legacy Bentek service., by default None
-         component_point_i_d: Optional[Union[list[str], Series[str], str]]
+         component_point_id: Optional[Union[list[str], Series[str], str]]
              Point ID for a meter used by the Americas Gas service., by default None
-         pipeline_operator_i_d: Optional[Union[list[str], Series[str], str]]
+         component_create_date: Optional[datetime], optional
+             The date and time stamp of when the record was created., by default None
+         component_create_date_gt: Optional[datetime], optional
+             filter by `component_create_date > x`, by default None
+         component_create_date_gte: Optional[datetime], optional
+             filter by `component_create_date >= x`, by default None
+         component_create_date_lt: Optional[datetime], optional
+             filter by `component_create_date < x`, by default None
+         component_create_date_lte: Optional[datetime], optional
+             filter by `component_create_date <= x`, by default None
+         pipeline_operator_id: Optional[Union[list[str], Series[str], str]]
              ID associated with the common parent owner or operator of a pipeline system., by default None
          pipeline_operator_name: Optional[Union[list[str], Series[str], str]]
              The name of the common parent owner or operator of a pipeline system., by default None
-         pipeline_i_d: Optional[Union[list[str], Series[str], str]]
+         pipeline_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a pipeline system, utilizes legacy Bentek pipeline ids when applicable., by default None
          pipeline_name: Optional[Union[list[str], Series[str], str]]
              The display name of a pipeline system, utilizes legacy Bentek names when applicable., by default None
@@ -883,9 +892,9 @@ class AmericasGas:
              The display name of a meter or point, utilizes legacy Bentek point name when applicable., by default None
          meter_type_primary: Optional[Union[list[str], Series[str], str]]
              The primary type of classification and purpose of a meter or point, utilizes legacy PointLogic definitions., by default None
-         meter_type_i_d_primary: Optional[Union[list[str], Series[str], str]]
+         meter_type_id_primary: Optional[Union[list[str], Series[str], str]]
              An ID for the primary type of classification and purpose of a meter or point, utilizes legacy PointLogic definitions and ID., by default None
-         meter_type_i_d_secondary: Optional[Union[list[str], Series[str], str]]
+         meter_type_id_secondary: Optional[Union[list[str], Series[str], str]]
              A secondary type classification and purpose of a meter or point, meant to provide an extra level of detail and utilizes legacy Bentek ids., by default None
          meter_type_secondary: Optional[Union[list[str], Series[str], str]]
              A secondary type classification and purpose of a meter or point, meant to provide an extra level of detail, utilizes legacy Bentek definitions., by default None
@@ -893,17 +902,17 @@ class AmericasGas:
              Location type code is a one letter abbreviation of the location description. Location types are sourced from legacy Bentek. These are similar to Flow Direction but serve as a secondary attribute., by default None
          location_description: Optional[Union[list[str], Series[str], str]]
              Location types are sourced from legacy Bentek. These are similar to Flow Direction but serve as a secondary attribute., by default None
-         location_type_i_d: Optional[Union[list[str], Series[str], str]]
+         location_type_id: Optional[Union[list[str], Series[str], str]]
              An ID for the location type sourced from legacy Bentek. These are similar to Flow Direction but serve as a secondary attribute., by default None
          flow_direction: Optional[Union[list[str], Series[str], str]]
              Flow direction indicates the orientation of a point such as receipt, delivery, bi-directional or the reported flow direction of segment or compressor. Attribute is sourced from legacy PointLogic. Flow direction is primary to the similar and secondary attribute of Location Type., by default None
          flow_direction_code: Optional[Union[list[str], Series[str], str]]
              A one letter code for Flow Direction such as ‘R’ for receipt or ‘D’ for delivery. Attribute is sourced from legacy PointLogic. Flow direction is primary to the similar and secondary attribute of Location Type., by default None
-         flow_direction_i_d: Optional[Union[list[str], Series[str], str]]
+         flow_direction_id: Optional[Union[list[str], Series[str], str]]
              Flow direction identification number for the orientation of a point such as receipt, delivery, bi-directional or the reported flow direction of segment or compressor. Attribute is sourced from legacy PointLogic. Flow direction is primary to the similar and secondary attribute of Location Type., by default None
          zone: Optional[Union[list[str], Series[str], str]]
              A designation for where on the pipeline system the point is located, corresponding to a pipeline’s operational and market design. Zonal information is sourced from the legacy Bentek service., by default None
-         company_i_d: Optional[Union[list[str], Series[str], str]]
+         company_id: Optional[Union[list[str], Series[str], str]]
              An ID sourced from the legacy Bentek service used to identify the connecting business or company name of a meter., by default None
          connecting_party: Optional[Union[list[str], Series[str], str]]
              The downstream connecting business name of a meter as reported by the pipeline, utilizes legacy Bentek service., by default None
@@ -913,27 +922,27 @@ class AmericasGas:
              A true or false return if a point or meter is active and in use within the Americas Gas service., by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada and Mexico., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         state_i_d: Optional[Union[list[str], Series[str], str]]
+         state_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the state or province utilizes legacy Bentek IDs., by default None
          state: Optional[Union[list[str], Series[str], str]]
              The political boundaries that define a state or province within country., by default None
-         county_i_d: Optional[Union[list[str], Series[str], str]]
+         county_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the county within a US state in which a meter or point resides, utilizes legacy Bentek IDs., by default None
          county: Optional[Union[list[str], Series[str], str]]
              The political boundaries of a defined county within a US state in which a meter or point resides., by default None
          producing_area: Optional[Union[list[str], Series[str], str]]
              Defined aggregation of counties within a state that is a best fit representation of prominent oil and gas plays and basins., by default None
-         producing_area_i_d: Optional[Union[list[str], Series[str], str]]
+         producing_area_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for a defined Producing Area utilizes legacy PointLogic IDs., by default None
          design_capacity: Optional[str], optional
              The volumetric max that a given meter, segment or compressor can receive or deliver as reported by the pipeline., by default None
@@ -981,7 +990,7 @@ class AmericasGas:
              Best Available refers to the most recent or final nomination cycle for a specific meter on a given flow date. It is indicated as either true or false, with true signifying that the nomination cycle in question is the Best Available. This designation helps in identifying the most current data for operational decisions and reporting purposes., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -1010,57 +1019,70 @@ class AmericasGas:
         filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
         filter_params.append(list_to_filter("nominationCycle", nomination_cycle))
         filter_params.append(
-            list_to_filter("legacyPointLogicPointID", legacy_point_logic_point_i_d)
+            list_to_filter("legacyPointLogicPointId", legacy_point_logic_point_id)
         )
         filter_params.append(
-            list_to_filter("legacyPointLogicLCIID", legacy_point_logic_l_c_i_i_d)
+            list_to_filter("legacyPointLogicLciId", legacy_point_logic_lci_id)
         )
         filter_params.append(
-            list_to_filter("legacyBentekPointID", legacy_bentek_point_i_d)
+            list_to_filter("legacyBentekPointId", legacy_bentek_point_id)
         )
-        filter_params.append(list_to_filter("componentPointID", component_point_i_d))
+        filter_params.append(list_to_filter("componentPointId", component_point_id))
         filter_params.append(
-            list_to_filter("pipelineOperatorID", pipeline_operator_i_d)
+            list_to_filter("componentCreateDate", component_create_date)
         )
+        if component_create_date_gt is not None:
+            filter_params.append(f'componentCreateDate > "{component_create_date_gt}"')
+        if component_create_date_gte is not None:
+            filter_params.append(
+                f'componentCreateDate >= "{component_create_date_gte}"'
+            )
+        if component_create_date_lt is not None:
+            filter_params.append(f'componentCreateDate < "{component_create_date_lt}"')
+        if component_create_date_lte is not None:
+            filter_params.append(
+                f'componentCreateDate <= "{component_create_date_lte}"'
+            )
+        filter_params.append(list_to_filter("pipelineOperatorId", pipeline_operator_id))
         filter_params.append(
             list_to_filter("pipelineOperatorName", pipeline_operator_name)
         )
-        filter_params.append(list_to_filter("pipelineID", pipeline_i_d))
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
         filter_params.append(list_to_filter("pipelineName", pipeline_name))
         filter_params.append(list_to_filter("pointName", point_name))
         filter_params.append(list_to_filter("meterTypePrimary", meter_type_primary))
         filter_params.append(
-            list_to_filter("meterTypeIDPrimary", meter_type_i_d_primary)
+            list_to_filter("meterTypeIdPrimary", meter_type_id_primary)
         )
         filter_params.append(
-            list_to_filter("meterTypeIDSecondary", meter_type_i_d_secondary)
+            list_to_filter("meterTypeIdSecondary", meter_type_id_secondary)
         )
         filter_params.append(list_to_filter("meterTypeSecondary", meter_type_secondary))
         filter_params.append(list_to_filter("locationTypeCode", location_type_code))
         filter_params.append(
             list_to_filter("locationDescription", location_description)
         )
-        filter_params.append(list_to_filter("locationTypeID", location_type_i_d))
+        filter_params.append(list_to_filter("locationTypeId", location_type_id))
         filter_params.append(list_to_filter("flowDirection", flow_direction))
         filter_params.append(list_to_filter("flowDirectionCode", flow_direction_code))
-        filter_params.append(list_to_filter("flowDirectionID", flow_direction_i_d))
+        filter_params.append(list_to_filter("flowDirectionId", flow_direction_id))
         filter_params.append(list_to_filter("zone", zone))
-        filter_params.append(list_to_filter("companyID", company_i_d))
+        filter_params.append(list_to_filter("companyId", company_id))
         filter_params.append(list_to_filter("connectingParty", connecting_party))
         filter_params.append(list_to_filter("locProp", loc_prop))
         filter_params.append(list_to_filter("pointIsActive", point_is_active))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("stateID", state_i_d))
+        filter_params.append(list_to_filter("stateId", state_id))
         filter_params.append(list_to_filter("state", state))
-        filter_params.append(list_to_filter("countyID", county_i_d))
+        filter_params.append(list_to_filter("countyId", county_id))
         filter_params.append(list_to_filter("county", county))
         filter_params.append(list_to_filter("producingArea", producing_area))
-        filter_params.append(list_to_filter("producingAreaID", producing_area_i_d))
+        filter_params.append(list_to_filter("producingAreaId", producing_area_id))
         filter_params.append(list_to_filter("designCapacity", design_capacity))
         if design_capacity_gt is not None:
             filter_params.append(f'designCapacity > "{design_capacity_gt}"')
@@ -1141,15 +1163,15 @@ class AmericasGas:
         date_frequency: Optional[Union[list[str], Series[str], str]] = None,
         date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
         market_type: Optional[Union[list[str], Series[str], str]] = None,
-        market_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        market_type_id: Optional[Union[list[str], Series[str], str]] = None,
         point_of_view: Optional[Union[list[str], Series[str], str]] = None,
-        geography_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        geography_id: Optional[Union[list[str], Series[str], str]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         temperature_unit_of_measure: Optional[
             Union[list[str], Series[str], str]
         ] = None,
@@ -1175,12 +1197,12 @@ class AmericasGas:
         cooling_degree_day_gte: Optional[str] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
         """
-        Population weighted temperatures and degree days by gegraphy within the US lower 48, Canada and Mexico.
+        Population weighted temperatures and degree days by geography within the US lower 48, Canada and Mexico.
 
         Parameters
         ----------
@@ -1221,23 +1243,23 @@ class AmericasGas:
              The time period averages of the dataset such as Daily, Weekly, Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
          market_type: Optional[Union[list[str], Series[str], str]]
              Market Type name, actual or forecast, by default None
-         market_type_i_d: Optional[Union[list[str], Series[str], str]]
+         market_type_id: Optional[Union[list[str], Series[str], str]]
              ID associated with Market type., by default None
          point_of_view: Optional[Union[list[str], Series[str], str]]
              Point of View for the values. Point of view based on a geographic hierarchy of country, region, subregion, or producing area., by default None
-         geography_i_d: Optional[Union[list[str], Series[str], str]]
+         geography_id: Optional[Union[list[str], Series[str], str]]
              Geography ID value for the point of view., by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada and Mexico., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          temperature_unit_of_measure: Optional[Union[list[str], Series[str], str]]
              Temperature unit of measure., by default None
@@ -1283,14 +1305,14 @@ class AmericasGas:
              filter by `cooling_degree_day <= x`, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
         """
 
         filter_params: List[str] = []
-        filter_params.append("flowDate", flow_date)
+        filter_params.append(list_to_filter("flowDate", flow_date))
         if flow_date_gt is not None:
             filter_params.append(f'flowDate > "{flow_date_gt}"')
         if flow_date_gte is not None:
@@ -1320,15 +1342,15 @@ class AmericasGas:
         filter_params.append(list_to_filter("dateFrequency", date_frequency))
         filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
         filter_params.append(list_to_filter("marketType", market_type))
-        filter_params.append(list_to_filter("marketTypeID", market_type_i_d))
+        filter_params.append(list_to_filter("marketTypeId", market_type_id))
         filter_params.append(list_to_filter("pointOfView", point_of_view))
-        filter_params.append(list_to_filter("geographyID", geography_i_d))
+        filter_params.append(list_to_filter("geographyId", geography_id))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(
             list_to_filter("temperatureUnitOfMeasure", temperature_unit_of_measure)
         )
@@ -1409,30 +1431,30 @@ class AmericasGas:
         forecast_date_gte: Optional[datetime] = None,
         date_frequency: Optional[Union[list[str], Series[str], str]] = None,
         date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
-        model_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        model_id: Optional[Union[list[str], Series[str], str]] = None,
         model_type: Optional[Union[list[str], Series[str], str]] = None,
-        model_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        model_type_id: Optional[Union[list[str], Series[str], str]] = None,
         market_type: Optional[Union[list[str], Series[str], str]] = None,
-        market_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        market_type_id: Optional[Union[list[str], Series[str], str]] = None,
         function_type: Optional[Union[list[str], Series[str], str]] = None,
-        function_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        function_type_id: Optional[Union[list[str], Series[str], str]] = None,
         point_of_view: Optional[Union[list[str], Series[str], str]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
         volume: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
         """
-        A 14-day ahead forecast for daily natural gas demand at a sector level for power, industrial, residential & commerical, fuel losses and total demand in the US lower 48 across all geographies. Canada and Mexico is included, but sector-level details may vary.
+        A 14-day ahead forecast for daily natural gas demand at a sector level for power, industrial, residential & commercial, fuel losses and total demand in the US lower 48 across all geographies. Canada and Mexico is included, but sector-level details may vary.
 
         Parameters
         ----------
@@ -1471,33 +1493,33 @@ class AmericasGas:
              Daily, Weekly, Monthly, Seasonal, Annual., by default None
          date_frequency_desc: Optional[Union[list[str], Series[str], str]]
              The time period averages of the dataset such as Daily, Weekly, Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
-         model_i_d: Optional[Union[list[str], Series[str], str]]
+         model_id: Optional[Union[list[str], Series[str], str]]
              Internal use, Model ID value., by default None
          model_type: Optional[Union[list[str], Series[str], str]]
              Model types can vary among supply, demand and other market fundamentals. The type describes the fundamentals the model output represents., by default None
-         model_type_i_d: Optional[Union[list[str], Series[str], str]]
+         model_type_id: Optional[Union[list[str], Series[str], str]]
              ID associated with Model type., by default None
          market_type: Optional[Union[list[str], Series[str], str]]
              Market Type name, actual or forecast, by default None
-         market_type_i_d: Optional[Union[list[str], Series[str], str]]
+         market_type_id: Optional[Union[list[str], Series[str], str]]
              ID associated with Market type., by default None
          function_type: Optional[Union[list[str], Series[str], str]]
              The name of the Function Type such as prediction, aggregation, allocation, ten year average., by default None
-         function_type_i_d: Optional[Union[list[str], Series[str], str]]
+         function_type_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a Function Type such as 1 is prediction, 2 is aggregation, 3 is allocation, 4 is ten year average., by default None
          point_of_view: Optional[Union[list[str], Series[str], str]]
              Point of View for the values. Point of view based on a geographic hierarchy of country, region, subregion, or producing area., by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada and Mexico., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Unit of measure., by default None
@@ -1505,7 +1527,7 @@ class AmericasGas:
              Volume., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -1541,20 +1563,20 @@ class AmericasGas:
             filter_params.append(f'forecastDate <= "{forecast_date_lte}"')
         filter_params.append(list_to_filter("dateFrequency", date_frequency))
         filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
-        filter_params.append(list_to_filter("modelID", model_i_d))
+        filter_params.append(list_to_filter("modelId", model_id))
         filter_params.append(list_to_filter("modelType", model_type))
-        filter_params.append(list_to_filter("modelTypeID", model_type_i_d))
+        filter_params.append(list_to_filter("modelTypeId", model_type_id))
         filter_params.append(list_to_filter("marketType", market_type))
-        filter_params.append(list_to_filter("marketTypeID", market_type_i_d))
+        filter_params.append(list_to_filter("marketTypeId", market_type_id))
         filter_params.append(list_to_filter("functionType", function_type))
-        filter_params.append(list_to_filter("functionTypeID", function_type_i_d))
+        filter_params.append(list_to_filter("functionTypeId", function_type_id))
         filter_params.append(list_to_filter("pointOfView", point_of_view))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(list_to_filter("uom", uom))
         filter_params.append(list_to_filter("volume", volume))
 
@@ -1591,38 +1613,38 @@ class AmericasGas:
         last_modified_date_gte: Optional[datetime] = None,
         date_frequency: Optional[Union[list[str], Series[str], str]] = None,
         date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
-        legacy_bentek_point_i_d: Optional[Union[list[str], Series[str], str]] = None,
-        component_point_i_d: Optional[Union[list[str], Series[str], str]] = None,
-        pipeline_operator_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        legacy_bentek_point_id: Optional[Union[list[str], Series[str], str]] = None,
+        component_point_id: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_operator_id: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_operator_name: Optional[Union[list[str], Series[str], str]] = None,
-        pipeline_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_name: Optional[Union[list[str], Series[str], str]] = None,
         point_name: Optional[Union[list[str], Series[str], str]] = None,
-        meter_type_i_d_primary: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_id_primary: Optional[Union[list[str], Series[str], str]] = None,
         meter_type_primary: Optional[Union[list[str], Series[str], str]] = None,
-        meter_type_i_d_secondary: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_id_secondary: Optional[Union[list[str], Series[str], str]] = None,
         meter_type_secondary: Optional[Union[list[str], Series[str], str]] = None,
         location_type_code: Optional[Union[list[str], Series[str], str]] = None,
         location_description: Optional[Union[list[str], Series[str], str]] = None,
-        location_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        location_type_id: Optional[Union[list[str], Series[str], str]] = None,
         flow_direction: Optional[Union[list[str], Series[str], str]] = None,
         common_code: Optional[Union[list[str], Series[str], str]] = None,
         zone: Optional[Union[list[str], Series[str], str]] = None,
-        company_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        company_id: Optional[Union[list[str], Series[str], str]] = None,
         connecting_party: Optional[Union[list[str], Series[str], str]] = None,
         loc_prop: Optional[Union[list[str], Series[str], str]] = None,
         point_is_active: Optional[Union[list[bool], Series[bool], bool]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        state_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        state_id: Optional[Union[list[str], Series[str], str]] = None,
         state: Optional[Union[list[str], Series[str], str]] = None,
-        county_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        county_id: Optional[Union[list[str], Series[str], str]] = None,
         county: Optional[Union[list[str], Series[str], str]] = None,
-        producing_area_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        producing_area_id: Optional[Union[list[str], Series[str], str]] = None,
         producing_area: Optional[Union[list[str], Series[str], str]] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
         scheduled_volume: Optional[Union[list[str], Series[str], str]] = None,
@@ -1634,11 +1656,11 @@ class AmericasGas:
         operationally_available: Optional[Union[list[str], Series[str], str]] = None,
         interruptible_flow: Optional[Union[list[str], Series[str], str]] = None,
         data_source: Optional[Union[list[str], Series[str], str]] = None,
-        posting_datetime: Optional[datetime] = None,
-        posting_datetime_lt: Optional[datetime] = None,
-        posting_datetime_lte: Optional[datetime] = None,
-        posting_datetime_gt: Optional[datetime] = None,
-        posting_datetime_gte: Optional[datetime] = None,
+        posting_date_time: Optional[datetime] = None,
+        posting_date_time_lt: Optional[datetime] = None,
+        posting_date_time_lte: Optional[datetime] = None,
+        posting_date_time_gt: Optional[datetime] = None,
+        posting_date_time_gte: Optional[datetime] = None,
         create_date: Optional[datetime] = None,
         create_date_lt: Optional[datetime] = None,
         create_date_lte: Optional[datetime] = None,
@@ -1646,12 +1668,12 @@ class AmericasGas:
         create_date_gte: Optional[datetime] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
         """
-        No-notice data is limited to US interstate pipelines that offer no-notice transportation service contracts in the tarrif. The details and provided information these pipelines post can vary. The overall dataset is simlar to pipeline flows in its structure, but reported seperately given the focused nature of no-notice services.
+        No-notice data is limited to US interstate pipelines that offer no-notice transportation service contracts in the tariff. The details and provided information these pipelines post can vary. The overall dataset is similar to pipeline flows in its structure, but reported separately given the focused nature of no-notice services.
 
         Parameters
         ----------
@@ -1680,25 +1702,25 @@ class AmericasGas:
              Daily, Weekly, Monthly, Seasonal, Annual., by default None
          date_frequency_desc: Optional[Union[list[str], Series[str], str]]
              The time period averages of the dataset such as Daily, Weekly, Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
-         legacy_bentek_point_i_d: Optional[Union[list[str], Series[str], str]]
+         legacy_bentek_point_id: Optional[Union[list[str], Series[str], str]]
              Point ID for a meter used by the legacy Bentek service., by default None
-         component_point_i_d: Optional[Union[list[str], Series[str], str]]
+         component_point_id: Optional[Union[list[str], Series[str], str]]
              Point ID for a meter used by the Americas Gas service., by default None
-         pipeline_operator_i_d: Optional[Union[list[str], Series[str], str]]
+         pipeline_operator_id: Optional[Union[list[str], Series[str], str]]
              ID associated with the common parent owner or operator of a pipeline system., by default None
          pipeline_operator_name: Optional[Union[list[str], Series[str], str]]
              The name of the common parent owner or operator of a pipeline system., by default None
-         pipeline_i_d: Optional[Union[list[str], Series[str], str]]
+         pipeline_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a pipeline system, utilizes legacy Bentek pipeline ids when applicable., by default None
          pipeline_name: Optional[Union[list[str], Series[str], str]]
              The display name of a pipeline system, utilizes legacy Bentek names when applicable., by default None
          point_name: Optional[Union[list[str], Series[str], str]]
              The display name of a meter or point, utilizes legacy Bentek point name when applicable., by default None
-         meter_type_i_d_primary: Optional[Union[list[str], Series[str], str]]
+         meter_type_id_primary: Optional[Union[list[str], Series[str], str]]
              An ID for the primary type of classification and purpose of a meter or point, utilizes legacy PointLogic definitions and ID., by default None
          meter_type_primary: Optional[Union[list[str], Series[str], str]]
              The primary type of classification and purpose of a meter or point, utilizes legacy PointLogic definitions., by default None
-         meter_type_i_d_secondary: Optional[Union[list[str], Series[str], str]]
+         meter_type_id_secondary: Optional[Union[list[str], Series[str], str]]
              A secondary type classification and purpose of a meter or point, meant to provide an extra level of detail and utilizes legacy Bentek ids., by default None
          meter_type_secondary: Optional[Union[list[str], Series[str], str]]
              A secondary type classification and purpose of a meter or point, meant to provide an extra level of detail, utilizes legacy Bentek definitions., by default None
@@ -1706,7 +1728,7 @@ class AmericasGas:
              Location type code is a one letter abbreviation of the location description. Location types are sourced from legacy Bentek. These are similar to Flow Direction but serve as a secondary attribute., by default None
          location_description: Optional[Union[list[str], Series[str], str]]
              Location types are sourced from legacy Bentek. These are similar to Flow Direction but serve as a secondary attribute., by default None
-         location_type_i_d: Optional[Union[list[str], Series[str], str]]
+         location_type_id: Optional[Union[list[str], Series[str], str]]
              An ID for the location type sourced from legacy Bentek. These are similar to Flow Direction but serve as a secondary attribute., by default None
          flow_direction: Optional[Union[list[str], Series[str], str]]
              Flow direction indicates the orientation of a point such as receipt, delivery, bi-directional or the reported flow direction of segment or compressor. Attribute is sourced from legacy PointLogic. Flow direction is primary to the similar and secondary attribute of Location Type., by default None
@@ -1714,7 +1736,7 @@ class AmericasGas:
              Common Code, when used, may provide additional information about the point as reported by the pipeline., by default None
          zone: Optional[Union[list[str], Series[str], str]]
              A designation for where on the pipeline system the point is located, corresponding to a pipeline’s operational and market design. Zonal information is sourced from the legacy Bentek service., by default None
-         company_i_d: Optional[Union[list[str], Series[str], str]]
+         company_id: Optional[Union[list[str], Series[str], str]]
              An ID sourced from the legacy Bentek service used to identify the connecting business or company name of a meter., by default None
          connecting_party: Optional[Union[list[str], Series[str], str]]
              The downstream connecting business name of a meter as reported by the pipeline, utilizes legacy Bentek service., by default None
@@ -1722,27 +1744,27 @@ class AmericasGas:
              The location propriety code reported by the pipeline for a specific meter., by default None
          point_is_active: Optional[Union[list[bool], Series[bool], bool]]
              A true or false return if a point or meter is active and in use within the Americas Gas service., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada and Mexico., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion in which a meter or point resides., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         state_i_d: Optional[Union[list[str], Series[str], str]]
+         state_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the state or province utilizes legacy Bentek IDs., by default None
          state: Optional[Union[list[str], Series[str], str]]
              The political boundaries that define a state or province within country., by default None
-         county_i_d: Optional[Union[list[str], Series[str], str]]
+         county_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the county within a US state in which a meter or point resides, utilizes legacy Bentek IDs., by default None
          county: Optional[Union[list[str], Series[str], str]]
              The political boundaries of a defined county within a US state in which a meter or point resides., by default None
-         producing_area_i_d: Optional[Union[list[str], Series[str], str]]
+         producing_area_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for a defined Producing Area, utilizes legacy PointLogic IDs., by default None
          producing_area: Optional[Union[list[str], Series[str], str]]
              Defined aggregation of counties within a state that is a best fit representation of prominent oil and gas plays and basins., by default None
@@ -1766,16 +1788,16 @@ class AmericasGas:
              If available, the volume scheduled on an interruptible contract., by default None
          data_source: Optional[Union[list[str], Series[str], str]]
              Source of the data., by default None
-         posting_datetime: Optional[datetime], optional
+         posting_date_time: Optional[datetime], optional
              Day and time the record was last posted., by default None
-         posting_datetime_gt: Optional[datetime], optional
-             filter by `posting_datetime > x`, by default None
-         posting_datetime_gte: Optional[datetime], optional
-             filter by `posting_datetime >= x`, by default None
-         posting_datetime_lt: Optional[datetime], optional
-             filter by `posting_datetime < x`, by default None
-         posting_datetime_lte: Optional[datetime], optional
-             filter by `posting_datetime <= x`, by default None
+         posting_date_time_gt: Optional[datetime], optional
+             filter by `posting_date_time > x`, by default None
+         posting_date_time_gte: Optional[datetime], optional
+             filter by `posting_date_time >= x`, by default None
+         posting_date_time_lt: Optional[datetime], optional
+             filter by `posting_date_time < x`, by default None
+         posting_date_time_lte: Optional[datetime], optional
+             filter by `posting_date_time <= x`, by default None
          create_date: Optional[datetime], optional
              The date and time stamp of when the record was created., by default None
          create_date_gt: Optional[datetime], optional
@@ -1788,14 +1810,14 @@ class AmericasGas:
              filter by `create_date <= x`, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
         """
 
         filter_params: List[str] = []
-        filter_params.append("flowDate", flow_date)
+        filter_params.append(list_to_filter("flowDate", flow_date))
         if flow_date_gt is not None:
             filter_params.append(f'flowDate > "{flow_date_gt}"')
         if flow_date_gte is not None:
@@ -1816,49 +1838,47 @@ class AmericasGas:
         filter_params.append(list_to_filter("dateFrequency", date_frequency))
         filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
         filter_params.append(
-            list_to_filter("legacyBentekPointID", legacy_bentek_point_i_d)
+            list_to_filter("legacyBentekPointId", legacy_bentek_point_id)
         )
-        filter_params.append(list_to_filter("componentPointID", component_point_i_d))
-        filter_params.append(
-            list_to_filter("pipelineOperatorID", pipeline_operator_i_d)
-        )
+        filter_params.append(list_to_filter("componentPointId", component_point_id))
+        filter_params.append(list_to_filter("pipelineOperatorId", pipeline_operator_id))
         filter_params.append(
             list_to_filter("pipelineOperatorName", pipeline_operator_name)
         )
-        filter_params.append(list_to_filter("pipelineID", pipeline_i_d))
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
         filter_params.append(list_to_filter("pipelineName", pipeline_name))
         filter_params.append(list_to_filter("pointName", point_name))
         filter_params.append(
-            list_to_filter("meterTypeIDPrimary", meter_type_i_d_primary)
+            list_to_filter("meterTypeIdPrimary", meter_type_id_primary)
         )
         filter_params.append(list_to_filter("meterTypePrimary", meter_type_primary))
         filter_params.append(
-            list_to_filter("meterTypeIDSecondary", meter_type_i_d_secondary)
+            list_to_filter("meterTypeIdSecondary", meter_type_id_secondary)
         )
         filter_params.append(list_to_filter("meterTypeSecondary", meter_type_secondary))
         filter_params.append(list_to_filter("locationTypeCode", location_type_code))
         filter_params.append(
             list_to_filter("locationDescription", location_description)
         )
-        filter_params.append(list_to_filter("locationTypeID", location_type_i_d))
+        filter_params.append(list_to_filter("locationTypeId", location_type_id))
         filter_params.append(list_to_filter("flowDirection", flow_direction))
         filter_params.append(list_to_filter("commonCode", common_code))
         filter_params.append(list_to_filter("zone", zone))
-        filter_params.append(list_to_filter("companyID", company_i_d))
+        filter_params.append(list_to_filter("companyId", company_id))
         filter_params.append(list_to_filter("connectingParty", connecting_party))
         filter_params.append(list_to_filter("locProp", loc_prop))
         filter_params.append(list_to_filter("pointIsActive", point_is_active))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("stateID", state_i_d))
+        filter_params.append(list_to_filter("stateId", state_id))
         filter_params.append(list_to_filter("state", state))
-        filter_params.append(list_to_filter("countyID", county_i_d))
+        filter_params.append(list_to_filter("countyId", county_id))
         filter_params.append(list_to_filter("county", county))
-        filter_params.append(list_to_filter("producingAreaID", producing_area_i_d))
+        filter_params.append(list_to_filter("producingAreaId", producing_area_id))
         filter_params.append(list_to_filter("producingArea", producing_area))
         filter_params.append(list_to_filter("uom", uom))
         filter_params.append(list_to_filter("scheduledVolume", scheduled_volume))
@@ -1874,15 +1894,15 @@ class AmericasGas:
         )
         filter_params.append(list_to_filter("interruptibleFlow", interruptible_flow))
         filter_params.append(list_to_filter("dataSource", data_source))
-        filter_params.append(list_to_filter("postingDatetime", posting_datetime))
-        if posting_datetime_gt is not None:
-            filter_params.append(f'postingDatetime > "{posting_datetime_gt}"')
-        if posting_datetime_gte is not None:
-            filter_params.append(f'postingDatetime >= "{posting_datetime_gte}"')
-        if posting_datetime_lt is not None:
-            filter_params.append(f'postingDatetime < "{posting_datetime_lt}"')
-        if posting_datetime_lte is not None:
-            filter_params.append(f'postingDatetime <= "{posting_datetime_lte}"')
+        filter_params.append(list_to_filter("postingDateTime", posting_date_time))
+        if posting_date_time_gt is not None:
+            filter_params.append(f'postingDateTime > "{posting_date_time_gt}"')
+        if posting_date_time_gte is not None:
+            filter_params.append(f'postingDateTime >= "{posting_date_time_gte}"')
+        if posting_date_time_lt is not None:
+            filter_params.append(f'postingDateTime < "{posting_date_time_lt}"')
+        if posting_date_time_lte is not None:
+            filter_params.append(f'postingDateTime <= "{posting_date_time_lte}"')
         filter_params.append(list_to_filter("createDate", create_date))
         if create_date_gt is not None:
             filter_params.append(f'createDate > "{create_date_gt}"')
@@ -1926,33 +1946,33 @@ class AmericasGas:
         last_modified_date_gte: Optional[datetime] = None,
         date_frequency: Optional[Union[list[str], Series[str], str]] = None,
         date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
-        legacy_bentek_point_i_d: Optional[Union[list[str], Series[str], str]] = None,
-        component_point_i_d: Optional[Union[list[str], Series[str], str]] = None,
-        pipeline_operator_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        legacy_bentek_point_id: Optional[Union[list[str], Series[str], str]] = None,
+        component_point_id: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_operator_id: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_operator_name: Optional[Union[list[str], Series[str], str]] = None,
-        pipeline_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_name: Optional[Union[list[str], Series[str], str]] = None,
-        gas_composition_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        gas_composition_type_id: Optional[Union[list[str], Series[str], str]] = None,
         gas_composition_name: Optional[Union[list[str], Series[str], str]] = None,
         point_name: Optional[Union[list[str], Series[str], str]] = None,
-        meter_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_id: Optional[Union[list[str], Series[str], str]] = None,
         meter_type: Optional[Union[list[str], Series[str], str]] = None,
         common_code: Optional[Union[list[str], Series[str], str]] = None,
         zone: Optional[Union[list[str], Series[str], str]] = None,
-        company_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        company_id: Optional[Union[list[str], Series[str], str]] = None,
         connecting_party: Optional[Union[list[str], Series[str], str]] = None,
         loc_prop: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        state_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        state_id: Optional[Union[list[str], Series[str], str]] = None,
         state: Optional[Union[list[str], Series[str], str]] = None,
-        county_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        county_id: Optional[Union[list[str], Series[str], str]] = None,
         county: Optional[Union[list[str], Series[str], str]] = None,
-        producing_area_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        producing_area_id: Optional[Union[list[str], Series[str], str]] = None,
         producing_area: Optional[Union[list[str], Series[str], str]] = None,
         latitude: Optional[Union[list[float], Series[float], float]] = None,
         longitude: Optional[Union[list[float], Series[float], float]] = None,
@@ -1969,7 +1989,7 @@ class AmericasGas:
         data_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -1980,7 +2000,7 @@ class AmericasGas:
         ----------
 
          measurement_date: datetime
-             Measurement date is when the analysis occured and is equal to the gas day or flow date.
+             Measurement date is when the analysis occurred and is equal to the gas day or flow date.
          measurement_date_gt: Optional[datetime], optional
              filter by `measurement_date > x`, by default None
          measurement_date_gte: Optional[datetime], optional
@@ -2003,25 +2023,25 @@ class AmericasGas:
              Daily, Weekly, Monthly, Seasonal, Annual., by default None
          date_frequency_desc: Optional[Union[list[str], Series[str], str]]
              The time period averages of the dataset such as Daily, Weekly, Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
-         legacy_bentek_point_i_d: Optional[Union[list[str], Series[str], str]]
+         legacy_bentek_point_id: Optional[Union[list[str], Series[str], str]]
              Point ID for a meter used by the legacy Bentek service., by default None
-         component_point_i_d: Optional[Union[list[str], Series[str], str]]
+         component_point_id: Optional[Union[list[str], Series[str], str]]
              Point ID for a meter used by the Americas Gas service., by default None
-         pipeline_operator_i_d: Optional[Union[list[str], Series[str], str]]
+         pipeline_operator_id: Optional[Union[list[str], Series[str], str]]
              ID associated with the common parent owner or operator of a pipeline system., by default None
          pipeline_operator_name: Optional[Union[list[str], Series[str], str]]
              The name of the common parent owner or operator of a pipeline system., by default None
-         pipeline_i_d: Optional[Union[list[str], Series[str], str]]
+         pipeline_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a pipeline system, utilizes legacy Bentek pipeline ids when applicable., by default None
          pipeline_name: Optional[Union[list[str], Series[str], str]]
              The display name of a pipeline system, utilizes legacy Bentek names when applicable., by default None
-         gas_composition_type_i_d: Optional[Union[list[str], Series[str], str]]
+         gas_composition_type_id: Optional[Union[list[str], Series[str], str]]
              Unique ID for the reported gas composition name., by default None
          gas_composition_name: Optional[Union[list[str], Series[str], str]]
              Reported gases within the gas stream such as methane, ethane, propane, butane, pentanes and others., by default None
          point_name: Optional[Union[list[str], Series[str], str]]
              The display name of a meter or point, utilizes legacy Bentek point name when applicable., by default None
-         meter_type_i_d: Optional[Union[list[str], Series[str], str]]
+         meter_type_id: Optional[Union[list[str], Series[str], str]]
              The classification and purpose of a meter or point, meant to provide an extra level of detail and utilizes legacy Bentek ids., by default None
          meter_type: Optional[Union[list[str], Series[str], str]]
              The classification and purpose of a meter or point, meant to provide an extra level of detail, utilizes legacy Bentek definitions., by default None
@@ -2029,33 +2049,33 @@ class AmericasGas:
              Common code, when used, may provide additional information about the point as reported by the pipeline., by default None
          zone: Optional[Union[list[str], Series[str], str]]
              A designation for where on the pipeline system the point is located, corresponding to a pipeline’s operational and market design. Zonal information is sourced from the legacy Bentek service., by default None
-         company_i_d: Optional[Union[list[str], Series[str], str]]
+         company_id: Optional[Union[list[str], Series[str], str]]
              An ID sourced from the legacy Bentek service used to identify the connecting business or company name of a meter., by default None
          connecting_party: Optional[Union[list[str], Series[str], str]]
              The downstream connecting business name of a meter as reported by the pipeline, utilizes legacy Bentek service., by default None
          loc_prop: Optional[Union[list[str], Series[str], str]]
              The location propriety code reported by the pipeline for a specific meter., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada and Mexico., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         state_i_d: Optional[Union[list[str], Series[str], str]]
+         state_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the state or province utilizes legacy Bentek IDs., by default None
          state: Optional[Union[list[str], Series[str], str]]
              The political boundaries that define a state or province within country., by default None
-         county_i_d: Optional[Union[list[str], Series[str], str]]
+         county_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the county within a US state in which a meter or point resides, utilizes legacy Bentek IDs., by default None
          county: Optional[Union[list[str], Series[str], str]]
              The political boundaries of a defined county within a US state in which a meter or point resides., by default None
-         producing_area_i_d: Optional[Union[list[str], Series[str], str]]
+         producing_area_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for a defined Producing Area, utilizes legacy PointLogic IDs., by default None
          producing_area: Optional[Union[list[str], Series[str], str]]
              Defined aggregation of counties within a state that is a best fit representation of prominent oil and gas plays and basins., by default None
@@ -2068,7 +2088,7 @@ class AmericasGas:
          value: Optional[Union[list[str], Series[str], str]]
              Reported pipeline value., by default None
          heating_value: Optional[Union[list[str], Series[str], str]]
-             A measure of the heat content of the gas stream, expreessed in Btu per cubic foot., by default None
+             A measure of the heat content of the gas stream, expressed in Btu per cubic foot., by default None
          specific_gravity: Optional[Union[list[str], Series[str], str]]
              A measure of the density of a substance in comparison to the density of water., by default None
          wobbe: Optional[Union[list[str], Series[str], str]]
@@ -2087,14 +2107,14 @@ class AmericasGas:
              A true or false return if the record is active., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
         """
 
         filter_params: List[str] = []
-        filter_params.append("measurementDate", measurement_date)
+        filter_params.append(list_to_filter("measurementDate", measurement_date))
         if measurement_date_gt is not None:
             filter_params.append(f'measurementDate > "{measurement_date_gt}"')
         if measurement_date_gte is not None:
@@ -2115,40 +2135,38 @@ class AmericasGas:
         filter_params.append(list_to_filter("dateFrequency", date_frequency))
         filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
         filter_params.append(
-            list_to_filter("legacyBentekPointID", legacy_bentek_point_i_d)
+            list_to_filter("legacyBentekPointId", legacy_bentek_point_id)
         )
-        filter_params.append(list_to_filter("componentPointID", component_point_i_d))
-        filter_params.append(
-            list_to_filter("pipelineOperatorID", pipeline_operator_i_d)
-        )
+        filter_params.append(list_to_filter("componentPointId", component_point_id))
+        filter_params.append(list_to_filter("pipelineOperatorId", pipeline_operator_id))
         filter_params.append(
             list_to_filter("pipelineOperatorName", pipeline_operator_name)
         )
-        filter_params.append(list_to_filter("pipelineID", pipeline_i_d))
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
         filter_params.append(list_to_filter("pipelineName", pipeline_name))
         filter_params.append(
-            list_to_filter("gasCompositionTypeID", gas_composition_type_i_d)
+            list_to_filter("gasCompositionTypeId", gas_composition_type_id)
         )
         filter_params.append(list_to_filter("gasCompositionName", gas_composition_name))
         filter_params.append(list_to_filter("pointName", point_name))
-        filter_params.append(list_to_filter("meterTypeID", meter_type_i_d))
+        filter_params.append(list_to_filter("meterTypeId", meter_type_id))
         filter_params.append(list_to_filter("meterType", meter_type))
         filter_params.append(list_to_filter("commonCode", common_code))
         filter_params.append(list_to_filter("zone", zone))
-        filter_params.append(list_to_filter("companyID", company_i_d))
+        filter_params.append(list_to_filter("companyId", company_id))
         filter_params.append(list_to_filter("connectingParty", connecting_party))
         filter_params.append(list_to_filter("locProp", loc_prop))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("stateID", state_i_d))
+        filter_params.append(list_to_filter("stateId", state_id))
         filter_params.append(list_to_filter("state", state))
-        filter_params.append(list_to_filter("countyID", county_i_d))
+        filter_params.append(list_to_filter("countyId", county_id))
         filter_params.append(list_to_filter("county", county))
-        filter_params.append(list_to_filter("producingAreaID", producing_area_i_d))
+        filter_params.append(list_to_filter("producingAreaId", producing_area_id))
         filter_params.append(list_to_filter("producingArea", producing_area))
         filter_params.append(list_to_filter("latitude", latitude))
         filter_params.append(list_to_filter("longitude", longitude))
@@ -2189,11 +2207,11 @@ class AmericasGas:
     def get_notices_data(
         self,
         *,
-        posting_datetime: datetime,
-        posting_datetime_lt: Optional[datetime] = None,
-        posting_datetime_lte: Optional[datetime] = None,
-        posting_datetime_gt: Optional[datetime] = None,
-        posting_datetime_gte: Optional[datetime] = None,
+        posting_date_time: datetime,
+        posting_date_time_lt: Optional[datetime] = None,
+        posting_date_time_lte: Optional[datetime] = None,
+        posting_date_time_gt: Optional[datetime] = None,
+        posting_date_time_gte: Optional[datetime] = None,
         last_modified_date: Optional[datetime] = None,
         last_modified_date_lt: Optional[datetime] = None,
         last_modified_date_lte: Optional[datetime] = None,
@@ -2209,19 +2227,19 @@ class AmericasGas:
         end_date_lte: Optional[datetime] = None,
         end_date_gt: Optional[datetime] = None,
         end_date_gte: Optional[datetime] = None,
-        pipeline_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_short_name: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_name: Optional[Union[list[str], Series[str], str]] = None,
-        notice_category_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        notice_category_id: Optional[Union[list[str], Series[str], str]] = None,
         category_code: Optional[Union[list[str], Series[str], str]] = None,
         category: Optional[Union[list[str], Series[str], str]] = None,
-        notice_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        notice_type_id: Optional[Union[list[str], Series[str], str]] = None,
         notice_type: Optional[Union[list[str], Series[str], str]] = None,
-        notice_status_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        notice_status_id: Optional[Union[list[str], Series[str], str]] = None,
         notice_status: Optional[Union[list[str], Series[str], str]] = None,
-        response_code_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        response_code_id: Optional[Union[list[str], Series[str], str]] = None,
         response: Optional[Union[list[str], Series[str], str]] = None,
-        notice_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        notice_id: Optional[Union[list[str], Series[str], str]] = None,
         prior_notice_identifier: Optional[Union[list[str], Series[str], str]] = None,
         subject: Optional[Union[list[str], Series[str], str]] = None,
         comments: Optional[Union[list[str], Series[str], str]] = None,
@@ -2244,7 +2262,7 @@ class AmericasGas:
         data_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -2254,16 +2272,16 @@ class AmericasGas:
         Parameters
         ----------
 
-         posting_datetime: datetime
+         posting_date_time: datetime
              Day and time the record was last posted.
-         posting_datetime_gt: Optional[datetime], optional
-             filter by `posting_datetime > x`, by default None
-         posting_datetime_gte: Optional[datetime], optional
-             filter by `posting_datetime >= x`, by default None
-         posting_datetime_lt: Optional[datetime], optional
-             filter by `posting_datetime < x`, by default None
-         posting_datetime_lte: Optional[datetime], optional
-             filter by `posting_datetime <= x`, by default None
+         posting_date_time_gt: Optional[datetime], optional
+             filter by `posting_date_time > x`, by default None
+         posting_date_time_gte: Optional[datetime], optional
+             filter by `posting_date_time >= x`, by default None
+         posting_date_time_lt: Optional[datetime], optional
+             filter by `posting_date_time < x`, by default None
+         posting_date_time_lte: Optional[datetime], optional
+             filter by `posting_date_time <= x`, by default None
          last_modified_date: Optional[datetime], optional
              Date and time the record was last updated., by default None
          last_modified_date_gt: Optional[datetime], optional
@@ -2294,31 +2312,31 @@ class AmericasGas:
              filter by `end_date < x`, by default None
          end_date_lte: Optional[datetime], optional
              filter by `end_date <= x`, by default None
-         pipeline_i_d: Optional[Union[list[str], Series[str], str]]
+         pipeline_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a pipeline system, utilizes legacy Bentek pipeline ids when applicable., by default None
          pipeline_short_name: Optional[Union[list[str], Series[str], str]]
              The short name of a pipeline system, utilizes legacy Bentek names when applicable., by default None
          pipeline_name: Optional[Union[list[str], Series[str], str]]
              The display name of a pipeline system, utilizes legacy Bentek names when applicable., by default None
-         notice_category_i_d: Optional[Union[list[str], Series[str], str]]
-             A unique identifier number assigned to different catogories of the notice., by default None
+         notice_category_id: Optional[Union[list[str], Series[str], str]]
+             A unique identifier number assigned to different categories of the notice., by default None
          category_code: Optional[Union[list[str], Series[str], str]]
              A short code or abbreviation for each category., by default None
          category: Optional[Union[list[str], Series[str], str]]
              The nature or significance of the pipeline category., by default None
-         notice_type_i_d: Optional[Union[list[str], Series[str], str]]
+         notice_type_id: Optional[Union[list[str], Series[str], str]]
              A unique identifier number assigned to different types of the notice., by default None
          notice_type: Optional[Union[list[str], Series[str], str]]
              The type of the notice., by default None
-         notice_status_i_d: Optional[Union[list[str], Series[str], str]]
+         notice_status_id: Optional[Union[list[str], Series[str], str]]
              A unique identifier number assigned to different statuses of the notice., by default None
          notice_status: Optional[Union[list[str], Series[str], str]]
              Current status of the notice., by default None
-         response_code_i_d: Optional[Union[list[str], Series[str], str]]
+         response_code_id: Optional[Union[list[str], Series[str], str]]
              A unique identifier number assigned to different types of responses required for the notice., by default None
          response: Optional[Union[list[str], Series[str], str]]
              The urgency and timeline associated with each response code., by default None
-         notice_i_d: Optional[Union[list[str], Series[str], str]]
+         notice_id: Optional[Union[list[str], Series[str], str]]
              Notice identifier of the notice., by default None
          prior_notice_identifier: Optional[Union[list[str], Series[str], str]]
              Prior notice identifier of the notice., by default None
@@ -2362,22 +2380,22 @@ class AmericasGas:
              A true or false return if the record is active., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
         """
 
         filter_params: List[str] = []
-        filter_params.append("postingDatetime", posting_datetime)
-        if posting_datetime_gt is not None:
-            filter_params.append(f'postingDatetime > "{posting_datetime_gt}"')
-        if posting_datetime_gte is not None:
-            filter_params.append(f'postingDatetime >= "{posting_datetime_gte}"')
-        if posting_datetime_lt is not None:
-            filter_params.append(f'postingDatetime < "{posting_datetime_lt}"')
-        if posting_datetime_lte is not None:
-            filter_params.append(f'postingDatetime <= "{posting_datetime_lte}"')
+        filter_params.append("postingDateTime", posting_date_time)
+        if posting_date_time_gt is not None:
+            filter_params.append(f'postingDateTime > "{posting_date_time_gt}"')
+        if posting_date_time_gte is not None:
+            filter_params.append(f'postingDateTime >= "{posting_date_time_gte}"')
+        if posting_date_time_lt is not None:
+            filter_params.append(f'postingDateTime < "{posting_date_time_lt}"')
+        if posting_date_time_lte is not None:
+            filter_params.append(f'postingDateTime <= "{posting_date_time_lte}"')
         filter_params.append(list_to_filter("lastModifiedDate", last_modified_date))
         if last_modified_date_gt is not None:
             filter_params.append(f'lastModifiedDate > "{last_modified_date_gt}"')
@@ -2405,19 +2423,19 @@ class AmericasGas:
             filter_params.append(f'endDate < "{end_date_lt}"')
         if end_date_lte is not None:
             filter_params.append(f'endDate <= "{end_date_lte}"')
-        filter_params.append(list_to_filter("pipelineID", pipeline_i_d))
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
         filter_params.append(list_to_filter("pipelineShortName", pipeline_short_name))
         filter_params.append(list_to_filter("pipelineName", pipeline_name))
-        filter_params.append(list_to_filter("noticeCategoryID", notice_category_i_d))
+        filter_params.append(list_to_filter("noticeCategoryId", notice_category_id))
         filter_params.append(list_to_filter("categoryCode", category_code))
         filter_params.append(list_to_filter("category", category))
-        filter_params.append(list_to_filter("noticeTypeID", notice_type_i_d))
+        filter_params.append(list_to_filter("noticeTypeId", notice_type_id))
         filter_params.append(list_to_filter("noticeType", notice_type))
-        filter_params.append(list_to_filter("noticeStatusID", notice_status_i_d))
+        filter_params.append(list_to_filter("noticeStatusId", notice_status_id))
         filter_params.append(list_to_filter("noticeStatus", notice_status))
-        filter_params.append(list_to_filter("responseCodeID", response_code_i_d))
+        filter_params.append(list_to_filter("responseCodeId", response_code_id))
         filter_params.append(list_to_filter("response", response))
-        filter_params.append(list_to_filter("noticeID", notice_i_d))
+        filter_params.append(list_to_filter("noticeId", notice_id))
         filter_params.append(
             list_to_filter("priorNoticeIdentifier", prior_notice_identifier)
         )
@@ -2479,26 +2497,26 @@ class AmericasGas:
         last_modified_date_lte: Optional[datetime] = None,
         last_modified_date_gt: Optional[datetime] = None,
         last_modified_date_gte: Optional[datetime] = None,
-        pipeline_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_name: Optional[Union[list[str], Series[str], str]] = None,
-        service_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        service_type_id: Optional[Union[list[str], Series[str], str]] = None,
         service_type: Optional[Union[list[str], Series[str], str]] = None,
         rate_name: Optional[Union[list[str], Series[str], str]] = None,
         rate_item_name: Optional[Union[list[str], Series[str], str]] = None,
         rate_description: Optional[Union[list[str], Series[str], str]] = None,
-        rate_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        rate_type_id: Optional[Union[list[str], Series[str], str]] = None,
         rate_amount: Optional[Union[list[str], Series[str], str]] = None,
-        rate_unit_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        rate_unit_id: Optional[Union[list[str], Series[str], str]] = None,
         rate_unit: Optional[Union[list[str], Series[str], str]] = None,
-        rate_frequency_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        rate_frequency_id: Optional[Union[list[str], Series[str], str]] = None,
         rate_frequency: Optional[Union[list[str], Series[str], str]] = None,
-        season_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        season_id: Optional[Union[list[str], Series[str], str]] = None,
         season: Optional[Union[list[str], Series[str], str]] = None,
-        gas_unit_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        gas_unit_id: Optional[Union[list[str], Series[str], str]] = None,
         gas_unit_name: Optional[Union[list[str], Series[str], str]] = None,
-        zone_i_d_receipt: Optional[Union[list[str], Series[str], str]] = None,
+        zone_id_receipt: Optional[Union[list[str], Series[str], str]] = None,
         receipt_zone: Optional[Union[list[str], Series[str], str]] = None,
-        zone_i_d_delivery: Optional[Union[list[str], Series[str], str]] = None,
+        zone_id_delivery: Optional[Union[list[str], Series[str], str]] = None,
         delivery_zone: Optional[Union[list[str], Series[str], str]] = None,
         date_effective: Optional[date] = None,
         date_effective_lt: Optional[date] = None,
@@ -2528,7 +2546,7 @@ class AmericasGas:
         data_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -2548,11 +2566,11 @@ class AmericasGas:
              filter by `last_modified_date < x`, by default None
          last_modified_date_lte: Optional[datetime], optional
              filter by `last_modified_date <= x`, by default None
-         pipeline_i_d: Optional[Union[list[str], Series[str], str]]
+         pipeline_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a pipeline system, utilizes legacy Bentek pipeline ids when applicable., by default None
          pipeline_name: Optional[Union[list[str], Series[str], str]]
              The display name of a pipeline system, utilizes legacy Bentek names when applicable., by default None
-         service_type_i_d: Optional[Union[list[str], Series[str], str]]
+         service_type_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the service type., by default None
          service_type: Optional[Union[list[str], Series[str], str]]
              The specific type or category of transportation service being offered by the pipeline., by default None
@@ -2562,31 +2580,31 @@ class AmericasGas:
              The specific name or description of the rate or charge being applied., by default None
          rate_description: Optional[Union[list[str], Series[str], str]]
              The category or classification of the rate being applied., by default None
-         rate_type_i_d: Optional[Union[list[str], Series[str], str]]
+         rate_type_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the rate type., by default None
          rate_amount: Optional[Union[list[str], Series[str], str]]
              The numerical value or percentage associated with the rate or charge., by default None
-         rate_unit_i_d: Optional[Union[list[str], Series[str], str]]
+         rate_unit_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the rate unit., by default None
          rate_unit: Optional[Union[list[str], Series[str], str]]
              The unit of measurement used to quantify the monetary value or percentage associated with the rate or charge., by default None
-         rate_frequency_i_d: Optional[Union[list[str], Series[str], str]]
+         rate_frequency_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the rate frequency., by default None
          rate_frequency: Optional[Union[list[str], Series[str], str]]
              The frequency at which the rate or charge is applied or calculated., by default None
-         season_i_d: Optional[Union[list[str], Series[str], str]]
+         season_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the season., by default None
          season: Optional[Union[list[str], Series[str], str]]
              Season per gas industry standards (April - October in the same year = summer and November - March bridge the calendar years = winter)., by default None
-         gas_unit_i_d: Optional[Union[list[str], Series[str], str]]
+         gas_unit_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the gas unit., by default None
          gas_unit_name: Optional[Union[list[str], Series[str], str]]
              The unit of measurement used to quantify the volume or quantity of gas being transported or supplied., by default None
-         zone_i_d_receipt: Optional[Union[list[str], Series[str], str]]
+         zone_id_receipt: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the receipt zone., by default None
          receipt_zone: Optional[Union[list[str], Series[str], str]]
              A designated area where the gas is received or collected from., by default None
-         zone_i_d_delivery: Optional[Union[list[str], Series[str], str]]
+         zone_id_delivery: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the delivery zone., by default None
          delivery_zone: Optional[Union[list[str], Series[str], str]]
              A designated area where the gas is delivered or transported to., by default None
@@ -2644,7 +2662,7 @@ class AmericasGas:
              A true or false return if the record is active., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -2660,26 +2678,26 @@ class AmericasGas:
             filter_params.append(f'lastModifiedDate < "{last_modified_date_lt}"')
         if last_modified_date_lte is not None:
             filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
-        filter_params.append(list_to_filter("pipelineID", pipeline_i_d))
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
         filter_params.append(list_to_filter("pipelineName", pipeline_name))
-        filter_params.append(list_to_filter("serviceTypeID", service_type_i_d))
+        filter_params.append(list_to_filter("serviceTypeId", service_type_id))
         filter_params.append(list_to_filter("serviceType", service_type))
         filter_params.append(list_to_filter("rateName", rate_name))
         filter_params.append(list_to_filter("rateItemName", rate_item_name))
         filter_params.append(list_to_filter("rateDescription", rate_description))
-        filter_params.append(list_to_filter("rateTypeID", rate_type_i_d))
+        filter_params.append(list_to_filter("rateTypeId", rate_type_id))
         filter_params.append(list_to_filter("rateAmount", rate_amount))
-        filter_params.append(list_to_filter("rateUnitID", rate_unit_i_d))
+        filter_params.append(list_to_filter("rateUnitId", rate_unit_id))
         filter_params.append(list_to_filter("rateUnit", rate_unit))
-        filter_params.append(list_to_filter("rateFrequencyID", rate_frequency_i_d))
+        filter_params.append(list_to_filter("rateFrequencyId", rate_frequency_id))
         filter_params.append(list_to_filter("rateFrequency", rate_frequency))
-        filter_params.append(list_to_filter("seasonID", season_i_d))
+        filter_params.append(list_to_filter("seasonId", season_id))
         filter_params.append(list_to_filter("season", season))
-        filter_params.append(list_to_filter("gasUnitID", gas_unit_i_d))
+        filter_params.append(list_to_filter("gasUnitId", gas_unit_id))
         filter_params.append(list_to_filter("gasUnitName", gas_unit_name))
-        filter_params.append(list_to_filter("zoneIDReceipt", zone_i_d_receipt))
+        filter_params.append(list_to_filter("zoneIdReceipt", zone_id_receipt))
         filter_params.append(list_to_filter("receiptZone", receipt_zone))
-        filter_params.append(list_to_filter("zoneIDDelivery", zone_i_d_delivery))
+        filter_params.append(list_to_filter("zoneIdDelivery", zone_id_delivery))
         filter_params.append(list_to_filter("deliveryZone", delivery_zone))
         filter_params.append(list_to_filter("dateEffective", date_effective))
         if date_effective_gt is not None:
@@ -2761,27 +2779,27 @@ class AmericasGas:
         last_modified_date_gte: Optional[datetime] = None,
         date_frequency: Optional[Union[list[str], Series[str], str]] = None,
         date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
-        model_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        model_id: Optional[Union[list[str], Series[str], str]] = None,
         view_type: Optional[Union[list[str], Series[str], str]] = None,
-        view_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        view_type_id: Optional[Union[list[str], Series[str], str]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         geography_pov: Optional[Union[list[str], Series[str], str]] = None,
-        geography_pov_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        geography_pov_id: Optional[Union[list[str], Series[str], str]] = None,
         name: Optional[Union[list[str], Series[str], str]] = None,
         row_order_ranking: Optional[Union[list[str], Series[str], str]] = None,
         neighboring_geography: Optional[Union[list[str], Series[str], str]] = None,
-        neighboring_geography_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        neighboring_geography_id: Optional[Union[list[str], Series[str], str]] = None,
         volume: Optional[Union[list[str], Series[str], str]] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
         data_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -2815,35 +2833,35 @@ class AmericasGas:
              Daily, Weekly, Monthly, Seasonal, Annual., by default None
          date_frequency_desc: Optional[Union[list[str], Series[str], str]]
              The time period averages of the dataset such as Daily, Weekly, Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
-         model_i_d: Optional[Union[list[str], Series[str], str]]
+         model_id: Optional[Union[list[str], Series[str], str]]
              Internal use, Model ID value., by default None
          view_type: Optional[Union[list[str], Series[str], str]]
              The name of the View Type such as Country Summary, Region Summary, Region Detail, Subregion Detail. Additional and more granular view types exist for the Gulf Coast region such as Gulf Coast: Subregion Summary, Gulf Coast: Substate Detail and Gulf Coast: Special Area Detail., by default None
-         view_type_i_d: Optional[Union[list[str], Series[str], str]]
+         view_type_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a View Type. Country Summary =1, Region Summary =2, Region Detail =3, Subregion Detail =4, Gulf Coast: Subregion Summary =5, Gulf Coast: Substate Detail =6, Gulf Coast: Special Area Detail =7, by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada or Mexico., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          geography_pov: Optional[Union[list[str], Series[str], str]]
-             Geography point of view based on geographic heirarchy of country, region, subregion, substate, or special area., by default None
-         geography_pov_i_d: Optional[Union[list[str], Series[str], str]]
+             Geography point of view based on geographic hierarchy of country, region, subregion, substate, or special area., by default None
+         geography_pov_id: Optional[Union[list[str], Series[str], str]]
              An ID for the geography point of view., by default None
          name: Optional[Union[list[str], Series[str], str]]
              Name of the pipeline summary or regional flows., by default None
          row_order_ranking: Optional[Union[list[str], Series[str], str]]
              A number used to define a consistent row order of the data within a geography point of view., by default None
          neighboring_geography: Optional[Union[list[str], Series[str], str]]
-             Neighboring geography point of view based on geographic heirarchy of country, region, subregion, substate, or special area., by default None
-         neighboring_geography_i_d: Optional[Union[list[str], Series[str], str]]
+             Neighboring geography point of view based on geographic hierarchy of country, region, subregion, substate, or special area., by default None
+         neighboring_geography_id: Optional[Union[list[str], Series[str], str]]
              An ID for the neighboring geography point of view., by default None
          volume: Optional[Union[list[str], Series[str], str]]
              Volume., by default None
@@ -2853,14 +2871,14 @@ class AmericasGas:
              A true or false return if the record is active., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
         """
 
         filter_params: List[str] = []
-        filter_params.append("flowDate", flow_date)
+        filter_params.append(list_to_filter("flowDate", flow_date))
         if flow_date_gt is not None:
             filter_params.append(f'flowDate > "{flow_date_gt}"')
         if flow_date_gte is not None:
@@ -2880,24 +2898,24 @@ class AmericasGas:
             filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
         filter_params.append(list_to_filter("dateFrequency", date_frequency))
         filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
-        filter_params.append(list_to_filter("modelID", model_i_d))
+        filter_params.append(list_to_filter("modelId", model_id))
         filter_params.append(list_to_filter("viewType", view_type))
-        filter_params.append(list_to_filter("viewTypeID", view_type_i_d))
+        filter_params.append(list_to_filter("viewTypeId", view_type_id))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(list_to_filter("geographyPov", geography_pov))
-        filter_params.append(list_to_filter("geographyPovID", geography_pov_i_d))
+        filter_params.append(list_to_filter("geographyPovId", geography_pov_id))
         filter_params.append(list_to_filter("name", name))
         filter_params.append(list_to_filter("rowOrderRanking", row_order_ranking))
         filter_params.append(
             list_to_filter("neighboringGeography", neighboring_geography)
         )
         filter_params.append(
-            list_to_filter("neighboringGeographyID", neighboring_geography_i_d)
+            list_to_filter("neighboringGeographyId", neighboring_geography_id)
         )
         filter_params.append(list_to_filter("volume", volume))
         filter_params.append(list_to_filter("uom", uom))
@@ -2943,20 +2961,20 @@ class AmericasGas:
         aggregate_play: Optional[Union[list[str], Series[str], str]] = None,
         subplay: Optional[Union[list[str], Series[str], str]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         gulfcoast_substate: Optional[Union[list[str], Series[str], str]] = None,
-        gulfcoast_substate_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        gulfcoast_substate_id: Optional[Union[list[str], Series[str], str]] = None,
         state_abbreviation: Optional[Union[list[str], Series[str], str]] = None,
-        state_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        state_id: Optional[Union[list[str], Series[str], str]] = None,
         value: Optional[Union[list[str], Series[str], str]] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -3004,23 +3022,23 @@ class AmericasGas:
              Production forecasts at a Sub Play level in its most granular expression and compliments the regional aggregation of production within the short and long term outlooks., by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada or Mexico., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          gulfcoast_substate: Optional[Union[list[str], Series[str], str]]
              The name of substate region or special area within the Gulf Coast region., by default None
-         gulfcoast_substate_i_d: Optional[Union[list[str], Series[str], str]]
+         gulfcoast_substate_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic substate regions within the Gulf Coast area., by default None
          state_abbreviation: Optional[Union[list[str], Series[str], str]]
              Abbreviation for a state or province within country., by default None
-         state_i_d: Optional[Union[list[str], Series[str], str]]
+         state_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the state or province utilizes legacy Bentek IDs., by default None
          value: Optional[Union[list[str], Series[str], str]]
              The dry natural gas production volume expressed in a daily average format., by default None
@@ -3028,7 +3046,7 @@ class AmericasGas:
              Unit of measure., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -3062,17 +3080,17 @@ class AmericasGas:
         filter_params.append(list_to_filter("aggregatePlay", aggregate_play))
         filter_params.append(list_to_filter("subplay", subplay))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(list_to_filter("gulfcoastSubstate", gulfcoast_substate))
         filter_params.append(
-            list_to_filter("gulfcoastSubstateID", gulfcoast_substate_i_d)
+            list_to_filter("gulfcoastSubstateId", gulfcoast_substate_id)
         )
         filter_params.append(list_to_filter("stateAbbreviation", state_abbreviation))
-        filter_params.append(list_to_filter("stateID", state_i_d))
+        filter_params.append(list_to_filter("stateId", state_id))
         filter_params.append(list_to_filter("value", value))
         filter_params.append(list_to_filter("uom", uom))
 
@@ -3110,15 +3128,15 @@ class AmericasGas:
         date_frequency: Optional[Union[list[str], Series[str], str]] = None,
         date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         geography_type: Optional[Union[list[str], Series[str], str]] = None,
         geography_pov: Optional[Union[list[str], Series[str], str]] = None,
-        geography_pov_i_d: Optional[Union[list[str], Series[str], str]] = None,
-        model_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        geography_pov_id: Optional[Union[list[str], Series[str], str]] = None,
+        model_id: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         category: Optional[Union[list[str], Series[str], str]] = None,
         row_order_ranking: Optional[Union[list[str], Series[str], str]] = None,
@@ -3126,7 +3144,7 @@ class AmericasGas:
         value: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -3162,23 +3180,23 @@ class AmericasGas:
              The time period averages of the dataset such as Daily, Weekly, Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada and Mexico., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          geography_type: Optional[Union[list[str], Series[str], str]]
              Geography type for the point of view based on geographic hierarchy of country, region, subregion, substate, or special area., by default None
          geography_pov: Optional[Union[list[str], Series[str], str]]
-             Geography point of view based on geographic heirarchy of country, region, subregion, substate, or special area., by default None
-         geography_pov_i_d: Optional[Union[list[str], Series[str], str]]
+             Geography point of view based on geographic hierarchy of country, region, subregion, substate, or special area., by default None
+         geography_pov_id: Optional[Union[list[str], Series[str], str]]
              An ID for the geography point of view., by default None
-         model_i_d: Optional[Union[list[str], Series[str], str]]
+         model_id: Optional[Union[list[str], Series[str], str]]
              Internal use, Model ID value., by default None
          concept: Optional[Union[list[str], Series[str], str]]
              Data concept such as Supply, Demand, LNG, Storage, Flows, etc., by default None
@@ -3192,14 +3210,14 @@ class AmericasGas:
              Value of the record., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
         """
 
         filter_params: List[str] = []
-        filter_params.append("flowDate", flow_date)
+        filter_params.append(list_to_filter("flowDate", flow_date))
         if flow_date_gt is not None:
             filter_params.append(f'flowDate > "{flow_date_gt}"')
         if flow_date_gte is not None:
@@ -3220,15 +3238,15 @@ class AmericasGas:
         filter_params.append(list_to_filter("dateFrequency", date_frequency))
         filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(list_to_filter("geographyType", geography_type))
         filter_params.append(list_to_filter("geographyPov", geography_pov))
-        filter_params.append(list_to_filter("geographyPovID", geography_pov_i_d))
-        filter_params.append(list_to_filter("modelID", model_i_d))
+        filter_params.append(list_to_filter("geographyPovId", geography_pov_id))
+        filter_params.append(list_to_filter("modelId", model_id))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("category", category))
         filter_params.append(list_to_filter("rowOrderRanking", row_order_ranking))
@@ -3265,29 +3283,27 @@ class AmericasGas:
         last_modified_date_gte: Optional[datetime] = None,
         pipeline_filer_name: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_name: Optional[Union[list[str], Series[str], str]] = None,
-        pipeline_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
         shipper_name: Optional[Union[list[str], Series[str], str]] = None,
-        legacy_point_logic_point_i_d: Optional[
+        legacy_point_logic_point_id: Optional[
             Union[list[str], Series[str], str]
         ] = None,
-        ple_point_i_d: Optional[Union[list[str], Series[str], str]] = None,
-        legacy_point_logic_l_c_i_i_d: Optional[
-            Union[list[str], Series[str], str]
-        ] = None,
-        component_point_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        ple_point_id: Optional[Union[list[str], Series[str], str]] = None,
+        legacy_point_logic_lci_id: Optional[Union[list[str], Series[str], str]] = None,
+        component_point_id: Optional[Union[list[str], Series[str], str]] = None,
         meter_type_primary: Optional[Union[list[str], Series[str], str]] = None,
         meter_type_i_d_primary: Optional[Union[list[str], Series[str], str]] = None,
         dir: Optional[Union[list[str], Series[str], str]] = None,
         loc_prop: Optional[Union[list[str], Series[str], str]] = None,
         zone: Optional[Union[list[str], Series[str], str]] = None,
         county: Optional[Union[list[str], Series[str], str]] = None,
-        county_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        county_id: Optional[Union[list[str], Series[str], str]] = None,
         state: Optional[Union[list[str], Series[str], str]] = None,
-        state_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        state_id: Optional[Union[list[str], Series[str], str]] = None,
         sub_region: Optional[Union[list[str], Series[str], str]] = None,
-        sub_region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         max_trans: Optional[Union[list[float], Series[float], float]] = None,
         max_storage: Optional[Union[list[float], Series[float], float]] = None,
         point_max_trans: Optional[Union[list[float], Series[float], float]] = None,
@@ -3311,7 +3327,7 @@ class AmericasGas:
         negotiated_rate: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -3339,17 +3355,17 @@ class AmericasGas:
              The filer name of a pipeline system., by default None
          pipeline_name: Optional[Union[list[str], Series[str], str]]
              The display name of a pipeline system, utilizes legacy Bentek names when applicable., by default None
-         pipeline_i_d: Optional[Union[list[str], Series[str], str]]
+         pipeline_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a pipeline system, utilizes legacy Bentek pipeline ids when applicable., by default None
          shipper_name: Optional[Union[list[str], Series[str], str]]
              The name of the company responsible for transporting natural gas from the production or supply source to the end consumer., by default None
-         legacy_point_logic_point_i_d: Optional[Union[list[str], Series[str], str]]
+         legacy_point_logic_point_id: Optional[Union[list[str], Series[str], str]]
              The display name of a meter or point, utilizes legacy Bentek point name when applicable., by default None
-         ple_point_i_d: Optional[Union[list[str], Series[str], str]]
+         ple_point_id: Optional[Union[list[str], Series[str], str]]
              Point ID for a meter used by the legacy PointLogic service., by default None
-         legacy_point_logic_l_c_i_i_d: Optional[Union[list[str], Series[str], str]]
+         legacy_point_logic_lci_id: Optional[Union[list[str], Series[str], str]]
              Alternative point ID for a meter used by the legacy PointLogic service., by default None
-         component_point_i_d: Optional[Union[list[str], Series[str], str]]
+         component_point_id: Optional[Union[list[str], Series[str], str]]
              Point ID for a meter used by the Americas Gas service., by default None
          meter_type_primary: Optional[Union[list[str], Series[str], str]]
              The primary type of classification and purpose of a meter or point, utilizes legacy PointLogic definitions., by default None
@@ -3363,19 +3379,19 @@ class AmericasGas:
              A designation for where on the pipeline system the point is located, corresponding to a pipeline’s operational and market design. Zonal information is sourced from the legacy Bentek service., by default None
          county: Optional[Union[list[str], Series[str], str]]
              The political boundaries of a defined county within a US state in which a meter or point resides., by default None
-         county_i_d: Optional[Union[list[str], Series[str], str]]
+         county_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the county within a US state in which a meter or point resides, utilizes legacy Bentek IDs., by default None
          state: Optional[Union[list[str], Series[str], str]]
              The political boundaries that define a state or province within country., by default None
-         state_i_d: Optional[Union[list[str], Series[str], str]]
+         state_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the state or province utilizes legacy Bentek IDs., by default None
          sub_region: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         sub_region_i_d: Optional[Union[list[str], Series[str], str]]
+         sub_region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          max_trans: Optional[Union[list[float], Series[float], float]]
              Maximum quantity of natural gas that can be transported per day., by default None
@@ -3416,12 +3432,12 @@ class AmericasGas:
          contract_months: Optional[Union[list[float], Series[float], float]]
              Total number of months for the contract., by default None
          roll_over_period: Optional[Union[list[float], Series[float], float]]
-             The number of days in the roll-over period after which the contract can be renewed or extended. Also know as evergreen period. If the contract continues on a monthly basis then 31 should be entered if annual enter 365, if unknown leave blank., by default None
+             The number of days in the roll-over period after which the contract can be renewed or extended. Also known as evergreen period. If the contract continues on a monthly basis then 31 should be entered; if annual enter 365; if unknown leave blank., by default None
          negotiated_rate: Optional[Union[list[str], Series[str], str]]
              Indicates whether the rate was negotiated (Yes/No)., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -3441,16 +3457,16 @@ class AmericasGas:
             filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
         filter_params.append(list_to_filter("pipelineFilerName", pipeline_filer_name))
         filter_params.append(list_to_filter("pipelineName", pipeline_name))
-        filter_params.append(list_to_filter("pipelineID", pipeline_i_d))
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
         filter_params.append(list_to_filter("shipperName", shipper_name))
         filter_params.append(
-            list_to_filter("legacyPointLogicPointID", legacy_point_logic_point_i_d)
+            list_to_filter("legacyPointLogicPointId", legacy_point_logic_point_id)
         )
-        filter_params.append(list_to_filter("plePointID", ple_point_i_d))
+        filter_params.append(list_to_filter("plePointId", ple_point_id))
         filter_params.append(
-            list_to_filter("legacyPointLogicLCIID", legacy_point_logic_l_c_i_i_d)
+            list_to_filter("legacyPointLogicLciId", legacy_point_logic_lci_id)
         )
-        filter_params.append(list_to_filter("componentPointID", component_point_i_d))
+        filter_params.append(list_to_filter("componentPointId", component_point_id))
         filter_params.append(list_to_filter("meterTypePrimary", meter_type_primary))
         filter_params.append(
             list_to_filter("meterTypeIDPrimary", meter_type_i_d_primary)
@@ -3459,13 +3475,13 @@ class AmericasGas:
         filter_params.append(list_to_filter("locProp", loc_prop))
         filter_params.append(list_to_filter("zone", zone))
         filter_params.append(list_to_filter("county", county))
-        filter_params.append(list_to_filter("countyID", county_i_d))
+        filter_params.append(list_to_filter("countyId", county_id))
         filter_params.append(list_to_filter("state", state))
-        filter_params.append(list_to_filter("stateID", state_i_d))
+        filter_params.append(list_to_filter("stateId", state_id))
         filter_params.append(list_to_filter("subRegion", sub_region))
-        filter_params.append(list_to_filter("subRegionID", sub_region_i_d))
+        filter_params.append(list_to_filter("subRegionId", sub_region_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("maxTrans", max_trans))
         filter_params.append(list_to_filter("maxStorage", max_storage))
         filter_params.append(list_to_filter("pointMaxTrans", point_max_trans))
@@ -3530,11 +3546,11 @@ class AmericasGas:
         concept: Optional[Union[list[str], Series[str], str]] = None,
         category: Optional[Union[list[str], Series[str], str]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         geography_point_of_view: Optional[Union[list[str], Series[str], str]] = None,
-        geography_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        geography_id: Optional[Union[list[str], Series[str], str]] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
         value: Optional[Union[list[str], Series[str], str]] = None,
         last_modified_date: Optional[datetime] = None,
@@ -3544,7 +3560,7 @@ class AmericasGas:
         last_modified_date_gte: Optional[datetime] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -3580,15 +3596,15 @@ class AmericasGas:
              Category that is unique within a Concept., by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada and Mexico., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          geography_point_of_view: Optional[Union[list[str], Series[str], str]]
              The geography in which the data perspective is expressed., by default None
-         geography_i_d: Optional[Union[list[str], Series[str], str]]
+         geography_id: Optional[Union[list[str], Series[str], str]]
              Geography ID value for the point of view., by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Unit of measure., by default None
@@ -3606,7 +3622,7 @@ class AmericasGas:
              filter by `last_modified_date <= x`, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -3630,13 +3646,13 @@ class AmericasGas:
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("category", category))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(
             list_to_filter("geographyPointOfView", geography_point_of_view)
         )
-        filter_params.append(list_to_filter("geographyID", geography_i_d))
+        filter_params.append(list_to_filter("geographyId", geography_id))
         filter_params.append(list_to_filter("uom", uom))
         filter_params.append(list_to_filter("value", value))
         filter_params.append(list_to_filter("lastModifiedDate", last_modified_date))
@@ -3682,31 +3698,31 @@ class AmericasGas:
         last_modified_date_gte: Optional[datetime] = None,
         date_frequency: Optional[Union[list[str], Series[str], str]] = None,
         date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
-        model_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        model_id: Optional[Union[list[str], Series[str], str]] = None,
         model_type: Optional[Union[list[str], Series[str], str]] = None,
-        model_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        model_type_id: Optional[Union[list[str], Series[str], str]] = None,
         market_type: Optional[Union[list[str], Series[str], str]] = None,
-        market_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        market_type_id: Optional[Union[list[str], Series[str], str]] = None,
         function_type: Optional[Union[list[str], Series[str], str]] = None,
-        function_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        function_type_id: Optional[Union[list[str], Series[str], str]] = None,
         point_of_view: Optional[Union[list[str], Series[str], str]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         state: Optional[Union[list[str], Series[str], str]] = None,
-        state_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        state_id: Optional[Union[list[str], Series[str], str]] = None,
         producing_area: Optional[Union[list[str], Series[str], str]] = None,
-        producing_area_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        producing_area_id: Optional[Union[list[str], Series[str], str]] = None,
         padd: Optional[Union[list[str], Series[str], str]] = None,
         padd_name: Optional[Union[list[str], Series[str], str]] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
         volume: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -3740,41 +3756,41 @@ class AmericasGas:
              Oil production can only be Monthly, Seasonal, Annual., by default None
          date_frequency_desc: Optional[Union[list[str], Series[str], str]]
              The time period averages of the dataset such as Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
-         model_i_d: Optional[Union[list[str], Series[str], str]]
+         model_id: Optional[Union[list[str], Series[str], str]]
              Internal use, Model ID value., by default None
          model_type: Optional[Union[list[str], Series[str], str]]
              Model types can vary among supply, demand and other market fundamentals. The type describes the fundamentals the model output represents., by default None
-         model_type_i_d: Optional[Union[list[str], Series[str], str]]
+         model_type_id: Optional[Union[list[str], Series[str], str]]
              ID associated with Model type., by default None
          market_type: Optional[Union[list[str], Series[str], str]]
              Oil market type relates to the point of view data, such as country, region, subregion, special area or producing area., by default None
-         market_type_i_d: Optional[Union[list[str], Series[str], str]]
+         market_type_id: Optional[Union[list[str], Series[str], str]]
              ID associated with Market type., by default None
          function_type: Optional[Union[list[str], Series[str], str]]
              The name of the Function Type such as prediction, aggregation, allocation, ten year average., by default None
-         function_type_i_d: Optional[Union[list[str], Series[str], str]]
+         function_type_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a Function Type such as 1 is prediction, 2 is aggregation, 3 is allocation, 4 is ten year average., by default None
          point_of_view: Optional[Union[list[str], Series[str], str]]
              Point of View for the values. Point of view based on a geographic hierarchy of country, region, subregion, or producing area., by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada and Mexico., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          state: Optional[Union[list[str], Series[str], str]]
              The political boundaries that define a state or province within country., by default None
-         state_i_d: Optional[Union[list[str], Series[str], str]]
+         state_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the state or province utilizes legacy Bentek IDs., by default None
          producing_area: Optional[Union[list[str], Series[str], str]]
              Defined aggregation of counties within a state that is a best fit representation of prominent oil and gas plays and basins., by default None
-         producing_area_i_d: Optional[Union[list[str], Series[str], str]]
+         producing_area_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for a defined Producing Area utilizes legacy PointLogic IDs., by default None
          padd: Optional[Union[list[str], Series[str], str]]
              Petroleum Administration for Defense Districts (PADDs) are geographic aggregations of the 50 States and the District of Columbia into five districts: PADD 1 is the East Coast, PADD 2 the Midwest, PADD 3 the Gulf Coast, PADD 4 the Rocky Mountain Region, and PADD 5 the West Coast., by default None
@@ -3786,14 +3802,14 @@ class AmericasGas:
              Volume., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
         """
 
         filter_params: List[str] = []
-        filter_params.append("flowDate", flow_date)
+        filter_params.append(list_to_filter("flowDate", flow_date))
         if flow_date_gt is not None:
             filter_params.append(f'flowDate > "{flow_date_gt}"')
         if flow_date_gte is not None:
@@ -3813,24 +3829,24 @@ class AmericasGas:
             filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
         filter_params.append(list_to_filter("dateFrequency", date_frequency))
         filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
-        filter_params.append(list_to_filter("modelID", model_i_d))
+        filter_params.append(list_to_filter("modelId", model_id))
         filter_params.append(list_to_filter("modelType", model_type))
-        filter_params.append(list_to_filter("modelTypeID", model_type_i_d))
+        filter_params.append(list_to_filter("modelTypeId", model_type_id))
         filter_params.append(list_to_filter("marketType", market_type))
-        filter_params.append(list_to_filter("marketTypeID", market_type_i_d))
+        filter_params.append(list_to_filter("marketTypeId", market_type_id))
         filter_params.append(list_to_filter("functionType", function_type))
-        filter_params.append(list_to_filter("functionTypeID", function_type_i_d))
+        filter_params.append(list_to_filter("functionTypeId", function_type_id))
         filter_params.append(list_to_filter("pointOfView", point_of_view))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(list_to_filter("state", state))
-        filter_params.append(list_to_filter("stateID", state_i_d))
+        filter_params.append(list_to_filter("stateId", state_id))
         filter_params.append(list_to_filter("producingArea", producing_area))
-        filter_params.append(list_to_filter("producingAreaID", producing_area_i_d))
+        filter_params.append(list_to_filter("producingAreaId", producing_area_id))
         filter_params.append(list_to_filter("padd", padd))
         filter_params.append(list_to_filter("paddName", padd_name))
         filter_params.append(list_to_filter("uom", uom))
@@ -3870,46 +3886,46 @@ class AmericasGas:
         date_frequency: Optional[Union[list[str], Series[str], str]] = None,
         date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
         facility_type: Optional[Union[list[str], Series[str], str]] = None,
-        facility_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        facility_type_id: Optional[Union[list[str], Series[str], str]] = None,
         view_type: Optional[Union[list[str], Series[str], str]] = None,
-        view_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        view_type_id: Optional[Union[list[str], Series[str], str]] = None,
         name: Optional[Union[list[str], Series[str], str]] = None,
-        model_i_d: Optional[Union[list[str], Series[str], str]] = None,
-        component_point_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        model_id: Optional[Union[list[str], Series[str], str]] = None,
+        component_point_id: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_name: Optional[Union[list[str], Series[str], str]] = None,
-        pipeline_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
         point_name: Optional[Union[list[str], Series[str], str]] = None,
         meter_type_primary: Optional[Union[list[str], Series[str], str]] = None,
-        meter_type_i_d_primary: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_id_primary: Optional[Union[list[str], Series[str], str]] = None,
         meter_type_secondary: Optional[Union[list[str], Series[str], str]] = None,
-        meter_type_i_d_secondary: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_id_secondary: Optional[Union[list[str], Series[str], str]] = None,
         flow_direction: Optional[Union[list[str], Series[str], str]] = None,
         flow_direction_code: Optional[Union[list[str], Series[str], str]] = None,
-        flow_direction_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        flow_direction_id: Optional[Union[list[str], Series[str], str]] = None,
         zone: Optional[Union[list[str], Series[str], str]] = None,
         connecting_party: Optional[Union[list[str], Series[str], str]] = None,
         loc_prop: Optional[Union[list[str], Series[str], str]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         state: Optional[Union[list[str], Series[str], str]] = None,
-        state_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        state_id: Optional[Union[list[str], Series[str], str]] = None,
         county: Optional[Union[list[str], Series[str], str]] = None,
-        county_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        county_id: Optional[Union[list[str], Series[str], str]] = None,
         producing_area: Optional[Union[list[str], Series[str], str]] = None,
-        producing_area_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        producing_area_id: Optional[Union[list[str], Series[str], str]] = None,
         padd_name: Optional[Union[list[str], Series[str], str]] = None,
         plant_field_name: Optional[Union[list[str], Series[str], str]] = None,
         plant_field_code: Optional[Union[list[str], Series[str], str]] = None,
         utility_company_name: Optional[Union[list[str], Series[str], str]] = None,
-        utility_company_i_d: Optional[str] = None,
-        utility_company_i_d_lt: Optional[str] = None,
-        utility_company_i_d_lte: Optional[str] = None,
-        utility_company_i_d_gt: Optional[str] = None,
-        utility_company_i_d_gte: Optional[str] = None,
+        utility_company_id: Optional[str] = None,
+        utility_company_id_lt: Optional[str] = None,
+        utility_company_id_lte: Optional[str] = None,
+        utility_company_id_gt: Optional[str] = None,
+        utility_company_id_gte: Optional[str] = None,
         nerc_region: Optional[Union[list[str], Series[str], str]] = None,
         balancing_authority_name: Optional[Union[list[str], Series[str], str]] = None,
         balancing_authority_code: Optional[Union[list[str], Series[str], str]] = None,
@@ -3921,7 +3937,7 @@ class AmericasGas:
         volume: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -3957,37 +3973,37 @@ class AmericasGas:
              The time period averages of the dataset such as Daily, Weekly, Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
          facility_type: Optional[Union[list[str], Series[str], str]]
              The type of facility that is being served by the pipeline such as Gas Processing Plant, Power Plant, Storage, LNG Feedgas or LNG Sendout., by default None
-         facility_type_i_d: Optional[Union[list[str], Series[str], str]]
+         facility_type_id: Optional[Union[list[str], Series[str], str]]
              The facility type ID is a numeric value (1 to 5) that corresponds to the sequential order of the facility types described., by default None
          view_type: Optional[Union[list[str], Series[str], str]]
-             The nature of the line item data and its time series. Facility view type contains the named facilty and applicable metadata. Sample view type details the underlining meter-level data in the aggregated Facility view type., by default None
-         view_type_i_d: Optional[Union[list[str], Series[str], str]]
+             The nature of the line item data and its time series. Facility view type contains the named facility and applicable metadata. Sample view type details the underlining meter-level data in the aggregated Facility view type., by default None
+         view_type_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a view type where Facility is equal to 1 and Sample 2., by default None
          name: Optional[Union[list[str], Series[str], str]]
              The name of the facility., by default None
-         model_i_d: Optional[Union[list[str], Series[str], str]]
+         model_id: Optional[Union[list[str], Series[str], str]]
              Internal use, Model ID value., by default None
-         component_point_i_d: Optional[Union[list[str], Series[str], str]]
+         component_point_id: Optional[Union[list[str], Series[str], str]]
              Point ID for a meter used by the Americas Gas service., by default None
          pipeline_name: Optional[Union[list[str], Series[str], str]]
              The display name of a pipeline system, utilizes legacy Bentek names when applicable., by default None
-         pipeline_i_d: Optional[Union[list[str], Series[str], str]]
+         pipeline_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a pipeline system, utilizes legacy Bentek pipeline ids when applicable., by default None
          point_name: Optional[Union[list[str], Series[str], str]]
              The display name of a meter or point, utilizes legacy Bentek point name when applicable., by default None
          meter_type_primary: Optional[Union[list[str], Series[str], str]]
              The primary type of classification and purpose of a meter or point, utilizes legacy PointLogic definitions., by default None
-         meter_type_i_d_primary: Optional[Union[list[str], Series[str], str]]
+         meter_type_id_primary: Optional[Union[list[str], Series[str], str]]
              An ID for the primary type of classification and purpose of a meter or point, utilizes legacy PointLogic definitions and ID., by default None
          meter_type_secondary: Optional[Union[list[str], Series[str], str]]
              A secondary type classification and purpose of a meter or point, meant to provide an extra level of detail, utilizes legacy Bentek definitions., by default None
-         meter_type_i_d_secondary: Optional[Union[list[str], Series[str], str]]
+         meter_type_id_secondary: Optional[Union[list[str], Series[str], str]]
              A secondary type classification and purpose of a meter or point, meant to provide an extra level of detail and utilizes legacy Bentek ids., by default None
          flow_direction: Optional[Union[list[str], Series[str], str]]
              Flow direction indicates the orientation of a point such as receipt, delivery, bi-directional or the reported flow direction of segment or compressor. Attribute is sourced from legacy PointLogic. Flow direction is primary to the similar and secondary attribute of Location Type., by default None
          flow_direction_code: Optional[Union[list[str], Series[str], str]]
              A one letter code for Flow Direction such as ‘R’ for receipt or ‘D’ for delivery. Attribute is sourced from legacy PointLogic. Flow direction is primary to the similar and secondary attribute of Location Type., by default None
-         flow_direction_i_d: Optional[Union[list[str], Series[str], str]]
+         flow_direction_id: Optional[Union[list[str], Series[str], str]]
              Flow direction identification number for the orientation of a point such as receipt, delivery, bi-directional or the reported flow direction of segment or compressor. Attribute is sourced from legacy PointLogic. Flow direction is primary to the similar and secondary attribute of Location Type., by default None
          zone: Optional[Union[list[str], Series[str], str]]
              A designation for where on the pipeline system the point is located, corresponding to a pipeline’s operational and market design. Zonal information is sourced from the legacy Bentek service., by default None
@@ -3997,27 +4013,27 @@ class AmericasGas:
              The location propriety code reported by the pipeline for a specific meter., by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada and Mexico., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          state: Optional[Union[list[str], Series[str], str]]
              The political boundaries that define a state or province within country., by default None
-         state_i_d: Optional[Union[list[str], Series[str], str]]
+         state_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the state or province utilizes legacy Bentek IDs., by default None
          county: Optional[Union[list[str], Series[str], str]]
              The political boundaries of a defined county within a US state in which a meter or point resides., by default None
-         county_i_d: Optional[Union[list[str], Series[str], str]]
+         county_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the county within a US state in which a meter or point resides, utilizes legacy Bentek IDs., by default None
          producing_area: Optional[Union[list[str], Series[str], str]]
              Defined aggregation of counties within a state that is a best fit representation of prominent oil and gas plays and basins., by default None
-         producing_area_i_d: Optional[Union[list[str], Series[str], str]]
+         producing_area_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for a defined Producing Area, utilizes legacy PointLogic IDs., by default None
          padd_name: Optional[Union[list[str], Series[str], str]]
              Petroleum Administration for Defense Districts (PADDs) are geographic aggregations of the 50 States and the District of Columbia into five districts., by default None
@@ -4027,16 +4043,16 @@ class AmericasGas:
              The plant or field code where the facility resides. When applicable, the code will align to EIA-860 or EIA-191 data., by default None
          utility_company_name: Optional[Union[list[str], Series[str], str]]
              The name of the utility company that owns or operates the facility. When applicable, the name will align to EIA-860 or EIA-191 data., by default None
-         utility_company_i_d: Optional[str], optional
-             The assigned ID of the utility company that ownes or operates the facility. When applicable, the name will align to EIA-860 or EIA-191 data., by default None
-         utility_company_i_d_gt: Optional[str], optional
-             filter by `utility_company_i_d > x`, by default None
-         utility_company_i_d_gte: Optional[str], optional
-             filter by `utility_company_i_d >= x`, by default None
-         utility_company_i_d_lt: Optional[str], optional
-             filter by `utility_company_i_d < x`, by default None
-         utility_company_i_d_lte: Optional[str], optional
-             filter by `utility_company_i_d <= x`, by default None
+         utility_company_id: Optional[str], optional
+             The assigned ID of the utility company that owns or operates the facility. When applicable, the name will align to EIA-860 or EIA-191 data., by default None
+         utility_company_id_gt: Optional[str], optional
+             filter by `utility_company_id > x`, by default None
+         utility_company_id_gte: Optional[str], optional
+             filter by `utility_company_id >= x`, by default None
+         utility_company_id_lt: Optional[str], optional
+             filter by `utility_company_id < x`, by default None
+         utility_company_id_lte: Optional[str], optional
+             filter by `utility_company_id <= x`, by default None
          nerc_region: Optional[Union[list[str], Series[str], str]]
              North American Reliability Council region., by default None
          balancing_authority_name: Optional[Union[list[str], Series[str], str]]
@@ -4057,14 +4073,14 @@ class AmericasGas:
              Volume., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
         """
 
         filter_params: List[str] = []
-        filter_params.append(f'flowDate = "{flow_date}"') 
+        filter_params.append(list_to_filter("flowDate", flow_date))
         if flow_date_gt is not None:
             filter_params.append(f'flowDate > "{flow_date_gt}"')
         if flow_date_gte is not None:
@@ -4085,54 +4101,54 @@ class AmericasGas:
         filter_params.append(list_to_filter("dateFrequency", date_frequency))
         filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
         filter_params.append(list_to_filter("facilityType", facility_type))
-        filter_params.append(list_to_filter("facilityTypeID", facility_type_i_d))
+        filter_params.append(list_to_filter("facilityTypeId", facility_type_id))
         filter_params.append(list_to_filter("viewType", view_type))
-        filter_params.append(list_to_filter("viewTypeID", view_type_i_d))
+        filter_params.append(list_to_filter("viewTypeId", view_type_id))
         filter_params.append(list_to_filter("name", name))
-        filter_params.append(list_to_filter("modelID", model_i_d))
-        filter_params.append(list_to_filter("componentPointID", component_point_i_d))
+        filter_params.append(list_to_filter("modelId", model_id))
+        filter_params.append(list_to_filter("componentPointId", component_point_id))
         filter_params.append(list_to_filter("pipelineName", pipeline_name))
-        filter_params.append(list_to_filter("pipelineID", pipeline_i_d))
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
         filter_params.append(list_to_filter("pointName", point_name))
         filter_params.append(list_to_filter("meterTypePrimary", meter_type_primary))
         filter_params.append(
-            list_to_filter("meterTypeIDPrimary", meter_type_i_d_primary)
+            list_to_filter("meterTypeIdPrimary", meter_type_id_primary)
         )
         filter_params.append(list_to_filter("meterTypeSecondary", meter_type_secondary))
         filter_params.append(
-            list_to_filter("meterTypeIDSecondary", meter_type_i_d_secondary)
+            list_to_filter("meterTypeIdSecondary", meter_type_id_secondary)
         )
         filter_params.append(list_to_filter("flowDirection", flow_direction))
         filter_params.append(list_to_filter("flowDirectionCode", flow_direction_code))
-        filter_params.append(list_to_filter("flowDirectionID", flow_direction_i_d))
+        filter_params.append(list_to_filter("flowDirectionId", flow_direction_id))
         filter_params.append(list_to_filter("zone", zone))
         filter_params.append(list_to_filter("connectingParty", connecting_party))
         filter_params.append(list_to_filter("locProp", loc_prop))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(list_to_filter("state", state))
-        filter_params.append(list_to_filter("stateID", state_i_d))
+        filter_params.append(list_to_filter("stateId", state_id))
         filter_params.append(list_to_filter("county", county))
-        filter_params.append(list_to_filter("countyID", county_i_d))
+        filter_params.append(list_to_filter("countyId", county_id))
         filter_params.append(list_to_filter("producingArea", producing_area))
-        filter_params.append(list_to_filter("producingAreaID", producing_area_i_d))
+        filter_params.append(list_to_filter("producingAreaId", producing_area_id))
         filter_params.append(list_to_filter("paddName", padd_name))
         filter_params.append(list_to_filter("plantFieldName", plant_field_name))
         filter_params.append(list_to_filter("plantFieldCode", plant_field_code))
         filter_params.append(list_to_filter("utilityCompanyName", utility_company_name))
-        filter_params.append(list_to_filter("utilityCompanyID", utility_company_i_d))
-        if utility_company_i_d_gt is not None:
-            filter_params.append(f'utilityCompanyID > "{utility_company_i_d_gt}"')
-        if utility_company_i_d_gte is not None:
-            filter_params.append(f'utilityCompanyID >= "{utility_company_i_d_gte}"')
-        if utility_company_i_d_lt is not None:
-            filter_params.append(f'utilityCompanyID < "{utility_company_i_d_lt}"')
-        if utility_company_i_d_lte is not None:
-            filter_params.append(f'utilityCompanyID <= "{utility_company_i_d_lte}"')
+        filter_params.append(list_to_filter("utilityCompanyId", utility_company_id))
+        if utility_company_id_gt is not None:
+            filter_params.append(f'utilityCompanyId > "{utility_company_id_gt}"')
+        if utility_company_id_gte is not None:
+            filter_params.append(f'utilityCompanyId >= "{utility_company_id_gte}"')
+        if utility_company_id_lt is not None:
+            filter_params.append(f'utilityCompanyId < "{utility_company_id_lt}"')
+        if utility_company_id_lte is not None:
+            filter_params.append(f'utilityCompanyId <= "{utility_company_id_lte}"')
         filter_params.append(list_to_filter("nercRegion", nerc_region))
         filter_params.append(
             list_to_filter("balancingAuthorityName", balancing_authority_name)
@@ -4173,7 +4189,7 @@ class AmericasGas:
         year: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_filer_name: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_name: Optional[Union[list[str], Series[str], str]] = None,
-        pipeline_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
         operating_revenues_gas: Optional[str] = None,
         operating_revenues_gas_lt: Optional[str] = None,
         operating_revenues_gas_lte: Optional[str] = None,
@@ -4289,26 +4305,6 @@ class AmericasGas:
         total_gas_plant_in_service_eoy_lte: Optional[str] = None,
         total_gas_plant_in_service_eoy_gt: Optional[str] = None,
         total_gas_plant_in_service_eoy_gte: Optional[str] = None,
-        plant_in_serv_classified_total: Optional[str] = None,
-        plant_in_serv_classified_total_lt: Optional[str] = None,
-        plant_in_serv_classified_total_lte: Optional[str] = None,
-        plant_in_serv_classified_total_gt: Optional[str] = None,
-        plant_in_serv_classified_total_gte: Optional[str] = None,
-        plant_purchased_or_sold_total: Optional[str] = None,
-        plant_purchased_or_sold_total_lt: Optional[str] = None,
-        plant_purchased_or_sold_total_lte: Optional[str] = None,
-        plant_purchased_or_sold_total_gt: Optional[str] = None,
-        plant_purchased_or_sold_total_gte: Optional[str] = None,
-        complete_constr_unclass_total: Optional[str] = None,
-        complete_constr_unclass_total_lt: Optional[str] = None,
-        complete_constr_unclass_total_lte: Optional[str] = None,
-        complete_constr_unclass_total_gt: Optional[str] = None,
-        complete_constr_unclass_total_gte: Optional[str] = None,
-        exptl_plant_unclassified_total: Optional[str] = None,
-        exptl_plant_unclassified_total_lt: Optional[str] = None,
-        exptl_plant_unclassified_total_lte: Optional[str] = None,
-        exptl_plant_unclassified_total_gt: Optional[str] = None,
-        exptl_plant_unclassified_total_gte: Optional[str] = None,
         constr_wip_total: Optional[str] = None,
         constr_wip_total_lt: Optional[str] = None,
         constr_wip_total_lte: Optional[str] = None,
@@ -4419,11 +4415,11 @@ class AmericasGas:
         transmiss_maint_exp_lte: Optional[str] = None,
         transmiss_maint_exp_gt: Optional[str] = None,
         transmiss_maint_exp_gte: Optional[str] = None,
-        transmiss_oand_m_exp: Optional[str] = None,
-        transmiss_oand_m_exp_lt: Optional[str] = None,
-        transmiss_oand_m_exp_lte: Optional[str] = None,
-        transmiss_oand_m_exp_gt: Optional[str] = None,
-        transmiss_oand_m_exp_gte: Optional[str] = None,
+        transmiss_oand_mexp: Optional[str] = None,
+        transmiss_oand_mexp_lt: Optional[str] = None,
+        transmiss_oand_mexp_lte: Optional[str] = None,
+        transmiss_oand_mexp_gt: Optional[str] = None,
+        transmiss_oand_mexp_gte: Optional[str] = None,
         peak1_int_pipe_no_notice_transp: Optional[str] = None,
         peak1_int_pipe_no_notice_transp_lt: Optional[str] = None,
         peak1_int_pipe_no_notice_transp_lte: Optional[str] = None,
@@ -4646,7 +4642,7 @@ class AmericasGas:
         gas_stored_amount_per_dth_gte: Optional[str] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -4662,7 +4658,7 @@ class AmericasGas:
              The filer name of a pipeline system., by default None
          pipeline_name: Optional[Union[list[str], Series[str], str]]
              The display name of a pipeline system, utilizes legacy Bentek names when applicable., by default None
-         pipeline_i_d: Optional[Union[list[str], Series[str], str]]
+         pipeline_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a pipeline system, utilizes legacy Bentek pipeline ids when applicable., by default None
          operating_revenues_gas: Optional[str], optional
              Operating revenues gas are the gas component of the revenues., by default None
@@ -4894,46 +4890,6 @@ class AmericasGas:
              filter by `total_gas_plant_in_service_eoy < x`, by default None
          total_gas_plant_in_service_eoy_lte: Optional[str], optional
              filter by `total_gas_plant_in_service_eoy <= x`, by default None
-         plant_in_serv_classified_total: Optional[str], optional
-             Unclassified costs associated in operating a pipeline., by default None
-         plant_in_serv_classified_total_gt: Optional[str], optional
-             filter by `plant_in_serv_classified_total > x`, by default None
-         plant_in_serv_classified_total_gte: Optional[str], optional
-             filter by `plant_in_serv_classified_total >= x`, by default None
-         plant_in_serv_classified_total_lt: Optional[str], optional
-             filter by `plant_in_serv_classified_total < x`, by default None
-         plant_in_serv_classified_total_lte: Optional[str], optional
-             filter by `plant_in_serv_classified_total <= x`, by default None
-         plant_purchased_or_sold_total: Optional[str], optional
-             The cost of property purchased or sold., by default None
-         plant_purchased_or_sold_total_gt: Optional[str], optional
-             filter by `plant_purchased_or_sold_total > x`, by default None
-         plant_purchased_or_sold_total_gte: Optional[str], optional
-             filter by `plant_purchased_or_sold_total >= x`, by default None
-         plant_purchased_or_sold_total_lt: Optional[str], optional
-             filter by `plant_purchased_or_sold_total < x`, by default None
-         plant_purchased_or_sold_total_lte: Optional[str], optional
-             filter by `plant_purchased_or_sold_total <= x`, by default None
-         complete_constr_unclass_total: Optional[str], optional
-              Completed construction not classified total., by default None
-         complete_constr_unclass_total_gt: Optional[str], optional
-             filter by `complete_constr_unclass_total > x`, by default None
-         complete_constr_unclass_total_gte: Optional[str], optional
-             filter by `complete_constr_unclass_total >= x`, by default None
-         complete_constr_unclass_total_lt: Optional[str], optional
-             filter by `complete_constr_unclass_total < x`, by default None
-         complete_constr_unclass_total_lte: Optional[str], optional
-             filter by `complete_constr_unclass_total <= x`, by default None
-         exptl_plant_unclassified_total: Optional[str], optional
-             Total experimental unclassified plant costs that are experimental or general research expenses., by default None
-         exptl_plant_unclassified_total_gt: Optional[str], optional
-             filter by `exptl_plant_unclassified_total > x`, by default None
-         exptl_plant_unclassified_total_gte: Optional[str], optional
-             filter by `exptl_plant_unclassified_total >= x`, by default None
-         exptl_plant_unclassified_total_lt: Optional[str], optional
-             filter by `exptl_plant_unclassified_total < x`, by default None
-         exptl_plant_unclassified_total_lte: Optional[str], optional
-             filter by `exptl_plant_unclassified_total <= x`, by default None
          constr_wip_total: Optional[str], optional
              Construction Work in Progress total., by default None
          constr_wip_total_gt: Optional[str], optional
@@ -5154,16 +5110,16 @@ class AmericasGas:
              filter by `transmiss_maint_exp < x`, by default None
          transmiss_maint_exp_lte: Optional[str], optional
              filter by `transmiss_maint_exp <= x`, by default None
-         transmiss_oand_m_exp: Optional[str], optional
+         transmiss_oand_mexp: Optional[str], optional
              Operation and maintenance expenses., by default None
-         transmiss_oand_m_exp_gt: Optional[str], optional
-             filter by `transmiss_oand_m_exp > x`, by default None
-         transmiss_oand_m_exp_gte: Optional[str], optional
-             filter by `transmiss_oand_m_exp >= x`, by default None
-         transmiss_oand_m_exp_lt: Optional[str], optional
-             filter by `transmiss_oand_m_exp < x`, by default None
-         transmiss_oand_m_exp_lte: Optional[str], optional
-             filter by `transmiss_oand_m_exp <= x`, by default None
+         transmiss_oand_mexp_gt: Optional[str], optional
+             filter by `transmiss_oand_mexp > x`, by default None
+         transmiss_oand_mexp_gte: Optional[str], optional
+             filter by `transmiss_oand_mexp >= x`, by default None
+         transmiss_oand_mexp_lt: Optional[str], optional
+             filter by `transmiss_oand_mexp < x`, by default None
+         transmiss_oand_mexp_lte: Optional[str], optional
+             filter by `transmiss_oand_mexp <= x`, by default None
          peak1_int_pipe_no_notice_transp: Optional[str], optional
              Single day peak deliveries for interstate pipelines Dth., by default None
          peak1_int_pipe_no_notice_transp_gt: Optional[str], optional
@@ -5606,7 +5562,7 @@ class AmericasGas:
              filter by `gas_stored_amount_per_dth <= x`, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -5616,7 +5572,7 @@ class AmericasGas:
         filter_params.append(list_to_filter("year", year))
         filter_params.append(list_to_filter("pipelineFilerName", pipeline_filer_name))
         filter_params.append(list_to_filter("pipelineName", pipeline_name))
-        filter_params.append(list_to_filter("pipelineID", pipeline_i_d))
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
         filter_params.append(
             list_to_filter("operatingRevenuesGas", operating_revenues_gas)
         )
@@ -6060,84 +6016,6 @@ class AmericasGas:
             filter_params.append(
                 f'totalGasPlantInServiceEoy <= "{total_gas_plant_in_service_eoy_lte}"'
             )
-        filter_params.append(
-            list_to_filter("plantInServClassifiedTotal", plant_in_serv_classified_total)
-        )
-        if plant_in_serv_classified_total_gt is not None:
-            filter_params.append(
-                f'plantInServClassifiedTotal > "{plant_in_serv_classified_total_gt}"'
-            )
-        if plant_in_serv_classified_total_gte is not None:
-            filter_params.append(
-                f'plantInServClassifiedTotal >= "{plant_in_serv_classified_total_gte}"'
-            )
-        if plant_in_serv_classified_total_lt is not None:
-            filter_params.append(
-                f'plantInServClassifiedTotal < "{plant_in_serv_classified_total_lt}"'
-            )
-        if plant_in_serv_classified_total_lte is not None:
-            filter_params.append(
-                f'plantInServClassifiedTotal <= "{plant_in_serv_classified_total_lte}"'
-            )
-        filter_params.append(
-            list_to_filter("plantPurchasedOrSoldTotal", plant_purchased_or_sold_total)
-        )
-        if plant_purchased_or_sold_total_gt is not None:
-            filter_params.append(
-                f'plantPurchasedOrSoldTotal > "{plant_purchased_or_sold_total_gt}"'
-            )
-        if plant_purchased_or_sold_total_gte is not None:
-            filter_params.append(
-                f'plantPurchasedOrSoldTotal >= "{plant_purchased_or_sold_total_gte}"'
-            )
-        if plant_purchased_or_sold_total_lt is not None:
-            filter_params.append(
-                f'plantPurchasedOrSoldTotal < "{plant_purchased_or_sold_total_lt}"'
-            )
-        if plant_purchased_or_sold_total_lte is not None:
-            filter_params.append(
-                f'plantPurchasedOrSoldTotal <= "{plant_purchased_or_sold_total_lte}"'
-            )
-        filter_params.append(
-            list_to_filter("completeConstrUnclassTotal", complete_constr_unclass_total)
-        )
-        if complete_constr_unclass_total_gt is not None:
-            filter_params.append(
-                f'completeConstrUnclassTotal > "{complete_constr_unclass_total_gt}"'
-            )
-        if complete_constr_unclass_total_gte is not None:
-            filter_params.append(
-                f'completeConstrUnclassTotal >= "{complete_constr_unclass_total_gte}"'
-            )
-        if complete_constr_unclass_total_lt is not None:
-            filter_params.append(
-                f'completeConstrUnclassTotal < "{complete_constr_unclass_total_lt}"'
-            )
-        if complete_constr_unclass_total_lte is not None:
-            filter_params.append(
-                f'completeConstrUnclassTotal <= "{complete_constr_unclass_total_lte}"'
-            )
-        filter_params.append(
-            list_to_filter(
-                "exptlPlantUnclassifiedTotal", exptl_plant_unclassified_total
-            )
-        )
-        if exptl_plant_unclassified_total_gt is not None:
-            filter_params.append(
-                f'exptlPlantUnclassifiedTotal > "{exptl_plant_unclassified_total_gt}"'
-            )
-        if exptl_plant_unclassified_total_gte is not None:
-            filter_params.append(
-                f'exptlPlantUnclassifiedTotal >= "{exptl_plant_unclassified_total_gte}"'
-            )
-        if exptl_plant_unclassified_total_lt is not None:
-            filter_params.append(
-                f'exptlPlantUnclassifiedTotal < "{exptl_plant_unclassified_total_lt}"'
-            )
-        if exptl_plant_unclassified_total_lte is not None:
-            filter_params.append(
-                f'exptlPlantUnclassifiedTotal <= "{exptl_plant_unclassified_total_lte}"'
-            )
         filter_params.append(list_to_filter("constrWipTotal", constr_wip_total))
         if constr_wip_total_gt is not None:
             filter_params.append(f'constrWipTotal > "{constr_wip_total_gt}"')
@@ -6527,15 +6405,15 @@ class AmericasGas:
             filter_params.append(f'transmissMaintExp < "{transmiss_maint_exp_lt}"')
         if transmiss_maint_exp_lte is not None:
             filter_params.append(f'transmissMaintExp <= "{transmiss_maint_exp_lte}"')
-        filter_params.append(list_to_filter("transmissOandMExp", transmiss_oand_m_exp))
-        if transmiss_oand_m_exp_gt is not None:
-            filter_params.append(f'transmissOandMExp > "{transmiss_oand_m_exp_gt}"')
-        if transmiss_oand_m_exp_gte is not None:
-            filter_params.append(f'transmissOandMExp >= "{transmiss_oand_m_exp_gte}"')
-        if transmiss_oand_m_exp_lt is not None:
-            filter_params.append(f'transmissOandMExp < "{transmiss_oand_m_exp_lt}"')
-        if transmiss_oand_m_exp_lte is not None:
-            filter_params.append(f'transmissOandMExp <= "{transmiss_oand_m_exp_lte}"')
+        filter_params.append(list_to_filter("transmissOandMexp", transmiss_oand_mexp))
+        if transmiss_oand_mexp_gt is not None:
+            filter_params.append(f'transmissOandMexp > "{transmiss_oand_mexp_gt}"')
+        if transmiss_oand_mexp_gte is not None:
+            filter_params.append(f'transmissOandMexp >= "{transmiss_oand_mexp_gte}"')
+        if transmiss_oand_mexp_lt is not None:
+            filter_params.append(f'transmissOandMexp < "{transmiss_oand_mexp_lt}"')
+        if transmiss_oand_mexp_lte is not None:
+            filter_params.append(f'transmissOandMexp <= "{transmiss_oand_mexp_lte}"')
         filter_params.append(
             list_to_filter(
                 "peak1IntPipeNoNoticeTransp", peak1_int_pipe_no_notice_transp
@@ -7396,26 +7274,26 @@ class AmericasGas:
         date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
         source: Optional[Union[list[str], Series[str], str]] = None,
         view_type: Optional[Union[list[str], Series[str], str]] = None,
-        view_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        view_type_id: Optional[Union[list[str], Series[str], str]] = None,
         value_type: Optional[Union[list[str], Series[str], str]] = None,
-        value_type_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        value_type_id: Optional[Union[list[str], Series[str], str]] = None,
         domain: Optional[Union[list[str], Series[str], str]] = None,
-        domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
-        region_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
         subregion: Optional[Union[list[str], Series[str], str]] = None,
-        subregion_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
         geography_pov: Optional[Union[list[str], Series[str], str]] = None,
-        geography_pov_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        geography_pov_id: Optional[Union[list[str], Series[str], str]] = None,
         geography_type: Optional[Union[list[str], Series[str], str]] = None,
-        model_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        model_id: Optional[Union[list[str], Series[str], str]] = None,
         working_capacity: Optional[Union[list[str], Series[str], str]] = None,
         utilization: Optional[Union[list[str], Series[str], str]] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
         volume: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -7453,31 +7331,31 @@ class AmericasGas:
              Source of the data, EIA or Americas Gas., by default None
          view_type: Optional[Union[list[str], Series[str], str]]
              The type of view, which can be either Inventory, Activity, or Sample., by default None
-         view_type_i_d: Optional[Union[list[str], Series[str], str]]
+         view_type_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a view type where Inventory is equal to 1, Activity 2 and Sample 3., by default None
          value_type: Optional[Union[list[str], Series[str], str]]
              The types of values presented in the view, such as Actual/Estimate, 5-Year Average, Delta to 5-Year Average, 5-Year Maximum, 5-Year Minimum, Last Year, Delta to Last Year, Delta to 5-Year Maximum, Delta to 5-Year Minimum., by default None
-         value_type_i_d: Optional[Union[list[str], Series[str], str]]
+         value_type_id: Optional[Union[list[str], Series[str], str]]
              The ID given to a value type numbered 1 through 9 listed in order as expressed in Value Type description., by default None
          domain: Optional[Union[list[str], Series[str], str]]
              US Lower-48, Canada and Mexico., by default None
-         domain_i_d: Optional[Union[list[str], Series[str], str]]
+         domain_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the domain., by default None
          region: Optional[Union[list[str], Series[str], str]]
              A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
-         region_i_d: Optional[Union[list[str], Series[str], str]]
+         region_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic region., by default None
          subregion: Optional[Union[list[str], Series[str], str]]
              A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
-         subregion_i_d: Optional[Union[list[str], Series[str], str]]
+         subregion_id: Optional[Union[list[str], Series[str], str]]
              A unique identification number for the geographic subregion., by default None
          geography_pov: Optional[Union[list[str], Series[str], str]]
-             Geography point of view based on geographic heirarchy of country, region, subregion, substate, or special area., by default None
-         geography_pov_i_d: Optional[Union[list[str], Series[str], str]]
+             Geography point of view based on geographic hierarchy of country, region, subregion, substate, or special area., by default None
+         geography_pov_id: Optional[Union[list[str], Series[str], str]]
              An ID for the geography point of view., by default None
          geography_type: Optional[Union[list[str], Series[str], str]]
              Geography type for the point of view based on geographic hierarchy of country, region, subregion, substate, or special area., by default None
-         model_i_d: Optional[Union[list[str], Series[str], str]]
+         model_id: Optional[Union[list[str], Series[str], str]]
              Internal use, Model ID value., by default None
          working_capacity: Optional[Union[list[str], Series[str], str]]
              Estimates for working storage capacity of a given geography. These estimates are based historical analysis of actual inventory and may vary from theoretical or published figures., by default None
@@ -7489,14 +7367,14 @@ class AmericasGas:
              Volume., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
         """
 
         filter_params: List[str] = []
-        filter_params.append("flowDate", flow_date)
+        filter_params.append(list_to_filter("flowDate", flow_date))
         if flow_date_gt is not None:
             filter_params.append(f'flowDate > "{flow_date_gt}"')
         if flow_date_gte is not None:
@@ -7518,19 +7396,19 @@ class AmericasGas:
         filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
         filter_params.append(list_to_filter("source", source))
         filter_params.append(list_to_filter("viewType", view_type))
-        filter_params.append(list_to_filter("viewTypeID", view_type_i_d))
+        filter_params.append(list_to_filter("viewTypeId", view_type_id))
         filter_params.append(list_to_filter("valueType", value_type))
-        filter_params.append(list_to_filter("valueTypeID", value_type_i_d))
+        filter_params.append(list_to_filter("valueTypeId", value_type_id))
         filter_params.append(list_to_filter("domain", domain))
-        filter_params.append(list_to_filter("domainID", domain_i_d))
+        filter_params.append(list_to_filter("domainId", domain_id))
         filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("regionID", region_i_d))
+        filter_params.append(list_to_filter("regionId", region_id))
         filter_params.append(list_to_filter("subregion", subregion))
-        filter_params.append(list_to_filter("subregionID", subregion_i_d))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
         filter_params.append(list_to_filter("geographyPov", geography_pov))
-        filter_params.append(list_to_filter("geographyPovID", geography_pov_i_d))
+        filter_params.append(list_to_filter("geographyPovId", geography_pov_id))
         filter_params.append(list_to_filter("geographyType", geography_type))
-        filter_params.append(list_to_filter("modelID", model_i_d))
+        filter_params.append(list_to_filter("modelId", model_id))
         filter_params.append(list_to_filter("workingCapacity", working_capacity))
         filter_params.append(list_to_filter("utilization", utilization))
         filter_params.append(list_to_filter("uom", uom))
@@ -7559,9 +7437,9 @@ class AmericasGas:
         *,
         project_name: Optional[Union[list[str], Series[str], str]] = None,
         company_name: Optional[Union[list[str], Series[str], str]] = None,
-        company_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        company_id: Optional[Union[list[str], Series[str], str]] = None,
         infrastructure_type: Optional[Union[list[str], Series[str], str]] = None,
-        project_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        project_id: Optional[Union[list[str], Series[str], str]] = None,
         storage_field_name: Optional[Union[list[str], Series[str], str]] = None,
         storage_field_type: Optional[Union[list[str], Series[str], str]] = None,
         project_type: Optional[Union[list[str], Series[str], str]] = None,
@@ -7604,17 +7482,17 @@ class AmericasGas:
         play_where_production_is_enabled: Optional[
             Union[list[str], Series[str], str]
         ] = None,
-        additional_production_enabling_capacity_m_mcfd: Optional[
+        additional_production_enabling_capacity_mmcfd: Optional[
             Union[list[str], Series[str], str]
         ] = None,
         lng_related: Optional[Union[list[str], Series[str], str]] = None,
         function_served_by_pipeline: Optional[
             Union[list[str], Series[str], str]
         ] = None,
-        name_of_l_n_g_facility_served: Optional[
+        name_of_lng_facility_served: Optional[
             Union[list[str], Series[str], str]
         ] = None,
-        capacity_available_to_l_n_g_facility_m_mcfd: Optional[
+        capacity_available_to_lng_facility_mmcfd: Optional[
             Union[list[str], Series[str], str]
         ] = None,
         miles: Optional[Union[list[str], Series[str], str]] = None,
@@ -7624,31 +7502,31 @@ class AmericasGas:
         ] = None,
         project_is_active: Optional[Union[list[bool], Series[bool], bool]] = None,
         from_domain: Optional[Union[list[str], Series[str], str]] = None,
-        from_domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        from_domain_id: Optional[Union[list[str], Series[str], str]] = None,
         to_domain: Optional[Union[list[str], Series[str], str]] = None,
-        to_domain_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        to_domain_id: Optional[Union[list[str], Series[str], str]] = None,
         from_state_name: Optional[Union[list[str], Series[str], str]] = None,
-        from_state_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        from_state_id: Optional[Union[list[str], Series[str], str]] = None,
         to_state_name: Optional[Union[list[str], Series[str], str]] = None,
-        to_state_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        to_state_id: Optional[Union[list[str], Series[str], str]] = None,
         from_county: Optional[Union[list[str], Series[str], str]] = None,
-        from_county_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        from_county_id: Optional[Union[list[str], Series[str], str]] = None,
         to_county: Optional[Union[list[str], Series[str], str]] = None,
-        to_county_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        to_county_id: Optional[Union[list[str], Series[str], str]] = None,
         flow_path_states: Optional[Union[list[str], Series[str], str]] = None,
         region_start: Optional[Union[list[str], Series[str], str]] = None,
-        region_start_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_start_id: Optional[Union[list[str], Series[str], str]] = None,
         region_end: Optional[Union[list[str], Series[str], str]] = None,
-        region_end_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        region_end_id: Optional[Union[list[str], Series[str], str]] = None,
         sub_region_start: Optional[Union[list[str], Series[str], str]] = None,
-        sub_region_start_i_d: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region_start_id: Optional[Union[list[str], Series[str], str]] = None,
         sub_region_end: Optional[Union[list[str], Series[str], str]] = None,
-        sub_region_end_i_d: Optional[Union[list[str], Series[str], str]] = None,
-        pipeline_project_estimated_cost_thousand_u_s_d: Optional[
+        sub_region_end_id: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_project_estimated_cost_thousand_usd: Optional[
             Union[list[float], Series[float], float]
         ] = None,
-        rate_u_s_d_dth: Optional[Union[list[float], Series[float], float]] = None,
-        comm_rate_u_s_d_dth: Optional[Union[list[float], Series[float], float]] = None,
+        rate_usd_dth: Optional[Union[list[float], Series[float], float]] = None,
+        comm_rate_usd_dth: Optional[Union[list[float], Series[float], float]] = None,
         status: Optional[Union[list[str], Series[str], str]] = None,
         common_operator: Optional[Union[list[str], Series[str], str]] = None,
         parent_company: Optional[Union[list[str], Series[str], str]] = None,
@@ -7665,7 +7543,7 @@ class AmericasGas:
         last_modified_date_gte: Optional[datetime] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -7679,11 +7557,11 @@ class AmericasGas:
              The name of the project as it is displayed on Platts Connect., by default None
          company_name: Optional[Union[list[str], Series[str], str]]
              The name of the project's company or related pipeline name., by default None
-         company_i_d: Optional[Union[list[str], Series[str], str]]
+         company_id: Optional[Union[list[str], Series[str], str]]
              An ID sourced from the legacy Bentek service used to identify the connecting business or company name of a meter., by default None
          infrastructure_type: Optional[Union[list[str], Series[str], str]]
              The name of the type of project- Pipeline, LNG facility or Storage., by default None
-         project_i_d: Optional[Union[list[str], Series[str], str]]
+         project_id: Optional[Union[list[str], Series[str], str]]
              The integer project id for the project., by default None
          storage_field_name: Optional[Union[list[str], Series[str], str]]
              The storage field name where the project is located., by default None
@@ -7765,15 +7643,15 @@ class AmericasGas:
              Indicates whether a project provides an incremental production outlet connecting to downstream markets (i.e., a production-enabling project)., by default None
          play_where_production_is_enabled: Optional[Union[list[str], Series[str], str]]
              The production play where the project is located., by default None
-         additional_production_enabling_capacity_m_mcfd: Optional[Union[list[str], Series[str], str]]
+         additional_production_enabling_capacity_mmcfd: Optional[Union[list[str], Series[str], str]]
              For projects classified as production-enabling, the size of the incremental production outlet., by default None
          lng_related: Optional[Union[list[str], Series[str], str]]
              Is this related to an LNG facility?  Yes or No., by default None
          function_served_by_pipeline: Optional[Union[list[str], Series[str], str]]
              The overall function what the project serves to do once built., by default None
-         name_of_l_n_g_facility_served: Optional[Union[list[str], Series[str], str]]
-             The name of the projects primary cutomer., by default None
-         capacity_available_to_l_n_g_facility_m_mcfd: Optional[Union[list[str], Series[str], str]]
+         name_of_lng_facility_served: Optional[Union[list[str], Series[str], str]]
+             The name of the projects primary customer., by default None
+         capacity_available_to_lng_facility_mmcfd: Optional[Union[list[str], Series[str], str]]
              The available capacity to the LNG facility in MMcf/d., by default None
          miles: Optional[Union[list[str], Series[str], str]]
              The length of the project in miles., by default None
@@ -7785,51 +7663,51 @@ class AmericasGas:
              Is the project active or not- True it should show up on Platts Connect and False it should not show up on Platts Connect., by default None
          from_domain: Optional[Union[list[str], Series[str], str]]
              The name of the country- US lower 48, Canada and Mexico where the project originates., by default None
-         from_domain_i_d: Optional[Union[list[str], Series[str], str]]
+         from_domain_id: Optional[Union[list[str], Series[str], str]]
              The integer id of the country- US lower 48, Canada and Mexico where the project originates., by default None
          to_domain: Optional[Union[list[str], Series[str], str]]
              The name of the country- US lower 48, Canada and Mexico where the project terminates., by default None
-         to_domain_i_d: Optional[Union[list[str], Series[str], str]]
+         to_domain_id: Optional[Union[list[str], Series[str], str]]
              The integer id of the country- US lower 48, Canada and Mexico where the project terminates., by default None
          from_state_name: Optional[Union[list[str], Series[str], str]]
              The name of the state where the project originates., by default None
-         from_state_i_d: Optional[Union[list[str], Series[str], str]]
+         from_state_id: Optional[Union[list[str], Series[str], str]]
              The integer id of the state where the project originates., by default None
          to_state_name: Optional[Union[list[str], Series[str], str]]
              The name of the state where the project terminates., by default None
-         to_state_i_d: Optional[Union[list[str], Series[str], str]]
+         to_state_id: Optional[Union[list[str], Series[str], str]]
              The integer id of the state where the project terminates., by default None
          from_county: Optional[Union[list[str], Series[str], str]]
              The name of the county where the project originates., by default None
-         from_county_i_d: Optional[Union[list[str], Series[str], str]]
+         from_county_id: Optional[Union[list[str], Series[str], str]]
              The integer id of the county where the project originates., by default None
          to_county: Optional[Union[list[str], Series[str], str]]
              The name of the county where the project terminates., by default None
-         to_county_i_d: Optional[Union[list[str], Series[str], str]]
+         to_county_id: Optional[Union[list[str], Series[str], str]]
              The integer id of the county where the project terminates., by default None
          flow_path_states: Optional[Union[list[str], Series[str], str]]
-             The abreviated names of the states that the project resides in or exists in as infrastructure., by default None
+             The abbreviated names of the states that the project resides in or exists in as infrastructure., by default None
          region_start: Optional[Union[list[str], Series[str], str]]
              The name of the region where the project originates., by default None
-         region_start_i_d: Optional[Union[list[str], Series[str], str]]
+         region_start_id: Optional[Union[list[str], Series[str], str]]
              The integer id of the region where the project originates., by default None
          region_end: Optional[Union[list[str], Series[str], str]]
              The name of the region where the project terminates., by default None
-         region_end_i_d: Optional[Union[list[str], Series[str], str]]
+         region_end_id: Optional[Union[list[str], Series[str], str]]
              The integer id of the region where the project terminates., by default None
          sub_region_start: Optional[Union[list[str], Series[str], str]]
              The name of the sub-region where the project originates., by default None
-         sub_region_start_i_d: Optional[Union[list[str], Series[str], str]]
+         sub_region_start_id: Optional[Union[list[str], Series[str], str]]
              The integer id of the sub-region where the project originates., by default None
          sub_region_end: Optional[Union[list[str], Series[str], str]]
              The name of the sub-region where the project terminates., by default None
-         sub_region_end_i_d: Optional[Union[list[str], Series[str], str]]
+         sub_region_end_id: Optional[Union[list[str], Series[str], str]]
              The integer id of the sub-region where the project terminates., by default None
-         pipeline_project_estimated_cost_thousand_u_s_d: Optional[Union[list[float], Series[float], float]]
-             The estimated cost of the project in thousands- US dollers., by default None
-         rate_u_s_d_dth: Optional[Union[list[float], Series[float], float]]
+         pipeline_project_estimated_cost_thousand_usd: Optional[Union[list[float], Series[float], float]]
+             The estimated cost of the project in thousands- US dollars., by default None
+         rate_usd_dth: Optional[Union[list[float], Series[float], float]]
              Rate in US dollars per dekatherm., by default None
-         comm_rate_u_s_d_dth: Optional[Union[list[float], Series[float], float]]
+         comm_rate_usd_dth: Optional[Union[list[float], Series[float], float]]
              Project transportation costs classified as the commodity (usage) rate in USD per Dekatherm = commRateUSDDth Value., by default None
          status: Optional[Union[list[str], Series[str], str]]
              The status of the project., by default None
@@ -7861,7 +7739,7 @@ class AmericasGas:
              filter by `last_modified_date <= x`, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -7870,9 +7748,9 @@ class AmericasGas:
         filter_params: List[str] = []
         filter_params.append(list_to_filter("projectName", project_name))
         filter_params.append(list_to_filter("companyName", company_name))
-        filter_params.append(list_to_filter("companyID", company_i_d))
+        filter_params.append(list_to_filter("companyId", company_id))
         filter_params.append(list_to_filter("infrastructureType", infrastructure_type))
-        filter_params.append(list_to_filter("projectID", project_i_d))
+        filter_params.append(list_to_filter("projectId", project_id))
         filter_params.append(list_to_filter("storageFieldName", storage_field_name))
         filter_params.append(list_to_filter("storageFieldType", storage_field_type))
         filter_params.append(list_to_filter("projectType", project_type))
@@ -7949,8 +7827,8 @@ class AmericasGas:
         )
         filter_params.append(
             list_to_filter(
-                "additionalProductionEnablingCapacityMMcfd",
-                additional_production_enabling_capacity_m_mcfd,
+                "additionalProductionEnablingCapacityMmcfd",
+                additional_production_enabling_capacity_mmcfd,
             )
         )
         filter_params.append(list_to_filter("lngRelated", lng_related))
@@ -7958,12 +7836,12 @@ class AmericasGas:
             list_to_filter("functionServedByPipeline", function_served_by_pipeline)
         )
         filter_params.append(
-            list_to_filter("nameOfLNGFacilityServed", name_of_l_n_g_facility_served)
+            list_to_filter("nameOfLngFacilityServed", name_of_lng_facility_served)
         )
         filter_params.append(
             list_to_filter(
-                "capacityAvailableToLNGFacilityMMcfd",
-                capacity_available_to_l_n_g_facility_m_mcfd,
+                "capacityAvailableToLngFacilityMmcfd",
+                capacity_available_to_lng_facility_mmcfd,
             )
         )
         filter_params.append(list_to_filter("miles", miles))
@@ -7975,34 +7853,34 @@ class AmericasGas:
         )
         filter_params.append(list_to_filter("projectIsActive", project_is_active))
         filter_params.append(list_to_filter("fromDomain", from_domain))
-        filter_params.append(list_to_filter("fromDomainID", from_domain_i_d))
+        filter_params.append(list_to_filter("fromDomainId", from_domain_id))
         filter_params.append(list_to_filter("toDomain", to_domain))
-        filter_params.append(list_to_filter("toDomainID", to_domain_i_d))
+        filter_params.append(list_to_filter("toDomainId", to_domain_id))
         filter_params.append(list_to_filter("fromStateName", from_state_name))
-        filter_params.append(list_to_filter("fromStateID", from_state_i_d))
+        filter_params.append(list_to_filter("fromStateId", from_state_id))
         filter_params.append(list_to_filter("toStateName", to_state_name))
-        filter_params.append(list_to_filter("toStateID", to_state_i_d))
+        filter_params.append(list_to_filter("toStateId", to_state_id))
         filter_params.append(list_to_filter("fromCounty", from_county))
-        filter_params.append(list_to_filter("fromCountyID", from_county_i_d))
+        filter_params.append(list_to_filter("fromCountyId", from_county_id))
         filter_params.append(list_to_filter("toCounty", to_county))
-        filter_params.append(list_to_filter("toCountyID", to_county_i_d))
+        filter_params.append(list_to_filter("toCountyId", to_county_id))
         filter_params.append(list_to_filter("flowPathStates", flow_path_states))
         filter_params.append(list_to_filter("regionStart", region_start))
-        filter_params.append(list_to_filter("regionStartID", region_start_i_d))
+        filter_params.append(list_to_filter("regionStartId", region_start_id))
         filter_params.append(list_to_filter("regionEnd", region_end))
-        filter_params.append(list_to_filter("regionEndID", region_end_i_d))
+        filter_params.append(list_to_filter("regionEndId", region_end_id))
         filter_params.append(list_to_filter("subRegionStart", sub_region_start))
-        filter_params.append(list_to_filter("subRegionStartID", sub_region_start_i_d))
+        filter_params.append(list_to_filter("subRegionStartId", sub_region_start_id))
         filter_params.append(list_to_filter("subRegionEnd", sub_region_end))
-        filter_params.append(list_to_filter("subRegionEndID", sub_region_end_i_d))
+        filter_params.append(list_to_filter("subRegionEndId", sub_region_end_id))
         filter_params.append(
             list_to_filter(
-                "pipelineProjectEstimatedCostThousandUSD",
-                pipeline_project_estimated_cost_thousand_u_s_d,
+                "pipelineProjectEstimatedCostThousandUsd",
+                pipeline_project_estimated_cost_thousand_usd,
             )
         )
-        filter_params.append(list_to_filter("rateUSDDth", rate_u_s_d_dth))
-        filter_params.append(list_to_filter("commRateUSDDth", comm_rate_u_s_d_dth))
+        filter_params.append(list_to_filter("rateUsdDth", rate_usd_dth))
+        filter_params.append(list_to_filter("commRateUsdDth", comm_rate_usd_dth))
         filter_params.append(list_to_filter("status", status))
         filter_params.append(list_to_filter("commonOperator", common_operator))
         filter_params.append(list_to_filter("parentCompany", parent_company))
