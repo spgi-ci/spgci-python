@@ -481,10 +481,4 @@ na = ci.AmericasGas()
 
 na.get_pipeline_flows(date_frequency="Monthly", subregion="New England", meter_type_primary="Power")
 # Monthly pipeline flows for Power as a primary meter type in New England
-
-na.get_natural_gas_production(flow_date="2025-01-01", state="New England", date_frequency="Annual")
-# DataFrame of annual natural gas production in Ohio for the year 2025.
-
-na.get_storage_data(flow_date="2025-01-01", subregion="New England", date_frequency="Annual")
-# DataFrame of annual natural gas storage data in New England for the year 2025.
 ```
