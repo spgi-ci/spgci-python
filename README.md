@@ -472,3 +472,13 @@ agri.get_price_purchase_forecast(commodity="corn", reporting_region="United Stat
 # DataFrame of the price purchase forecast for corn in the United States in USD for the period from January 1, 2023 to December 31, 2024.
 ```
 
+### Americas Gas
+
+```python
+import spgci as ci
+
+na = ci.AmericasGas()
+
+na.get_pipeline_flows(date_frequency="Monthly", subregion="New England", meter_type_primary="Power")
+# Monthly pipeline flows for Power as a primary meter type in New England
+```
