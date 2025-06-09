@@ -9114,3 +9114,488 @@ class LNGGlobalAnalytics:
             paginate=paginate,
         )
         return response
+    
+
+    def get_demand_forecast_short_term_current(
+        self,
+        *,
+        import_market: Optional[Union[list[str], Series[str], str]] = None,
+        month: Optional[date] = None,
+        month_lt: Optional[date] = None,
+        month_lte: Optional[date] = None,
+        month_gt: Optional[date] = None,
+        month_gte: Optional[date] = None,
+        point_in_time_month: Optional[date] = None,
+        point_in_time_month_lt: Optional[date] = None,
+        point_in_time_month_lte: Optional[date] = None,
+        point_in_time_month_gt: Optional[date] = None,
+        point_in_time_month_gte: Optional[date] = None,
+        modified_date: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_gte: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Provides the latest short-term demand forecast data
+
+        Parameters
+        ----------
+
+         import_market: Optional[Union[list[str], Series[str], str]]
+             Market where the LNG is delivered to, by default None
+         month: Optional[date], optional
+             Calendar month of the forecasted volume, by default None
+         month_gt: Optional[date], optional
+             filter by `month > x`, by default None
+         month_gte: Optional[date], optional
+             filter by `month >= x`, by default None
+         month_lt: Optional[date], optional
+             filter by `month < x`, by default None
+         month_lte: Optional[date], optional
+             filter by `month <= x`, by default None
+         point_in_time_month: Optional[date], optional
+             The month in which the forecast was originally published, by default None
+         point_in_time_month_gt: Optional[date], optional
+             filter by `point_in_time_month > x`, by default None
+         point_in_time_month_gte: Optional[date], optional
+             filter by `point_in_time_month >= x`, by default None
+         point_in_time_month_lt: Optional[date], optional
+             filter by `point_in_time_month < x`, by default None
+         point_in_time_month_lte: Optional[date], optional
+             filter by `point_in_time_month <= x`, by default None
+         modified_date: Optional[datetime], optional
+             The latest modified date of the forecasted value, by default None
+         modified_date_gt: Optional[datetime], optional
+             filter by `modified_date > x`, by default None
+         modified_date_gte: Optional[datetime], optional
+             filter by `modified_date >= x`, by default None
+         modified_date_lt: Optional[datetime], optional
+             filter by `modified_date < x`, by default None
+         modified_date_lte: Optional[datetime], optional
+             filter by `modified_date <= x`, by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("importMarket", import_market))
+        filter_params.append(list_to_filter("month", month))
+        if month_gt is not None:
+            filter_params.append(f'month > "{month_gt}"')
+        if month_gte is not None:
+            filter_params.append(f'month >= "{month_gte}"')
+        if month_lt is not None:
+            filter_params.append(f'month < "{month_lt}"')
+        if month_lte is not None:
+            filter_params.append(f'month <= "{month_lte}"')
+        filter_params.append(list_to_filter("pointInTimeMonth", point_in_time_month))
+        if point_in_time_month_gt is not None:
+            filter_params.append(f'pointInTimeMonth > "{point_in_time_month_gt}"')
+        if point_in_time_month_gte is not None:
+            filter_params.append(f'pointInTimeMonth >= "{point_in_time_month_gte}"')
+        if point_in_time_month_lt is not None:
+            filter_params.append(f'pointInTimeMonth < "{point_in_time_month_lt}"')
+        if point_in_time_month_lte is not None:
+            filter_params.append(f'pointInTimeMonth <= "{point_in_time_month_lte}"')
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+        if modified_date_gt is not None:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/lng/v1/demand-forecast/short-term/current",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_supply_forecast_short_term_current(
+        self,
+        *,
+        export_project: Optional[Union[list[str], Series[str], str]] = None,
+        export_market: Optional[Union[list[str], Series[str], str]] = None,
+        month: Optional[date] = None,
+        month_lt: Optional[date] = None,
+        month_lte: Optional[date] = None,
+        month_gt: Optional[date] = None,
+        month_gte: Optional[date] = None,
+        point_in_time_month: Optional[date] = None,
+        point_in_time_month_lt: Optional[date] = None,
+        point_in_time_month_lte: Optional[date] = None,
+        point_in_time_month_gt: Optional[date] = None,
+        point_in_time_month_gte: Optional[date] = None,
+        modified_date: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_gte: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Provides the latest short-term supply forecast data
+
+        Parameters
+        ----------
+
+         export_project: Optional[Union[list[str], Series[str], str]]
+             Associated liquefaction project, by default None
+         export_market: Optional[Union[list[str], Series[str], str]]
+             Market where the liquefaction project is located, by default None
+         month: Optional[date], optional
+             Calendar month of the forecasted volume, by default None
+         month_gt: Optional[date], optional
+             filter by `month > x`, by default None
+         month_gte: Optional[date], optional
+             filter by `month >= x`, by default None
+         month_lt: Optional[date], optional
+             filter by `month < x`, by default None
+         month_lte: Optional[date], optional
+             filter by `month <= x`, by default None
+         point_in_time_month: Optional[date], optional
+             The month in which the forecast was originally published, by default None
+         point_in_time_month_gt: Optional[date], optional
+             filter by `point_in_time_month > x`, by default None
+         point_in_time_month_gte: Optional[date], optional
+             filter by `point_in_time_month >= x`, by default None
+         point_in_time_month_lt: Optional[date], optional
+             filter by `point_in_time_month < x`, by default None
+         point_in_time_month_lte: Optional[date], optional
+             filter by `point_in_time_month <= x`, by default None
+         modified_date: Optional[datetime], optional
+             The latest modified date of the forecasted value, by default None
+         modified_date_gt: Optional[datetime], optional
+             filter by `modified_date > x`, by default None
+         modified_date_gte: Optional[datetime], optional
+             filter by `modified_date >= x`, by default None
+         modified_date_lt: Optional[datetime], optional
+             filter by `modified_date < x`, by default None
+         modified_date_lte: Optional[datetime], optional
+             filter by `modified_date <= x`, by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("exportProject", export_project))
+        filter_params.append(list_to_filter("exportMarket", export_market))
+        filter_params.append(list_to_filter("month", month))
+        if month_gt is not None:
+            filter_params.append(f'month > "{month_gt}"')
+        if month_gte is not None:
+            filter_params.append(f'month >= "{month_gte}"')
+        if month_lt is not None:
+            filter_params.append(f'month < "{month_lt}"')
+        if month_lte is not None:
+            filter_params.append(f'month <= "{month_lte}"')
+        filter_params.append(list_to_filter("pointInTimeMonth", point_in_time_month))
+        if point_in_time_month_gt is not None:
+            filter_params.append(f'pointInTimeMonth > "{point_in_time_month_gt}"')
+        if point_in_time_month_gte is not None:
+            filter_params.append(f'pointInTimeMonth >= "{point_in_time_month_gte}"')
+        if point_in_time_month_lt is not None:
+            filter_params.append(f'pointInTimeMonth < "{point_in_time_month_lt}"')
+        if point_in_time_month_lte is not None:
+            filter_params.append(f'pointInTimeMonth <= "{point_in_time_month_lte}"')
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+        if modified_date_gt is not None:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/lng/v1/supply-forecast/short-term/current",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_demand_forecast_short_term_history(
+        self,
+        *,
+        import_market: Optional[Union[list[str], Series[str], str]] = None,
+        month: Optional[date] = None,
+        month_lt: Optional[date] = None,
+        month_lte: Optional[date] = None,
+        month_gt: Optional[date] = None,
+        month_gte: Optional[date] = None,
+        point_in_time_month: Optional[date] = None,
+        point_in_time_month_lt: Optional[date] = None,
+        point_in_time_month_lte: Optional[date] = None,
+        point_in_time_month_gt: Optional[date] = None,
+        point_in_time_month_gte: Optional[date] = None,
+        modified_date: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_gte: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Provides the historical points in time of the short-term demand forecast from January 2021 onwards
+
+        Parameters
+        ----------
+
+         import_market: Optional[Union[list[str], Series[str], str]]
+             Market where the LNG is delivered to, by default None
+         month: Optional[date], optional
+             Calendar month of the forecasted volume, by default None
+         month_gt: Optional[date], optional
+             filter by `month > x`, by default None
+         month_gte: Optional[date], optional
+             filter by `month >= x`, by default None
+         month_lt: Optional[date], optional
+             filter by `month < x`, by default None
+         month_lte: Optional[date], optional
+             filter by `month <= x`, by default None
+         point_in_time_month: Optional[date], optional
+             The month in which the forecast was originally published, by default None
+         point_in_time_month_gt: Optional[date], optional
+             filter by `point_in_time_month > x`, by default None
+         point_in_time_month_gte: Optional[date], optional
+             filter by `point_in_time_month >= x`, by default None
+         point_in_time_month_lt: Optional[date], optional
+             filter by `point_in_time_month < x`, by default None
+         point_in_time_month_lte: Optional[date], optional
+             filter by `point_in_time_month <= x`, by default None
+         modified_date: Optional[datetime], optional
+             The latest modified date of the forecasted value, by default None
+         modified_date_gt: Optional[datetime], optional
+             filter by `modified_date > x`, by default None
+         modified_date_gte: Optional[datetime], optional
+             filter by `modified_date >= x`, by default None
+         modified_date_lt: Optional[datetime], optional
+             filter by `modified_date < x`, by default None
+         modified_date_lte: Optional[datetime], optional
+             filter by `modified_date <= x`, by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("importMarket", import_market))
+        filter_params.append(list_to_filter("month", month))
+        if month_gt is not None:
+            filter_params.append(f'month > "{month_gt}"')
+        if month_gte is not None:
+            filter_params.append(f'month >= "{month_gte}"')
+        if month_lt is not None:
+            filter_params.append(f'month < "{month_lt}"')
+        if month_lte is not None:
+            filter_params.append(f'month <= "{month_lte}"')
+        filter_params.append(list_to_filter("pointInTimeMonth", point_in_time_month))
+        if point_in_time_month_gt is not None:
+            filter_params.append(f'pointInTimeMonth > "{point_in_time_month_gt}"')
+        if point_in_time_month_gte is not None:
+            filter_params.append(f'pointInTimeMonth >= "{point_in_time_month_gte}"')
+        if point_in_time_month_lt is not None:
+            filter_params.append(f'pointInTimeMonth < "{point_in_time_month_lt}"')
+        if point_in_time_month_lte is not None:
+            filter_params.append(f'pointInTimeMonth <= "{point_in_time_month_lte}"')
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+        if modified_date_gt is not None:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/lng/v1/demand-forecast/short-term/history",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_supply_forecast_short_term_history(
+        self,
+        *,
+        export_project: Optional[Union[list[str], Series[str], str]] = None,
+        export_market: Optional[Union[list[str], Series[str], str]] = None,
+        month: Optional[date] = None,
+        month_lt: Optional[date] = None,
+        month_lte: Optional[date] = None,
+        month_gt: Optional[date] = None,
+        month_gte: Optional[date] = None,
+        point_in_time_month: Optional[date] = None,
+        point_in_time_month_lt: Optional[date] = None,
+        point_in_time_month_lte: Optional[date] = None,
+        point_in_time_month_gt: Optional[date] = None,
+        point_in_time_month_gte: Optional[date] = None,
+        modified_date: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_gte: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Provides the historical points in time of the short-term supply forecast from January 2021 onwards
+
+        Parameters
+        ----------
+
+         export_project: Optional[Union[list[str], Series[str], str]]
+             Associated liquefaction project, by default None
+         export_market: Optional[Union[list[str], Series[str], str]]
+             Market where the liquefaction project is located, by default None
+         month: Optional[date], optional
+             Calendar month of the forecasted volume, by default None
+         month_gt: Optional[date], optional
+             filter by `month > x`, by default None
+         month_gte: Optional[date], optional
+             filter by `month >= x`, by default None
+         month_lt: Optional[date], optional
+             filter by `month < x`, by default None
+         month_lte: Optional[date], optional
+             filter by `month <= x`, by default None
+         point_in_time_month: Optional[date], optional
+             The month in which the forecast was originally published, by default None
+         point_in_time_month_gt: Optional[date], optional
+             filter by `point_in_time_month > x`, by default None
+         point_in_time_month_gte: Optional[date], optional
+             filter by `point_in_time_month >= x`, by default None
+         point_in_time_month_lt: Optional[date], optional
+             filter by `point_in_time_month < x`, by default None
+         point_in_time_month_lte: Optional[date], optional
+             filter by `point_in_time_month <= x`, by default None
+         modified_date: Optional[datetime], optional
+             The latest modified date of the forecasted value, by default None
+         modified_date_gt: Optional[datetime], optional
+             filter by `modified_date > x`, by default None
+         modified_date_gte: Optional[datetime], optional
+             filter by `modified_date >= x`, by default None
+         modified_date_lt: Optional[datetime], optional
+             filter by `modified_date < x`, by default None
+         modified_date_lte: Optional[datetime], optional
+             filter by `modified_date <= x`, by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("exportProject", export_project))
+        filter_params.append(list_to_filter("exportMarket", export_market))
+        filter_params.append(list_to_filter("month", month))
+        if month_gt is not None:
+            filter_params.append(f'month > "{month_gt}"')
+        if month_gte is not None:
+            filter_params.append(f'month >= "{month_gte}"')
+        if month_lt is not None:
+            filter_params.append(f'month < "{month_lt}"')
+        if month_lte is not None:
+            filter_params.append(f'month <= "{month_lte}"')
+        filter_params.append(list_to_filter("pointInTimeMonth", point_in_time_month))
+        if point_in_time_month_gt is not None:
+            filter_params.append(f'pointInTimeMonth > "{point_in_time_month_gt}"')
+        if point_in_time_month_gte is not None:
+            filter_params.append(f'pointInTimeMonth >= "{point_in_time_month_gte}"')
+        if point_in_time_month_lt is not None:
+            filter_params.append(f'pointInTimeMonth < "{point_in_time_month_lt}"')
+        if point_in_time_month_lte is not None:
+            filter_params.append(f'pointInTimeMonth <= "{point_in_time_month_lte}"')
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+        if modified_date_gt is not None:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/lng/v1/supply-forecast/short-term/history",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response

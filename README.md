@@ -298,6 +298,12 @@ lng.get_power_generation(
 )
 # DataFrame of power generation for India, Pakistan, Bangladesh by fuel type on a monthly basis.
 
+lng.get_demand_forecast_short_term_current(import_market="France",month_gte="2025-01-01")
+# DataFrame of short term demand forecast for import market of France starting January 1st 2025
+
+lng.get_supply_forecast_short_term_current(export_market="Canada",month_gte="2025-01-01")
+# DataFrame of short term supply forecast for export market of Canada starting January 1st 2025
+
 ```
 
 ### Crude Analytics
