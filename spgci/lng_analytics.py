@@ -9181,7 +9181,7 @@ class LNGGlobalAnalytics:
              filter by `modified_date <= x`, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -9303,7 +9303,7 @@ class LNGGlobalAnalytics:
              filter by `modified_date <= x`, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -9423,7 +9423,7 @@ class LNGGlobalAnalytics:
              filter by `modified_date <= x`, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -9545,7 +9545,7 @@ class LNGGlobalAnalytics:
              filter by `modified_date <= x`, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
