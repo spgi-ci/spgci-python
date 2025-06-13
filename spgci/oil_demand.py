@@ -19,22 +19,23 @@ from typing import Union, Optional, List
 from spgci.api_client import get_data, Paginator
 from spgci.utilities import list_to_filter
 from enum import Enum
+import warnings
 
 
 class GlobalOilDemand:
     """
-    Global Oil Demand.
+    Global Oil Demand
 
-    Includes
-    --------
-    ``RefTypes`` to use with the ``get_reference_data`` method.
-    ``get_reference_data()`` to get the list of countries, states, grades, etc.. for the World Oil Supply dataset.
-    ``get_ownership()`` to get production ownership by company.
-    ``get_cost_of_supplies()`` to get cost of supplies in $/b. Includes Brent equivalent, Brent differential, wellhead and annual production in MBD.
-    ``get_production()`` to get the latest historical and forecast oil supply data for individual countries.
-    ``get_production_archive()`` to get previously issued historical and forecast oil supply data for individual countries.
-
+    .. deprecated:: 0.0.57
+       Use `OilNGLAnalytics` instead.
     """
+
+    def __init__(self):
+        warnings.warn(
+            "GlobalOilDemand is deprecated. Use OilNGLAnalytics instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
     _path = "mgodf/v1/"
 
@@ -82,6 +83,9 @@ class GlobalOilDemand:
         raw: bool = False,
     ) -> Union[Response, DataFrame]:
         """
+        .. deprecated:: 0.0.57
+            Use `OilNGLAnalytics` instead.
+
         Fetch latest Global Oil Demand forecast by month.
 
         Parameters
@@ -195,6 +199,9 @@ class GlobalOilDemand:
         raw: bool = False,
     ) -> Union[Response, DataFrame]:
         """
+        .. deprecated:: 0.0.57
+            Use `OilNGLAnalytics` instead.
+
         Fetch archive Global Oil Demand forecast by month.
 
         Parameters
@@ -294,7 +301,10 @@ class GlobalOilDemand:
         self, type: RefTypes, raw: bool = False
     ) -> Union[Response, DataFrame]:
         """
-        Fetch reference data for the World Oil Supply dataset.
+        .. deprecated:: 0.0.57
+            Use `OilNGLAnalytics` instead.
+
+        Fetch reference data for the Global Oil Demand dataset.
 
         Parameters
         ----------
