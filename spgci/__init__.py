@@ -46,6 +46,7 @@ from .oil_ngl_analytics import OilNGLAnalytics
 from .integrated_energy_scenarios import IntegratedEnergyScenarios
 from .agriculture_and_food import AgriAndFood
 from .americas_gas import AmericasGas
+from .refined_product_demand import RefinedProductDemand
 
 
 from .config import username, password, set_credentials, version
@@ -79,4 +80,5 @@ __all__ = [
     "IntegratedEnergyScenarios",
     "AgriAndFood",
     "AmericasGas",
+    "RefinedProductDemand",
 ]
