@@ -1728,7 +1728,527 @@ class EUGasAnalytics:
             paginate=paginate,
         )
         return response
+    
 
+    def get_supply_demand_short_term_forecast(
+        self,
+        *,
+        forecast_week: Optional[Union[list[str], Series[str], str]] = None,
+        uom: Optional[Union[list[str], Series[str], str]] = None,
+        dataset: Optional[Union[list[str], Series[str], str]] = None,
+        region: Optional[Union[list[str], Series[str], str]] = None,
+        level1: Optional[Union[list[str], Series[str], str]] = None,
+        level2: Optional[Union[list[str], Series[str], str]] = None,
+        level3: Optional[Union[list[str], Series[str], str]] = None,
+        date: Optional[date] = None,
+        date_lt: Optional[date] = None,
+        date_lte: Optional[date] = None,
+        date_gt: Optional[date] = None,
+        date_gte: Optional[date] = None,
+        modified_date: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_gte: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Access Weekly Supply, Demand, Bidirectional and Storage forecast for European Gas markets.
+
+        Parameters
+        ----------
+
+         forecast_week: Optional[Union[list[str], Series[str], str]]
+             The week of the forecast, by default None
+         uom: Optional[Union[list[str], Series[str], str]]
+             Unit of measurement, by default None
+         dataset: Optional[Union[list[str], Series[str], str]]
+             The dataset providing this data, by default None
+         region: Optional[Union[list[str], Series[str], str]]
+             The code for the region, by default None
+         level1: Optional[Union[list[str], Series[str], str]]
+             The top-level classification of this dataset, by default None
+         level2: Optional[Union[list[str], Series[str], str]]
+             The level 2 classification of this dataset, by default None
+         level3: Optional[Union[list[str], Series[str], str]]
+             The level 3 classification of this dataset, by default None
+         date: Optional[date], optional
+             The date forecast, by default None
+         date_gt: Optional[date], optional
+             filter by `date > x`, by default None
+         date_gte: Optional[date], optional
+             filter by `date >= x`, by default None
+         date_lt: Optional[date], optional
+             filter by `date < x`, by default None
+         date_lte: Optional[date], optional
+             filter by `date <= x`, by default None
+         modified_date: Optional[datetime], optional
+             The date when this data was imported., by default None
+         modified_date_gt: Optional[datetime], optional
+             filter by `modified_date > x`, by default None
+         modified_date_gte: Optional[datetime], optional
+             filter by `modified_date >= x`, by default None
+         modified_date_lt: Optional[datetime], optional
+             filter by `modified_date < x`, by default None
+         modified_date_lte: Optional[datetime], optional
+             filter by `modified_date <= x`, by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("forecastWeek", forecast_week))
+        filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("dataset", dataset))
+        filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("level1", level1))
+        filter_params.append(list_to_filter("level2", level2))
+        filter_params.append(list_to_filter("level3", level3))
+        filter_params.append(list_to_filter("date", date))
+        if date_gt is not None:
+            filter_params.append(f'date > "{date_gt}"')
+        if date_gte is not None:
+            filter_params.append(f'date >= "{date_gte}"')
+        if date_lt is not None:
+            filter_params.append(f'date < "{date_lt}"')
+        if date_lte is not None:
+            filter_params.append(f'date <= "{date_lte}"')
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+        if modified_date_gt is not None:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/eugas/v2/analytics/supply-demand/short-term-forecast",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_supply_demand_forecast_switching(
+        self,
+        *,
+        forecast_week: Optional[Union[list[str], Series[str], str]] = None,
+        uom: Optional[Union[list[str], Series[str], str]] = None,
+        dataset: Optional[Union[list[str], Series[str], str]] = None,
+        region: Optional[Union[list[str], Series[str], str]] = None,
+        level1: Optional[Union[list[str], Series[str], str]] = None,
+        level2: Optional[Union[list[str], Series[str], str]] = None,
+        level3: Optional[Union[list[str], Series[str], str]] = None,
+        date: Optional[date] = None,
+        date_lt: Optional[date] = None,
+        date_lte: Optional[date] = None,
+        date_gt: Optional[date] = None,
+        date_gte: Optional[date] = None,
+        modified_date: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_gte: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Access Weekly Coal to Gas Switching Forecast for European Gas Markets.
+
+        Parameters
+        ----------
+
+         forecast_week: Optional[Union[list[str], Series[str], str]]
+             The week of the forecast, by default None
+         uom: Optional[Union[list[str], Series[str], str]]
+             Unit of measurement, by default None
+         dataset: Optional[Union[list[str], Series[str], str]]
+             The dataset providing this data, by default None
+         region: Optional[Union[list[str], Series[str], str]]
+             The code for the region, by default None
+         level1: Optional[Union[list[str], Series[str], str]]
+             The top-level classification of this dataset, by default None
+         level2: Optional[Union[list[str], Series[str], str]]
+             The level 2 classification of this dataset, by default None
+         level3: Optional[Union[list[str], Series[str], str]]
+             The level 3 classification of this dataset, by default None
+         date: Optional[date], optional
+             The date forecast, by default None
+         date_gt: Optional[date], optional
+             filter by `date > x`, by default None
+         date_gte: Optional[date], optional
+             filter by `date >= x`, by default None
+         date_lt: Optional[date], optional
+             filter by `date < x`, by default None
+         date_lte: Optional[date], optional
+             filter by `date <= x`, by default None
+         modified_date: Optional[datetime], optional
+             The date when this data was imported., by default None
+         modified_date_gt: Optional[datetime], optional
+             filter by `modified_date > x`, by default None
+         modified_date_gte: Optional[datetime], optional
+             filter by `modified_date >= x`, by default None
+         modified_date_lt: Optional[datetime], optional
+             filter by `modified_date < x`, by default None
+         modified_date_lte: Optional[datetime], optional
+             filter by `modified_date <= x`, by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("forecastWeek", forecast_week))
+        filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("dataset", dataset))
+        filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("level1", level1))
+        filter_params.append(list_to_filter("level2", level2))
+        filter_params.append(list_to_filter("level3", level3))
+        filter_params.append(list_to_filter("date", date))
+        if date_gt is not None:
+            filter_params.append(f'date > "{date_gt}"')
+        if date_gte is not None:
+            filter_params.append(f'date >= "{date_gte}"')
+        if date_lt is not None:
+            filter_params.append(f'date < "{date_lt}"')
+        if date_lte is not None:
+            filter_params.append(f'date <= "{date_lte}"')
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+        if modified_date_gt is not None:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/eugas/v2/analytics/supply-demand/forecast/switching",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_price_forecast(
+        self,
+        *,
+        category: Optional[Union[list[str], Series[str], str]] = None,
+        uom: Optional[Union[list[str], Series[str], str]] = None,
+        date: Optional[datetime] = None,
+        date_lt: Optional[datetime] = None,
+        date_lte: Optional[datetime] = None,
+        date_gt: Optional[datetime] = None,
+        date_gte: Optional[datetime] = None,
+        forecast_week: Optional[Union[list[str], Series[str], str]] = None,
+        hub: Optional[Union[list[str], Series[str], str]] = None,
+        region: Optional[Union[list[str], Series[str], str]] = None,
+        modified_date: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_gte: Optional[datetime] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Access Weekly price forecast for TTF, NBP and PSV European Gas Hubs.
+
+        Parameters
+        ----------
+
+         category: Optional[Union[list[str], Series[str], str]]
+             The category of the forecast data, by default None
+         uom: Optional[Union[list[str], Series[str], str]]
+             The unit for the value, by default None
+         date: Optional[datetime], optional
+             Date for the imported data, by default None
+         date_gt: Optional[datetime], optional
+             filter by `date > x`, by default None
+         date_gte: Optional[datetime], optional
+             filter by `date >= x`, by default None
+         date_lt: Optional[datetime], optional
+             filter by `date < x`, by default None
+         date_lte: Optional[datetime], optional
+             filter by `date <= x`, by default None
+         forecast_week: Optional[Union[list[str], Series[str], str]]
+             The month imported, by default None
+         hub: Optional[Union[list[str], Series[str], str]]
+             The hub code, by default None
+         region: Optional[Union[list[str], Series[str], str]]
+             The code for the region, by default None
+         modified_date: Optional[datetime], optional
+             The date when this data was imported., by default None
+         modified_date_gt: Optional[datetime], optional
+             filter by `modified_date > x`, by default None
+         modified_date_gte: Optional[datetime], optional
+             filter by `modified_date >= x`, by default None
+         modified_date_lt: Optional[datetime], optional
+             filter by `modified_date < x`, by default None
+         modified_date_lte: Optional[datetime], optional
+             filter by `modified_date <= x`, by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("category", category))
+        filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("date", date))
+        if date_gt is not None:
+            filter_params.append(f'date > "{date_gt}"')
+        if date_gte is not None:
+            filter_params.append(f'date >= "{date_gte}"')
+        if date_lt is not None:
+            filter_params.append(f'date < "{date_lt}"')
+        if date_lte is not None:
+            filter_params.append(f'date <= "{date_lte}"')
+        filter_params.append(list_to_filter("forecastWeek", forecast_week))
+        filter_params.append(list_to_filter("hub", hub))
+        filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+        if modified_date_gt is not None:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/eugas/v2/analytics/price/forecast",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+    
+
+    def get_daily_country_overview(
+        self,
+        *,
+        id: Optional[int] = None,
+        id_lt: Optional[int] = None,
+        id_lte: Optional[int] = None,
+        id_gt: Optional[int] = None,
+        id_gte: Optional[int] = None,
+        gas_day: Optional[date] = None,
+        gas_day_lt: Optional[date] = None,
+        gas_day_lte: Optional[date] = None,
+        gas_day_gt: Optional[date] = None,
+        gas_day_gte: Optional[date] = None,
+        main_flow_type: Optional[Union[list[str], Series[str], str]] = None,
+        secondary_flow_type: Optional[Union[list[str], Series[str], str]] = None,
+        detailed_flow_type: Optional[Union[list[str], Series[str], str]] = None,
+        from_country: Optional[Union[list[str], Series[str], str]] = None,
+        from_system_operator: Optional[Union[list[str], Series[str], str]] = None,
+        to_system_operator: Optional[Union[list[str], Series[str], str]] = None,
+        country: Optional[Union[list[str], Series[str], str]] = None,
+        name: Optional[Union[list[str], Series[str], str]] = None,
+        gas_type: Optional[Union[list[str], Series[str], str]] = None,
+        source: Optional[Union[list[str], Series[str], str]] = None,
+        direction: Optional[Union[list[str], Series[str], str]] = None,
+        uom: Optional[Union[list[str], Series[str], str]] = None,
+        modified_date: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_gte: Optional[datetime] = None,
+        default_source: Optional[Union[list[str], Series[str], str]] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Retrieve The daily supply and demand overview of the specified country.
+
+        Parameters
+        ----------
+
+         id: Optional[int], optional
+             The unique identifier for the gas data field., by default None
+         id_gt: Optional[int], optional
+             filter by `id > x`, by default None
+         id_gte: Optional[int], optional
+             filter by `id >= x`, by default None
+         id_lt: Optional[int], optional
+             filter by `id < x`, by default None
+         id_lte: Optional[int], optional
+             filter by `id <= x`, by default None
+         gas_day: Optional[date], optional
+             The date for which the gas data is recorded or applicable., by default None
+         gas_day_gt: Optional[date], optional
+             filter by `gas_day > x`, by default None
+         gas_day_gte: Optional[date], optional
+             filter by `gas_day >= x`, by default None
+         gas_day_lt: Optional[date], optional
+             filter by `gas_day < x`, by default None
+         gas_day_lte: Optional[date], optional
+             filter by `gas_day <= x`, by default None
+         main_flow_type: Optional[Union[list[str], Series[str], str]]
+             The main type of gas flow, such as pipeline or LNG terminal., by default None
+         secondary_flow_type: Optional[Union[list[str], Series[str], str]]
+             The secondary type of gas flow, such as production or storage., by default None
+         detailed_flow_type: Optional[Union[list[str], Series[str], str]]
+             The detailed or specific type of gas flow, such as landing point or LNG terminal., by default None
+         from_country: Optional[Union[list[str], Series[str], str]]
+             The country from which the gas is being transported or delivered., by default None
+         from_system_operator: Optional[Union[list[str], Series[str], str]]
+             The system operator responsible for the gas transportation or delivery from the specified country., by default None
+         to_system_operator: Optional[Union[list[str], Series[str], str]]
+             The system operator responsible for the gas transportation or delivery to the specified country., by default None
+         country: Optional[Union[list[str], Series[str], str]]
+             The country from which the gas is being transported or delivered or the country to which the gas is being transported or delivered, by default None
+         name: Optional[Union[list[str], Series[str], str]]
+             The name or identifier of the specific flow point or location in the gas network., by default None
+         gas_type: Optional[Union[list[str], Series[str], str]]
+             The type of gas being transported or delivered, such as H-gas (high-calorific gas)., by default None
+         source: Optional[Union[list[str], Series[str], str]]
+             The source or origin of the gas being transported or delivered, such as a specific gas facility or company., by default None
+         direction: Optional[Union[list[str], Series[str], str]]
+             The direction of gas flow at the specified flow point, such as net flow or total flow., by default None
+         uom: Optional[Union[list[str], Series[str], str]]
+             The unit of measurement used for quantifying the gas flow at the specified flow point, such as MCM (million cubic meters)., by default None
+         modified_date: Optional[datetime], optional
+             The date and time when the gas data field was last modified or updated., by default None
+         modified_date_gt: Optional[datetime], optional
+             filter by `modified_date > x`, by default None
+         modified_date_gte: Optional[datetime], optional
+             filter by `modified_date >= x`, by default None
+         modified_date_lt: Optional[datetime], optional
+             filter by `modified_date < x`, by default None
+         modified_date_lte: Optional[datetime], optional
+             filter by `modified_date <= x`, by default None
+         default_source: Optional[Union[list[str], Series[str], str]]
+             Indicates whether the specified flow point is the default source for gas flow data., by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("id", id))
+        if id_gt is not None:
+            filter_params.append(f'id > "{id_gt}"')
+        if id_gte is not None:
+            filter_params.append(f'id >= "{id_gte}"')
+        if id_lt is not None:
+            filter_params.append(f'id < "{id_lt}"')
+        if id_lte is not None:
+            filter_params.append(f'id <= "{id_lte}"')
+        filter_params.append(list_to_filter("gasDay", gas_day))
+        if gas_day_gt is not None:
+            filter_params.append(f'gasDay > "{gas_day_gt}"')
+        if gas_day_gte is not None:
+            filter_params.append(f'gasDay >= "{gas_day_gte}"')
+        if gas_day_lt is not None:
+            filter_params.append(f'gasDay < "{gas_day_lt}"')
+        if gas_day_lte is not None:
+            filter_params.append(f'gasDay <= "{gas_day_lte}"')
+        filter_params.append(list_to_filter("mainFlowType", main_flow_type))
+        filter_params.append(list_to_filter("secondaryFlowType", secondary_flow_type))
+        filter_params.append(list_to_filter("detailedFlowType", detailed_flow_type))
+        filter_params.append(list_to_filter("fromCountry", from_country))
+        filter_params.append(list_to_filter("fromSystemOperator", from_system_operator))
+        filter_params.append(list_to_filter("toSystemOperator", to_system_operator))
+        filter_params.append(list_to_filter("country", country))
+        filter_params.append(list_to_filter("name", name))
+        filter_params.append(list_to_filter("gasType", gas_type))
+        filter_params.append(list_to_filter("source", source))
+        filter_params.append(list_to_filter("direction", direction))
+        filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+        if modified_date_gt is not None:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+        filter_params.append(list_to_filter("defaultSource", default_source))
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/eugas/v1/daily/country-overview",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+
+    
     @staticmethod
     def _convert_to_df(resp: Response) -> pd.DataFrame:
         j = resp.json()

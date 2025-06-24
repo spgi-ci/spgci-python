@@ -420,6 +420,9 @@ df.pivot_table(
 # DataFrame of hub balances for October 2024 for PEG in Million Cubic Meters
 # Pivot Table shows this grouped by FlowType (demand, supply, storage, etc...) and +/- N Days.
 
+egp.get_daily_country_overview(country="Netherlands", uom="MCM", gas_day_gte="2025-05-01", gas_day_lte="2025-05-31")
+# DataFrame of the daily supply and demand of a specified country
+
 ```
 
 ### Oil and NGL Analytics
