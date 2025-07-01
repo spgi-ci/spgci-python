@@ -359,7 +359,7 @@ class Chemicals:
         duration: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -445,7 +445,7 @@ class Chemicals:
              Number of outage days for the plant that month, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
