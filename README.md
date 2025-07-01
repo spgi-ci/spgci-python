@@ -304,6 +304,12 @@ lng.get_demand_forecast_short_term_current(import_market="France",month_gte="202
 lng.get_supply_forecast_short_term_current(export_market="Canada",month_gte="2025-01-01")
 # DataFrame of short term supply forecast for export market of Canada starting January 1st 2025
 
+lng.get_events_trade_route(trade_route="Cape of Good Hope", vessel_direction="Westbound")
+# DataFrame for events recording key information, e.g Westbound vessels passing throught the Cape of Good Hope
+
+lng.get_events_diversion(diversion_location="Indian Ocean")
+# DataFrame for events of diversion, e.g. in the Indian Ocean
+
 ```
 
 ### Crude Analytics
@@ -339,7 +345,6 @@ w.get_forecast(market="United States", weather_date_gte="2024-01-01", weather_da
 
 w.get_actual(market="Hong Kong", paginate=True)
 # DataFrame of actual weather in Hong Kong, paginate=True to get full history.
-
 
 ```
 
