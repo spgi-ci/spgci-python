@@ -494,5 +494,20 @@ import spgci as ci
 na = ci.AmericasGas()
 
 na.get_pipeline_flows(date_frequency="Monthly", subregion="New England", meter_type_primary="Power")
-# Monthly pipeline flows for Power as a primary meter type in New England
+# DataFrame of monthly pipeline flows for Power as a primary meter type in New England
+
+na.get_modeled_demand_actual(flow_date="2025-07-07")
+# DataFrame of actual modeled demand for a specific date
+
+na.get_outlook_marketbalances_prices(
+    date_frequency="Summer",
+    domain="Canada",
+    category="LNG exports",
+    vintage_type="Long Term Outlook",
+    vintage="2025.01"
+)
+# DataFrame of market balances and prices outlook for Canadian LNG exports for the 2025 Long Term Outlook
+
+na.get_unique_values("outlook-marketbalances-prices", "region")
+# DataFrame the unique values in a dataset and column, e.g. the regions available in outlook market balances prices dataset
 ```
