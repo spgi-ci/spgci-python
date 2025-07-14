@@ -1,3 +1,17 @@
+# Copyright 2025 S&P Global Commodity Insights
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#       http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from __future__ import annotations
 from typing import List, Optional, Union, Literal
 from requests import Response
@@ -10,17 +24,6 @@ import pandas as pd
 
 
 class OilNGLAnalytics:
-    _endpoint = "api/v1/"
-    _reference_endpoint = "reference/v1/"
-    _vw_oil_inventory_endpoint = "/oil-inventory"
-    _vw_oil_inventory_latest_endpoint = "/oil-inventory/latest"
-    _vw_arbflow_refined_product_arbitrage_endpoint = "/arbflow/arbitrage"
-    _vw_refinery_production_endpoint = "/refinery-production"
-    _vw_refinery_production_latest_endpoint = "/refinery-production/latest"
-    _vw_refinery_runs_endpoint = "/refinery-runs"
-    _vw_refinery_runs_latest_endpoint = "/refinery-runs/latest"
-    _vw_refinery_utilization_rate_endpoint = "/refinery-utilization-rate"
-    _vw_refinery_utilization_rate_latest_endpoint = "/refinery-utilization-rate/latest"
 
     _datasets = Literal[
         "arbflow-arbitrage",
