@@ -78,13 +78,7 @@ class AmericasGas:
 
         def to_df(resp: Response):
             j = resp.json()
-            # The API may return either "aggResultValue" or "results" for groupby endpoints
-            if "aggResultValue" in j:
-                return DataFrame(j["aggResultValue"])
-            elif "results" in j:
-                return DataFrame(j["results"])
-            else:
-                return DataFrame()
+            return DataFrame(j["aggResultValue"])
 
         return get_data(path, params, to_df, paginate=True)
 
