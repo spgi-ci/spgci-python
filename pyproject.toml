@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spgci"
-version = "0.0.60"
+version = "0.0.61"
 description = "SPGCI is an API Client for the S&P Commodity Insights REST API"
 authors = ["S&P Global Commodity Insights <pl_api_support@spglobal.com>"]
 license = "Apache-2.0"

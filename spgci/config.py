@@ -1,4 +1,4 @@
-# Copyright 2023 S&P Global Commodity Insights
+# Copyright 2025 S&P Global Commodity Insights
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ proxies: Dict[str, str] = {
 auth: Union[AuthBase, None] = None
 
 #: Version of the SPGCI Pkg
-version = "0.0.60"
+version = "0.0.61"
 
 #: time to sleep between api calls
 sleep_time = 0

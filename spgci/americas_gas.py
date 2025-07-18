@@ -81,6 +81,33 @@ class AmericasGas:
             return DataFrame(j["aggResultValue"])
 
         return get_data(path, params, to_df, paginate=True)
+    
+    def get_metadata(self, dataset: str) -> pd.DataFrame:
+        """
+        Fetches metadata for the specified Americas Gas dataset using the metadata endpoint.
+        Returns the metadata DataFrame describing available columns and types.
+        """
+        dataset_to_path = {
+            "reference-data-pipeline-flows": "/analytics/gas/na-gas/v1/reference-data/pipeline-flows/metadata",
+            "pipeline-flows": "/analytics/gas/na-gas/v1/pipeline-flows/metadata",
+            "modeled-demand-actual": "/analytics/gas/na-gas/v1/modeled-demand-actual/metadata",
+            "natural-gas-production": "/analytics/gas/na-gas/v1/natural-gas-production/metadata",
+            "population-weighted-weather": "/analytics/gas/na-gas/v1/population-weighted-weather/metadata",
+            "outlook-production-play": "/analytics/gas/na-gas/v1/outlook-production-play/metadata",
+            "outlook-marketbalances-prices": "/analytics/gas/na-gas/v1/outlook-marketbalances-prices/metadata",
+            "pipeline-storage-projects": "/analytics/gas/na-gas/v1/pipeline-storage-projects/metadata",
+        }
+        if dataset not in dataset_to_path:
+            valid = "\n".join(dataset_to_path.keys())
+            raise ValueError(
+                f"Dataset '{dataset}' not found. Valid datasets:\n{valid}"
+            )
+        path = dataset_to_path[dataset]
+        resp = get_data(path, params={}, raw=True, paginate=False)
+        j = resp.json()
+        # API response is a list of dicts
+        return pd.DataFrame(j)
+
 
     def get_reference_data_pipeline_flows(
         self,
