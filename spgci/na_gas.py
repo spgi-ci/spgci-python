@@ -21,18 +21,22 @@ from spgci.api_client import get_data, Paginator
 from spgci.utilities import list_to_filter
 from enum import Enum
 from datetime import datetime, date
-
+import warnings
 
 class NANaturalGasAnalytics:
     """
-    North America Natural Gas Pipeline.
+    North America Natural Gas Pipeline
 
-    Includes
-    --------
-    ``get_pipelines()`` to get the list of pipelines and their associated properties such as county, facility type, drn number, etc; for the North America Natural Gas Pipeline dataset.
-    ``get_pipeline_flows()`` to get north america natural gas pipeline flow data. Returns 48 hours of history by default.
-
+    .. deprecated:: 0.0.60
+       Use `AmericasGas` instead.
     """
+
+    def __init__(self):
+        warnings.warn(
+            "NANaturalGasAnalytics is deprecated as of 0.0.60. Use AmericasGas instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
     _path = "analytics/natural-gas/north-america/supply-demand/v1/"
 
