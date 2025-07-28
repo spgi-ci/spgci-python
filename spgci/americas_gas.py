@@ -27,6 +27,7 @@ class AmericasGas:
 
     _datasets = Literal[
         "reference-data-pipeline-flows",
+        "reference-data-geography",
         "pipeline-flows", 
         "modeled-demand-actual",
         "natural-gas-production",
@@ -34,6 +35,7 @@ class AmericasGas:
         "outlook-production-play",
         "outlook-marketbalances-prices",
         "pipeline-storage-projects",
+        "pipeline-profiles-data",
     ]
     def get_unique_values(
         self,
@@ -57,6 +59,7 @@ class AmericasGas:
         """
         dataset_to_path = {
             "reference-data-pipeline-flows": "/analytics/gas/na-gas/v1/reference-data/pipeline-flows",
+            "reference-data-geography": "/analytics/gas/na-gas/v1/reference-data/geography",
             "pipeline-flows": "/analytics/gas/na-gas/v1/pipeline-flows",
             "modeled-demand-actual": "/analytics/gas/na-gas/v1/modeled-demand-actual",
             "natural-gas-production": "/analytics/gas/na-gas/v1/natural-gas-production",
@@ -64,6 +67,7 @@ class AmericasGas:
             "outlook-production-play": "/analytics/gas/na-gas/v1/outlook-production-play",
             "outlook-marketbalances-prices": "/analytics/gas/na-gas/v1/outlook-marketbalances-prices",
             "pipeline-storage-projects": "/analytics/gas/na-gas/v1/pipeline-storage-projects",
+            "pipeline-profiles-data": "/analytics/gas/na-gas/v1/pipeline-profiles-data",
         }
 
         if dataset not in dataset_to_path:
@@ -82,31 +86,135 @@ class AmericasGas:
 
         return get_data(path, params, to_df, paginate=True)
     
-    def get_metadata(self, dataset: str) -> pd.DataFrame:
+
+    def get_reference_data_geography(
+        self,
+        *,
+        last_modified_date: Optional[datetime] = None,
+        last_modified_date_lt: Optional[datetime] = None,
+        last_modified_date_lte: Optional[datetime] = None,
+        last_modified_date_gt: Optional[datetime] = None,
+        last_modified_date_gte: Optional[datetime] = None,
+        domain: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
+        region: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
+        subregion: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
+        gulfcoast_substate: Optional[Union[list[str], Series[str], str]] = None,
+        gulfcoast_substate_id: Optional[Union[list[str], Series[str], str]] = None,
+        state_abbreviation: Optional[Union[list[str], Series[str], str]] = None,
+        state: Optional[Union[list[str], Series[str], str]] = None,
+        state_id: Optional[Union[list[str], Series[str], str]] = None,
+        county: Optional[Union[list[str], Series[str], str]] = None,
+        county_id: Optional[Union[list[str], Series[str], str]] = None,
+        producing_area: Optional[Union[list[str], Series[str], str]] = None,
+        producing_area_id: Optional[Union[list[str], Series[str], str]] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
         """
-        Fetches metadata for the specified Americas Gas dataset using the metadata endpoint.
-        Returns the metadata DataFrame describing available columns and types.
+        A relationship table expressing the hierarchy from county and state up through subregion, region and domain levels such as the US lower 48, Canada and Mexico.
+
+        Parameters
+        ----------
+
+         last_modified_date: Optional[datetime], optional
+             Date and time the record was last updated., by default None
+         last_modified_date_gt: Optional[datetime], optional
+             filter by `last_modified_date > x`, by default None
+         last_modified_date_gte: Optional[datetime], optional
+             filter by `last_modified_date >= x`, by default None
+         last_modified_date_lt: Optional[datetime], optional
+             filter by `last_modified_date < x`, by default None
+         last_modified_date_lte: Optional[datetime], optional
+             filter by `last_modified_date <= x`, by default None
+         domain: Optional[Union[list[str], Series[str], str]]
+             US Lower-48, Canada and Mexico., by default None
+         domain_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the domain., by default None
+         region: Optional[Union[list[str], Series[str], str]]
+             A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
+         region_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic region., by default None
+         subregion: Optional[Union[list[str], Series[str], str]]
+             A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
+         subregion_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic subregion., by default None
+         gulfcoast_substate: Optional[Union[list[str], Series[str], str]]
+             The name of substate region or special area within the Gulf Coast region., by default None
+         gulfcoast_substate_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic substate regions within the Gulf Coast area., by default None
+         state_abbreviation: Optional[Union[list[str], Series[str], str]]
+             Abbreviation for a state or province within country., by default None
+         state: Optional[Union[list[str], Series[str], str]]
+             The political boundaries that define a state or province within country., by default None
+         state_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the state or province utilizes legacy Bentek IDs., by default None
+         county: Optional[Union[list[str], Series[str], str]]
+             The political boundaries of a defined county within a US state in which a meter or point resides., by default None
+         county_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the county within a US state in which a meter or point resides, utilizes legacy Bentek IDs., by default None
+         producing_area: Optional[Union[list[str], Series[str], str]]
+             Defined aggregation of counties within a state that is a best fit representation of prominent oil and gas plays and basins., by default None
+         producing_area_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for a defined Producing Area utilizes legacy PointLogic IDs., by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
         """
-        dataset_to_path = {
-            "reference-data-pipeline-flows": "/analytics/gas/na-gas/v1/reference-data/pipeline-flows/metadata",
-            "pipeline-flows": "/analytics/gas/na-gas/v1/pipeline-flows/metadata",
-            "modeled-demand-actual": "/analytics/gas/na-gas/v1/modeled-demand-actual/metadata",
-            "natural-gas-production": "/analytics/gas/na-gas/v1/natural-gas-production/metadata",
-            "population-weighted-weather": "/analytics/gas/na-gas/v1/population-weighted-weather/metadata",
-            "outlook-production-play": "/analytics/gas/na-gas/v1/outlook-production-play/metadata",
-            "outlook-marketbalances-prices": "/analytics/gas/na-gas/v1/outlook-marketbalances-prices/metadata",
-            "pipeline-storage-projects": "/analytics/gas/na-gas/v1/pipeline-storage-projects/metadata",
-        }
-        if dataset not in dataset_to_path:
-            valid = "\n".join(dataset_to_path.keys())
-            raise ValueError(
-                f"Dataset '{dataset}' not found. Valid datasets:\n{valid}"
-            )
-        path = dataset_to_path[dataset]
-        resp = get_data(path, params={}, raw=True, paginate=False)
-        j = resp.json()
-        # API response is a list of dicts
-        return pd.DataFrame(j)
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("lastModifiedDate", last_modified_date))
+        if last_modified_date_gt is not None:
+            filter_params.append(f'lastModifiedDate > "{last_modified_date_gt}"')
+        if last_modified_date_gte is not None:
+            filter_params.append(f'lastModifiedDate >= "{last_modified_date_gte}"')
+        if last_modified_date_lt is not None:
+            filter_params.append(f'lastModifiedDate < "{last_modified_date_lt}"')
+        if last_modified_date_lte is not None:
+            filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
+        filter_params.append(list_to_filter("domain", domain))
+        filter_params.append(list_to_filter("domainId", domain_id))
+        filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("regionId", region_id))
+        filter_params.append(list_to_filter("subregion", subregion))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
+        filter_params.append(list_to_filter("gulfcoastSubstate", gulfcoast_substate))
+        filter_params.append(
+            list_to_filter("gulfcoastSubstateId", gulfcoast_substate_id)
+        )
+        filter_params.append(list_to_filter("stateAbbreviation", state_abbreviation))
+        filter_params.append(list_to_filter("state", state))
+        filter_params.append(list_to_filter("stateId", state_id))
+        filter_params.append(list_to_filter("county", county))
+        filter_params.append(list_to_filter("countyId", county_id))
+        filter_params.append(list_to_filter("producingArea", producing_area))
+        filter_params.append(list_to_filter("producingAreaId", producing_area_id))
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/analytics/gas/na-gas/v1/reference-data/geography",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
 
 
     def get_reference_data_pipeline_flows(
@@ -2174,6 +2282,3081 @@ class AmericasGas:
             paginate=paginate,
         )
         return response
+    
+    def get_pipeline_profiles_data(
+        self,
+        *,
+        year: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_filer_name: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_name: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
+        operating_revenues_gas: Optional[str] = None,
+        operating_revenues_gas_lt: Optional[str] = None,
+        operating_revenues_gas_lte: Optional[str] = None,
+        operating_revenues_gas_gt: Optional[str] = None,
+        operating_revenues_gas_gte: Optional[str] = None,
+        operating_revenues_total: Optional[str] = None,
+        operating_revenues_total_lt: Optional[str] = None,
+        operating_revenues_total_lte: Optional[str] = None,
+        operating_revenues_total_gt: Optional[str] = None,
+        operating_revenues_total_gte: Optional[str] = None,
+        operation_expenses_gas: Optional[str] = None,
+        operation_expenses_gas_lt: Optional[str] = None,
+        operation_expenses_gas_lte: Optional[str] = None,
+        operation_expenses_gas_gt: Optional[str] = None,
+        operation_expenses_gas_gte: Optional[str] = None,
+        operating_expenses_total: Optional[str] = None,
+        operating_expenses_total_lt: Optional[str] = None,
+        operating_expenses_total_lte: Optional[str] = None,
+        operating_expenses_total_gt: Optional[str] = None,
+        operating_expenses_total_gte: Optional[str] = None,
+        maintenance_expenses_gas: Optional[str] = None,
+        maintenance_expenses_gas_lt: Optional[str] = None,
+        maintenance_expenses_gas_lte: Optional[str] = None,
+        maintenance_expenses_gas_gt: Optional[str] = None,
+        maintenance_expenses_gas_gte: Optional[str] = None,
+        maintenance_expenses_total: Optional[str] = None,
+        maintenance_expenses_total_lt: Optional[str] = None,
+        maintenance_expenses_total_lte: Optional[str] = None,
+        maintenance_expenses_total_gt: Optional[str] = None,
+        maintenance_expenses_total_gte: Optional[str] = None,
+        taxes_other_than_income_taxes_total: Optional[str] = None,
+        taxes_other_than_income_taxes_total_lt: Optional[str] = None,
+        taxes_other_than_income_taxes_total_lte: Optional[str] = None,
+        taxes_other_than_income_taxes_total_gt: Optional[str] = None,
+        taxes_other_than_income_taxes_total_gte: Optional[str] = None,
+        utility_ebitda: Optional[str] = None,
+        utility_ebitda_lt: Optional[str] = None,
+        utility_ebitda_lte: Optional[str] = None,
+        utility_ebitda_gt: Optional[str] = None,
+        utility_ebitda_gte: Optional[str] = None,
+        transmission_pipeline_length: Optional[str] = None,
+        transmission_pipeline_length_lt: Optional[str] = None,
+        transmission_pipeline_length_lte: Optional[str] = None,
+        transmission_pipeline_length_gt: Optional[str] = None,
+        transmission_pipeline_length_gte: Optional[str] = None,
+        trpt_gas_for_others_transmsn_vol_mmcf: Optional[str] = None,
+        trpt_gas_for_others_transmsn_vol_mmcf_lt: Optional[str] = None,
+        trpt_gas_for_others_transmsn_vol_mmcf_lte: Optional[str] = None,
+        trpt_gas_for_others_transmsn_vol_mmcf_gt: Optional[str] = None,
+        trpt_gas_for_others_transmsn_vol_mmcf_gte: Optional[str] = None,
+        land_and_rights_trans_eoy000: Optional[str] = None,
+        land_and_rights_trans_eoy000_lt: Optional[str] = None,
+        land_and_rights_trans_eoy000_lte: Optional[str] = None,
+        land_and_rights_trans_eoy000_gt: Optional[str] = None,
+        land_and_rights_trans_eoy000_gte: Optional[str] = None,
+        rights_of_way_trans_eoy000: Optional[str] = None,
+        rights_of_way_trans_eoy000_lt: Optional[str] = None,
+        rights_of_way_trans_eoy000_lte: Optional[str] = None,
+        rights_of_way_trans_eoy000_gt: Optional[str] = None,
+        rights_of_way_trans_eoy000_gte: Optional[str] = None,
+        struc_and_improv_tran_eoy000: Optional[str] = None,
+        struc_and_improv_tran_eoy000_lt: Optional[str] = None,
+        struc_and_improv_tran_eoy000_lte: Optional[str] = None,
+        struc_and_improv_tran_eoy000_gt: Optional[str] = None,
+        struc_and_improv_tran_eoy000_gte: Optional[str] = None,
+        mains_transmission_eoy000: Optional[str] = None,
+        mains_transmission_eoy000_lt: Optional[str] = None,
+        mains_transmission_eoy000_lte: Optional[str] = None,
+        mains_transmission_eoy000_gt: Optional[str] = None,
+        mains_transmission_eoy000_gte: Optional[str] = None,
+        comprstaequip_trans_eoy000: Optional[str] = None,
+        comprstaequip_trans_eoy000_lt: Optional[str] = None,
+        comprstaequip_trans_eoy000_lte: Optional[str] = None,
+        comprstaequip_trans_eoy000_gt: Optional[str] = None,
+        comprstaequip_trans_eoy000_gte: Optional[str] = None,
+        meas_reg_sta_eq_trans_eoy000: Optional[str] = None,
+        meas_reg_sta_eq_trans_eoy000_lt: Optional[str] = None,
+        meas_reg_sta_eq_trans_eoy000_lte: Optional[str] = None,
+        meas_reg_sta_eq_trans_eoy000_gt: Optional[str] = None,
+        meas_reg_sta_eq_trans_eoy000_gte: Optional[str] = None,
+        communication_equip_trans_eoy000: Optional[str] = None,
+        communication_equip_trans_eoy000_lt: Optional[str] = None,
+        communication_equip_trans_eoy000_lte: Optional[str] = None,
+        communication_equip_trans_eoy000_gt: Optional[str] = None,
+        communication_equip_trans_eoy000_gte: Optional[str] = None,
+        total_transmission_plant_addns000: Optional[str] = None,
+        total_transmission_plant_addns000_lt: Optional[str] = None,
+        total_transmission_plant_addns000_lte: Optional[str] = None,
+        total_transmission_plant_addns000_gt: Optional[str] = None,
+        total_transmission_plant_addns000_gte: Optional[str] = None,
+        total_transmission_plant_ret000: Optional[str] = None,
+        total_transmission_plant_ret000_lt: Optional[str] = None,
+        total_transmission_plant_ret000_lte: Optional[str] = None,
+        total_transmission_plant_ret000_gt: Optional[str] = None,
+        total_transmission_plant_ret000_gte: Optional[str] = None,
+        total_transmission_plant_adjust000: Optional[str] = None,
+        total_transmission_plant_adjust000_lt: Optional[str] = None,
+        total_transmission_plant_adjust000_lte: Optional[str] = None,
+        total_transmission_plant_adjust000_gt: Optional[str] = None,
+        total_transmission_plant_adjust000_gte: Optional[str] = None,
+        total_transmission_plant_transf000: Optional[str] = None,
+        total_transmission_plant_transf000_lt: Optional[str] = None,
+        total_transmission_plant_transf000_lte: Optional[str] = None,
+        total_transmission_plant_transf000_gt: Optional[str] = None,
+        total_transmission_plant_transf000_gte: Optional[str] = None,
+        total_transmission_plant_eoy000: Optional[str] = None,
+        total_transmission_plant_eoy000_lt: Optional[str] = None,
+        total_transmission_plant_eoy000_lte: Optional[str] = None,
+        total_transmission_plant_eoy000_gt: Optional[str] = None,
+        total_transmission_plant_eoy000_gte: Optional[str] = None,
+        total_gas_plant_in_service_eoy: Optional[str] = None,
+        total_gas_plant_in_service_eoy_lt: Optional[str] = None,
+        total_gas_plant_in_service_eoy_lte: Optional[str] = None,
+        total_gas_plant_in_service_eoy_gt: Optional[str] = None,
+        total_gas_plant_in_service_eoy_gte: Optional[str] = None,
+        constr_wip_total: Optional[str] = None,
+        constr_wip_total_lt: Optional[str] = None,
+        constr_wip_total_lte: Optional[str] = None,
+        constr_wip_total_gt: Optional[str] = None,
+        constr_wip_total_gte: Optional[str] = None,
+        total_utility_plant_total: Optional[str] = None,
+        total_utility_plant_total_lt: Optional[str] = None,
+        total_utility_plant_total_lte: Optional[str] = None,
+        total_utility_plant_total_gt: Optional[str] = None,
+        total_utility_plant_total_gte: Optional[str] = None,
+        tran_op_sup_and_engineering: Optional[str] = None,
+        tran_op_sup_and_engineering_lt: Optional[str] = None,
+        tran_op_sup_and_engineering_lte: Optional[str] = None,
+        tran_op_sup_and_engineering_gt: Optional[str] = None,
+        tran_op_sup_and_engineering_gte: Optional[str] = None,
+        transmiss_oper_load_dispatch: Optional[str] = None,
+        transmiss_oper_load_dispatch_lt: Optional[str] = None,
+        transmiss_oper_load_dispatch_lte: Optional[str] = None,
+        transmiss_oper_load_dispatch_gt: Optional[str] = None,
+        transmiss_oper_load_dispatch_gte: Optional[str] = None,
+        oper_trans_communication_sys_exp: Optional[str] = None,
+        oper_trans_communication_sys_exp_lt: Optional[str] = None,
+        oper_trans_communication_sys_exp_lte: Optional[str] = None,
+        oper_trans_communication_sys_exp_gt: Optional[str] = None,
+        oper_trans_communication_sys_exp_gte: Optional[str] = None,
+        oper_trans_compr_sta_labor_and_exp: Optional[str] = None,
+        oper_trans_compr_sta_labor_and_exp_lt: Optional[str] = None,
+        oper_trans_compr_sta_labor_and_exp_lte: Optional[str] = None,
+        oper_trans_compr_sta_labor_and_exp_gt: Optional[str] = None,
+        oper_trans_compr_sta_labor_and_exp_gte: Optional[str] = None,
+        oper_trans_gas_for_compr_st_fuel: Optional[str] = None,
+        oper_trans_gas_for_compr_st_fuel_lt: Optional[str] = None,
+        oper_trans_gas_for_compr_st_fuel_lte: Optional[str] = None,
+        oper_trans_gas_for_compr_st_fuel_gt: Optional[str] = None,
+        oper_trans_gas_for_compr_st_fuel_gte: Optional[str] = None,
+        oper_trans_oth_fuel_and_pwr_for_compr_st: Optional[str] = None,
+        oper_trans_oth_fuel_and_pwr_for_compr_st_lt: Optional[str] = None,
+        oper_trans_oth_fuel_and_pwr_for_compr_st_lte: Optional[str] = None,
+        oper_trans_oth_fuel_and_pwr_for_compr_st_gt: Optional[str] = None,
+        oper_trans_oth_fuel_and_pwr_for_compr_st_gte: Optional[str] = None,
+        oper_trans_mains_exp: Optional[str] = None,
+        oper_trans_mains_exp_lt: Optional[str] = None,
+        oper_trans_mains_exp_lte: Optional[str] = None,
+        oper_trans_mains_exp_gt: Optional[str] = None,
+        oper_trans_mains_exp_gte: Optional[str] = None,
+        oper_trans_meas_and_reg_sta_exp: Optional[str] = None,
+        oper_trans_meas_and_reg_sta_exp_lt: Optional[str] = None,
+        oper_trans_meas_and_reg_sta_exp_lte: Optional[str] = None,
+        oper_trans_meas_and_reg_sta_exp_gt: Optional[str] = None,
+        oper_trans_meas_and_reg_sta_exp_gte: Optional[str] = None,
+        oper_trans_transm_and_compr_by_oth: Optional[str] = None,
+        oper_trans_transm_and_compr_by_oth_lt: Optional[str] = None,
+        oper_trans_transm_and_compr_by_oth_lte: Optional[str] = None,
+        oper_trans_transm_and_compr_by_oth_gt: Optional[str] = None,
+        oper_trans_transm_and_compr_by_oth_gte: Optional[str] = None,
+        tran_op_misc_transmission_exp: Optional[str] = None,
+        tran_op_misc_transmission_exp_lt: Optional[str] = None,
+        tran_op_misc_transmission_exp_lte: Optional[str] = None,
+        tran_op_misc_transmission_exp_gt: Optional[str] = None,
+        tran_op_misc_transmission_exp_gte: Optional[str] = None,
+        transmiss_oper_rents: Optional[str] = None,
+        transmiss_oper_rents_lt: Optional[str] = None,
+        transmiss_oper_rents_lte: Optional[str] = None,
+        transmiss_oper_rents_gt: Optional[str] = None,
+        transmiss_oper_rents_gte: Optional[str] = None,
+        transmiss_tran_operation_exp: Optional[str] = None,
+        transmiss_tran_operation_exp_lt: Optional[str] = None,
+        transmiss_tran_operation_exp_lte: Optional[str] = None,
+        transmiss_tran_operation_exp_gt: Optional[str] = None,
+        transmiss_tran_operation_exp_gte: Optional[str] = None,
+        transmiss_maint_supvsn_and_engin: Optional[str] = None,
+        transmiss_maint_supvsn_and_engin_lt: Optional[str] = None,
+        transmiss_maint_supvsn_and_engin_lte: Optional[str] = None,
+        transmiss_maint_supvsn_and_engin_gt: Optional[str] = None,
+        transmiss_maint_supvsn_and_engin_gte: Optional[str] = None,
+        transmiss_maint_of_structures: Optional[str] = None,
+        transmiss_maint_of_structures_lt: Optional[str] = None,
+        transmiss_maint_of_structures_lte: Optional[str] = None,
+        transmiss_maint_of_structures_gt: Optional[str] = None,
+        transmiss_maint_of_structures_gte: Optional[str] = None,
+        maint_trans_mains: Optional[str] = None,
+        maint_trans_mains_lt: Optional[str] = None,
+        maint_trans_mains_lte: Optional[str] = None,
+        maint_trans_mains_gt: Optional[str] = None,
+        maint_trans_mains_gte: Optional[str] = None,
+        maint_trans_compressor_sta_equip: Optional[str] = None,
+        maint_trans_compressor_sta_equip_lt: Optional[str] = None,
+        maint_trans_compressor_sta_equip_lte: Optional[str] = None,
+        maint_trans_compressor_sta_equip_gt: Optional[str] = None,
+        maint_trans_compressor_sta_equip_gte: Optional[str] = None,
+        maint_trans_meas_and_reg_sta_equip: Optional[str] = None,
+        maint_trans_meas_and_reg_sta_equip_lt: Optional[str] = None,
+        maint_trans_meas_and_reg_sta_equip_lte: Optional[str] = None,
+        maint_trans_meas_and_reg_sta_equip_gt: Optional[str] = None,
+        maint_trans_meas_and_reg_sta_equip_gte: Optional[str] = None,
+        maint_trans_communication_equip: Optional[str] = None,
+        maint_trans_communication_equip_lt: Optional[str] = None,
+        maint_trans_communication_equip_lte: Optional[str] = None,
+        maint_trans_communication_equip_gt: Optional[str] = None,
+        maint_trans_communication_equip_gte: Optional[str] = None,
+        transmiss_maint_of_misc_tran_plt: Optional[str] = None,
+        transmiss_maint_of_misc_tran_plt_lt: Optional[str] = None,
+        transmiss_maint_of_misc_tran_plt_lte: Optional[str] = None,
+        transmiss_maint_of_misc_tran_plt_gt: Optional[str] = None,
+        transmiss_maint_of_misc_tran_plt_gte: Optional[str] = None,
+        transmiss_maint_exp: Optional[str] = None,
+        transmiss_maint_exp_lt: Optional[str] = None,
+        transmiss_maint_exp_lte: Optional[str] = None,
+        transmiss_maint_exp_gt: Optional[str] = None,
+        transmiss_maint_exp_gte: Optional[str] = None,
+        transmiss_oand_mexp: Optional[str] = None,
+        transmiss_oand_mexp_lt: Optional[str] = None,
+        transmiss_oand_mexp_lte: Optional[str] = None,
+        transmiss_oand_mexp_gt: Optional[str] = None,
+        transmiss_oand_mexp_gte: Optional[str] = None,
+        peak1_int_pipe_no_notice_transp: Optional[str] = None,
+        peak1_int_pipe_no_notice_transp_lt: Optional[str] = None,
+        peak1_int_pipe_no_notice_transp_lte: Optional[str] = None,
+        peak1_int_pipe_no_notice_transp_gt: Optional[str] = None,
+        peak1_int_pipe_no_notice_transp_gte: Optional[str] = None,
+        peak1_oth_dth_no_notice_transport: Optional[str] = None,
+        peak1_oth_dth_no_notice_transport_lt: Optional[str] = None,
+        peak1_oth_dth_no_notice_transport_lte: Optional[str] = None,
+        peak1_oth_dth_no_notice_transport_gt: Optional[str] = None,
+        peak1_oth_dth_no_notice_transport_gte: Optional[str] = None,
+        peak1_total_dth_no_notice_transp: Optional[str] = None,
+        peak1_total_dth_no_notice_transp_lt: Optional[str] = None,
+        peak1_total_dth_no_notice_transp_lte: Optional[str] = None,
+        peak1_total_dth_no_notice_transp_gt: Optional[str] = None,
+        peak1_total_dth_no_notice_transp_gte: Optional[str] = None,
+        peak1_int_pipe_dth_oth_firm_transp: Optional[str] = None,
+        peak1_int_pipe_dth_oth_firm_transp_lt: Optional[str] = None,
+        peak1_int_pipe_dth_oth_firm_transp_lte: Optional[str] = None,
+        peak1_int_pipe_dth_oth_firm_transp_gt: Optional[str] = None,
+        peak1_int_pipe_dth_oth_firm_transp_gte: Optional[str] = None,
+        peak1_oth_dth_other_firm_transport: Optional[str] = None,
+        peak1_oth_dth_other_firm_transport_lt: Optional[str] = None,
+        peak1_oth_dth_other_firm_transport_lte: Optional[str] = None,
+        peak1_oth_dth_other_firm_transport_gt: Optional[str] = None,
+        peak1_oth_dth_other_firm_transport_gte: Optional[str] = None,
+        peak1_total_dth_oth_firm_transport: Optional[str] = None,
+        peak1_total_dth_oth_firm_transport_lt: Optional[str] = None,
+        peak1_total_dth_oth_firm_transport_lte: Optional[str] = None,
+        peak1_total_dth_oth_firm_transport_gt: Optional[str] = None,
+        peak1_total_dth_oth_firm_transport_gte: Optional[str] = None,
+        peak1_int_pipe_dth_interr_transp: Optional[str] = None,
+        peak1_int_pipe_dth_interr_transp_lt: Optional[str] = None,
+        peak1_int_pipe_dth_interr_transp_lte: Optional[str] = None,
+        peak1_int_pipe_dth_interr_transp_gt: Optional[str] = None,
+        peak1_int_pipe_dth_interr_transp_gte: Optional[str] = None,
+        peak1_oth_dth_interr_transport: Optional[str] = None,
+        peak1_oth_dth_interr_transport_lt: Optional[str] = None,
+        peak1_oth_dth_interr_transport_lte: Optional[str] = None,
+        peak1_oth_dth_interr_transport_gt: Optional[str] = None,
+        peak1_oth_dth_interr_transport_gte: Optional[str] = None,
+        peak1_total_dth_interr_transport: Optional[str] = None,
+        peak1_total_dth_interr_transport_lt: Optional[str] = None,
+        peak1_total_dth_interr_transport_lte: Optional[str] = None,
+        peak1_total_dth_interr_transport_gt: Optional[str] = None,
+        peak1_total_dth_interr_transport_gte: Optional[str] = None,
+        peak1_int_pipe_dth_oth_transp: Optional[str] = None,
+        peak1_int_pipe_dth_oth_transp_lt: Optional[str] = None,
+        peak1_int_pipe_dth_oth_transp_lte: Optional[str] = None,
+        peak1_int_pipe_dth_oth_transp_gt: Optional[str] = None,
+        peak1_int_pipe_dth_oth_transp_gte: Optional[str] = None,
+        peak1_oth_dth_other_transport: Optional[str] = None,
+        peak1_oth_dth_other_transport_lt: Optional[str] = None,
+        peak1_oth_dth_other_transport_lte: Optional[str] = None,
+        peak1_oth_dth_other_transport_gt: Optional[str] = None,
+        peak1_oth_dth_other_transport_gte: Optional[str] = None,
+        peak1_total_dth_oth_transport: Optional[str] = None,
+        peak1_total_dth_oth_transport_lt: Optional[str] = None,
+        peak1_total_dth_oth_transport_lte: Optional[str] = None,
+        peak1_total_dth_oth_transport_gt: Optional[str] = None,
+        peak1_total_dth_oth_transport_gte: Optional[str] = None,
+        peak1_int_pipe_dth_transp: Optional[str] = None,
+        peak1_int_pipe_dth_transp_lt: Optional[str] = None,
+        peak1_int_pipe_dth_transp_lte: Optional[str] = None,
+        peak1_int_pipe_dth_transp_gt: Optional[str] = None,
+        peak1_int_pipe_dth_transp_gte: Optional[str] = None,
+        peak1_oth_dth_transport: Optional[str] = None,
+        peak1_oth_dth_transport_lt: Optional[str] = None,
+        peak1_oth_dth_transport_lte: Optional[str] = None,
+        peak1_oth_dth_transport_gt: Optional[str] = None,
+        peak1_oth_dth_transport_gte: Optional[str] = None,
+        peak1_total_dth_transport: Optional[str] = None,
+        peak1_total_dth_transport_lt: Optional[str] = None,
+        peak1_total_dth_transport_lte: Optional[str] = None,
+        peak1_total_dth_transport_gt: Optional[str] = None,
+        peak1_total_dth_transport_gte: Optional[str] = None,
+        peak3_int_pipe_no_notice_transp: Optional[str] = None,
+        peak3_int_pipe_no_notice_transp_lt: Optional[str] = None,
+        peak3_int_pipe_no_notice_transp_lte: Optional[str] = None,
+        peak3_int_pipe_no_notice_transp_gt: Optional[str] = None,
+        peak3_int_pipe_no_notice_transp_gte: Optional[str] = None,
+        peak3_oth_no_notice_transport: Optional[str] = None,
+        peak3_oth_no_notice_transport_lt: Optional[str] = None,
+        peak3_oth_no_notice_transport_lte: Optional[str] = None,
+        peak3_oth_no_notice_transport_gt: Optional[str] = None,
+        peak3_oth_no_notice_transport_gte: Optional[str] = None,
+        peak3_total_no_notice_transport: Optional[str] = None,
+        peak3_total_no_notice_transport_lt: Optional[str] = None,
+        peak3_total_no_notice_transport_lte: Optional[str] = None,
+        peak3_total_no_notice_transport_gt: Optional[str] = None,
+        peak3_total_no_notice_transport_gte: Optional[str] = None,
+        peak3_int_pipe_dth_oth_firm_transp: Optional[str] = None,
+        peak3_int_pipe_dth_oth_firm_transp_lt: Optional[str] = None,
+        peak3_int_pipe_dth_oth_firm_transp_lte: Optional[str] = None,
+        peak3_int_pipe_dth_oth_firm_transp_gt: Optional[str] = None,
+        peak3_int_pipe_dth_oth_firm_transp_gte: Optional[str] = None,
+        peak3_oth_dth_other_firm_transport: Optional[str] = None,
+        peak3_oth_dth_other_firm_transport_lt: Optional[str] = None,
+        peak3_oth_dth_other_firm_transport_lte: Optional[str] = None,
+        peak3_oth_dth_other_firm_transport_gt: Optional[str] = None,
+        peak3_oth_dth_other_firm_transport_gte: Optional[str] = None,
+        peak3_total_dth_oth_firm_transp: Optional[str] = None,
+        peak3_total_dth_oth_firm_transp_lt: Optional[str] = None,
+        peak3_total_dth_oth_firm_transp_lte: Optional[str] = None,
+        peak3_total_dth_oth_firm_transp_gt: Optional[str] = None,
+        peak3_total_dth_oth_firm_transp_gte: Optional[str] = None,
+        peak3_int_pipe_dth_interr_transp: Optional[str] = None,
+        peak3_int_pipe_dth_interr_transp_lt: Optional[str] = None,
+        peak3_int_pipe_dth_interr_transp_lte: Optional[str] = None,
+        peak3_int_pipe_dth_interr_transp_gt: Optional[str] = None,
+        peak3_int_pipe_dth_interr_transp_gte: Optional[str] = None,
+        peak3_oth_dth_interr_transport: Optional[str] = None,
+        peak3_oth_dth_interr_transport_lt: Optional[str] = None,
+        peak3_oth_dth_interr_transport_lte: Optional[str] = None,
+        peak3_oth_dth_interr_transport_gt: Optional[str] = None,
+        peak3_oth_dth_interr_transport_gte: Optional[str] = None,
+        peak3_total_dth_interr_transport: Optional[str] = None,
+        peak3_total_dth_interr_transport_lt: Optional[str] = None,
+        peak3_total_dth_interr_transport_lte: Optional[str] = None,
+        peak3_total_dth_interr_transport_gt: Optional[str] = None,
+        peak3_total_dth_interr_transport_gte: Optional[str] = None,
+        peak3_int_pipe_dth_oth_transp: Optional[str] = None,
+        peak3_int_pipe_dth_oth_transp_lt: Optional[str] = None,
+        peak3_int_pipe_dth_oth_transp_lte: Optional[str] = None,
+        peak3_int_pipe_dth_oth_transp_gt: Optional[str] = None,
+        peak3_int_pipe_dth_oth_transp_gte: Optional[str] = None,
+        peak3_oth_dth_other_transport: Optional[str] = None,
+        peak3_oth_dth_other_transport_lt: Optional[str] = None,
+        peak3_oth_dth_other_transport_lte: Optional[str] = None,
+        peak3_oth_dth_other_transport_gt: Optional[str] = None,
+        peak3_oth_dth_other_transport_gte: Optional[str] = None,
+        peak3_total_dth_other_transport: Optional[str] = None,
+        peak3_total_dth_other_transport_lt: Optional[str] = None,
+        peak3_total_dth_other_transport_lte: Optional[str] = None,
+        peak3_total_dth_other_transport_gt: Optional[str] = None,
+        peak3_total_dth_other_transport_gte: Optional[str] = None,
+        peak3_int_pipe_dth_transp: Optional[str] = None,
+        peak3_int_pipe_dth_transp_lt: Optional[str] = None,
+        peak3_int_pipe_dth_transp_lte: Optional[str] = None,
+        peak3_int_pipe_dth_transp_gt: Optional[str] = None,
+        peak3_int_pipe_dth_transp_gte: Optional[str] = None,
+        peak3_oth_dth_transport: Optional[str] = None,
+        peak3_oth_dth_transport_lt: Optional[str] = None,
+        peak3_oth_dth_transport_lte: Optional[str] = None,
+        peak3_oth_dth_transport_gt: Optional[str] = None,
+        peak3_oth_dth_transport_gte: Optional[str] = None,
+        peak3_total_dth_transport: Optional[str] = None,
+        peak3_total_dth_transport_lt: Optional[str] = None,
+        peak3_total_dth_transport_lte: Optional[str] = None,
+        peak3_total_dth_transport_gt: Optional[str] = None,
+        peak3_total_dth_transport_gte: Optional[str] = None,
+        gas_of_oth_recd_for_gathering: Optional[str] = None,
+        gas_of_oth_recd_for_gathering_lt: Optional[str] = None,
+        gas_of_oth_recd_for_gathering_lte: Optional[str] = None,
+        gas_of_oth_recd_for_gathering_gt: Optional[str] = None,
+        gas_of_oth_recd_for_gathering_gte: Optional[str] = None,
+        reciepts: Optional[str] = None,
+        reciepts_lt: Optional[str] = None,
+        reciepts_lte: Optional[str] = None,
+        reciepts_gt: Optional[str] = None,
+        reciepts_gte: Optional[str] = None,
+        deliv_of_gas_trans_or_compr_oth: Optional[str] = None,
+        deliv_of_gas_trans_or_compr_oth_lt: Optional[str] = None,
+        deliv_of_gas_trans_or_compr_oth_lte: Optional[str] = None,
+        deliv_of_gas_trans_or_compr_oth_gt: Optional[str] = None,
+        deliv_of_gas_trans_or_compr_oth_gte: Optional[str] = None,
+        gas_delivered_as_imbalances: Optional[str] = None,
+        gas_delivered_as_imbalances_lt: Optional[str] = None,
+        gas_delivered_as_imbalances_lte: Optional[str] = None,
+        gas_delivered_as_imbalances_gt: Optional[str] = None,
+        gas_delivered_as_imbalances_gte: Optional[str] = None,
+        gas_used_for_compressor_sta_fuel: Optional[str] = None,
+        gas_used_for_compressor_sta_fuel_lt: Optional[str] = None,
+        gas_used_for_compressor_sta_fuel_lte: Optional[str] = None,
+        gas_used_for_compressor_sta_fuel_gt: Optional[str] = None,
+        gas_used_for_compressor_sta_fuel_gte: Optional[str] = None,
+        nat_gas_other_deliv: Optional[str] = None,
+        nat_gas_other_deliv_lt: Optional[str] = None,
+        nat_gas_other_deliv_lte: Optional[str] = None,
+        nat_gas_other_deliv_gt: Optional[str] = None,
+        nat_gas_other_deliv_gte: Optional[str] = None,
+        total_deliveries: Optional[str] = None,
+        total_deliveries_lt: Optional[str] = None,
+        total_deliveries_lte: Optional[str] = None,
+        total_deliveries_gt: Optional[str] = None,
+        total_deliveries_gte: Optional[str] = None,
+        gas_stored_boy: Optional[str] = None,
+        gas_stored_boy_lt: Optional[str] = None,
+        gas_stored_boy_lte: Optional[str] = None,
+        gas_stored_boy_gt: Optional[str] = None,
+        gas_stored_boy_gte: Optional[str] = None,
+        gas_stored_gas_deliv_to_storage: Optional[str] = None,
+        gas_stored_gas_deliv_to_storage_lt: Optional[str] = None,
+        gas_stored_gas_deliv_to_storage_lte: Optional[str] = None,
+        gas_stored_gas_deliv_to_storage_gt: Optional[str] = None,
+        gas_stored_gas_deliv_to_storage_gte: Optional[str] = None,
+        gas_stored_gas_withdr_from_stor: Optional[str] = None,
+        gas_stored_gas_withdr_from_stor_lt: Optional[str] = None,
+        gas_stored_gas_withdr_from_stor_lte: Optional[str] = None,
+        gas_stored_gas_withdr_from_stor_gt: Optional[str] = None,
+        gas_stored_gas_withdr_from_stor_gte: Optional[str] = None,
+        gas_stored_oth_deb_or_cred_net: Optional[str] = None,
+        gas_stored_oth_deb_or_cred_net_lt: Optional[str] = None,
+        gas_stored_oth_deb_or_cred_net_lte: Optional[str] = None,
+        gas_stored_oth_deb_or_cred_net_gt: Optional[str] = None,
+        gas_stored_oth_deb_or_cred_net_gte: Optional[str] = None,
+        gas_stored_eoy: Optional[str] = None,
+        gas_stored_eoy_lt: Optional[str] = None,
+        gas_stored_eoy_lte: Optional[str] = None,
+        gas_stored_eoy_gt: Optional[str] = None,
+        gas_stored_eoy_gte: Optional[str] = None,
+        gas_stored_gas_volume_dth: Optional[str] = None,
+        gas_stored_gas_volume_dth_lt: Optional[str] = None,
+        gas_stored_gas_volume_dth_lte: Optional[str] = None,
+        gas_stored_gas_volume_dth_gt: Optional[str] = None,
+        gas_stored_gas_volume_dth_gte: Optional[str] = None,
+        gas_stored_amount_per_dth: Optional[str] = None,
+        gas_stored_amount_per_dth_lt: Optional[str] = None,
+        gas_stored_amount_per_dth_lte: Optional[str] = None,
+        gas_stored_amount_per_dth_gt: Optional[str] = None,
+        gas_stored_amount_per_dth_gte: Optional[str] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Gas pipeline profiles with financial highlights, plant in service expenses, operation & maintenance expenses, transmission peaks and receipts & deliveries sourced from the FERC Form 2 & 2A.
+
+        Parameters
+        ----------
+
+         year: Optional[Union[list[str], Series[str], str]]
+             The year the data was reported to the US Federal Energy Regulatory Commission (FERC)., by default None
+         pipeline_filer_name: Optional[Union[list[str], Series[str], str]]
+             The filer name of a pipeline system., by default None
+         pipeline_name: Optional[Union[list[str], Series[str], str]]
+             The display name of a pipeline system, utilizes legacy Bentek names when applicable., by default None
+         pipeline_id: Optional[Union[list[str], Series[str], str]]
+             The ID given to a pipeline system, utilizes legacy Bentek pipeline ids when applicable., by default None
+         operating_revenues_gas: Optional[str], optional
+             Operating revenues gas are the gas component of the revenues., by default None
+         operating_revenues_gas_gt: Optional[str], optional
+             filter by `operating_revenues_gas > x`, by default None
+         operating_revenues_gas_gte: Optional[str], optional
+             filter by `operating_revenues_gas >= x`, by default None
+         operating_revenues_gas_lt: Optional[str], optional
+             filter by `operating_revenues_gas < x`, by default None
+         operating_revenues_gas_lte: Optional[str], optional
+             filter by `operating_revenues_gas <= x`, by default None
+         operating_revenues_total: Optional[str], optional
+             Total operating revenues for the entire pipeline., by default None
+         operating_revenues_total_gt: Optional[str], optional
+             filter by `operating_revenues_total > x`, by default None
+         operating_revenues_total_gte: Optional[str], optional
+             filter by `operating_revenues_total >= x`, by default None
+         operating_revenues_total_lt: Optional[str], optional
+             filter by `operating_revenues_total < x`, by default None
+         operating_revenues_total_lte: Optional[str], optional
+             filter by `operating_revenues_total <= x`, by default None
+         operation_expenses_gas: Optional[str], optional
+             The operating expenses of pipeline - maintenance, supervision etc., by default None
+         operation_expenses_gas_gt: Optional[str], optional
+             filter by `operation_expenses_gas > x`, by default None
+         operation_expenses_gas_gte: Optional[str], optional
+             filter by `operation_expenses_gas >= x`, by default None
+         operation_expenses_gas_lt: Optional[str], optional
+             filter by `operation_expenses_gas < x`, by default None
+         operation_expenses_gas_lte: Optional[str], optional
+             filter by `operation_expenses_gas <= x`, by default None
+         operating_expenses_total: Optional[str], optional
+             The total operating expense for the pipeline., by default None
+         operating_expenses_total_gt: Optional[str], optional
+             filter by `operating_expenses_total > x`, by default None
+         operating_expenses_total_gte: Optional[str], optional
+             filter by `operating_expenses_total >= x`, by default None
+         operating_expenses_total_lt: Optional[str], optional
+             filter by `operating_expenses_total < x`, by default None
+         operating_expenses_total_lte: Optional[str], optional
+             filter by `operating_expenses_total <= x`, by default None
+         maintenance_expenses_gas: Optional[str], optional
+             The maintenance expenses for natural gas associated to the pipeline., by default None
+         maintenance_expenses_gas_gt: Optional[str], optional
+             filter by `maintenance_expenses_gas > x`, by default None
+         maintenance_expenses_gas_gte: Optional[str], optional
+             filter by `maintenance_expenses_gas >= x`, by default None
+         maintenance_expenses_gas_lt: Optional[str], optional
+             filter by `maintenance_expenses_gas < x`, by default None
+         maintenance_expenses_gas_lte: Optional[str], optional
+             filter by `maintenance_expenses_gas <= x`, by default None
+         maintenance_expenses_total: Optional[str], optional
+             The total maintenance expenses including gas and other maintenance expenses., by default None
+         maintenance_expenses_total_gt: Optional[str], optional
+             filter by `maintenance_expenses_total > x`, by default None
+         maintenance_expenses_total_gte: Optional[str], optional
+             filter by `maintenance_expenses_total >= x`, by default None
+         maintenance_expenses_total_lt: Optional[str], optional
+             filter by `maintenance_expenses_total < x`, by default None
+         maintenance_expenses_total_lte: Optional[str], optional
+             filter by `maintenance_expenses_total <= x`, by default None
+         taxes_other_than_income_taxes_total: Optional[str], optional
+             The total associated taxes other than income taxes for the pipeline., by default None
+         taxes_other_than_income_taxes_total_gt: Optional[str], optional
+             filter by `taxes_other_than_income_taxes_total > x`, by default None
+         taxes_other_than_income_taxes_total_gte: Optional[str], optional
+             filter by `taxes_other_than_income_taxes_total >= x`, by default None
+         taxes_other_than_income_taxes_total_lt: Optional[str], optional
+             filter by `taxes_other_than_income_taxes_total < x`, by default None
+         taxes_other_than_income_taxes_total_lte: Optional[str], optional
+             filter by `taxes_other_than_income_taxes_total <= x`, by default None
+         utility_ebitda: Optional[str], optional
+             The pipeline EBITDA = Earnings Before Interest, Taxes, Depreciation and Amortization., by default None
+         utility_ebitda_gt: Optional[str], optional
+             filter by `utility_ebitda > x`, by default None
+         utility_ebitda_gte: Optional[str], optional
+             filter by `utility_ebitda >= x`, by default None
+         utility_ebitda_lt: Optional[str], optional
+             filter by `utility_ebitda < x`, by default None
+         utility_ebitda_lte: Optional[str], optional
+             filter by `utility_ebitda <= x`, by default None
+         transmission_pipeline_length: Optional[str], optional
+             The pipeline length in miles., by default None
+         transmission_pipeline_length_gt: Optional[str], optional
+             filter by `transmission_pipeline_length > x`, by default None
+         transmission_pipeline_length_gte: Optional[str], optional
+             filter by `transmission_pipeline_length >= x`, by default None
+         transmission_pipeline_length_lt: Optional[str], optional
+             filter by `transmission_pipeline_length < x`, by default None
+         transmission_pipeline_length_lte: Optional[str], optional
+             filter by `transmission_pipeline_length <= x`, by default None
+         trpt_gas_for_others_transmsn_vol_mmcf: Optional[str], optional
+             Transportation of gas for others in MMcf., by default None
+         trpt_gas_for_others_transmsn_vol_mmcf_gt: Optional[str], optional
+             filter by `trpt_gas_for_others_transmsn_vol_mmcf > x`, by default None
+         trpt_gas_for_others_transmsn_vol_mmcf_gte: Optional[str], optional
+             filter by `trpt_gas_for_others_transmsn_vol_mmcf >= x`, by default None
+         trpt_gas_for_others_transmsn_vol_mmcf_lt: Optional[str], optional
+             filter by `trpt_gas_for_others_transmsn_vol_mmcf < x`, by default None
+         trpt_gas_for_others_transmsn_vol_mmcf_lte: Optional[str], optional
+             filter by `trpt_gas_for_others_transmsn_vol_mmcf <= x`, by default None
+         land_and_rights_trans_eoy000: Optional[str], optional
+             The land and rights of way costs associated with the transport of natural gas for the pipeline at end of year (EOY)., by default None
+         land_and_rights_trans_eoy000_gt: Optional[str], optional
+             filter by `land_and_rights_trans_eoy000 > x`, by default None
+         land_and_rights_trans_eoy000_gte: Optional[str], optional
+             filter by `land_and_rights_trans_eoy000 >= x`, by default None
+         land_and_rights_trans_eoy000_lt: Optional[str], optional
+             filter by `land_and_rights_trans_eoy000 < x`, by default None
+         land_and_rights_trans_eoy000_lte: Optional[str], optional
+             filter by `land_and_rights_trans_eoy000 <= x`, by default None
+         rights_of_way_trans_eoy000: Optional[str], optional
+             Specific right of way costs associated with the transport of natural gas for the pipeline at end of year (EOY)., by default None
+         rights_of_way_trans_eoy000_gt: Optional[str], optional
+             filter by `rights_of_way_trans_eoy000 > x`, by default None
+         rights_of_way_trans_eoy000_gte: Optional[str], optional
+             filter by `rights_of_way_trans_eoy000 >= x`, by default None
+         rights_of_way_trans_eoy000_lt: Optional[str], optional
+             filter by `rights_of_way_trans_eoy000 < x`, by default None
+         rights_of_way_trans_eoy000_lte: Optional[str], optional
+             filter by `rights_of_way_trans_eoy000 <= x`, by default None
+         struc_and_improv_tran_eoy000: Optional[str], optional
+             Specific structure and improvement costs in the transportation of natural gas for the pipeline at end of year (EOY)., by default None
+         struc_and_improv_tran_eoy000_gt: Optional[str], optional
+             filter by `struc_and_improv_tran_eoy000 > x`, by default None
+         struc_and_improv_tran_eoy000_gte: Optional[str], optional
+             filter by `struc_and_improv_tran_eoy000 >= x`, by default None
+         struc_and_improv_tran_eoy000_lt: Optional[str], optional
+             filter by `struc_and_improv_tran_eoy000 < x`, by default None
+         struc_and_improv_tran_eoy000_lte: Optional[str], optional
+             filter by `struc_and_improv_tran_eoy000 <= x`, by default None
+         mains_transmission_eoy000: Optional[str], optional
+             Specific maintenance costs in the transportation of natural gas for the pipeline at end of year (EOY)., by default None
+         mains_transmission_eoy000_gt: Optional[str], optional
+             filter by `mains_transmission_eoy000 > x`, by default None
+         mains_transmission_eoy000_gte: Optional[str], optional
+             filter by `mains_transmission_eoy000 >= x`, by default None
+         mains_transmission_eoy000_lt: Optional[str], optional
+             filter by `mains_transmission_eoy000 < x`, by default None
+         mains_transmission_eoy000_lte: Optional[str], optional
+             filter by `mains_transmission_eoy000 <= x`, by default None
+         comprstaequip_trans_eoy000: Optional[str], optional
+             Specific compressor station equipment costs accrued by the pipeline in the transportation of natural gas for the pipeline at end of year (EOY)., by default None
+         comprstaequip_trans_eoy000_gt: Optional[str], optional
+             filter by `comprstaequip_trans_eoy000 > x`, by default None
+         comprstaequip_trans_eoy000_gte: Optional[str], optional
+             filter by `comprstaequip_trans_eoy000 >= x`, by default None
+         comprstaequip_trans_eoy000_lt: Optional[str], optional
+             filter by `comprstaequip_trans_eoy000 < x`, by default None
+         comprstaequip_trans_eoy000_lte: Optional[str], optional
+             filter by `comprstaequip_trans_eoy000 <= x`, by default None
+         meas_reg_sta_eq_trans_eoy000: Optional[str], optional
+             Specific measuring, regulating station equipment costs accrued by the pipeline in the transportation of natural gas for the pipeline at end of year (EOY)., by default None
+         meas_reg_sta_eq_trans_eoy000_gt: Optional[str], optional
+             filter by `meas_reg_sta_eq_trans_eoy000 > x`, by default None
+         meas_reg_sta_eq_trans_eoy000_gte: Optional[str], optional
+             filter by `meas_reg_sta_eq_trans_eoy000 >= x`, by default None
+         meas_reg_sta_eq_trans_eoy000_lt: Optional[str], optional
+             filter by `meas_reg_sta_eq_trans_eoy000 < x`, by default None
+         meas_reg_sta_eq_trans_eoy000_lte: Optional[str], optional
+             filter by `meas_reg_sta_eq_trans_eoy000 <= x`, by default None
+         communication_equip_trans_eoy000: Optional[str], optional
+             Specific communication equipment costs accrued by the pipeline in the transportation of natural gas for the pipeline at end of year (EOY)., by default None
+         communication_equip_trans_eoy000_gt: Optional[str], optional
+             filter by `communication_equip_trans_eoy000 > x`, by default None
+         communication_equip_trans_eoy000_gte: Optional[str], optional
+             filter by `communication_equip_trans_eoy000 >= x`, by default None
+         communication_equip_trans_eoy000_lt: Optional[str], optional
+             filter by `communication_equip_trans_eoy000 < x`, by default None
+         communication_equip_trans_eoy000_lte: Optional[str], optional
+             filter by `communication_equip_trans_eoy000 <= x`, by default None
+         total_transmission_plant_addns000: Optional[str], optional
+             The cost of additional meters, meter installation, house regulator installations, industrial measuring and regulating station equipment, other property on customers' premises, asset retirement costs for distribution, land and land rights, structures and improvements, office furniture and equipment, transportation equipment, stores equipment, tools, shop, and garage equipment, laboratory equipment etc., by default None
+         total_transmission_plant_addns000_gt: Optional[str], optional
+             filter by `total_transmission_plant_addns000 > x`, by default None
+         total_transmission_plant_addns000_gte: Optional[str], optional
+             filter by `total_transmission_plant_addns000 >= x`, by default None
+         total_transmission_plant_addns000_lt: Optional[str], optional
+             filter by `total_transmission_plant_addns000 < x`, by default None
+         total_transmission_plant_addns000_lte: Optional[str], optional
+             filter by `total_transmission_plant_addns000 <= x`, by default None
+         total_transmission_plant_ret000: Optional[str], optional
+             Total pipeline asset retirement costs., by default None
+         total_transmission_plant_ret000_gt: Optional[str], optional
+             filter by `total_transmission_plant_ret000 > x`, by default None
+         total_transmission_plant_ret000_gte: Optional[str], optional
+             filter by `total_transmission_plant_ret000 >= x`, by default None
+         total_transmission_plant_ret000_lt: Optional[str], optional
+             filter by `total_transmission_plant_ret000 < x`, by default None
+         total_transmission_plant_ret000_lte: Optional[str], optional
+             filter by `total_transmission_plant_ret000 <= x`, by default None
+         total_transmission_plant_adjust000: Optional[str], optional
+             The cost of adjustments of meters, meter installation, house regulator installations, industrial measuring and regulating station equipment, other property on customers' premises, asset retirement costs for distribution, land and land rights, structures and improvements, office furniture and equipment, transportation equipment, stores equipment, tools, shop, and garage equipment, laboratory equipment etc., by default None
+         total_transmission_plant_adjust000_gt: Optional[str], optional
+             filter by `total_transmission_plant_adjust000 > x`, by default None
+         total_transmission_plant_adjust000_gte: Optional[str], optional
+             filter by `total_transmission_plant_adjust000 >= x`, by default None
+         total_transmission_plant_adjust000_lt: Optional[str], optional
+             filter by `total_transmission_plant_adjust000 < x`, by default None
+         total_transmission_plant_adjust000_lte: Optional[str], optional
+             filter by `total_transmission_plant_adjust000 <= x`, by default None
+         total_transmission_plant_transf000: Optional[str], optional
+             The transfer costs of meters, meter installation, house regulator installations, industrial measuring and regulating station equipment, other property on customers' premises, asset retirement costs for distribution, land and land rights, structures and improvements, office furniture and equipment, transportation equipment, stores equipment, tools, shop, and garage equipment, laboratory equipment etc., by default None
+         total_transmission_plant_transf000_gt: Optional[str], optional
+             filter by `total_transmission_plant_transf000 > x`, by default None
+         total_transmission_plant_transf000_gte: Optional[str], optional
+             filter by `total_transmission_plant_transf000 >= x`, by default None
+         total_transmission_plant_transf000_lt: Optional[str], optional
+             filter by `total_transmission_plant_transf000 < x`, by default None
+         total_transmission_plant_transf000_lte: Optional[str], optional
+             filter by `total_transmission_plant_transf000 <= x`, by default None
+         total_transmission_plant_eoy000: Optional[str], optional
+             The total costs of operating a pipeline with respect to additions, retirements, adjustments, and transfers (includes land and land rights, structures and improvements, maintenance, compressor station equipment etc., by default None
+         total_transmission_plant_eoy000_gt: Optional[str], optional
+             filter by `total_transmission_plant_eoy000 > x`, by default None
+         total_transmission_plant_eoy000_gte: Optional[str], optional
+             filter by `total_transmission_plant_eoy000 >= x`, by default None
+         total_transmission_plant_eoy000_lt: Optional[str], optional
+             filter by `total_transmission_plant_eoy000 < x`, by default None
+         total_transmission_plant_eoy000_lte: Optional[str], optional
+             filter by `total_transmission_plant_eoy000 <= x`, by default None
+         total_gas_plant_in_service_eoy: Optional[str], optional
+             The total costs of operating a pipeline., by default None
+         total_gas_plant_in_service_eoy_gt: Optional[str], optional
+             filter by `total_gas_plant_in_service_eoy > x`, by default None
+         total_gas_plant_in_service_eoy_gte: Optional[str], optional
+             filter by `total_gas_plant_in_service_eoy >= x`, by default None
+         total_gas_plant_in_service_eoy_lt: Optional[str], optional
+             filter by `total_gas_plant_in_service_eoy < x`, by default None
+         total_gas_plant_in_service_eoy_lte: Optional[str], optional
+             filter by `total_gas_plant_in_service_eoy <= x`, by default None
+         constr_wip_total: Optional[str], optional
+             Construction Work in Progress total., by default None
+         constr_wip_total_gt: Optional[str], optional
+             filter by `constr_wip_total > x`, by default None
+         constr_wip_total_gte: Optional[str], optional
+             filter by `constr_wip_total >= x`, by default None
+         constr_wip_total_lt: Optional[str], optional
+             filter by `constr_wip_total < x`, by default None
+         constr_wip_total_lte: Optional[str], optional
+             filter by `constr_wip_total <= x`, by default None
+         total_utility_plant_total: Optional[str], optional
+             All costs associated in operating a pipeline + construction work in progress expenses., by default None
+         total_utility_plant_total_gt: Optional[str], optional
+             filter by `total_utility_plant_total > x`, by default None
+         total_utility_plant_total_gte: Optional[str], optional
+             filter by `total_utility_plant_total >= x`, by default None
+         total_utility_plant_total_lt: Optional[str], optional
+             filter by `total_utility_plant_total < x`, by default None
+         total_utility_plant_total_lte: Optional[str], optional
+             filter by `total_utility_plant_total <= x`, by default None
+         tran_op_sup_and_engineering: Optional[str], optional
+             Transmission facility operation, supervision and engineering costs., by default None
+         tran_op_sup_and_engineering_gt: Optional[str], optional
+             filter by `tran_op_sup_and_engineering > x`, by default None
+         tran_op_sup_and_engineering_gte: Optional[str], optional
+             filter by `tran_op_sup_and_engineering >= x`, by default None
+         tran_op_sup_and_engineering_lt: Optional[str], optional
+             filter by `tran_op_sup_and_engineering < x`, by default None
+         tran_op_sup_and_engineering_lte: Optional[str], optional
+             filter by `tran_op_sup_and_engineering <= x`, by default None
+         transmiss_oper_load_dispatch: Optional[str], optional
+             Transmission facility operation system control and load dispatching costs., by default None
+         transmiss_oper_load_dispatch_gt: Optional[str], optional
+             filter by `transmiss_oper_load_dispatch > x`, by default None
+         transmiss_oper_load_dispatch_gte: Optional[str], optional
+             filter by `transmiss_oper_load_dispatch >= x`, by default None
+         transmiss_oper_load_dispatch_lt: Optional[str], optional
+             filter by `transmiss_oper_load_dispatch < x`, by default None
+         transmiss_oper_load_dispatch_lte: Optional[str], optional
+             filter by `transmiss_oper_load_dispatch <= x`, by default None
+         oper_trans_communication_sys_exp: Optional[str], optional
+             Communication system expenses at the transmission facility., by default None
+         oper_trans_communication_sys_exp_gt: Optional[str], optional
+             filter by `oper_trans_communication_sys_exp > x`, by default None
+         oper_trans_communication_sys_exp_gte: Optional[str], optional
+             filter by `oper_trans_communication_sys_exp >= x`, by default None
+         oper_trans_communication_sys_exp_lt: Optional[str], optional
+             filter by `oper_trans_communication_sys_exp < x`, by default None
+         oper_trans_communication_sys_exp_lte: Optional[str], optional
+             filter by `oper_trans_communication_sys_exp <= x`, by default None
+         oper_trans_compr_sta_labor_and_exp: Optional[str], optional
+             Compressor station labor and expenses., by default None
+         oper_trans_compr_sta_labor_and_exp_gt: Optional[str], optional
+             filter by `oper_trans_compr_sta_labor_and_exp > x`, by default None
+         oper_trans_compr_sta_labor_and_exp_gte: Optional[str], optional
+             filter by `oper_trans_compr_sta_labor_and_exp >= x`, by default None
+         oper_trans_compr_sta_labor_and_exp_lt: Optional[str], optional
+             filter by `oper_trans_compr_sta_labor_and_exp < x`, by default None
+         oper_trans_compr_sta_labor_and_exp_lte: Optional[str], optional
+             filter by `oper_trans_compr_sta_labor_and_exp <= x`, by default None
+         oper_trans_gas_for_compr_st_fuel: Optional[str], optional
+             Gas for compressor station fuel expenses., by default None
+         oper_trans_gas_for_compr_st_fuel_gt: Optional[str], optional
+             filter by `oper_trans_gas_for_compr_st_fuel > x`, by default None
+         oper_trans_gas_for_compr_st_fuel_gte: Optional[str], optional
+             filter by `oper_trans_gas_for_compr_st_fuel >= x`, by default None
+         oper_trans_gas_for_compr_st_fuel_lt: Optional[str], optional
+             filter by `oper_trans_gas_for_compr_st_fuel < x`, by default None
+         oper_trans_gas_for_compr_st_fuel_lte: Optional[str], optional
+             filter by `oper_trans_gas_for_compr_st_fuel <= x`, by default None
+         oper_trans_oth_fuel_and_pwr_for_compr_st: Optional[str], optional
+             Other fuel and power expenses at compressor stations, by default None
+         oper_trans_oth_fuel_and_pwr_for_compr_st_gt: Optional[str], optional
+             filter by `oper_trans_oth_fuel_and_pwr_for_compr_st > x`, by default None
+         oper_trans_oth_fuel_and_pwr_for_compr_st_gte: Optional[str], optional
+             filter by `oper_trans_oth_fuel_and_pwr_for_compr_st >= x`, by default None
+         oper_trans_oth_fuel_and_pwr_for_compr_st_lt: Optional[str], optional
+             filter by `oper_trans_oth_fuel_and_pwr_for_compr_st < x`, by default None
+         oper_trans_oth_fuel_and_pwr_for_compr_st_lte: Optional[str], optional
+             filter by `oper_trans_oth_fuel_and_pwr_for_compr_st <= x`, by default None
+         oper_trans_mains_exp: Optional[str], optional
+             Transmission facility mains expenses., by default None
+         oper_trans_mains_exp_gt: Optional[str], optional
+             filter by `oper_trans_mains_exp > x`, by default None
+         oper_trans_mains_exp_gte: Optional[str], optional
+             filter by `oper_trans_mains_exp >= x`, by default None
+         oper_trans_mains_exp_lt: Optional[str], optional
+             filter by `oper_trans_mains_exp < x`, by default None
+         oper_trans_mains_exp_lte: Optional[str], optional
+             filter by `oper_trans_mains_exp <= x`, by default None
+         oper_trans_meas_and_reg_sta_exp: Optional[str], optional
+             Transmission facility Measuring and Regulating Station Expenses., by default None
+         oper_trans_meas_and_reg_sta_exp_gt: Optional[str], optional
+             filter by `oper_trans_meas_and_reg_sta_exp > x`, by default None
+         oper_trans_meas_and_reg_sta_exp_gte: Optional[str], optional
+             filter by `oper_trans_meas_and_reg_sta_exp >= x`, by default None
+         oper_trans_meas_and_reg_sta_exp_lt: Optional[str], optional
+             filter by `oper_trans_meas_and_reg_sta_exp < x`, by default None
+         oper_trans_meas_and_reg_sta_exp_lte: Optional[str], optional
+             filter by `oper_trans_meas_and_reg_sta_exp <= x`, by default None
+         oper_trans_transm_and_compr_by_oth: Optional[str], optional
+             Expenses associate with the transmission and compression of gas by others., by default None
+         oper_trans_transm_and_compr_by_oth_gt: Optional[str], optional
+             filter by `oper_trans_transm_and_compr_by_oth > x`, by default None
+         oper_trans_transm_and_compr_by_oth_gte: Optional[str], optional
+             filter by `oper_trans_transm_and_compr_by_oth >= x`, by default None
+         oper_trans_transm_and_compr_by_oth_lt: Optional[str], optional
+             filter by `oper_trans_transm_and_compr_by_oth < x`, by default None
+         oper_trans_transm_and_compr_by_oth_lte: Optional[str], optional
+             filter by `oper_trans_transm_and_compr_by_oth <= x`, by default None
+         tran_op_misc_transmission_exp: Optional[str], optional
+             Miscellaneous expenses associated with the transmission of gas., by default None
+         tran_op_misc_transmission_exp_gt: Optional[str], optional
+             filter by `tran_op_misc_transmission_exp > x`, by default None
+         tran_op_misc_transmission_exp_gte: Optional[str], optional
+             filter by `tran_op_misc_transmission_exp >= x`, by default None
+         tran_op_misc_transmission_exp_lt: Optional[str], optional
+             filter by `tran_op_misc_transmission_exp < x`, by default None
+         tran_op_misc_transmission_exp_lte: Optional[str], optional
+             filter by `tran_op_misc_transmission_exp <= x`, by default None
+         transmiss_oper_rents: Optional[str], optional
+             Rent expenses associated with the transmission of gas., by default None
+         transmiss_oper_rents_gt: Optional[str], optional
+             filter by `transmiss_oper_rents > x`, by default None
+         transmiss_oper_rents_gte: Optional[str], optional
+             filter by `transmiss_oper_rents >= x`, by default None
+         transmiss_oper_rents_lt: Optional[str], optional
+             filter by `transmiss_oper_rents < x`, by default None
+         transmiss_oper_rents_lte: Optional[str], optional
+             filter by `transmiss_oper_rents <= x`, by default None
+         transmiss_tran_operation_exp: Optional[str], optional
+             The total transmission expenses: operation supervision and engineering, system control and load dispatching, communication system expenses, compressor station labor and expenses, gas for compressor station fuel, other fuel and power for compressor stations, mains expenses, measuring and regulating station expenses, transmission and compression of gas by others, other expenses and rents., by default None
+         transmiss_tran_operation_exp_gt: Optional[str], optional
+             filter by `transmiss_tran_operation_exp > x`, by default None
+         transmiss_tran_operation_exp_gte: Optional[str], optional
+             filter by `transmiss_tran_operation_exp >= x`, by default None
+         transmiss_tran_operation_exp_lt: Optional[str], optional
+             filter by `transmiss_tran_operation_exp < x`, by default None
+         transmiss_tran_operation_exp_lte: Optional[str], optional
+             filter by `transmiss_tran_operation_exp <= x`, by default None
+         transmiss_maint_supvsn_and_engin: Optional[str], optional
+             Operation, supervision and engineering maintenance expenses., by default None
+         transmiss_maint_supvsn_and_engin_gt: Optional[str], optional
+             filter by `transmiss_maint_supvsn_and_engin > x`, by default None
+         transmiss_maint_supvsn_and_engin_gte: Optional[str], optional
+             filter by `transmiss_maint_supvsn_and_engin >= x`, by default None
+         transmiss_maint_supvsn_and_engin_lt: Optional[str], optional
+             filter by `transmiss_maint_supvsn_and_engin < x`, by default None
+         transmiss_maint_supvsn_and_engin_lte: Optional[str], optional
+             filter by `transmiss_maint_supvsn_and_engin <= x`, by default None
+         transmiss_maint_of_structures: Optional[str], optional
+             Maintenance of structures and improvements expenses., by default None
+         transmiss_maint_of_structures_gt: Optional[str], optional
+             filter by `transmiss_maint_of_structures > x`, by default None
+         transmiss_maint_of_structures_gte: Optional[str], optional
+             filter by `transmiss_maint_of_structures >= x`, by default None
+         transmiss_maint_of_structures_lt: Optional[str], optional
+             filter by `transmiss_maint_of_structures < x`, by default None
+         transmiss_maint_of_structures_lte: Optional[str], optional
+             filter by `transmiss_maint_of_structures <= x`, by default None
+         maint_trans_mains: Optional[str], optional
+             Maintenance of mains expenses., by default None
+         maint_trans_mains_gt: Optional[str], optional
+             filter by `maint_trans_mains > x`, by default None
+         maint_trans_mains_gte: Optional[str], optional
+             filter by `maint_trans_mains >= x`, by default None
+         maint_trans_mains_lt: Optional[str], optional
+             filter by `maint_trans_mains < x`, by default None
+         maint_trans_mains_lte: Optional[str], optional
+             filter by `maint_trans_mains <= x`, by default None
+         maint_trans_compressor_sta_equip: Optional[str], optional
+             Compressor station equipment maintenance expenses., by default None
+         maint_trans_compressor_sta_equip_gt: Optional[str], optional
+             filter by `maint_trans_compressor_sta_equip > x`, by default None
+         maint_trans_compressor_sta_equip_gte: Optional[str], optional
+             filter by `maint_trans_compressor_sta_equip >= x`, by default None
+         maint_trans_compressor_sta_equip_lt: Optional[str], optional
+             filter by `maint_trans_compressor_sta_equip < x`, by default None
+         maint_trans_compressor_sta_equip_lte: Optional[str], optional
+             filter by `maint_trans_compressor_sta_equip <= x`, by default None
+         maint_trans_meas_and_reg_sta_equip: Optional[str], optional
+             Transmission maintenance of measuring and regulation station equipment., by default None
+         maint_trans_meas_and_reg_sta_equip_gt: Optional[str], optional
+             filter by `maint_trans_meas_and_reg_sta_equip > x`, by default None
+         maint_trans_meas_and_reg_sta_equip_gte: Optional[str], optional
+             filter by `maint_trans_meas_and_reg_sta_equip >= x`, by default None
+         maint_trans_meas_and_reg_sta_equip_lt: Optional[str], optional
+             filter by `maint_trans_meas_and_reg_sta_equip < x`, by default None
+         maint_trans_meas_and_reg_sta_equip_lte: Optional[str], optional
+             filter by `maint_trans_meas_and_reg_sta_equip <= x`, by default None
+         maint_trans_communication_equip: Optional[str], optional
+             Maintenance expenses associated with communication equipment., by default None
+         maint_trans_communication_equip_gt: Optional[str], optional
+             filter by `maint_trans_communication_equip > x`, by default None
+         maint_trans_communication_equip_gte: Optional[str], optional
+             filter by `maint_trans_communication_equip >= x`, by default None
+         maint_trans_communication_equip_lt: Optional[str], optional
+             filter by `maint_trans_communication_equip < x`, by default None
+         maint_trans_communication_equip_lte: Optional[str], optional
+             filter by `maint_trans_communication_equip <= x`, by default None
+         transmiss_maint_of_misc_tran_plt: Optional[str], optional
+             Total of other maintenance expenses., by default None
+         transmiss_maint_of_misc_tran_plt_gt: Optional[str], optional
+             filter by `transmiss_maint_of_misc_tran_plt > x`, by default None
+         transmiss_maint_of_misc_tran_plt_gte: Optional[str], optional
+             filter by `transmiss_maint_of_misc_tran_plt >= x`, by default None
+         transmiss_maint_of_misc_tran_plt_lt: Optional[str], optional
+             filter by `transmiss_maint_of_misc_tran_plt < x`, by default None
+         transmiss_maint_of_misc_tran_plt_lte: Optional[str], optional
+             filter by `transmiss_maint_of_misc_tran_plt <= x`, by default None
+         transmiss_maint_exp: Optional[str], optional
+             The total maintenance expenses for the pipeline., by default None
+         transmiss_maint_exp_gt: Optional[str], optional
+             filter by `transmiss_maint_exp > x`, by default None
+         transmiss_maint_exp_gte: Optional[str], optional
+             filter by `transmiss_maint_exp >= x`, by default None
+         transmiss_maint_exp_lt: Optional[str], optional
+             filter by `transmiss_maint_exp < x`, by default None
+         transmiss_maint_exp_lte: Optional[str], optional
+             filter by `transmiss_maint_exp <= x`, by default None
+         transmiss_oand_mexp: Optional[str], optional
+             Operation and maintenance expenses., by default None
+         transmiss_oand_mexp_gt: Optional[str], optional
+             filter by `transmiss_oand_mexp > x`, by default None
+         transmiss_oand_mexp_gte: Optional[str], optional
+             filter by `transmiss_oand_mexp >= x`, by default None
+         transmiss_oand_mexp_lt: Optional[str], optional
+             filter by `transmiss_oand_mexp < x`, by default None
+         transmiss_oand_mexp_lte: Optional[str], optional
+             filter by `transmiss_oand_mexp <= x`, by default None
+         peak1_int_pipe_no_notice_transp: Optional[str], optional
+             Single day peak deliveries for interstate pipelines Dth., by default None
+         peak1_int_pipe_no_notice_transp_gt: Optional[str], optional
+             filter by `peak1_int_pipe_no_notice_transp > x`, by default None
+         peak1_int_pipe_no_notice_transp_gte: Optional[str], optional
+             filter by `peak1_int_pipe_no_notice_transp >= x`, by default None
+         peak1_int_pipe_no_notice_transp_lt: Optional[str], optional
+             filter by `peak1_int_pipe_no_notice_transp < x`, by default None
+         peak1_int_pipe_no_notice_transp_lte: Optional[str], optional
+             filter by `peak1_int_pipe_no_notice_transp <= x`, by default None
+         peak1_oth_dth_no_notice_transport: Optional[str], optional
+             Single day peak deliveries for no notice transport for others Dth., by default None
+         peak1_oth_dth_no_notice_transport_gt: Optional[str], optional
+             filter by `peak1_oth_dth_no_notice_transport > x`, by default None
+         peak1_oth_dth_no_notice_transport_gte: Optional[str], optional
+             filter by `peak1_oth_dth_no_notice_transport >= x`, by default None
+         peak1_oth_dth_no_notice_transport_lt: Optional[str], optional
+             filter by `peak1_oth_dth_no_notice_transport < x`, by default None
+         peak1_oth_dth_no_notice_transport_lte: Optional[str], optional
+             filter by `peak1_oth_dth_no_notice_transport <= x`, by default None
+         peak1_total_dth_no_notice_transp: Optional[str], optional
+             Total single day peak deliveries for no notice transported volumes Dth., by default None
+         peak1_total_dth_no_notice_transp_gt: Optional[str], optional
+             filter by `peak1_total_dth_no_notice_transp > x`, by default None
+         peak1_total_dth_no_notice_transp_gte: Optional[str], optional
+             filter by `peak1_total_dth_no_notice_transp >= x`, by default None
+         peak1_total_dth_no_notice_transp_lt: Optional[str], optional
+             filter by `peak1_total_dth_no_notice_transp < x`, by default None
+         peak1_total_dth_no_notice_transp_lte: Optional[str], optional
+             filter by `peak1_total_dth_no_notice_transp <= x`, by default None
+         peak1_int_pipe_dth_oth_firm_transp: Optional[str], optional
+             Single peak day other firm transportation-Dth of Gas Delivered to Interstate Pipelines., by default None
+         peak1_int_pipe_dth_oth_firm_transp_gt: Optional[str], optional
+             filter by `peak1_int_pipe_dth_oth_firm_transp > x`, by default None
+         peak1_int_pipe_dth_oth_firm_transp_gte: Optional[str], optional
+             filter by `peak1_int_pipe_dth_oth_firm_transp >= x`, by default None
+         peak1_int_pipe_dth_oth_firm_transp_lt: Optional[str], optional
+             filter by `peak1_int_pipe_dth_oth_firm_transp < x`, by default None
+         peak1_int_pipe_dth_oth_firm_transp_lte: Optional[str], optional
+             filter by `peak1_int_pipe_dth_oth_firm_transp <= x`, by default None
+         peak1_oth_dth_other_firm_transport: Optional[str], optional
+             Single peak day other firm transportation-Dth of gas delivered to others., by default None
+         peak1_oth_dth_other_firm_transport_gt: Optional[str], optional
+             filter by `peak1_oth_dth_other_firm_transport > x`, by default None
+         peak1_oth_dth_other_firm_transport_gte: Optional[str], optional
+             filter by `peak1_oth_dth_other_firm_transport >= x`, by default None
+         peak1_oth_dth_other_firm_transport_lt: Optional[str], optional
+             filter by `peak1_oth_dth_other_firm_transport < x`, by default None
+         peak1_oth_dth_other_firm_transport_lte: Optional[str], optional
+             filter by `peak1_oth_dth_other_firm_transport <= x`, by default None
+         peak1_total_dth_oth_firm_transport: Optional[str], optional
+             Total single day peak deliveries for other firm transportation Dth., by default None
+         peak1_total_dth_oth_firm_transport_gt: Optional[str], optional
+             filter by `peak1_total_dth_oth_firm_transport > x`, by default None
+         peak1_total_dth_oth_firm_transport_gte: Optional[str], optional
+             filter by `peak1_total_dth_oth_firm_transport >= x`, by default None
+         peak1_total_dth_oth_firm_transport_lt: Optional[str], optional
+             filter by `peak1_total_dth_oth_firm_transport < x`, by default None
+         peak1_total_dth_oth_firm_transport_lte: Optional[str], optional
+             filter by `peak1_total_dth_oth_firm_transport <= x`, by default None
+         peak1_int_pipe_dth_interr_transp: Optional[str], optional
+             Peak day interruptible transportation-Dth of gas delivered to interstate pipelines., by default None
+         peak1_int_pipe_dth_interr_transp_gt: Optional[str], optional
+             filter by `peak1_int_pipe_dth_interr_transp > x`, by default None
+         peak1_int_pipe_dth_interr_transp_gte: Optional[str], optional
+             filter by `peak1_int_pipe_dth_interr_transp >= x`, by default None
+         peak1_int_pipe_dth_interr_transp_lt: Optional[str], optional
+             filter by `peak1_int_pipe_dth_interr_transp < x`, by default None
+         peak1_int_pipe_dth_interr_transp_lte: Optional[str], optional
+             filter by `peak1_int_pipe_dth_interr_transp <= x`, by default None
+         peak1_oth_dth_interr_transport: Optional[str], optional
+             Peak day interruptible transportation-Dth of gas delivered to others., by default None
+         peak1_oth_dth_interr_transport_gt: Optional[str], optional
+             filter by `peak1_oth_dth_interr_transport > x`, by default None
+         peak1_oth_dth_interr_transport_gte: Optional[str], optional
+             filter by `peak1_oth_dth_interr_transport >= x`, by default None
+         peak1_oth_dth_interr_transport_lt: Optional[str], optional
+             filter by `peak1_oth_dth_interr_transport < x`, by default None
+         peak1_oth_dth_interr_transport_lte: Optional[str], optional
+             filter by `peak1_oth_dth_interr_transport <= x`, by default None
+         peak1_total_dth_interr_transport: Optional[str], optional
+             Peak day interruptible transportation-total Dth., by default None
+         peak1_total_dth_interr_transport_gt: Optional[str], optional
+             filter by `peak1_total_dth_interr_transport > x`, by default None
+         peak1_total_dth_interr_transport_gte: Optional[str], optional
+             filter by `peak1_total_dth_interr_transport >= x`, by default None
+         peak1_total_dth_interr_transport_lt: Optional[str], optional
+             filter by `peak1_total_dth_interr_transport < x`, by default None
+         peak1_total_dth_interr_transport_lte: Optional[str], optional
+             filter by `peak1_total_dth_interr_transport <= x`, by default None
+         peak1_int_pipe_dth_oth_transp: Optional[str], optional
+             Other-single peak day-Dth of gas delivered to interstate pipelines., by default None
+         peak1_int_pipe_dth_oth_transp_gt: Optional[str], optional
+             filter by `peak1_int_pipe_dth_oth_transp > x`, by default None
+         peak1_int_pipe_dth_oth_transp_gte: Optional[str], optional
+             filter by `peak1_int_pipe_dth_oth_transp >= x`, by default None
+         peak1_int_pipe_dth_oth_transp_lt: Optional[str], optional
+             filter by `peak1_int_pipe_dth_oth_transp < x`, by default None
+         peak1_int_pipe_dth_oth_transp_lte: Optional[str], optional
+             filter by `peak1_int_pipe_dth_oth_transp <= x`, by default None
+         peak1_oth_dth_other_transport: Optional[str], optional
+             Other-single peak day-Dth of gas delivered to others., by default None
+         peak1_oth_dth_other_transport_gt: Optional[str], optional
+             filter by `peak1_oth_dth_other_transport > x`, by default None
+         peak1_oth_dth_other_transport_gte: Optional[str], optional
+             filter by `peak1_oth_dth_other_transport >= x`, by default None
+         peak1_oth_dth_other_transport_lt: Optional[str], optional
+             filter by `peak1_oth_dth_other_transport < x`, by default None
+         peak1_oth_dth_other_transport_lte: Optional[str], optional
+             filter by `peak1_oth_dth_other_transport <= x`, by default None
+         peak1_total_dth_oth_transport: Optional[str], optional
+             Other-single peak day total Dth., by default None
+         peak1_total_dth_oth_transport_gt: Optional[str], optional
+             filter by `peak1_total_dth_oth_transport > x`, by default None
+         peak1_total_dth_oth_transport_gte: Optional[str], optional
+             filter by `peak1_total_dth_oth_transport >= x`, by default None
+         peak1_total_dth_oth_transport_lt: Optional[str], optional
+             filter by `peak1_total_dth_oth_transport < x`, by default None
+         peak1_total_dth_oth_transport_lte: Optional[str], optional
+             filter by `peak1_total_dth_oth_transport <= x`, by default None
+         peak1_int_pipe_dth_transp: Optional[str], optional
+             Single peak day-Dth of gas delivered to interstate pipelines total., by default None
+         peak1_int_pipe_dth_transp_gt: Optional[str], optional
+             filter by `peak1_int_pipe_dth_transp > x`, by default None
+         peak1_int_pipe_dth_transp_gte: Optional[str], optional
+             filter by `peak1_int_pipe_dth_transp >= x`, by default None
+         peak1_int_pipe_dth_transp_lt: Optional[str], optional
+             filter by `peak1_int_pipe_dth_transp < x`, by default None
+         peak1_int_pipe_dth_transp_lte: Optional[str], optional
+             filter by `peak1_int_pipe_dth_transp <= x`, by default None
+         peak1_oth_dth_transport: Optional[str], optional
+             Single peak day-Dth of gas delivered to others total., by default None
+         peak1_oth_dth_transport_gt: Optional[str], optional
+             filter by `peak1_oth_dth_transport > x`, by default None
+         peak1_oth_dth_transport_gte: Optional[str], optional
+             filter by `peak1_oth_dth_transport >= x`, by default None
+         peak1_oth_dth_transport_lt: Optional[str], optional
+             filter by `peak1_oth_dth_transport < x`, by default None
+         peak1_oth_dth_transport_lte: Optional[str], optional
+             filter by `peak1_oth_dth_transport <= x`, by default None
+         peak1_total_dth_transport: Optional[str], optional
+             Single peak day-Dth of gas delivered total., by default None
+         peak1_total_dth_transport_gt: Optional[str], optional
+             filter by `peak1_total_dth_transport > x`, by default None
+         peak1_total_dth_transport_gte: Optional[str], optional
+             filter by `peak1_total_dth_transport >= x`, by default None
+         peak1_total_dth_transport_lt: Optional[str], optional
+             filter by `peak1_total_dth_transport < x`, by default None
+         peak1_total_dth_transport_lte: Optional[str], optional
+             filter by `peak1_total_dth_transport <= x`, by default None
+         peak3_int_pipe_no_notice_transp: Optional[str], optional
+             Peak 3 Day No-Notice Transportation-Dth of Gas Delivered to Interstate Pipelines., by default None
+         peak3_int_pipe_no_notice_transp_gt: Optional[str], optional
+             filter by `peak3_int_pipe_no_notice_transp > x`, by default None
+         peak3_int_pipe_no_notice_transp_gte: Optional[str], optional
+             filter by `peak3_int_pipe_no_notice_transp >= x`, by default None
+         peak3_int_pipe_no_notice_transp_lt: Optional[str], optional
+             filter by `peak3_int_pipe_no_notice_transp < x`, by default None
+         peak3_int_pipe_no_notice_transp_lte: Optional[str], optional
+             filter by `peak3_int_pipe_no_notice_transp <= x`, by default None
+         peak3_oth_no_notice_transport: Optional[str], optional
+             Peak 3 Day No-Notice Transportation-Dth of Gas Delivered to Others., by default None
+         peak3_oth_no_notice_transport_gt: Optional[str], optional
+             filter by `peak3_oth_no_notice_transport > x`, by default None
+         peak3_oth_no_notice_transport_gte: Optional[str], optional
+             filter by `peak3_oth_no_notice_transport >= x`, by default None
+         peak3_oth_no_notice_transport_lt: Optional[str], optional
+             filter by `peak3_oth_no_notice_transport < x`, by default None
+         peak3_oth_no_notice_transport_lte: Optional[str], optional
+             filter by `peak3_oth_no_notice_transport <= x`, by default None
+         peak3_total_no_notice_transport: Optional[str], optional
+             Total Peak 3 Day No-Notice Transportation Dth., by default None
+         peak3_total_no_notice_transport_gt: Optional[str], optional
+             filter by `peak3_total_no_notice_transport > x`, by default None
+         peak3_total_no_notice_transport_gte: Optional[str], optional
+             filter by `peak3_total_no_notice_transport >= x`, by default None
+         peak3_total_no_notice_transport_lt: Optional[str], optional
+             filter by `peak3_total_no_notice_transport < x`, by default None
+         peak3_total_no_notice_transport_lte: Optional[str], optional
+             filter by `peak3_total_no_notice_transport <= x`, by default None
+         peak3_int_pipe_dth_oth_firm_transp: Optional[str], optional
+             Peak 3 day Other Firm Transportation-Dth of Gas Delivered to Interstate Pipelines., by default None
+         peak3_int_pipe_dth_oth_firm_transp_gt: Optional[str], optional
+             filter by `peak3_int_pipe_dth_oth_firm_transp > x`, by default None
+         peak3_int_pipe_dth_oth_firm_transp_gte: Optional[str], optional
+             filter by `peak3_int_pipe_dth_oth_firm_transp >= x`, by default None
+         peak3_int_pipe_dth_oth_firm_transp_lt: Optional[str], optional
+             filter by `peak3_int_pipe_dth_oth_firm_transp < x`, by default None
+         peak3_int_pipe_dth_oth_firm_transp_lte: Optional[str], optional
+             filter by `peak3_int_pipe_dth_oth_firm_transp <= x`, by default None
+         peak3_oth_dth_other_firm_transport: Optional[str], optional
+             Peak 3 day Other Firm Transportation-Dth of Gas Delivered to Others., by default None
+         peak3_oth_dth_other_firm_transport_gt: Optional[str], optional
+             filter by `peak3_oth_dth_other_firm_transport > x`, by default None
+         peak3_oth_dth_other_firm_transport_gte: Optional[str], optional
+             filter by `peak3_oth_dth_other_firm_transport >= x`, by default None
+         peak3_oth_dth_other_firm_transport_lt: Optional[str], optional
+             filter by `peak3_oth_dth_other_firm_transport < x`, by default None
+         peak3_oth_dth_other_firm_transport_lte: Optional[str], optional
+             filter by `peak3_oth_dth_other_firm_transport <= x`, by default None
+         peak3_total_dth_oth_firm_transp: Optional[str], optional
+             Total 3 day peak other firm transportation Dth., by default None
+         peak3_total_dth_oth_firm_transp_gt: Optional[str], optional
+             filter by `peak3_total_dth_oth_firm_transp > x`, by default None
+         peak3_total_dth_oth_firm_transp_gte: Optional[str], optional
+             filter by `peak3_total_dth_oth_firm_transp >= x`, by default None
+         peak3_total_dth_oth_firm_transp_lt: Optional[str], optional
+             filter by `peak3_total_dth_oth_firm_transp < x`, by default None
+         peak3_total_dth_oth_firm_transp_lte: Optional[str], optional
+             filter by `peak3_total_dth_oth_firm_transp <= x`, by default None
+         peak3_int_pipe_dth_interr_transp: Optional[str], optional
+             Peak 3 day interruptible transportation-Dth of gas delivered to interstate pipelines., by default None
+         peak3_int_pipe_dth_interr_transp_gt: Optional[str], optional
+             filter by `peak3_int_pipe_dth_interr_transp > x`, by default None
+         peak3_int_pipe_dth_interr_transp_gte: Optional[str], optional
+             filter by `peak3_int_pipe_dth_interr_transp >= x`, by default None
+         peak3_int_pipe_dth_interr_transp_lt: Optional[str], optional
+             filter by `peak3_int_pipe_dth_interr_transp < x`, by default None
+         peak3_int_pipe_dth_interr_transp_lte: Optional[str], optional
+             filter by `peak3_int_pipe_dth_interr_transp <= x`, by default None
+         peak3_oth_dth_interr_transport: Optional[str], optional
+             Peak 3 day interruptible transportation-Dth of gas delivered to others., by default None
+         peak3_oth_dth_interr_transport_gt: Optional[str], optional
+             filter by `peak3_oth_dth_interr_transport > x`, by default None
+         peak3_oth_dth_interr_transport_gte: Optional[str], optional
+             filter by `peak3_oth_dth_interr_transport >= x`, by default None
+         peak3_oth_dth_interr_transport_lt: Optional[str], optional
+             filter by `peak3_oth_dth_interr_transport < x`, by default None
+         peak3_oth_dth_interr_transport_lte: Optional[str], optional
+             filter by `peak3_oth_dth_interr_transport <= x`, by default None
+         peak3_total_dth_interr_transport: Optional[str], optional
+             Peak 3 day total interruptible transportation Dth., by default None
+         peak3_total_dth_interr_transport_gt: Optional[str], optional
+             filter by `peak3_total_dth_interr_transport > x`, by default None
+         peak3_total_dth_interr_transport_gte: Optional[str], optional
+             filter by `peak3_total_dth_interr_transport >= x`, by default None
+         peak3_total_dth_interr_transport_lt: Optional[str], optional
+             filter by `peak3_total_dth_interr_transport < x`, by default None
+         peak3_total_dth_interr_transport_lte: Optional[str], optional
+             filter by `peak3_total_dth_interr_transport <= x`, by default None
+         peak3_int_pipe_dth_oth_transp: Optional[str], optional
+             Peak 3 day other-Dth of gas delivered to interstate pipelines., by default None
+         peak3_int_pipe_dth_oth_transp_gt: Optional[str], optional
+             filter by `peak3_int_pipe_dth_oth_transp > x`, by default None
+         peak3_int_pipe_dth_oth_transp_gte: Optional[str], optional
+             filter by `peak3_int_pipe_dth_oth_transp >= x`, by default None
+         peak3_int_pipe_dth_oth_transp_lt: Optional[str], optional
+             filter by `peak3_int_pipe_dth_oth_transp < x`, by default None
+         peak3_int_pipe_dth_oth_transp_lte: Optional[str], optional
+             filter by `peak3_int_pipe_dth_oth_transp <= x`, by default None
+         peak3_oth_dth_other_transport: Optional[str], optional
+             Peak 3 day other-Dth of gas delivered to others., by default None
+         peak3_oth_dth_other_transport_gt: Optional[str], optional
+             filter by `peak3_oth_dth_other_transport > x`, by default None
+         peak3_oth_dth_other_transport_gte: Optional[str], optional
+             filter by `peak3_oth_dth_other_transport >= x`, by default None
+         peak3_oth_dth_other_transport_lt: Optional[str], optional
+             filter by `peak3_oth_dth_other_transport < x`, by default None
+         peak3_oth_dth_other_transport_lte: Optional[str], optional
+             filter by `peak3_oth_dth_other_transport <= x`, by default None
+         peak3_total_dth_other_transport: Optional[str], optional
+             Total 3 day peak other-Dth of gas delivered to others., by default None
+         peak3_total_dth_other_transport_gt: Optional[str], optional
+             filter by `peak3_total_dth_other_transport > x`, by default None
+         peak3_total_dth_other_transport_gte: Optional[str], optional
+             filter by `peak3_total_dth_other_transport >= x`, by default None
+         peak3_total_dth_other_transport_lt: Optional[str], optional
+             filter by `peak3_total_dth_other_transport < x`, by default None
+         peak3_total_dth_other_transport_lte: Optional[str], optional
+             filter by `peak3_total_dth_other_transport <= x`, by default None
+         peak3_int_pipe_dth_transp: Optional[str], optional
+             Total 3 day peak-Dth of gas delivered to interstate pipelines., by default None
+         peak3_int_pipe_dth_transp_gt: Optional[str], optional
+             filter by `peak3_int_pipe_dth_transp > x`, by default None
+         peak3_int_pipe_dth_transp_gte: Optional[str], optional
+             filter by `peak3_int_pipe_dth_transp >= x`, by default None
+         peak3_int_pipe_dth_transp_lt: Optional[str], optional
+             filter by `peak3_int_pipe_dth_transp < x`, by default None
+         peak3_int_pipe_dth_transp_lte: Optional[str], optional
+             filter by `peak3_int_pipe_dth_transp <= x`, by default None
+         peak3_oth_dth_transport: Optional[str], optional
+             Total 3 day peak-Dth of gas delivered to others., by default None
+         peak3_oth_dth_transport_gt: Optional[str], optional
+             filter by `peak3_oth_dth_transport > x`, by default None
+         peak3_oth_dth_transport_gte: Optional[str], optional
+             filter by `peak3_oth_dth_transport >= x`, by default None
+         peak3_oth_dth_transport_lt: Optional[str], optional
+             filter by `peak3_oth_dth_transport < x`, by default None
+         peak3_oth_dth_transport_lte: Optional[str], optional
+             filter by `peak3_oth_dth_transport <= x`, by default None
+         peak3_total_dth_transport: Optional[str], optional
+             Total peak 3 day-Dth transport., by default None
+         peak3_total_dth_transport_gt: Optional[str], optional
+             filter by `peak3_total_dth_transport > x`, by default None
+         peak3_total_dth_transport_gte: Optional[str], optional
+             filter by `peak3_total_dth_transport >= x`, by default None
+         peak3_total_dth_transport_lt: Optional[str], optional
+             filter by `peak3_total_dth_transport < x`, by default None
+         peak3_total_dth_transport_lte: Optional[str], optional
+             filter by `peak3_total_dth_transport <= x`, by default None
+         gas_of_oth_recd_for_gathering: Optional[str], optional
+             Gas of others received for gathering., by default None
+         gas_of_oth_recd_for_gathering_gt: Optional[str], optional
+             filter by `gas_of_oth_recd_for_gathering > x`, by default None
+         gas_of_oth_recd_for_gathering_gte: Optional[str], optional
+             filter by `gas_of_oth_recd_for_gathering >= x`, by default None
+         gas_of_oth_recd_for_gathering_lt: Optional[str], optional
+             filter by `gas_of_oth_recd_for_gathering < x`, by default None
+         gas_of_oth_recd_for_gathering_lte: Optional[str], optional
+             filter by `gas_of_oth_recd_for_gathering <= x`, by default None
+         reciepts: Optional[str], optional
+             Total receipts of gas received., by default None
+         reciepts_gt: Optional[str], optional
+             filter by `reciepts > x`, by default None
+         reciepts_gte: Optional[str], optional
+             filter by `reciepts >= x`, by default None
+         reciepts_lt: Optional[str], optional
+             filter by `reciepts < x`, by default None
+         reciepts_lte: Optional[str], optional
+             filter by `reciepts <= x`, by default None
+         deliv_of_gas_trans_or_compr_oth: Optional[str], optional
+             Deliveries of gas transported for others., by default None
+         deliv_of_gas_trans_or_compr_oth_gt: Optional[str], optional
+             filter by `deliv_of_gas_trans_or_compr_oth > x`, by default None
+         deliv_of_gas_trans_or_compr_oth_gte: Optional[str], optional
+             filter by `deliv_of_gas_trans_or_compr_oth >= x`, by default None
+         deliv_of_gas_trans_or_compr_oth_lt: Optional[str], optional
+             filter by `deliv_of_gas_trans_or_compr_oth < x`, by default None
+         deliv_of_gas_trans_or_compr_oth_lte: Optional[str], optional
+             filter by `deliv_of_gas_trans_or_compr_oth <= x`, by default None
+         gas_delivered_as_imbalances: Optional[str], optional
+             Gas delivered as imbalances., by default None
+         gas_delivered_as_imbalances_gt: Optional[str], optional
+             filter by `gas_delivered_as_imbalances > x`, by default None
+         gas_delivered_as_imbalances_gte: Optional[str], optional
+             filter by `gas_delivered_as_imbalances >= x`, by default None
+         gas_delivered_as_imbalances_lt: Optional[str], optional
+             filter by `gas_delivered_as_imbalances < x`, by default None
+         gas_delivered_as_imbalances_lte: Optional[str], optional
+             filter by `gas_delivered_as_imbalances <= x`, by default None
+         gas_used_for_compressor_sta_fuel: Optional[str], optional
+             Gas used for compressor station fuel., by default None
+         gas_used_for_compressor_sta_fuel_gt: Optional[str], optional
+             filter by `gas_used_for_compressor_sta_fuel > x`, by default None
+         gas_used_for_compressor_sta_fuel_gte: Optional[str], optional
+             filter by `gas_used_for_compressor_sta_fuel >= x`, by default None
+         gas_used_for_compressor_sta_fuel_lt: Optional[str], optional
+             filter by `gas_used_for_compressor_sta_fuel < x`, by default None
+         gas_used_for_compressor_sta_fuel_lte: Optional[str], optional
+             filter by `gas_used_for_compressor_sta_fuel <= x`, by default None
+         nat_gas_other_deliv: Optional[str], optional
+             Natural gas other deliveries., by default None
+         nat_gas_other_deliv_gt: Optional[str], optional
+             filter by `nat_gas_other_deliv > x`, by default None
+         nat_gas_other_deliv_gte: Optional[str], optional
+             filter by `nat_gas_other_deliv >= x`, by default None
+         nat_gas_other_deliv_lt: Optional[str], optional
+             filter by `nat_gas_other_deliv < x`, by default None
+         nat_gas_other_deliv_lte: Optional[str], optional
+             filter by `nat_gas_other_deliv <= x`, by default None
+         total_deliveries: Optional[str], optional
+             Total deliveries of natural gas., by default None
+         total_deliveries_gt: Optional[str], optional
+             filter by `total_deliveries > x`, by default None
+         total_deliveries_gte: Optional[str], optional
+             filter by `total_deliveries >= x`, by default None
+         total_deliveries_lt: Optional[str], optional
+             filter by `total_deliveries < x`, by default None
+         total_deliveries_lte: Optional[str], optional
+             filter by `total_deliveries <= x`, by default None
+         gas_stored_boy: Optional[str], optional
+             Stored gas balance-beginning of year (BOY)., by default None
+         gas_stored_boy_gt: Optional[str], optional
+             filter by `gas_stored_boy > x`, by default None
+         gas_stored_boy_gte: Optional[str], optional
+             filter by `gas_stored_boy >= x`, by default None
+         gas_stored_boy_lt: Optional[str], optional
+             filter by `gas_stored_boy < x`, by default None
+         gas_stored_boy_lte: Optional[str], optional
+             filter by `gas_stored_boy <= x`, by default None
+         gas_stored_gas_deliv_to_storage: Optional[str], optional
+             Gas delivered to storage-beginning of year (BOY)., by default None
+         gas_stored_gas_deliv_to_storage_gt: Optional[str], optional
+             filter by `gas_stored_gas_deliv_to_storage > x`, by default None
+         gas_stored_gas_deliv_to_storage_gte: Optional[str], optional
+             filter by `gas_stored_gas_deliv_to_storage >= x`, by default None
+         gas_stored_gas_deliv_to_storage_lt: Optional[str], optional
+             filter by `gas_stored_gas_deliv_to_storage < x`, by default None
+         gas_stored_gas_deliv_to_storage_lte: Optional[str], optional
+             filter by `gas_stored_gas_deliv_to_storage <= x`, by default None
+         gas_stored_gas_withdr_from_stor: Optional[str], optional
+             Gas withdrawn from storage- beginning of year (BOY)., by default None
+         gas_stored_gas_withdr_from_stor_gt: Optional[str], optional
+             filter by `gas_stored_gas_withdr_from_stor > x`, by default None
+         gas_stored_gas_withdr_from_stor_gte: Optional[str], optional
+             filter by `gas_stored_gas_withdr_from_stor >= x`, by default None
+         gas_stored_gas_withdr_from_stor_lt: Optional[str], optional
+             filter by `gas_stored_gas_withdr_from_stor < x`, by default None
+         gas_stored_gas_withdr_from_stor_lte: Optional[str], optional
+             filter by `gas_stored_gas_withdr_from_stor <= x`, by default None
+         gas_stored_oth_deb_or_cred_net: Optional[str], optional
+             Gas stored other debits and credits., by default None
+         gas_stored_oth_deb_or_cred_net_gt: Optional[str], optional
+             filter by `gas_stored_oth_deb_or_cred_net > x`, by default None
+         gas_stored_oth_deb_or_cred_net_gte: Optional[str], optional
+             filter by `gas_stored_oth_deb_or_cred_net >= x`, by default None
+         gas_stored_oth_deb_or_cred_net_lt: Optional[str], optional
+             filter by `gas_stored_oth_deb_or_cred_net < x`, by default None
+         gas_stored_oth_deb_or_cred_net_lte: Optional[str], optional
+             filter by `gas_stored_oth_deb_or_cred_net <= x`, by default None
+         gas_stored_eoy: Optional[str], optional
+             Stored gas- end of year Dth (EOY)., by default None
+         gas_stored_eoy_gt: Optional[str], optional
+             filter by `gas_stored_eoy > x`, by default None
+         gas_stored_eoy_gte: Optional[str], optional
+             filter by `gas_stored_eoy >= x`, by default None
+         gas_stored_eoy_lt: Optional[str], optional
+             filter by `gas_stored_eoy < x`, by default None
+         gas_stored_eoy_lte: Optional[str], optional
+             filter by `gas_stored_eoy <= x`, by default None
+         gas_stored_gas_volume_dth: Optional[str], optional
+             Gas volume stored Dth., by default None
+         gas_stored_gas_volume_dth_gt: Optional[str], optional
+             filter by `gas_stored_gas_volume_dth > x`, by default None
+         gas_stored_gas_volume_dth_gte: Optional[str], optional
+             filter by `gas_stored_gas_volume_dth >= x`, by default None
+         gas_stored_gas_volume_dth_lt: Optional[str], optional
+             filter by `gas_stored_gas_volume_dth < x`, by default None
+         gas_stored_gas_volume_dth_lte: Optional[str], optional
+             filter by `gas_stored_gas_volume_dth <= x`, by default None
+         gas_stored_amount_per_dth: Optional[str], optional
+             Gas stored per Dth., by default None
+         gas_stored_amount_per_dth_gt: Optional[str], optional
+             filter by `gas_stored_amount_per_dth > x`, by default None
+         gas_stored_amount_per_dth_gte: Optional[str], optional
+             filter by `gas_stored_amount_per_dth >= x`, by default None
+         gas_stored_amount_per_dth_lt: Optional[str], optional
+             filter by `gas_stored_amount_per_dth < x`, by default None
+         gas_stored_amount_per_dth_lte: Optional[str], optional
+             filter by `gas_stored_amount_per_dth <= x`, by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("year", year))
+        filter_params.append(list_to_filter("pipelineFilerName", pipeline_filer_name))
+        filter_params.append(list_to_filter("pipelineName", pipeline_name))
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
+        filter_params.append(
+            list_to_filter("operatingRevenuesGas", operating_revenues_gas)
+        )
+        if operating_revenues_gas_gt is not None:
+            filter_params.append(
+                f'operatingRevenuesGas > "{operating_revenues_gas_gt}"'
+            )
+        if operating_revenues_gas_gte is not None:
+            filter_params.append(
+                f'operatingRevenuesGas >= "{operating_revenues_gas_gte}"'
+            )
+        if operating_revenues_gas_lt is not None:
+            filter_params.append(
+                f'operatingRevenuesGas < "{operating_revenues_gas_lt}"'
+            )
+        if operating_revenues_gas_lte is not None:
+            filter_params.append(
+                f'operatingRevenuesGas <= "{operating_revenues_gas_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("operatingRevenuesTotal", operating_revenues_total)
+        )
+        if operating_revenues_total_gt is not None:
+            filter_params.append(
+                f'operatingRevenuesTotal > "{operating_revenues_total_gt}"'
+            )
+        if operating_revenues_total_gte is not None:
+            filter_params.append(
+                f'operatingRevenuesTotal >= "{operating_revenues_total_gte}"'
+            )
+        if operating_revenues_total_lt is not None:
+            filter_params.append(
+                f'operatingRevenuesTotal < "{operating_revenues_total_lt}"'
+            )
+        if operating_revenues_total_lte is not None:
+            filter_params.append(
+                f'operatingRevenuesTotal <= "{operating_revenues_total_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("operationExpensesGas", operation_expenses_gas)
+        )
+        if operation_expenses_gas_gt is not None:
+            filter_params.append(
+                f'operationExpensesGas > "{operation_expenses_gas_gt}"'
+            )
+        if operation_expenses_gas_gte is not None:
+            filter_params.append(
+                f'operationExpensesGas >= "{operation_expenses_gas_gte}"'
+            )
+        if operation_expenses_gas_lt is not None:
+            filter_params.append(
+                f'operationExpensesGas < "{operation_expenses_gas_lt}"'
+            )
+        if operation_expenses_gas_lte is not None:
+            filter_params.append(
+                f'operationExpensesGas <= "{operation_expenses_gas_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("operatingExpensesTotal", operating_expenses_total)
+        )
+        if operating_expenses_total_gt is not None:
+            filter_params.append(
+                f'operatingExpensesTotal > "{operating_expenses_total_gt}"'
+            )
+        if operating_expenses_total_gte is not None:
+            filter_params.append(
+                f'operatingExpensesTotal >= "{operating_expenses_total_gte}"'
+            )
+        if operating_expenses_total_lt is not None:
+            filter_params.append(
+                f'operatingExpensesTotal < "{operating_expenses_total_lt}"'
+            )
+        if operating_expenses_total_lte is not None:
+            filter_params.append(
+                f'operatingExpensesTotal <= "{operating_expenses_total_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("maintenanceExpensesGas", maintenance_expenses_gas)
+        )
+        if maintenance_expenses_gas_gt is not None:
+            filter_params.append(
+                f'maintenanceExpensesGas > "{maintenance_expenses_gas_gt}"'
+            )
+        if maintenance_expenses_gas_gte is not None:
+            filter_params.append(
+                f'maintenanceExpensesGas >= "{maintenance_expenses_gas_gte}"'
+            )
+        if maintenance_expenses_gas_lt is not None:
+            filter_params.append(
+                f'maintenanceExpensesGas < "{maintenance_expenses_gas_lt}"'
+            )
+        if maintenance_expenses_gas_lte is not None:
+            filter_params.append(
+                f'maintenanceExpensesGas <= "{maintenance_expenses_gas_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("maintenanceExpensesTotal", maintenance_expenses_total)
+        )
+        if maintenance_expenses_total_gt is not None:
+            filter_params.append(
+                f'maintenanceExpensesTotal > "{maintenance_expenses_total_gt}"'
+            )
+        if maintenance_expenses_total_gte is not None:
+            filter_params.append(
+                f'maintenanceExpensesTotal >= "{maintenance_expenses_total_gte}"'
+            )
+        if maintenance_expenses_total_lt is not None:
+            filter_params.append(
+                f'maintenanceExpensesTotal < "{maintenance_expenses_total_lt}"'
+            )
+        if maintenance_expenses_total_lte is not None:
+            filter_params.append(
+                f'maintenanceExpensesTotal <= "{maintenance_expenses_total_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "taxesOtherThanIncomeTaxesTotal", taxes_other_than_income_taxes_total
+            )
+        )
+        if taxes_other_than_income_taxes_total_gt is not None:
+            filter_params.append(
+                f'taxesOtherThanIncomeTaxesTotal > "{taxes_other_than_income_taxes_total_gt}"'
+            )
+        if taxes_other_than_income_taxes_total_gte is not None:
+            filter_params.append(
+                f'taxesOtherThanIncomeTaxesTotal >= "{taxes_other_than_income_taxes_total_gte}"'
+            )
+        if taxes_other_than_income_taxes_total_lt is not None:
+            filter_params.append(
+                f'taxesOtherThanIncomeTaxesTotal < "{taxes_other_than_income_taxes_total_lt}"'
+            )
+        if taxes_other_than_income_taxes_total_lte is not None:
+            filter_params.append(
+                f'taxesOtherThanIncomeTaxesTotal <= "{taxes_other_than_income_taxes_total_lte}"'
+            )
+        filter_params.append(list_to_filter("utilityEbitda", utility_ebitda))
+        if utility_ebitda_gt is not None:
+            filter_params.append(f'utilityEbitda > "{utility_ebitda_gt}"')
+        if utility_ebitda_gte is not None:
+            filter_params.append(f'utilityEbitda >= "{utility_ebitda_gte}"')
+        if utility_ebitda_lt is not None:
+            filter_params.append(f'utilityEbitda < "{utility_ebitda_lt}"')
+        if utility_ebitda_lte is not None:
+            filter_params.append(f'utilityEbitda <= "{utility_ebitda_lte}"')
+        filter_params.append(
+            list_to_filter("transmissionPipelineLength", transmission_pipeline_length)
+        )
+        if transmission_pipeline_length_gt is not None:
+            filter_params.append(
+                f'transmissionPipelineLength > "{transmission_pipeline_length_gt}"'
+            )
+        if transmission_pipeline_length_gte is not None:
+            filter_params.append(
+                f'transmissionPipelineLength >= "{transmission_pipeline_length_gte}"'
+            )
+        if transmission_pipeline_length_lt is not None:
+            filter_params.append(
+                f'transmissionPipelineLength < "{transmission_pipeline_length_lt}"'
+            )
+        if transmission_pipeline_length_lte is not None:
+            filter_params.append(
+                f'transmissionPipelineLength <= "{transmission_pipeline_length_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "trptGasForOthersTransmsnVolMmcf", trpt_gas_for_others_transmsn_vol_mmcf
+            )
+        )
+        if trpt_gas_for_others_transmsn_vol_mmcf_gt is not None:
+            filter_params.append(
+                f'trptGasForOthersTransmsnVolMmcf > "{trpt_gas_for_others_transmsn_vol_mmcf_gt}"'
+            )
+        if trpt_gas_for_others_transmsn_vol_mmcf_gte is not None:
+            filter_params.append(
+                f'trptGasForOthersTransmsnVolMmcf >= "{trpt_gas_for_others_transmsn_vol_mmcf_gte}"'
+            )
+        if trpt_gas_for_others_transmsn_vol_mmcf_lt is not None:
+            filter_params.append(
+                f'trptGasForOthersTransmsnVolMmcf < "{trpt_gas_for_others_transmsn_vol_mmcf_lt}"'
+            )
+        if trpt_gas_for_others_transmsn_vol_mmcf_lte is not None:
+            filter_params.append(
+                f'trptGasForOthersTransmsnVolMmcf <= "{trpt_gas_for_others_transmsn_vol_mmcf_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("landAndRightsTransEoy000", land_and_rights_trans_eoy000)
+        )
+        if land_and_rights_trans_eoy000_gt is not None:
+            filter_params.append(
+                f'landAndRightsTransEoy000 > "{land_and_rights_trans_eoy000_gt}"'
+            )
+        if land_and_rights_trans_eoy000_gte is not None:
+            filter_params.append(
+                f'landAndRightsTransEoy000 >= "{land_and_rights_trans_eoy000_gte}"'
+            )
+        if land_and_rights_trans_eoy000_lt is not None:
+            filter_params.append(
+                f'landAndRightsTransEoy000 < "{land_and_rights_trans_eoy000_lt}"'
+            )
+        if land_and_rights_trans_eoy000_lte is not None:
+            filter_params.append(
+                f'landAndRightsTransEoy000 <= "{land_and_rights_trans_eoy000_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("rightsOfWayTransEoy000", rights_of_way_trans_eoy000)
+        )
+        if rights_of_way_trans_eoy000_gt is not None:
+            filter_params.append(
+                f'rightsOfWayTransEoy000 > "{rights_of_way_trans_eoy000_gt}"'
+            )
+        if rights_of_way_trans_eoy000_gte is not None:
+            filter_params.append(
+                f'rightsOfWayTransEoy000 >= "{rights_of_way_trans_eoy000_gte}"'
+            )
+        if rights_of_way_trans_eoy000_lt is not None:
+            filter_params.append(
+                f'rightsOfWayTransEoy000 < "{rights_of_way_trans_eoy000_lt}"'
+            )
+        if rights_of_way_trans_eoy000_lte is not None:
+            filter_params.append(
+                f'rightsOfWayTransEoy000 <= "{rights_of_way_trans_eoy000_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("strucAndImprovTranEoy000", struc_and_improv_tran_eoy000)
+        )
+        if struc_and_improv_tran_eoy000_gt is not None:
+            filter_params.append(
+                f'strucAndImprovTranEoy000 > "{struc_and_improv_tran_eoy000_gt}"'
+            )
+        if struc_and_improv_tran_eoy000_gte is not None:
+            filter_params.append(
+                f'strucAndImprovTranEoy000 >= "{struc_and_improv_tran_eoy000_gte}"'
+            )
+        if struc_and_improv_tran_eoy000_lt is not None:
+            filter_params.append(
+                f'strucAndImprovTranEoy000 < "{struc_and_improv_tran_eoy000_lt}"'
+            )
+        if struc_and_improv_tran_eoy000_lte is not None:
+            filter_params.append(
+                f'strucAndImprovTranEoy000 <= "{struc_and_improv_tran_eoy000_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("mainsTransmissionEoy000", mains_transmission_eoy000)
+        )
+        if mains_transmission_eoy000_gt is not None:
+            filter_params.append(
+                f'mainsTransmissionEoy000 > "{mains_transmission_eoy000_gt}"'
+            )
+        if mains_transmission_eoy000_gte is not None:
+            filter_params.append(
+                f'mainsTransmissionEoy000 >= "{mains_transmission_eoy000_gte}"'
+            )
+        if mains_transmission_eoy000_lt is not None:
+            filter_params.append(
+                f'mainsTransmissionEoy000 < "{mains_transmission_eoy000_lt}"'
+            )
+        if mains_transmission_eoy000_lte is not None:
+            filter_params.append(
+                f'mainsTransmissionEoy000 <= "{mains_transmission_eoy000_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("comprstaequipTransEoy000", comprstaequip_trans_eoy000)
+        )
+        if comprstaequip_trans_eoy000_gt is not None:
+            filter_params.append(
+                f'comprstaequipTransEoy000 > "{comprstaequip_trans_eoy000_gt}"'
+            )
+        if comprstaequip_trans_eoy000_gte is not None:
+            filter_params.append(
+                f'comprstaequipTransEoy000 >= "{comprstaequip_trans_eoy000_gte}"'
+            )
+        if comprstaequip_trans_eoy000_lt is not None:
+            filter_params.append(
+                f'comprstaequipTransEoy000 < "{comprstaequip_trans_eoy000_lt}"'
+            )
+        if comprstaequip_trans_eoy000_lte is not None:
+            filter_params.append(
+                f'comprstaequipTransEoy000 <= "{comprstaequip_trans_eoy000_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("measRegStaEqTransEoy000", meas_reg_sta_eq_trans_eoy000)
+        )
+        if meas_reg_sta_eq_trans_eoy000_gt is not None:
+            filter_params.append(
+                f'measRegStaEqTransEoy000 > "{meas_reg_sta_eq_trans_eoy000_gt}"'
+            )
+        if meas_reg_sta_eq_trans_eoy000_gte is not None:
+            filter_params.append(
+                f'measRegStaEqTransEoy000 >= "{meas_reg_sta_eq_trans_eoy000_gte}"'
+            )
+        if meas_reg_sta_eq_trans_eoy000_lt is not None:
+            filter_params.append(
+                f'measRegStaEqTransEoy000 < "{meas_reg_sta_eq_trans_eoy000_lt}"'
+            )
+        if meas_reg_sta_eq_trans_eoy000_lte is not None:
+            filter_params.append(
+                f'measRegStaEqTransEoy000 <= "{meas_reg_sta_eq_trans_eoy000_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "communicationEquipTransEoy000", communication_equip_trans_eoy000
+            )
+        )
+        if communication_equip_trans_eoy000_gt is not None:
+            filter_params.append(
+                f'communicationEquipTransEoy000 > "{communication_equip_trans_eoy000_gt}"'
+            )
+        if communication_equip_trans_eoy000_gte is not None:
+            filter_params.append(
+                f'communicationEquipTransEoy000 >= "{communication_equip_trans_eoy000_gte}"'
+            )
+        if communication_equip_trans_eoy000_lt is not None:
+            filter_params.append(
+                f'communicationEquipTransEoy000 < "{communication_equip_trans_eoy000_lt}"'
+            )
+        if communication_equip_trans_eoy000_lte is not None:
+            filter_params.append(
+                f'communicationEquipTransEoy000 <= "{communication_equip_trans_eoy000_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "totalTransmissionPlantAddns000", total_transmission_plant_addns000
+            )
+        )
+        if total_transmission_plant_addns000_gt is not None:
+            filter_params.append(
+                f'totalTransmissionPlantAddns000 > "{total_transmission_plant_addns000_gt}"'
+            )
+        if total_transmission_plant_addns000_gte is not None:
+            filter_params.append(
+                f'totalTransmissionPlantAddns000 >= "{total_transmission_plant_addns000_gte}"'
+            )
+        if total_transmission_plant_addns000_lt is not None:
+            filter_params.append(
+                f'totalTransmissionPlantAddns000 < "{total_transmission_plant_addns000_lt}"'
+            )
+        if total_transmission_plant_addns000_lte is not None:
+            filter_params.append(
+                f'totalTransmissionPlantAddns000 <= "{total_transmission_plant_addns000_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "totalTransmissionPlantRet000", total_transmission_plant_ret000
+            )
+        )
+        if total_transmission_plant_ret000_gt is not None:
+            filter_params.append(
+                f'totalTransmissionPlantRet000 > "{total_transmission_plant_ret000_gt}"'
+            )
+        if total_transmission_plant_ret000_gte is not None:
+            filter_params.append(
+                f'totalTransmissionPlantRet000 >= "{total_transmission_plant_ret000_gte}"'
+            )
+        if total_transmission_plant_ret000_lt is not None:
+            filter_params.append(
+                f'totalTransmissionPlantRet000 < "{total_transmission_plant_ret000_lt}"'
+            )
+        if total_transmission_plant_ret000_lte is not None:
+            filter_params.append(
+                f'totalTransmissionPlantRet000 <= "{total_transmission_plant_ret000_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "totalTransmissionPlantAdjust000", total_transmission_plant_adjust000
+            )
+        )
+        if total_transmission_plant_adjust000_gt is not None:
+            filter_params.append(
+                f'totalTransmissionPlantAdjust000 > "{total_transmission_plant_adjust000_gt}"'
+            )
+        if total_transmission_plant_adjust000_gte is not None:
+            filter_params.append(
+                f'totalTransmissionPlantAdjust000 >= "{total_transmission_plant_adjust000_gte}"'
+            )
+        if total_transmission_plant_adjust000_lt is not None:
+            filter_params.append(
+                f'totalTransmissionPlantAdjust000 < "{total_transmission_plant_adjust000_lt}"'
+            )
+        if total_transmission_plant_adjust000_lte is not None:
+            filter_params.append(
+                f'totalTransmissionPlantAdjust000 <= "{total_transmission_plant_adjust000_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "totalTransmissionPlantTransf000", total_transmission_plant_transf000
+            )
+        )
+        if total_transmission_plant_transf000_gt is not None:
+            filter_params.append(
+                f'totalTransmissionPlantTransf000 > "{total_transmission_plant_transf000_gt}"'
+            )
+        if total_transmission_plant_transf000_gte is not None:
+            filter_params.append(
+                f'totalTransmissionPlantTransf000 >= "{total_transmission_plant_transf000_gte}"'
+            )
+        if total_transmission_plant_transf000_lt is not None:
+            filter_params.append(
+                f'totalTransmissionPlantTransf000 < "{total_transmission_plant_transf000_lt}"'
+            )
+        if total_transmission_plant_transf000_lte is not None:
+            filter_params.append(
+                f'totalTransmissionPlantTransf000 <= "{total_transmission_plant_transf000_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "totalTransmissionPlantEoy000", total_transmission_plant_eoy000
+            )
+        )
+        if total_transmission_plant_eoy000_gt is not None:
+            filter_params.append(
+                f'totalTransmissionPlantEoy000 > "{total_transmission_plant_eoy000_gt}"'
+            )
+        if total_transmission_plant_eoy000_gte is not None:
+            filter_params.append(
+                f'totalTransmissionPlantEoy000 >= "{total_transmission_plant_eoy000_gte}"'
+            )
+        if total_transmission_plant_eoy000_lt is not None:
+            filter_params.append(
+                f'totalTransmissionPlantEoy000 < "{total_transmission_plant_eoy000_lt}"'
+            )
+        if total_transmission_plant_eoy000_lte is not None:
+            filter_params.append(
+                f'totalTransmissionPlantEoy000 <= "{total_transmission_plant_eoy000_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("totalGasPlantInServiceEoy", total_gas_plant_in_service_eoy)
+        )
+        if total_gas_plant_in_service_eoy_gt is not None:
+            filter_params.append(
+                f'totalGasPlantInServiceEoy > "{total_gas_plant_in_service_eoy_gt}"'
+            )
+        if total_gas_plant_in_service_eoy_gte is not None:
+            filter_params.append(
+                f'totalGasPlantInServiceEoy >= "{total_gas_plant_in_service_eoy_gte}"'
+            )
+        if total_gas_plant_in_service_eoy_lt is not None:
+            filter_params.append(
+                f'totalGasPlantInServiceEoy < "{total_gas_plant_in_service_eoy_lt}"'
+            )
+        if total_gas_plant_in_service_eoy_lte is not None:
+            filter_params.append(
+                f'totalGasPlantInServiceEoy <= "{total_gas_plant_in_service_eoy_lte}"'
+            )
+        filter_params.append(list_to_filter("constrWipTotal", constr_wip_total))
+        if constr_wip_total_gt is not None:
+            filter_params.append(f'constrWipTotal > "{constr_wip_total_gt}"')
+        if constr_wip_total_gte is not None:
+            filter_params.append(f'constrWipTotal >= "{constr_wip_total_gte}"')
+        if constr_wip_total_lt is not None:
+            filter_params.append(f'constrWipTotal < "{constr_wip_total_lt}"')
+        if constr_wip_total_lte is not None:
+            filter_params.append(f'constrWipTotal <= "{constr_wip_total_lte}"')
+        filter_params.append(
+            list_to_filter("totalUtilityPlantTotal", total_utility_plant_total)
+        )
+        if total_utility_plant_total_gt is not None:
+            filter_params.append(
+                f'totalUtilityPlantTotal > "{total_utility_plant_total_gt}"'
+            )
+        if total_utility_plant_total_gte is not None:
+            filter_params.append(
+                f'totalUtilityPlantTotal >= "{total_utility_plant_total_gte}"'
+            )
+        if total_utility_plant_total_lt is not None:
+            filter_params.append(
+                f'totalUtilityPlantTotal < "{total_utility_plant_total_lt}"'
+            )
+        if total_utility_plant_total_lte is not None:
+            filter_params.append(
+                f'totalUtilityPlantTotal <= "{total_utility_plant_total_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("tranOpSupAndEngineering", tran_op_sup_and_engineering)
+        )
+        if tran_op_sup_and_engineering_gt is not None:
+            filter_params.append(
+                f'tranOpSupAndEngineering > "{tran_op_sup_and_engineering_gt}"'
+            )
+        if tran_op_sup_and_engineering_gte is not None:
+            filter_params.append(
+                f'tranOpSupAndEngineering >= "{tran_op_sup_and_engineering_gte}"'
+            )
+        if tran_op_sup_and_engineering_lt is not None:
+            filter_params.append(
+                f'tranOpSupAndEngineering < "{tran_op_sup_and_engineering_lt}"'
+            )
+        if tran_op_sup_and_engineering_lte is not None:
+            filter_params.append(
+                f'tranOpSupAndEngineering <= "{tran_op_sup_and_engineering_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("transmissOperLoadDispatch", transmiss_oper_load_dispatch)
+        )
+        if transmiss_oper_load_dispatch_gt is not None:
+            filter_params.append(
+                f'transmissOperLoadDispatch > "{transmiss_oper_load_dispatch_gt}"'
+            )
+        if transmiss_oper_load_dispatch_gte is not None:
+            filter_params.append(
+                f'transmissOperLoadDispatch >= "{transmiss_oper_load_dispatch_gte}"'
+            )
+        if transmiss_oper_load_dispatch_lt is not None:
+            filter_params.append(
+                f'transmissOperLoadDispatch < "{transmiss_oper_load_dispatch_lt}"'
+            )
+        if transmiss_oper_load_dispatch_lte is not None:
+            filter_params.append(
+                f'transmissOperLoadDispatch <= "{transmiss_oper_load_dispatch_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "operTransCommunicationSysExp", oper_trans_communication_sys_exp
+            )
+        )
+        if oper_trans_communication_sys_exp_gt is not None:
+            filter_params.append(
+                f'operTransCommunicationSysExp > "{oper_trans_communication_sys_exp_gt}"'
+            )
+        if oper_trans_communication_sys_exp_gte is not None:
+            filter_params.append(
+                f'operTransCommunicationSysExp >= "{oper_trans_communication_sys_exp_gte}"'
+            )
+        if oper_trans_communication_sys_exp_lt is not None:
+            filter_params.append(
+                f'operTransCommunicationSysExp < "{oper_trans_communication_sys_exp_lt}"'
+            )
+        if oper_trans_communication_sys_exp_lte is not None:
+            filter_params.append(
+                f'operTransCommunicationSysExp <= "{oper_trans_communication_sys_exp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "operTransComprStaLaborAndExp", oper_trans_compr_sta_labor_and_exp
+            )
+        )
+        if oper_trans_compr_sta_labor_and_exp_gt is not None:
+            filter_params.append(
+                f'operTransComprStaLaborAndExp > "{oper_trans_compr_sta_labor_and_exp_gt}"'
+            )
+        if oper_trans_compr_sta_labor_and_exp_gte is not None:
+            filter_params.append(
+                f'operTransComprStaLaborAndExp >= "{oper_trans_compr_sta_labor_and_exp_gte}"'
+            )
+        if oper_trans_compr_sta_labor_and_exp_lt is not None:
+            filter_params.append(
+                f'operTransComprStaLaborAndExp < "{oper_trans_compr_sta_labor_and_exp_lt}"'
+            )
+        if oper_trans_compr_sta_labor_and_exp_lte is not None:
+            filter_params.append(
+                f'operTransComprStaLaborAndExp <= "{oper_trans_compr_sta_labor_and_exp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "operTransGasForComprStFuel", oper_trans_gas_for_compr_st_fuel
+            )
+        )
+        if oper_trans_gas_for_compr_st_fuel_gt is not None:
+            filter_params.append(
+                f'operTransGasForComprStFuel > "{oper_trans_gas_for_compr_st_fuel_gt}"'
+            )
+        if oper_trans_gas_for_compr_st_fuel_gte is not None:
+            filter_params.append(
+                f'operTransGasForComprStFuel >= "{oper_trans_gas_for_compr_st_fuel_gte}"'
+            )
+        if oper_trans_gas_for_compr_st_fuel_lt is not None:
+            filter_params.append(
+                f'operTransGasForComprStFuel < "{oper_trans_gas_for_compr_st_fuel_lt}"'
+            )
+        if oper_trans_gas_for_compr_st_fuel_lte is not None:
+            filter_params.append(
+                f'operTransGasForComprStFuel <= "{oper_trans_gas_for_compr_st_fuel_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "operTransOthFuelAndPwrForComprSt",
+                oper_trans_oth_fuel_and_pwr_for_compr_st,
+            )
+        )
+        if oper_trans_oth_fuel_and_pwr_for_compr_st_gt is not None:
+            filter_params.append(
+                f'operTransOthFuelAndPwrForComprSt > "{oper_trans_oth_fuel_and_pwr_for_compr_st_gt}"'
+            )
+        if oper_trans_oth_fuel_and_pwr_for_compr_st_gte is not None:
+            filter_params.append(
+                f'operTransOthFuelAndPwrForComprSt >= "{oper_trans_oth_fuel_and_pwr_for_compr_st_gte}"'
+            )
+        if oper_trans_oth_fuel_and_pwr_for_compr_st_lt is not None:
+            filter_params.append(
+                f'operTransOthFuelAndPwrForComprSt < "{oper_trans_oth_fuel_and_pwr_for_compr_st_lt}"'
+            )
+        if oper_trans_oth_fuel_and_pwr_for_compr_st_lte is not None:
+            filter_params.append(
+                f'operTransOthFuelAndPwrForComprSt <= "{oper_trans_oth_fuel_and_pwr_for_compr_st_lte}"'
+            )
+        filter_params.append(list_to_filter("operTransMainsExp", oper_trans_mains_exp))
+        if oper_trans_mains_exp_gt is not None:
+            filter_params.append(f'operTransMainsExp > "{oper_trans_mains_exp_gt}"')
+        if oper_trans_mains_exp_gte is not None:
+            filter_params.append(f'operTransMainsExp >= "{oper_trans_mains_exp_gte}"')
+        if oper_trans_mains_exp_lt is not None:
+            filter_params.append(f'operTransMainsExp < "{oper_trans_mains_exp_lt}"')
+        if oper_trans_mains_exp_lte is not None:
+            filter_params.append(f'operTransMainsExp <= "{oper_trans_mains_exp_lte}"')
+        filter_params.append(
+            list_to_filter("operTransMeasAndRegStaExp", oper_trans_meas_and_reg_sta_exp)
+        )
+        if oper_trans_meas_and_reg_sta_exp_gt is not None:
+            filter_params.append(
+                f'operTransMeasAndRegStaExp > "{oper_trans_meas_and_reg_sta_exp_gt}"'
+            )
+        if oper_trans_meas_and_reg_sta_exp_gte is not None:
+            filter_params.append(
+                f'operTransMeasAndRegStaExp >= "{oper_trans_meas_and_reg_sta_exp_gte}"'
+            )
+        if oper_trans_meas_and_reg_sta_exp_lt is not None:
+            filter_params.append(
+                f'operTransMeasAndRegStaExp < "{oper_trans_meas_and_reg_sta_exp_lt}"'
+            )
+        if oper_trans_meas_and_reg_sta_exp_lte is not None:
+            filter_params.append(
+                f'operTransMeasAndRegStaExp <= "{oper_trans_meas_and_reg_sta_exp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "operTransTransmAndComprByOth", oper_trans_transm_and_compr_by_oth
+            )
+        )
+        if oper_trans_transm_and_compr_by_oth_gt is not None:
+            filter_params.append(
+                f'operTransTransmAndComprByOth > "{oper_trans_transm_and_compr_by_oth_gt}"'
+            )
+        if oper_trans_transm_and_compr_by_oth_gte is not None:
+            filter_params.append(
+                f'operTransTransmAndComprByOth >= "{oper_trans_transm_and_compr_by_oth_gte}"'
+            )
+        if oper_trans_transm_and_compr_by_oth_lt is not None:
+            filter_params.append(
+                f'operTransTransmAndComprByOth < "{oper_trans_transm_and_compr_by_oth_lt}"'
+            )
+        if oper_trans_transm_and_compr_by_oth_lte is not None:
+            filter_params.append(
+                f'operTransTransmAndComprByOth <= "{oper_trans_transm_and_compr_by_oth_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("tranOpMiscTransmissionExp", tran_op_misc_transmission_exp)
+        )
+        if tran_op_misc_transmission_exp_gt is not None:
+            filter_params.append(
+                f'tranOpMiscTransmissionExp > "{tran_op_misc_transmission_exp_gt}"'
+            )
+        if tran_op_misc_transmission_exp_gte is not None:
+            filter_params.append(
+                f'tranOpMiscTransmissionExp >= "{tran_op_misc_transmission_exp_gte}"'
+            )
+        if tran_op_misc_transmission_exp_lt is not None:
+            filter_params.append(
+                f'tranOpMiscTransmissionExp < "{tran_op_misc_transmission_exp_lt}"'
+            )
+        if tran_op_misc_transmission_exp_lte is not None:
+            filter_params.append(
+                f'tranOpMiscTransmissionExp <= "{tran_op_misc_transmission_exp_lte}"'
+            )
+        filter_params.append(list_to_filter("transmissOperRents", transmiss_oper_rents))
+        if transmiss_oper_rents_gt is not None:
+            filter_params.append(f'transmissOperRents > "{transmiss_oper_rents_gt}"')
+        if transmiss_oper_rents_gte is not None:
+            filter_params.append(f'transmissOperRents >= "{transmiss_oper_rents_gte}"')
+        if transmiss_oper_rents_lt is not None:
+            filter_params.append(f'transmissOperRents < "{transmiss_oper_rents_lt}"')
+        if transmiss_oper_rents_lte is not None:
+            filter_params.append(f'transmissOperRents <= "{transmiss_oper_rents_lte}"')
+        filter_params.append(
+            list_to_filter("transmissTranOperationExp", transmiss_tran_operation_exp)
+        )
+        if transmiss_tran_operation_exp_gt is not None:
+            filter_params.append(
+                f'transmissTranOperationExp > "{transmiss_tran_operation_exp_gt}"'
+            )
+        if transmiss_tran_operation_exp_gte is not None:
+            filter_params.append(
+                f'transmissTranOperationExp >= "{transmiss_tran_operation_exp_gte}"'
+            )
+        if transmiss_tran_operation_exp_lt is not None:
+            filter_params.append(
+                f'transmissTranOperationExp < "{transmiss_tran_operation_exp_lt}"'
+            )
+        if transmiss_tran_operation_exp_lte is not None:
+            filter_params.append(
+                f'transmissTranOperationExp <= "{transmiss_tran_operation_exp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "transmissMaintSupvsnAndEngin", transmiss_maint_supvsn_and_engin
+            )
+        )
+        if transmiss_maint_supvsn_and_engin_gt is not None:
+            filter_params.append(
+                f'transmissMaintSupvsnAndEngin > "{transmiss_maint_supvsn_and_engin_gt}"'
+            )
+        if transmiss_maint_supvsn_and_engin_gte is not None:
+            filter_params.append(
+                f'transmissMaintSupvsnAndEngin >= "{transmiss_maint_supvsn_and_engin_gte}"'
+            )
+        if transmiss_maint_supvsn_and_engin_lt is not None:
+            filter_params.append(
+                f'transmissMaintSupvsnAndEngin < "{transmiss_maint_supvsn_and_engin_lt}"'
+            )
+        if transmiss_maint_supvsn_and_engin_lte is not None:
+            filter_params.append(
+                f'transmissMaintSupvsnAndEngin <= "{transmiss_maint_supvsn_and_engin_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("transmissMaintOfStructures", transmiss_maint_of_structures)
+        )
+        if transmiss_maint_of_structures_gt is not None:
+            filter_params.append(
+                f'transmissMaintOfStructures > "{transmiss_maint_of_structures_gt}"'
+            )
+        if transmiss_maint_of_structures_gte is not None:
+            filter_params.append(
+                f'transmissMaintOfStructures >= "{transmiss_maint_of_structures_gte}"'
+            )
+        if transmiss_maint_of_structures_lt is not None:
+            filter_params.append(
+                f'transmissMaintOfStructures < "{transmiss_maint_of_structures_lt}"'
+            )
+        if transmiss_maint_of_structures_lte is not None:
+            filter_params.append(
+                f'transmissMaintOfStructures <= "{transmiss_maint_of_structures_lte}"'
+            )
+        filter_params.append(list_to_filter("maintTransMains", maint_trans_mains))
+        if maint_trans_mains_gt is not None:
+            filter_params.append(f'maintTransMains > "{maint_trans_mains_gt}"')
+        if maint_trans_mains_gte is not None:
+            filter_params.append(f'maintTransMains >= "{maint_trans_mains_gte}"')
+        if maint_trans_mains_lt is not None:
+            filter_params.append(f'maintTransMains < "{maint_trans_mains_lt}"')
+        if maint_trans_mains_lte is not None:
+            filter_params.append(f'maintTransMains <= "{maint_trans_mains_lte}"')
+        filter_params.append(
+            list_to_filter(
+                "maintTransCompressorStaEquip", maint_trans_compressor_sta_equip
+            )
+        )
+        if maint_trans_compressor_sta_equip_gt is not None:
+            filter_params.append(
+                f'maintTransCompressorStaEquip > "{maint_trans_compressor_sta_equip_gt}"'
+            )
+        if maint_trans_compressor_sta_equip_gte is not None:
+            filter_params.append(
+                f'maintTransCompressorStaEquip >= "{maint_trans_compressor_sta_equip_gte}"'
+            )
+        if maint_trans_compressor_sta_equip_lt is not None:
+            filter_params.append(
+                f'maintTransCompressorStaEquip < "{maint_trans_compressor_sta_equip_lt}"'
+            )
+        if maint_trans_compressor_sta_equip_lte is not None:
+            filter_params.append(
+                f'maintTransCompressorStaEquip <= "{maint_trans_compressor_sta_equip_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "maintTransMeasAndRegStaEquip", maint_trans_meas_and_reg_sta_equip
+            )
+        )
+        if maint_trans_meas_and_reg_sta_equip_gt is not None:
+            filter_params.append(
+                f'maintTransMeasAndRegStaEquip > "{maint_trans_meas_and_reg_sta_equip_gt}"'
+            )
+        if maint_trans_meas_and_reg_sta_equip_gte is not None:
+            filter_params.append(
+                f'maintTransMeasAndRegStaEquip >= "{maint_trans_meas_and_reg_sta_equip_gte}"'
+            )
+        if maint_trans_meas_and_reg_sta_equip_lt is not None:
+            filter_params.append(
+                f'maintTransMeasAndRegStaEquip < "{maint_trans_meas_and_reg_sta_equip_lt}"'
+            )
+        if maint_trans_meas_and_reg_sta_equip_lte is not None:
+            filter_params.append(
+                f'maintTransMeasAndRegStaEquip <= "{maint_trans_meas_and_reg_sta_equip_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "maintTransCommunicationEquip", maint_trans_communication_equip
+            )
+        )
+        if maint_trans_communication_equip_gt is not None:
+            filter_params.append(
+                f'maintTransCommunicationEquip > "{maint_trans_communication_equip_gt}"'
+            )
+        if maint_trans_communication_equip_gte is not None:
+            filter_params.append(
+                f'maintTransCommunicationEquip >= "{maint_trans_communication_equip_gte}"'
+            )
+        if maint_trans_communication_equip_lt is not None:
+            filter_params.append(
+                f'maintTransCommunicationEquip < "{maint_trans_communication_equip_lt}"'
+            )
+        if maint_trans_communication_equip_lte is not None:
+            filter_params.append(
+                f'maintTransCommunicationEquip <= "{maint_trans_communication_equip_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "transmissMaintOfMiscTranPlt", transmiss_maint_of_misc_tran_plt
+            )
+        )
+        if transmiss_maint_of_misc_tran_plt_gt is not None:
+            filter_params.append(
+                f'transmissMaintOfMiscTranPlt > "{transmiss_maint_of_misc_tran_plt_gt}"'
+            )
+        if transmiss_maint_of_misc_tran_plt_gte is not None:
+            filter_params.append(
+                f'transmissMaintOfMiscTranPlt >= "{transmiss_maint_of_misc_tran_plt_gte}"'
+            )
+        if transmiss_maint_of_misc_tran_plt_lt is not None:
+            filter_params.append(
+                f'transmissMaintOfMiscTranPlt < "{transmiss_maint_of_misc_tran_plt_lt}"'
+            )
+        if transmiss_maint_of_misc_tran_plt_lte is not None:
+            filter_params.append(
+                f'transmissMaintOfMiscTranPlt <= "{transmiss_maint_of_misc_tran_plt_lte}"'
+            )
+        filter_params.append(list_to_filter("transmissMaintExp", transmiss_maint_exp))
+        if transmiss_maint_exp_gt is not None:
+            filter_params.append(f'transmissMaintExp > "{transmiss_maint_exp_gt}"')
+        if transmiss_maint_exp_gte is not None:
+            filter_params.append(f'transmissMaintExp >= "{transmiss_maint_exp_gte}"')
+        if transmiss_maint_exp_lt is not None:
+            filter_params.append(f'transmissMaintExp < "{transmiss_maint_exp_lt}"')
+        if transmiss_maint_exp_lte is not None:
+            filter_params.append(f'transmissMaintExp <= "{transmiss_maint_exp_lte}"')
+        filter_params.append(list_to_filter("transmissOandMexp", transmiss_oand_mexp))
+        if transmiss_oand_mexp_gt is not None:
+            filter_params.append(f'transmissOandMexp > "{transmiss_oand_mexp_gt}"')
+        if transmiss_oand_mexp_gte is not None:
+            filter_params.append(f'transmissOandMexp >= "{transmiss_oand_mexp_gte}"')
+        if transmiss_oand_mexp_lt is not None:
+            filter_params.append(f'transmissOandMexp < "{transmiss_oand_mexp_lt}"')
+        if transmiss_oand_mexp_lte is not None:
+            filter_params.append(f'transmissOandMexp <= "{transmiss_oand_mexp_lte}"')
+        filter_params.append(
+            list_to_filter(
+                "peak1IntPipeNoNoticeTransp", peak1_int_pipe_no_notice_transp
+            )
+        )
+        if peak1_int_pipe_no_notice_transp_gt is not None:
+            filter_params.append(
+                f'peak1IntPipeNoNoticeTransp > "{peak1_int_pipe_no_notice_transp_gt}"'
+            )
+        if peak1_int_pipe_no_notice_transp_gte is not None:
+            filter_params.append(
+                f'peak1IntPipeNoNoticeTransp >= "{peak1_int_pipe_no_notice_transp_gte}"'
+            )
+        if peak1_int_pipe_no_notice_transp_lt is not None:
+            filter_params.append(
+                f'peak1IntPipeNoNoticeTransp < "{peak1_int_pipe_no_notice_transp_lt}"'
+            )
+        if peak1_int_pipe_no_notice_transp_lte is not None:
+            filter_params.append(
+                f'peak1IntPipeNoNoticeTransp <= "{peak1_int_pipe_no_notice_transp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak1OthDthNoNoticeTransport", peak1_oth_dth_no_notice_transport
+            )
+        )
+        if peak1_oth_dth_no_notice_transport_gt is not None:
+            filter_params.append(
+                f'peak1OthDthNoNoticeTransport > "{peak1_oth_dth_no_notice_transport_gt}"'
+            )
+        if peak1_oth_dth_no_notice_transport_gte is not None:
+            filter_params.append(
+                f'peak1OthDthNoNoticeTransport >= "{peak1_oth_dth_no_notice_transport_gte}"'
+            )
+        if peak1_oth_dth_no_notice_transport_lt is not None:
+            filter_params.append(
+                f'peak1OthDthNoNoticeTransport < "{peak1_oth_dth_no_notice_transport_lt}"'
+            )
+        if peak1_oth_dth_no_notice_transport_lte is not None:
+            filter_params.append(
+                f'peak1OthDthNoNoticeTransport <= "{peak1_oth_dth_no_notice_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak1TotalDthNoNoticeTransp", peak1_total_dth_no_notice_transp
+            )
+        )
+        if peak1_total_dth_no_notice_transp_gt is not None:
+            filter_params.append(
+                f'peak1TotalDthNoNoticeTransp > "{peak1_total_dth_no_notice_transp_gt}"'
+            )
+        if peak1_total_dth_no_notice_transp_gte is not None:
+            filter_params.append(
+                f'peak1TotalDthNoNoticeTransp >= "{peak1_total_dth_no_notice_transp_gte}"'
+            )
+        if peak1_total_dth_no_notice_transp_lt is not None:
+            filter_params.append(
+                f'peak1TotalDthNoNoticeTransp < "{peak1_total_dth_no_notice_transp_lt}"'
+            )
+        if peak1_total_dth_no_notice_transp_lte is not None:
+            filter_params.append(
+                f'peak1TotalDthNoNoticeTransp <= "{peak1_total_dth_no_notice_transp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak1IntPipeDthOthFirmTransp", peak1_int_pipe_dth_oth_firm_transp
+            )
+        )
+        if peak1_int_pipe_dth_oth_firm_transp_gt is not None:
+            filter_params.append(
+                f'peak1IntPipeDthOthFirmTransp > "{peak1_int_pipe_dth_oth_firm_transp_gt}"'
+            )
+        if peak1_int_pipe_dth_oth_firm_transp_gte is not None:
+            filter_params.append(
+                f'peak1IntPipeDthOthFirmTransp >= "{peak1_int_pipe_dth_oth_firm_transp_gte}"'
+            )
+        if peak1_int_pipe_dth_oth_firm_transp_lt is not None:
+            filter_params.append(
+                f'peak1IntPipeDthOthFirmTransp < "{peak1_int_pipe_dth_oth_firm_transp_lt}"'
+            )
+        if peak1_int_pipe_dth_oth_firm_transp_lte is not None:
+            filter_params.append(
+                f'peak1IntPipeDthOthFirmTransp <= "{peak1_int_pipe_dth_oth_firm_transp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak1OthDthOtherFirmTransport", peak1_oth_dth_other_firm_transport
+            )
+        )
+        if peak1_oth_dth_other_firm_transport_gt is not None:
+            filter_params.append(
+                f'peak1OthDthOtherFirmTransport > "{peak1_oth_dth_other_firm_transport_gt}"'
+            )
+        if peak1_oth_dth_other_firm_transport_gte is not None:
+            filter_params.append(
+                f'peak1OthDthOtherFirmTransport >= "{peak1_oth_dth_other_firm_transport_gte}"'
+            )
+        if peak1_oth_dth_other_firm_transport_lt is not None:
+            filter_params.append(
+                f'peak1OthDthOtherFirmTransport < "{peak1_oth_dth_other_firm_transport_lt}"'
+            )
+        if peak1_oth_dth_other_firm_transport_lte is not None:
+            filter_params.append(
+                f'peak1OthDthOtherFirmTransport <= "{peak1_oth_dth_other_firm_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak1TotalDthOthFirmTransport", peak1_total_dth_oth_firm_transport
+            )
+        )
+        if peak1_total_dth_oth_firm_transport_gt is not None:
+            filter_params.append(
+                f'peak1TotalDthOthFirmTransport > "{peak1_total_dth_oth_firm_transport_gt}"'
+            )
+        if peak1_total_dth_oth_firm_transport_gte is not None:
+            filter_params.append(
+                f'peak1TotalDthOthFirmTransport >= "{peak1_total_dth_oth_firm_transport_gte}"'
+            )
+        if peak1_total_dth_oth_firm_transport_lt is not None:
+            filter_params.append(
+                f'peak1TotalDthOthFirmTransport < "{peak1_total_dth_oth_firm_transport_lt}"'
+            )
+        if peak1_total_dth_oth_firm_transport_lte is not None:
+            filter_params.append(
+                f'peak1TotalDthOthFirmTransport <= "{peak1_total_dth_oth_firm_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak1IntPipeDthInterrTransp", peak1_int_pipe_dth_interr_transp
+            )
+        )
+        if peak1_int_pipe_dth_interr_transp_gt is not None:
+            filter_params.append(
+                f'peak1IntPipeDthInterrTransp > "{peak1_int_pipe_dth_interr_transp_gt}"'
+            )
+        if peak1_int_pipe_dth_interr_transp_gte is not None:
+            filter_params.append(
+                f'peak1IntPipeDthInterrTransp >= "{peak1_int_pipe_dth_interr_transp_gte}"'
+            )
+        if peak1_int_pipe_dth_interr_transp_lt is not None:
+            filter_params.append(
+                f'peak1IntPipeDthInterrTransp < "{peak1_int_pipe_dth_interr_transp_lt}"'
+            )
+        if peak1_int_pipe_dth_interr_transp_lte is not None:
+            filter_params.append(
+                f'peak1IntPipeDthInterrTransp <= "{peak1_int_pipe_dth_interr_transp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("peak1OthDthInterrTransport", peak1_oth_dth_interr_transport)
+        )
+        if peak1_oth_dth_interr_transport_gt is not None:
+            filter_params.append(
+                f'peak1OthDthInterrTransport > "{peak1_oth_dth_interr_transport_gt}"'
+            )
+        if peak1_oth_dth_interr_transport_gte is not None:
+            filter_params.append(
+                f'peak1OthDthInterrTransport >= "{peak1_oth_dth_interr_transport_gte}"'
+            )
+        if peak1_oth_dth_interr_transport_lt is not None:
+            filter_params.append(
+                f'peak1OthDthInterrTransport < "{peak1_oth_dth_interr_transport_lt}"'
+            )
+        if peak1_oth_dth_interr_transport_lte is not None:
+            filter_params.append(
+                f'peak1OthDthInterrTransport <= "{peak1_oth_dth_interr_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak1TotalDthInterrTransport", peak1_total_dth_interr_transport
+            )
+        )
+        if peak1_total_dth_interr_transport_gt is not None:
+            filter_params.append(
+                f'peak1TotalDthInterrTransport > "{peak1_total_dth_interr_transport_gt}"'
+            )
+        if peak1_total_dth_interr_transport_gte is not None:
+            filter_params.append(
+                f'peak1TotalDthInterrTransport >= "{peak1_total_dth_interr_transport_gte}"'
+            )
+        if peak1_total_dth_interr_transport_lt is not None:
+            filter_params.append(
+                f'peak1TotalDthInterrTransport < "{peak1_total_dth_interr_transport_lt}"'
+            )
+        if peak1_total_dth_interr_transport_lte is not None:
+            filter_params.append(
+                f'peak1TotalDthInterrTransport <= "{peak1_total_dth_interr_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("peak1IntPipeDthOthTransp", peak1_int_pipe_dth_oth_transp)
+        )
+        if peak1_int_pipe_dth_oth_transp_gt is not None:
+            filter_params.append(
+                f'peak1IntPipeDthOthTransp > "{peak1_int_pipe_dth_oth_transp_gt}"'
+            )
+        if peak1_int_pipe_dth_oth_transp_gte is not None:
+            filter_params.append(
+                f'peak1IntPipeDthOthTransp >= "{peak1_int_pipe_dth_oth_transp_gte}"'
+            )
+        if peak1_int_pipe_dth_oth_transp_lt is not None:
+            filter_params.append(
+                f'peak1IntPipeDthOthTransp < "{peak1_int_pipe_dth_oth_transp_lt}"'
+            )
+        if peak1_int_pipe_dth_oth_transp_lte is not None:
+            filter_params.append(
+                f'peak1IntPipeDthOthTransp <= "{peak1_int_pipe_dth_oth_transp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("peak1OthDthOtherTransport", peak1_oth_dth_other_transport)
+        )
+        if peak1_oth_dth_other_transport_gt is not None:
+            filter_params.append(
+                f'peak1OthDthOtherTransport > "{peak1_oth_dth_other_transport_gt}"'
+            )
+        if peak1_oth_dth_other_transport_gte is not None:
+            filter_params.append(
+                f'peak1OthDthOtherTransport >= "{peak1_oth_dth_other_transport_gte}"'
+            )
+        if peak1_oth_dth_other_transport_lt is not None:
+            filter_params.append(
+                f'peak1OthDthOtherTransport < "{peak1_oth_dth_other_transport_lt}"'
+            )
+        if peak1_oth_dth_other_transport_lte is not None:
+            filter_params.append(
+                f'peak1OthDthOtherTransport <= "{peak1_oth_dth_other_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("peak1TotalDthOthTransport", peak1_total_dth_oth_transport)
+        )
+        if peak1_total_dth_oth_transport_gt is not None:
+            filter_params.append(
+                f'peak1TotalDthOthTransport > "{peak1_total_dth_oth_transport_gt}"'
+            )
+        if peak1_total_dth_oth_transport_gte is not None:
+            filter_params.append(
+                f'peak1TotalDthOthTransport >= "{peak1_total_dth_oth_transport_gte}"'
+            )
+        if peak1_total_dth_oth_transport_lt is not None:
+            filter_params.append(
+                f'peak1TotalDthOthTransport < "{peak1_total_dth_oth_transport_lt}"'
+            )
+        if peak1_total_dth_oth_transport_lte is not None:
+            filter_params.append(
+                f'peak1TotalDthOthTransport <= "{peak1_total_dth_oth_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("peak1IntPipeDthTransp", peak1_int_pipe_dth_transp)
+        )
+        if peak1_int_pipe_dth_transp_gt is not None:
+            filter_params.append(
+                f'peak1IntPipeDthTransp > "{peak1_int_pipe_dth_transp_gt}"'
+            )
+        if peak1_int_pipe_dth_transp_gte is not None:
+            filter_params.append(
+                f'peak1IntPipeDthTransp >= "{peak1_int_pipe_dth_transp_gte}"'
+            )
+        if peak1_int_pipe_dth_transp_lt is not None:
+            filter_params.append(
+                f'peak1IntPipeDthTransp < "{peak1_int_pipe_dth_transp_lt}"'
+            )
+        if peak1_int_pipe_dth_transp_lte is not None:
+            filter_params.append(
+                f'peak1IntPipeDthTransp <= "{peak1_int_pipe_dth_transp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("peak1OthDthTransport", peak1_oth_dth_transport)
+        )
+        if peak1_oth_dth_transport_gt is not None:
+            filter_params.append(
+                f'peak1OthDthTransport > "{peak1_oth_dth_transport_gt}"'
+            )
+        if peak1_oth_dth_transport_gte is not None:
+            filter_params.append(
+                f'peak1OthDthTransport >= "{peak1_oth_dth_transport_gte}"'
+            )
+        if peak1_oth_dth_transport_lt is not None:
+            filter_params.append(
+                f'peak1OthDthTransport < "{peak1_oth_dth_transport_lt}"'
+            )
+        if peak1_oth_dth_transport_lte is not None:
+            filter_params.append(
+                f'peak1OthDthTransport <= "{peak1_oth_dth_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("peak1TotalDthTransport", peak1_total_dth_transport)
+        )
+        if peak1_total_dth_transport_gt is not None:
+            filter_params.append(
+                f'peak1TotalDthTransport > "{peak1_total_dth_transport_gt}"'
+            )
+        if peak1_total_dth_transport_gte is not None:
+            filter_params.append(
+                f'peak1TotalDthTransport >= "{peak1_total_dth_transport_gte}"'
+            )
+        if peak1_total_dth_transport_lt is not None:
+            filter_params.append(
+                f'peak1TotalDthTransport < "{peak1_total_dth_transport_lt}"'
+            )
+        if peak1_total_dth_transport_lte is not None:
+            filter_params.append(
+                f'peak1TotalDthTransport <= "{peak1_total_dth_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak3IntPipeNoNoticeTransp", peak3_int_pipe_no_notice_transp
+            )
+        )
+        if peak3_int_pipe_no_notice_transp_gt is not None:
+            filter_params.append(
+                f'peak3IntPipeNoNoticeTransp > "{peak3_int_pipe_no_notice_transp_gt}"'
+            )
+        if peak3_int_pipe_no_notice_transp_gte is not None:
+            filter_params.append(
+                f'peak3IntPipeNoNoticeTransp >= "{peak3_int_pipe_no_notice_transp_gte}"'
+            )
+        if peak3_int_pipe_no_notice_transp_lt is not None:
+            filter_params.append(
+                f'peak3IntPipeNoNoticeTransp < "{peak3_int_pipe_no_notice_transp_lt}"'
+            )
+        if peak3_int_pipe_no_notice_transp_lte is not None:
+            filter_params.append(
+                f'peak3IntPipeNoNoticeTransp <= "{peak3_int_pipe_no_notice_transp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("peak3OthNoNoticeTransport", peak3_oth_no_notice_transport)
+        )
+        if peak3_oth_no_notice_transport_gt is not None:
+            filter_params.append(
+                f'peak3OthNoNoticeTransport > "{peak3_oth_no_notice_transport_gt}"'
+            )
+        if peak3_oth_no_notice_transport_gte is not None:
+            filter_params.append(
+                f'peak3OthNoNoticeTransport >= "{peak3_oth_no_notice_transport_gte}"'
+            )
+        if peak3_oth_no_notice_transport_lt is not None:
+            filter_params.append(
+                f'peak3OthNoNoticeTransport < "{peak3_oth_no_notice_transport_lt}"'
+            )
+        if peak3_oth_no_notice_transport_lte is not None:
+            filter_params.append(
+                f'peak3OthNoNoticeTransport <= "{peak3_oth_no_notice_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak3TotalNoNoticeTransport", peak3_total_no_notice_transport
+            )
+        )
+        if peak3_total_no_notice_transport_gt is not None:
+            filter_params.append(
+                f'peak3TotalNoNoticeTransport > "{peak3_total_no_notice_transport_gt}"'
+            )
+        if peak3_total_no_notice_transport_gte is not None:
+            filter_params.append(
+                f'peak3TotalNoNoticeTransport >= "{peak3_total_no_notice_transport_gte}"'
+            )
+        if peak3_total_no_notice_transport_lt is not None:
+            filter_params.append(
+                f'peak3TotalNoNoticeTransport < "{peak3_total_no_notice_transport_lt}"'
+            )
+        if peak3_total_no_notice_transport_lte is not None:
+            filter_params.append(
+                f'peak3TotalNoNoticeTransport <= "{peak3_total_no_notice_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak3IntPipeDthOthFirmTransp", peak3_int_pipe_dth_oth_firm_transp
+            )
+        )
+        if peak3_int_pipe_dth_oth_firm_transp_gt is not None:
+            filter_params.append(
+                f'peak3IntPipeDthOthFirmTransp > "{peak3_int_pipe_dth_oth_firm_transp_gt}"'
+            )
+        if peak3_int_pipe_dth_oth_firm_transp_gte is not None:
+            filter_params.append(
+                f'peak3IntPipeDthOthFirmTransp >= "{peak3_int_pipe_dth_oth_firm_transp_gte}"'
+            )
+        if peak3_int_pipe_dth_oth_firm_transp_lt is not None:
+            filter_params.append(
+                f'peak3IntPipeDthOthFirmTransp < "{peak3_int_pipe_dth_oth_firm_transp_lt}"'
+            )
+        if peak3_int_pipe_dth_oth_firm_transp_lte is not None:
+            filter_params.append(
+                f'peak3IntPipeDthOthFirmTransp <= "{peak3_int_pipe_dth_oth_firm_transp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak3OthDthOtherFirmTransport", peak3_oth_dth_other_firm_transport
+            )
+        )
+        if peak3_oth_dth_other_firm_transport_gt is not None:
+            filter_params.append(
+                f'peak3OthDthOtherFirmTransport > "{peak3_oth_dth_other_firm_transport_gt}"'
+            )
+        if peak3_oth_dth_other_firm_transport_gte is not None:
+            filter_params.append(
+                f'peak3OthDthOtherFirmTransport >= "{peak3_oth_dth_other_firm_transport_gte}"'
+            )
+        if peak3_oth_dth_other_firm_transport_lt is not None:
+            filter_params.append(
+                f'peak3OthDthOtherFirmTransport < "{peak3_oth_dth_other_firm_transport_lt}"'
+            )
+        if peak3_oth_dth_other_firm_transport_lte is not None:
+            filter_params.append(
+                f'peak3OthDthOtherFirmTransport <= "{peak3_oth_dth_other_firm_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak3TotalDthOthFirmTransp", peak3_total_dth_oth_firm_transp
+            )
+        )
+        if peak3_total_dth_oth_firm_transp_gt is not None:
+            filter_params.append(
+                f'peak3TotalDthOthFirmTransp > "{peak3_total_dth_oth_firm_transp_gt}"'
+            )
+        if peak3_total_dth_oth_firm_transp_gte is not None:
+            filter_params.append(
+                f'peak3TotalDthOthFirmTransp >= "{peak3_total_dth_oth_firm_transp_gte}"'
+            )
+        if peak3_total_dth_oth_firm_transp_lt is not None:
+            filter_params.append(
+                f'peak3TotalDthOthFirmTransp < "{peak3_total_dth_oth_firm_transp_lt}"'
+            )
+        if peak3_total_dth_oth_firm_transp_lte is not None:
+            filter_params.append(
+                f'peak3TotalDthOthFirmTransp <= "{peak3_total_dth_oth_firm_transp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak3IntPipeDthInterrTransp", peak3_int_pipe_dth_interr_transp
+            )
+        )
+        if peak3_int_pipe_dth_interr_transp_gt is not None:
+            filter_params.append(
+                f'peak3IntPipeDthInterrTransp > "{peak3_int_pipe_dth_interr_transp_gt}"'
+            )
+        if peak3_int_pipe_dth_interr_transp_gte is not None:
+            filter_params.append(
+                f'peak3IntPipeDthInterrTransp >= "{peak3_int_pipe_dth_interr_transp_gte}"'
+            )
+        if peak3_int_pipe_dth_interr_transp_lt is not None:
+            filter_params.append(
+                f'peak3IntPipeDthInterrTransp < "{peak3_int_pipe_dth_interr_transp_lt}"'
+            )
+        if peak3_int_pipe_dth_interr_transp_lte is not None:
+            filter_params.append(
+                f'peak3IntPipeDthInterrTransp <= "{peak3_int_pipe_dth_interr_transp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("peak3OthDthInterrTransport", peak3_oth_dth_interr_transport)
+        )
+        if peak3_oth_dth_interr_transport_gt is not None:
+            filter_params.append(
+                f'peak3OthDthInterrTransport > "{peak3_oth_dth_interr_transport_gt}"'
+            )
+        if peak3_oth_dth_interr_transport_gte is not None:
+            filter_params.append(
+                f'peak3OthDthInterrTransport >= "{peak3_oth_dth_interr_transport_gte}"'
+            )
+        if peak3_oth_dth_interr_transport_lt is not None:
+            filter_params.append(
+                f'peak3OthDthInterrTransport < "{peak3_oth_dth_interr_transport_lt}"'
+            )
+        if peak3_oth_dth_interr_transport_lte is not None:
+            filter_params.append(
+                f'peak3OthDthInterrTransport <= "{peak3_oth_dth_interr_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak3TotalDthInterrTransport", peak3_total_dth_interr_transport
+            )
+        )
+        if peak3_total_dth_interr_transport_gt is not None:
+            filter_params.append(
+                f'peak3TotalDthInterrTransport > "{peak3_total_dth_interr_transport_gt}"'
+            )
+        if peak3_total_dth_interr_transport_gte is not None:
+            filter_params.append(
+                f'peak3TotalDthInterrTransport >= "{peak3_total_dth_interr_transport_gte}"'
+            )
+        if peak3_total_dth_interr_transport_lt is not None:
+            filter_params.append(
+                f'peak3TotalDthInterrTransport < "{peak3_total_dth_interr_transport_lt}"'
+            )
+        if peak3_total_dth_interr_transport_lte is not None:
+            filter_params.append(
+                f'peak3TotalDthInterrTransport <= "{peak3_total_dth_interr_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("peak3IntPipeDthOthTransp", peak3_int_pipe_dth_oth_transp)
+        )
+        if peak3_int_pipe_dth_oth_transp_gt is not None:
+            filter_params.append(
+                f'peak3IntPipeDthOthTransp > "{peak3_int_pipe_dth_oth_transp_gt}"'
+            )
+        if peak3_int_pipe_dth_oth_transp_gte is not None:
+            filter_params.append(
+                f'peak3IntPipeDthOthTransp >= "{peak3_int_pipe_dth_oth_transp_gte}"'
+            )
+        if peak3_int_pipe_dth_oth_transp_lt is not None:
+            filter_params.append(
+                f'peak3IntPipeDthOthTransp < "{peak3_int_pipe_dth_oth_transp_lt}"'
+            )
+        if peak3_int_pipe_dth_oth_transp_lte is not None:
+            filter_params.append(
+                f'peak3IntPipeDthOthTransp <= "{peak3_int_pipe_dth_oth_transp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("peak3OthDthOtherTransport", peak3_oth_dth_other_transport)
+        )
+        if peak3_oth_dth_other_transport_gt is not None:
+            filter_params.append(
+                f'peak3OthDthOtherTransport > "{peak3_oth_dth_other_transport_gt}"'
+            )
+        if peak3_oth_dth_other_transport_gte is not None:
+            filter_params.append(
+                f'peak3OthDthOtherTransport >= "{peak3_oth_dth_other_transport_gte}"'
+            )
+        if peak3_oth_dth_other_transport_lt is not None:
+            filter_params.append(
+                f'peak3OthDthOtherTransport < "{peak3_oth_dth_other_transport_lt}"'
+            )
+        if peak3_oth_dth_other_transport_lte is not None:
+            filter_params.append(
+                f'peak3OthDthOtherTransport <= "{peak3_oth_dth_other_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "peak3TotalDthOtherTransport", peak3_total_dth_other_transport
+            )
+        )
+        if peak3_total_dth_other_transport_gt is not None:
+            filter_params.append(
+                f'peak3TotalDthOtherTransport > "{peak3_total_dth_other_transport_gt}"'
+            )
+        if peak3_total_dth_other_transport_gte is not None:
+            filter_params.append(
+                f'peak3TotalDthOtherTransport >= "{peak3_total_dth_other_transport_gte}"'
+            )
+        if peak3_total_dth_other_transport_lt is not None:
+            filter_params.append(
+                f'peak3TotalDthOtherTransport < "{peak3_total_dth_other_transport_lt}"'
+            )
+        if peak3_total_dth_other_transport_lte is not None:
+            filter_params.append(
+                f'peak3TotalDthOtherTransport <= "{peak3_total_dth_other_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("peak3IntPipeDthTransp", peak3_int_pipe_dth_transp)
+        )
+        if peak3_int_pipe_dth_transp_gt is not None:
+            filter_params.append(
+                f'peak3IntPipeDthTransp > "{peak3_int_pipe_dth_transp_gt}"'
+            )
+        if peak3_int_pipe_dth_transp_gte is not None:
+            filter_params.append(
+                f'peak3IntPipeDthTransp >= "{peak3_int_pipe_dth_transp_gte}"'
+            )
+        if peak3_int_pipe_dth_transp_lt is not None:
+            filter_params.append(
+                f'peak3IntPipeDthTransp < "{peak3_int_pipe_dth_transp_lt}"'
+            )
+        if peak3_int_pipe_dth_transp_lte is not None:
+            filter_params.append(
+                f'peak3IntPipeDthTransp <= "{peak3_int_pipe_dth_transp_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("peak3OthDthTransport", peak3_oth_dth_transport)
+        )
+        if peak3_oth_dth_transport_gt is not None:
+            filter_params.append(
+                f'peak3OthDthTransport > "{peak3_oth_dth_transport_gt}"'
+            )
+        if peak3_oth_dth_transport_gte is not None:
+            filter_params.append(
+                f'peak3OthDthTransport >= "{peak3_oth_dth_transport_gte}"'
+            )
+        if peak3_oth_dth_transport_lt is not None:
+            filter_params.append(
+                f'peak3OthDthTransport < "{peak3_oth_dth_transport_lt}"'
+            )
+        if peak3_oth_dth_transport_lte is not None:
+            filter_params.append(
+                f'peak3OthDthTransport <= "{peak3_oth_dth_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("peak3TotalDthTransport", peak3_total_dth_transport)
+        )
+        if peak3_total_dth_transport_gt is not None:
+            filter_params.append(
+                f'peak3TotalDthTransport > "{peak3_total_dth_transport_gt}"'
+            )
+        if peak3_total_dth_transport_gte is not None:
+            filter_params.append(
+                f'peak3TotalDthTransport >= "{peak3_total_dth_transport_gte}"'
+            )
+        if peak3_total_dth_transport_lt is not None:
+            filter_params.append(
+                f'peak3TotalDthTransport < "{peak3_total_dth_transport_lt}"'
+            )
+        if peak3_total_dth_transport_lte is not None:
+            filter_params.append(
+                f'peak3TotalDthTransport <= "{peak3_total_dth_transport_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("gasOfOthRecdForGathering", gas_of_oth_recd_for_gathering)
+        )
+        if gas_of_oth_recd_for_gathering_gt is not None:
+            filter_params.append(
+                f'gasOfOthRecdForGathering > "{gas_of_oth_recd_for_gathering_gt}"'
+            )
+        if gas_of_oth_recd_for_gathering_gte is not None:
+            filter_params.append(
+                f'gasOfOthRecdForGathering >= "{gas_of_oth_recd_for_gathering_gte}"'
+            )
+        if gas_of_oth_recd_for_gathering_lt is not None:
+            filter_params.append(
+                f'gasOfOthRecdForGathering < "{gas_of_oth_recd_for_gathering_lt}"'
+            )
+        if gas_of_oth_recd_for_gathering_lte is not None:
+            filter_params.append(
+                f'gasOfOthRecdForGathering <= "{gas_of_oth_recd_for_gathering_lte}"'
+            )
+        filter_params.append(list_to_filter("reciepts", reciepts))
+        if reciepts_gt is not None:
+            filter_params.append(f'reciepts > "{reciepts_gt}"')
+        if reciepts_gte is not None:
+            filter_params.append(f'reciepts >= "{reciepts_gte}"')
+        if reciepts_lt is not None:
+            filter_params.append(f'reciepts < "{reciepts_lt}"')
+        if reciepts_lte is not None:
+            filter_params.append(f'reciepts <= "{reciepts_lte}"')
+        filter_params.append(
+            list_to_filter("delivOfGasTransOrComprOth", deliv_of_gas_trans_or_compr_oth)
+        )
+        if deliv_of_gas_trans_or_compr_oth_gt is not None:
+            filter_params.append(
+                f'delivOfGasTransOrComprOth > "{deliv_of_gas_trans_or_compr_oth_gt}"'
+            )
+        if deliv_of_gas_trans_or_compr_oth_gte is not None:
+            filter_params.append(
+                f'delivOfGasTransOrComprOth >= "{deliv_of_gas_trans_or_compr_oth_gte}"'
+            )
+        if deliv_of_gas_trans_or_compr_oth_lt is not None:
+            filter_params.append(
+                f'delivOfGasTransOrComprOth < "{deliv_of_gas_trans_or_compr_oth_lt}"'
+            )
+        if deliv_of_gas_trans_or_compr_oth_lte is not None:
+            filter_params.append(
+                f'delivOfGasTransOrComprOth <= "{deliv_of_gas_trans_or_compr_oth_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("gasDeliveredAsImbalances", gas_delivered_as_imbalances)
+        )
+        if gas_delivered_as_imbalances_gt is not None:
+            filter_params.append(
+                f'gasDeliveredAsImbalances > "{gas_delivered_as_imbalances_gt}"'
+            )
+        if gas_delivered_as_imbalances_gte is not None:
+            filter_params.append(
+                f'gasDeliveredAsImbalances >= "{gas_delivered_as_imbalances_gte}"'
+            )
+        if gas_delivered_as_imbalances_lt is not None:
+            filter_params.append(
+                f'gasDeliveredAsImbalances < "{gas_delivered_as_imbalances_lt}"'
+            )
+        if gas_delivered_as_imbalances_lte is not None:
+            filter_params.append(
+                f'gasDeliveredAsImbalances <= "{gas_delivered_as_imbalances_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "gasUsedForCompressorStaFuel", gas_used_for_compressor_sta_fuel
+            )
+        )
+        if gas_used_for_compressor_sta_fuel_gt is not None:
+            filter_params.append(
+                f'gasUsedForCompressorStaFuel > "{gas_used_for_compressor_sta_fuel_gt}"'
+            )
+        if gas_used_for_compressor_sta_fuel_gte is not None:
+            filter_params.append(
+                f'gasUsedForCompressorStaFuel >= "{gas_used_for_compressor_sta_fuel_gte}"'
+            )
+        if gas_used_for_compressor_sta_fuel_lt is not None:
+            filter_params.append(
+                f'gasUsedForCompressorStaFuel < "{gas_used_for_compressor_sta_fuel_lt}"'
+            )
+        if gas_used_for_compressor_sta_fuel_lte is not None:
+            filter_params.append(
+                f'gasUsedForCompressorStaFuel <= "{gas_used_for_compressor_sta_fuel_lte}"'
+            )
+        filter_params.append(list_to_filter("natGasOtherDeliv", nat_gas_other_deliv))
+        if nat_gas_other_deliv_gt is not None:
+            filter_params.append(f'natGasOtherDeliv > "{nat_gas_other_deliv_gt}"')
+        if nat_gas_other_deliv_gte is not None:
+            filter_params.append(f'natGasOtherDeliv >= "{nat_gas_other_deliv_gte}"')
+        if nat_gas_other_deliv_lt is not None:
+            filter_params.append(f'natGasOtherDeliv < "{nat_gas_other_deliv_lt}"')
+        if nat_gas_other_deliv_lte is not None:
+            filter_params.append(f'natGasOtherDeliv <= "{nat_gas_other_deliv_lte}"')
+        filter_params.append(list_to_filter("totalDeliveries", total_deliveries))
+        if total_deliveries_gt is not None:
+            filter_params.append(f'totalDeliveries > "{total_deliveries_gt}"')
+        if total_deliveries_gte is not None:
+            filter_params.append(f'totalDeliveries >= "{total_deliveries_gte}"')
+        if total_deliveries_lt is not None:
+            filter_params.append(f'totalDeliveries < "{total_deliveries_lt}"')
+        if total_deliveries_lte is not None:
+            filter_params.append(f'totalDeliveries <= "{total_deliveries_lte}"')
+        filter_params.append(list_to_filter("gasStoredBoy", gas_stored_boy))
+        if gas_stored_boy_gt is not None:
+            filter_params.append(f'gasStoredBoy > "{gas_stored_boy_gt}"')
+        if gas_stored_boy_gte is not None:
+            filter_params.append(f'gasStoredBoy >= "{gas_stored_boy_gte}"')
+        if gas_stored_boy_lt is not None:
+            filter_params.append(f'gasStoredBoy < "{gas_stored_boy_lt}"')
+        if gas_stored_boy_lte is not None:
+            filter_params.append(f'gasStoredBoy <= "{gas_stored_boy_lte}"')
+        filter_params.append(
+            list_to_filter(
+                "gasStoredGasDelivToStorage", gas_stored_gas_deliv_to_storage
+            )
+        )
+        if gas_stored_gas_deliv_to_storage_gt is not None:
+            filter_params.append(
+                f'gasStoredGasDelivToStorage > "{gas_stored_gas_deliv_to_storage_gt}"'
+            )
+        if gas_stored_gas_deliv_to_storage_gte is not None:
+            filter_params.append(
+                f'gasStoredGasDelivToStorage >= "{gas_stored_gas_deliv_to_storage_gte}"'
+            )
+        if gas_stored_gas_deliv_to_storage_lt is not None:
+            filter_params.append(
+                f'gasStoredGasDelivToStorage < "{gas_stored_gas_deliv_to_storage_lt}"'
+            )
+        if gas_stored_gas_deliv_to_storage_lte is not None:
+            filter_params.append(
+                f'gasStoredGasDelivToStorage <= "{gas_stored_gas_deliv_to_storage_lte}"'
+            )
+        filter_params.append(
+            list_to_filter(
+                "gasStoredGasWithdrFromStor", gas_stored_gas_withdr_from_stor
+            )
+        )
+        if gas_stored_gas_withdr_from_stor_gt is not None:
+            filter_params.append(
+                f'gasStoredGasWithdrFromStor > "{gas_stored_gas_withdr_from_stor_gt}"'
+            )
+        if gas_stored_gas_withdr_from_stor_gte is not None:
+            filter_params.append(
+                f'gasStoredGasWithdrFromStor >= "{gas_stored_gas_withdr_from_stor_gte}"'
+            )
+        if gas_stored_gas_withdr_from_stor_lt is not None:
+            filter_params.append(
+                f'gasStoredGasWithdrFromStor < "{gas_stored_gas_withdr_from_stor_lt}"'
+            )
+        if gas_stored_gas_withdr_from_stor_lte is not None:
+            filter_params.append(
+                f'gasStoredGasWithdrFromStor <= "{gas_stored_gas_withdr_from_stor_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("gasStoredOthDebOrCredNet", gas_stored_oth_deb_or_cred_net)
+        )
+        if gas_stored_oth_deb_or_cred_net_gt is not None:
+            filter_params.append(
+                f'gasStoredOthDebOrCredNet > "{gas_stored_oth_deb_or_cred_net_gt}"'
+            )
+        if gas_stored_oth_deb_or_cred_net_gte is not None:
+            filter_params.append(
+                f'gasStoredOthDebOrCredNet >= "{gas_stored_oth_deb_or_cred_net_gte}"'
+            )
+        if gas_stored_oth_deb_or_cred_net_lt is not None:
+            filter_params.append(
+                f'gasStoredOthDebOrCredNet < "{gas_stored_oth_deb_or_cred_net_lt}"'
+            )
+        if gas_stored_oth_deb_or_cred_net_lte is not None:
+            filter_params.append(
+                f'gasStoredOthDebOrCredNet <= "{gas_stored_oth_deb_or_cred_net_lte}"'
+            )
+        filter_params.append(list_to_filter("gasStoredEoy", gas_stored_eoy))
+        if gas_stored_eoy_gt is not None:
+            filter_params.append(f'gasStoredEoy > "{gas_stored_eoy_gt}"')
+        if gas_stored_eoy_gte is not None:
+            filter_params.append(f'gasStoredEoy >= "{gas_stored_eoy_gte}"')
+        if gas_stored_eoy_lt is not None:
+            filter_params.append(f'gasStoredEoy < "{gas_stored_eoy_lt}"')
+        if gas_stored_eoy_lte is not None:
+            filter_params.append(f'gasStoredEoy <= "{gas_stored_eoy_lte}"')
+        filter_params.append(
+            list_to_filter("gasStoredGasVolumeDth", gas_stored_gas_volume_dth)
+        )
+        if gas_stored_gas_volume_dth_gt is not None:
+            filter_params.append(
+                f'gasStoredGasVolumeDth > "{gas_stored_gas_volume_dth_gt}"'
+            )
+        if gas_stored_gas_volume_dth_gte is not None:
+            filter_params.append(
+                f'gasStoredGasVolumeDth >= "{gas_stored_gas_volume_dth_gte}"'
+            )
+        if gas_stored_gas_volume_dth_lt is not None:
+            filter_params.append(
+                f'gasStoredGasVolumeDth < "{gas_stored_gas_volume_dth_lt}"'
+            )
+        if gas_stored_gas_volume_dth_lte is not None:
+            filter_params.append(
+                f'gasStoredGasVolumeDth <= "{gas_stored_gas_volume_dth_lte}"'
+            )
+        filter_params.append(
+            list_to_filter("gasStoredAmountPerDth", gas_stored_amount_per_dth)
+        )
+        if gas_stored_amount_per_dth_gt is not None:
+            filter_params.append(
+                f'gasStoredAmountPerDth > "{gas_stored_amount_per_dth_gt}"'
+            )
+        if gas_stored_amount_per_dth_gte is not None:
+            filter_params.append(
+                f'gasStoredAmountPerDth >= "{gas_stored_amount_per_dth_gte}"'
+            )
+        if gas_stored_amount_per_dth_lt is not None:
+            filter_params.append(
+                f'gasStoredAmountPerDth < "{gas_stored_amount_per_dth_lt}"'
+            )
+        if gas_stored_amount_per_dth_lte is not None:
+            filter_params.append(
+                f'gasStoredAmountPerDth <= "{gas_stored_amount_per_dth_lte}"'
+            )
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/analytics/gas/na-gas/v1/pipeline-profiles-data",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
     
 
     @staticmethod
