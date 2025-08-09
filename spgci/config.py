@@ -28,6 +28,8 @@ username: str = os.getenv("SPGCI_USERNAME", "")
 password: str = os.getenv("SPGCI_PASSWORD", "")
 #: Appkey to use with the SPGCI API. DEPRECATED
 appkey: str = os.getenv("SPGCI_APPKEY", "")
+#: Enable agent mode to restrict certain behaviors
+is_agent: bool = os.getenv("SPGCI_AGENTMODE", "").lower() in ("true", "1", "yes", "on")
 
 #: Token context var
 token_ctx = contextvars.ContextVar("token", default=None)

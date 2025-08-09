@@ -152,6 +152,11 @@ def get_data(
 
     tp = pagination.total_pages
     if tp > 10:
+        if spgci.config.is_agent:
+            raise ValueError(
+                f"Agent mode is enabled. Cannot paginate when total pages ({tp}) > 10. "
+                f"Set `paginate=False` to fetch only the first page."
+            )
         warnings.warn(
             f"\nWith `paginate=True` this will fetch {tp} pages. Set `paginate=False` to disable."
         )
