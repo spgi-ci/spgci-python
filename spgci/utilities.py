@@ -12,13 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Union, Any, TypeVar, Collection, Optional
+from typing import List, Union, Any, TypeVar, Collection, Optional, Dict
 from pandas import Series
 from typing_extensions import TypeGuard
 from enum import Enum
 from datetime import date
 
 T = TypeVar("T", bound=Enum)
+
+
+def build_filter_expression(filters: Dict[str, Any]) -> str:
+    """
+    Build a complete filter expression from a dictionary of field filters.
+
+    Args:
+        filters: Dict with field names as keys and filter values as values
+
+    Returns:
+        Complete filter expression string
+    """
+    filter_parts = []
+
+    for field_name, items in filters.items():
+        if items is not None:  # Skip None values
+            filter_part = list_to_filter(field_name, items)
+            if filter_part:  # Only add non-empty filters
+                filter_parts.append(filter_part)
+
+    return " AND ".join(filter_parts)
 
 
 def list_to_filter(
