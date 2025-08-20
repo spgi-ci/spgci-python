@@ -87,7 +87,6 @@ class Chemicals:
             raise ValueError(
                 f"dataset '{dataset}' not found ",
             )
-            return
         else:
             path = dataset_to_path[dataset]
 
@@ -96,7 +95,12 @@ class Chemicals:
 
         def to_df(resp: Response):
             j = resp.json()
-            return DataFrame(j["aggResultValue"])
+            df = pd.json_normalize(j["aggResultValue"])
+            columns_dt = ["vintageDate", "reportForDate", "historicalEdgeDate", "modifiedDate"]
+            for c in columns_dt:
+                if c in df.columns:
+                    df[c] = pd.to_datetime(df[c], utc=True, format="ISO8601", errors="coerce")
+            return df
 
         return get_data(path, params, to_df, paginate=True)
 
