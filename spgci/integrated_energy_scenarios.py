@@ -85,7 +85,7 @@ class IntegratedEnergyScenarios:
         def to_df(resp: Response):
             j = resp.json()
             df = pd.json_normalize(j["aggResultValue"])
-            columns_dt = ["vintageDate", "reportForDate", "historicalEdgeDate", "modifiedDate"]
+            columns_dt = ["modifiedDate"]
             for c in columns_dt:
                 if c in df.columns:
                     df[c] = pd.to_datetime(df[c], utc=True, format="ISO8601", errors="coerce")

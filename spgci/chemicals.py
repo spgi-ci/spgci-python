@@ -96,7 +96,20 @@ class Chemicals:
         def to_df(resp: Response):
             j = resp.json()
             df = pd.json_normalize(j["aggResultValue"])
-            columns_dt = ["vintageDate", "reportForDate", "historicalEdgeDate", "modifiedDate"]
+            columns_dt = [
+                "vintageDate",
+                "reportForDate",
+                "historicalEdgeDate",
+                "modifiedDate",
+                "eventBeginDate",
+                "validFrom",
+                "validTo",
+                "startDate",
+                "endDate",
+                "publishDate",
+                "date",
+                "lastModifiedDate",
+            ]
             for c in columns_dt:
                 if c in df.columns:
                     df[c] = pd.to_datetime(df[c], utc=True, format="ISO8601", errors="coerce")
@@ -1738,85 +1751,6 @@ class Chemicals:
             paginate=paginate,
         )
         return response
-
-    @staticmethod
-    def _convert_to_df(resp: Response) -> pd.DataFrame:
-        j = resp.json()
-        df = pd.json_normalize(j["results"])  # type: ignore
-
-        if "eventBeginDate" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["eventBeginDate"] = pd.to_datetime(
-                    df["eventBeginDate"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["eventBeginDate"] = pd.to_datetime(df["eventBeginDate"], errors="coerce", utc=True)  # type: ignore
-
-        if "validFrom" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["validFrom"] = pd.to_datetime(
-                    df["validFrom"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["validFrom"] = pd.to_datetime(df["validFrom"], errors="coerce", utc=True)  # type: ignore
-
-        if "validTo" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["validTo"] = pd.to_datetime(
-                    df["validTo"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["validTo"] = pd.to_datetime(df["validTo"], errors="coerce", utc=True)  # type: ignore
-
-        if "modifiedDate" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["modifiedDate"] = pd.to_datetime(
-                    df["modifiedDate"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["modifiedDate"] = pd.to_datetime(df["modifiedDate"], errors="coerce", utc=True)  # type: ignore
-
-        if "startDate" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["startDate"] = pd.to_datetime(
-                    df["startDate"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["startDate"] = pd.to_datetime(df["startDate"], errors="coerce", utc=True)  # type: ignore
-
-        if "endDate" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["endDate"] = pd.to_datetime(
-                    df["endDate"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["endDate"] = pd.to_datetime(df["endDate"], errors="coerce", utc=True)  # type: ignore
-
-        if "publishDate" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["publishDate"] = pd.to_datetime(
-                    df["publishDate"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["publishDate"] = pd.to_datetime(df["publishDate"], errors="coerce", utc=True)  # type: ignore
-
-        if "date" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["date"] = pd.to_datetime(
-                    df["date"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["date"] = pd.to_datetime(df["date"], errors="coerce", utc=True)  # type: ignore
-
-        if "lastModifiedDate" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["lastModifiedDate"] = pd.to_datetime(
-                    df["lastModifiedDate"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["lastModifiedDate"] = pd.to_datetime(df["lastModifiedDate"], errors="coerce", utc=True)  # type: ignore
-
-        return df
 
     def get_capacity(
         self,
@@ -4728,3 +4662,83 @@ class Chemicals:
             paginate=paginate,
         )
         return response
+
+
+    @staticmethod
+    def _convert_to_df(resp: Response) -> pd.DataFrame:
+        j = resp.json()
+        df = pd.json_normalize(j["results"])  # type: ignore
+
+        if "eventBeginDate" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["eventBeginDate"] = pd.to_datetime(
+                    df["eventBeginDate"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["eventBeginDate"] = pd.to_datetime(df["eventBeginDate"], errors="coerce", utc=True)  # type: ignore
+
+        if "validFrom" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["validFrom"] = pd.to_datetime(
+                    df["validFrom"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["validFrom"] = pd.to_datetime(df["validFrom"], errors="coerce", utc=True)  # type: ignore
+
+        if "validTo" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["validTo"] = pd.to_datetime(
+                    df["validTo"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["validTo"] = pd.to_datetime(df["validTo"], errors="coerce", utc=True)  # type: ignore
+
+        if "modifiedDate" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["modifiedDate"] = pd.to_datetime(
+                    df["modifiedDate"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["modifiedDate"] = pd.to_datetime(df["modifiedDate"], errors="coerce", utc=True)  # type: ignore
+
+        if "startDate" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["startDate"] = pd.to_datetime(
+                    df["startDate"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["startDate"] = pd.to_datetime(df["startDate"], errors="coerce", utc=True)  # type: ignore
+
+        if "endDate" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["endDate"] = pd.to_datetime(
+                    df["endDate"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["endDate"] = pd.to_datetime(df["endDate"], errors="coerce", utc=True)  # type: ignore
+
+        if "publishDate" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["publishDate"] = pd.to_datetime(
+                    df["publishDate"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["publishDate"] = pd.to_datetime(df["publishDate"], errors="coerce", utc=True)  # type: ignore
+
+        if "date" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["date"] = pd.to_datetime(
+                    df["date"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["date"] = pd.to_datetime(df["date"], errors="coerce", utc=True)  # type: ignore
+
+        if "lastModifiedDate" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["lastModifiedDate"] = pd.to_datetime(
+                    df["lastModifiedDate"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["lastModifiedDate"] = pd.to_datetime(df["lastModifiedDate"], errors="coerce", utc=True)  # type: ignore
+
+        return df
