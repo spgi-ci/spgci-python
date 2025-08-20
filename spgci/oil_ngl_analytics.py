@@ -108,19 +108,23 @@ class OilNGLAnalytics:
             raise ValueError(
                 f"dataset '{dataset}' not found ",
             )
-            return
         else:
             path = dataset_to_path[dataset]
 
         col_value = ", ".join(columns) if isinstance(columns, list) else columns or ""
         params = {"GroupBy": col_value, "pageSize": 5000}
-
+        
         if filter_exp is not None:
             params.update({"filter": filter_exp})
 
         def to_df(resp: Response):
             j = resp.json()
-            return DataFrame(j["aggResultValue"])
+            df = pd.json_normalize(j["aggResultValue"])
+            columns_dt = ["vintageDate", "reportForDate", "historicalEdgeDate", "modifiedDate"]
+            for c in columns_dt:
+                if c in df.columns:
+                    df[c] = pd.to_datetime(df[c], utc=True, format="ISO8601", errors="coerce")
+            return df
 
         return get_data(path, params, to_df, paginate=True)
 
