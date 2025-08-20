@@ -76,7 +76,6 @@ class IntegratedEnergyScenarios:
             raise ValueError(
                 f"dataset '{dataset}' not found ",
             )
-            return
         else:
             path = dataset_to_path[dataset]
 
