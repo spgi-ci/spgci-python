@@ -85,44 +85,64 @@ class IntegratedEnergyScenarios:
 
         def to_df(resp: Response):
             j = resp.json()
-            return DataFrame(j["aggResultValue"])
+            df = pd.json_normalize(j["aggResultValue"])
+            columns_dt = ["vintageDate", "reportForDate", "historicalEdgeDate", "modifiedDate"]
+            for c in columns_dt:
+                if c in df.columns:
+                    df[c] = pd.to_datetime(df[c], utc=True, format="ISO8601", errors="coerce")
+            return df
 
         return get_data(path, params, to_df, paginate=True)
 
     def get_coal_market(
         self,
-        *,
+        long_name: Optional[Union[list[str], Series[str], str]] = None,
         scenario: Optional[Union[list[str], Series[str], str]] = None,
+        model_vintage: Optional[Union[list[str], Series[str], str]] = None,
+        energy_type: Optional[Union[list[str], Series[str], str]] = None,
         subsector: Optional[Union[list[str], Series[str], str]] = None,
+        theme: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
-        year: Optional[int] = None,
-        year_lt: Optional[int] = None,
-        year_lte: Optional[int] = None,
-        year_gt: Optional[int] = None,
-        year_gte: Optional[int] = None,
-        modified_date: Optional[datetime] = None,
-        modified_date_lt: Optional[datetime] = None,
-        modified_date_lte: Optional[datetime] = None,
-        modified_date_gt: Optional[datetime] = None,
-        modified_date_gte: Optional[datetime] = None,
+        unit: Optional[Union[list[str], Series[str], str]] = None,
+        year: Optional[Union[list[str], Series[str], str]] = None,
+        year_lt: Optional[Union[int, str]] = None,
+        year_lte: Optional[Union[int, str]] = None,
+        year_gt: Optional[Union[int, str]] = None,
+        year_gte: Optional[Union[int, str]] = None,
+        value: Optional[Union[list[str], Series[str], str]] = None,
+        modified_date: Optional[Union[list[str], Series[str], str]] = None,
+        modified_date_lt: Optional[Union[str, datetime]] = None,
+        modified_date_lte: Optional[Union[str, datetime]] = None,
+        modified_date_gt: Optional[Union[str, datetime]] = None,
+        modified_date_gte: Optional[Union[str, datetime]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
         raw: bool = False,
-        paginate: bool = False,
+        paginate: bool = False
     ) -> Union[DataFrame, Response]:
         """
-        The Coal Markets dataset contains the outlooks to 2050 for S&P Global’s scenarios for coal demand by sectors. Data is provided in million tonne of oil equivalent (mtoe) for 1990-2050 timeframe in annual granularity for selected geographies.
+        Fetch the data based on the filter expression.
 
         Parameters
         ----------
-
+        
+        long_name: Optional[Union[list[str], Series[str], str]]
+            Long name for the series., be default None
         scenario: Optional[Union[list[str], Series[str], str]]
-            S&P Global's Energy and Climate Scenarios: Green Rules, Discord and Inflections (base planning scenario), and low emission cases: Accelerated CCS and Multitech Mitigation., by default None
+            S&P Global's Energy and Climate Scenarios: Green Rules, Discord and Inflections (base planning scenario), and low emission cases: Accelerated CCS and Multitech Mitigation., be default None
+        model_vintage: Optional[Union[list[str], Series[str], str]]
+            Indicates the year of execution for the forecast model, providing the temporal context of the model's data and assumptions used in generating the forecast results., be default None
+        energy_type: Optional[Union[list[str], Series[str], str]]
+            Set to coal., be default None
         subsector: Optional[Union[list[str], Series[str], str]]
-            Coal consumption sectors: power and heat, gas works, own use and other, industry, feedstocks, rail transport, other transport, residential, agricultural, and commercial., by default None
+            Coal consumption sectors: power and heat, gas works, own use and other, industry, feedstocks, rail transport, other transport, residential, agricultural, and commercial., be default None
+        theme: Optional[Union[list[str], Series[str], str]]
+            Set to coal consumption., be default None
         country: Optional[Union[list[str], Series[str], str]]
-            Geography for which data is forecast., by default None
+            Geography for which data is forecast., be default None
+        unit: Optional[Union[list[str], Series[str], str]]
+            Unit of measurement. Ex: mtoe (million tonnes of oil equivalent), be default None
         year: Optional[int], optional
             Forecast year, includes actuals for historic values., by default None
         year_gt: Optional[int], optional
@@ -144,17 +164,22 @@ class IntegratedEnergyScenarios:
         modified_date_lte: Optional[datetime], optional
             filter by `modified_date <= x`, by default None
         filter_exp: Optional[str] = None,
-        page: int = 1,
-        page_size: int = 1000,
-        raw: bool = False,
-        paginate: bool = False
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
 
         """
 
         filter_params: List[str] = []
+        filter_params.append(list_to_filter("longName", long_name))
         filter_params.append(list_to_filter("scenario", scenario))
+        filter_params.append(list_to_filter("modelVintage", model_vintage))
+        filter_params.append(list_to_filter("energyType", energy_type))
         filter_params.append(list_to_filter("subsector", subsector))
+        filter_params.append(list_to_filter("theme", theme))
         filter_params.append(list_to_filter("country", country))
+        filter_params.append(list_to_filter("unit", unit))
         filter_params.append(list_to_filter("year", year))
         if year_gt is not None:
             filter_params.append(f'year > "{year_gt}"')
@@ -164,6 +189,7 @@ class IntegratedEnergyScenarios:
             filter_params.append(f'year < "{year_lt}"')
         if year_lte is not None:
             filter_params.append(f'year <= "{year_lte}"')
+        filter_params.append(list_to_filter("value", value))
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -173,7 +199,7 @@ class IntegratedEnergyScenarios:
             filter_params.append(f'modifiedDate < "{modified_date_lt}"')
         if modified_date_lte is not None:
             filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
-
+        
         filter_params = [fp for fp in filter_params if fp != ""]
 
         if filter_exp is None:
@@ -198,16 +224,20 @@ class IntegratedEnergyScenarios:
         scenario: Optional[Union[list[str], Series[str], str]] = None,
         theme: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
-        year: Optional[int] = None,
-        year_lt: Optional[int] = None,
-        year_lte: Optional[int] = None,
-        year_gt: Optional[int] = None,
-        year_gte: Optional[int] = None,
-        modified_date: Optional[datetime] = None,
-        modified_date_lt: Optional[datetime] = None,
-        modified_date_lte: Optional[datetime] = None,
-        modified_date_gt: Optional[datetime] = None,
-        modified_date_gte: Optional[datetime] = None,
+        year: Optional[Union[list[str], Series[str], str]] = None,
+        year_lt: Optional[Union[int, str]] = None,
+        year_lte: Optional[Union[int, str]] = None,
+        year_gt: Optional[Union[int, str]] = None,
+        year_gte: Optional[Union[int, str]] = None,
+        unit: Optional[Union[list[str], Series[str], str]] = None,
+        value: Optional[Union[list[str], Series[str], str]] = None,
+        long_name: Optional[Union[list[str], Series[str], str]] = None,
+        model_vintage: Optional[Union[list[str], Series[str], str]] = None,
+        modified_date: Optional[Union[list[str], Series[str], str]] = None,
+        modified_date_lt: Optional[Union[str, datetime]] = None,
+        modified_date_lte: Optional[Union[str, datetime]] = None,
+        modified_date_gt: Optional[Union[str, datetime]] = None,
+        modified_date_gte: Optional[Union[str, datetime]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
@@ -220,12 +250,20 @@ class IntegratedEnergyScenarios:
         Parameters
         ----------
 
+        long_name: Optional[Union[list[str], Series[str], str]]
+            Long name for the series (human-readable series label), by default None
         scenario: Optional[Union[list[str], Series[str], str]]
             S&P Global's Energy and Climate Scenarios: Green Rules, Discord and Inflections (base planning scenario), and low emission cases: Accelerated CCS and Multitech Mitigation., by default None
+        model_vintage: Optional[Union[list[str], Series[str], str]]
+            Indicates the year of execution for the forecast model, providing the temporal context of the model's data and assumptions used in generating the forecast results., by default None
         theme: Optional[Union[list[str], Series[str], str]]
             Set to employment., by default None
         country: Optional[Union[list[str], Series[str], str]]
             Geography for which data is forecast., by default None
+        unit: Optional[Union[list[str], Series[str], str]]
+            Unit of measurement (for example: million persons), by default None
+        value: Optional[Union[list[str], Series[str], str]]
+            Numeric value filter for the series, by default None
         year: Optional[int], optional
             Forecast year, includes actuals for historic values., by default None
         year_gt: Optional[int], optional
@@ -248,16 +286,19 @@ class IntegratedEnergyScenarios:
             filter by `modified_date <= x`, by default None
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False
 
         """
 
         filter_params: List[str] = []
+        filter_params.append(list_to_filter("longName", long_name))
         filter_params.append(list_to_filter("scenario", scenario))
+        filter_params.append(list_to_filter("modelVintage", model_vintage))
         filter_params.append(list_to_filter("theme", theme))
         filter_params.append(list_to_filter("country", country))
+        filter_params.append(list_to_filter("unit", unit))
         filter_params.append(list_to_filter("year", year))
         if year_gt is not None:
             filter_params.append(f'year > "{year_gt}"')
@@ -267,6 +308,7 @@ class IntegratedEnergyScenarios:
             filter_params.append(f'year < "{year_lt}"')
         if year_lte is not None:
             filter_params.append(f'year <= "{year_lte}"')
+        filter_params.append(list_to_filter("value", value))
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -276,7 +318,7 @@ class IntegratedEnergyScenarios:
             filter_params.append(f'modifiedDate < "{modified_date_lt}"')
         if modified_date_lte is not None:
             filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
-
+        
         filter_params = [fp for fp in filter_params if fp != ""]
 
         if filter_exp is None:
@@ -287,7 +329,7 @@ class IntegratedEnergyScenarios:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/carbon-scenarios/ies/v1/employment",
+            path="/carbon-scenarios/ies/v1/employment",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -302,6 +344,10 @@ class IntegratedEnergyScenarios:
         energy_type: Optional[Union[list[str], Series[str], str]] = None,
         subsector: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
+        long_name: Optional[Union[list[str], Series[str], str]] = None,
+        model_vintage: Optional[Union[list[str], Series[str], str]] = None,
+        unit: Optional[Union[list[str], Series[str], str]] = None,
+        value: Optional[Union[list[str], Series[str], str]] = None,
         year: Optional[int] = None,
         year_lt: Optional[int] = None,
         year_lte: Optional[int] = None,
@@ -320,51 +366,16 @@ class IntegratedEnergyScenarios:
     ) -> Union[DataFrame, Response]:
         """
         The Final Energy Consumption dataset contains the outlooks to 2050 for S&P Global’s scenarios for energy demand by sectors and energy type. Data is provided in million tonne of oil equivalent (mtoe) for 1990-2050 timeframe in annual granularity for selected geographies.
-
-        Parameters
-        ----------
-
-        scenario: Optional[Union[list[str], Series[str], str]]
-            S&P Global's Energy and Climate Scenarios: Green Rules, Discord and Inflections (base planning scenario), and low emission cases: Accelerated CCS and Multitech Mitigation., by default None
-        energy_type: Optional[Union[list[str], Series[str], str]]
-            Energy types: electricity, oil, natural gas, coal, hydrogen, and other energy., by default None
-        subsector: Optional[Union[list[str], Series[str], str]]
-            Final energy consumption sectors: residential, agricultural, commercial, industry, feedstocks, road transport, rail transport, aviation transport, shipping transport, and other transport., by default None
-        country: Optional[Union[list[str], Series[str], str]]
-            Geography for which data is forecast., by default None
-        year: Optional[int], optional
-            Forecast year, includes actuals for historic values., by default None
-        year_gt: Optional[int], optional
-            filter by `year > x`, by default None
-        year_gte: Optional[int], optional
-            filter by `year >= x`, by default None
-        year_lt: Optional[int], optional
-            filter by `year < x`, by default None
-        year_lte: Optional[int], optional
-            filter by `year <= x`, by default None
-        modified_date: Optional[datetime], optional
-            The last modified date for the corresponding record., by default None
-        modified_date_gt: Optional[datetime], optional
-            filter by `modified_date > x`, by default None
-        modified_date_gte: Optional[datetime], optional
-            filter by `modified_date >= x`, by default None
-        modified_date_lt: Optional[datetime], optional
-            filter by `modified_date < x`, by default None
-        modified_date_lte: Optional[datetime], optional
-            filter by `modified_date <= x`, by default None
-        filter_exp: Optional[str] = None,
-        page: int = 1,
-        page_size: int = 1000,
-        raw: bool = False,
-        paginate: bool = False
-
         """
 
         filter_params: List[str] = []
+        filter_params.append(list_to_filter("longName", long_name))
         filter_params.append(list_to_filter("scenario", scenario))
         filter_params.append(list_to_filter("energyType", energy_type))
+        filter_params.append(list_to_filter("modelVintage", model_vintage))
         filter_params.append(list_to_filter("subsector", subsector))
         filter_params.append(list_to_filter("country", country))
+        filter_params.append(list_to_filter("unit", unit))
         filter_params.append(list_to_filter("year", year))
         if year_gt is not None:
             filter_params.append(f'year > "{year_gt}"')
@@ -374,6 +385,7 @@ class IntegratedEnergyScenarios:
             filter_params.append(f'year < "{year_lt}"')
         if year_lte is not None:
             filter_params.append(f'year <= "{year_lte}"')
+        filter_params.append(list_to_filter("value", value))
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -394,117 +406,99 @@ class IntegratedEnergyScenarios:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/carbon-scenarios/ies/v1/final-energy-consumption",
+            path="/carbon-scenarios/ies/v1/final-energy-consumption",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
             paginate=paginate,
         )
         return response
+
 
     def get_gdp(
         self,
-        *,
+        long_name: Optional[Union[list[str], Series[str], str]] = None,
         scenario: Optional[Union[list[str], Series[str], str]] = None,
+        model_vintage: Optional[Union[list[str], Series[str], str]] = None,
+        theme: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
-        year: Optional[int] = None,
-        year_lt: Optional[int] = None,
-        year_lte: Optional[int] = None,
-        year_gt: Optional[int] = None,
-        year_gte: Optional[int] = None,
-        modified_date: Optional[datetime] = None,
-        modified_date_lt: Optional[datetime] = None,
-        modified_date_lte: Optional[datetime] = None,
-        modified_date_gt: Optional[datetime] = None,
-        modified_date_gte: Optional[datetime] = None,
-        filter_exp: Optional[str] = None,
-        page: int = 1,
-        page_size: int = 5000,
-        raw: bool = False,
-        paginate: bool = False,
-    ) -> Union[DataFrame, Response]:
-        """
-        The GDP (gross domestic product) dataset contains the outlooks to 2050 for S&P Global’s scenarios for the following GDP series in their respective units: Real GDP (billion real US dollars), Real GDP PPP basis (billion real US dollars), Nominal GDP (billion nominal US dollars), Nominal GDP PPP basis (billion nominal US dollars). Data is provided for 1990-2050 timeframe in annual granularity for selected geographies.
-
-        Parameters
-        ----------
-
-        scenario: Optional[Union[list[str], Series[str], str]]
-            S&P Global's Energy and Climate Scenarios: Green Rules, Discord and Inflections (base planning scenario), and low emission cases: Accelerated CCS and Multitech Mitigation., by default None
-        country: Optional[Union[list[str], Series[str], str]]
-            Geography for which data is forecast., by default None
-        year: Optional[int], optional
-            Forecast year, includes actuals for historic values., by default None
-        year_gt: Optional[int], optional
-            filter by `year > x`, by default None
-        year_gte: Optional[int], optional
-            filter by `year >= x`, by default None
-        year_lt: Optional[int], optional
-            filter by `year < x`, by default None
-        year_lte: Optional[int], optional
-            filter by `year <= x`, by default None
-        modified_date: Optional[datetime], optional
-            The last modified date for the corresponding record., by default None
-        modified_date_gt: Optional[datetime], optional
-            filter by `modified_date > x`, by default None
-        modified_date_gte: Optional[datetime], optional
-            filter by `modified_date >= x`, by default None
-        modified_date_lt: Optional[datetime], optional
-            filter by `modified_date < x`, by default None
-        modified_date_lte: Optional[datetime], optional
-            filter by `modified_date <= x`, by default None
-        filter_exp: Optional[str] = None,
-        page: int = 1,
-        page_size: int = 1000,
-        raw: bool = False,
+        unit: Optional[Union[list[str], Series[str], str]] = None,
+        year: Optional[Union[list[str], Series[str], str]] = None,
+        value: Optional[Union[list[str], Series[str], str]] = None,
+        modified_date: Optional[Union[list[str], Series[str], str]] = None,
+        filter_exp: Optional[str] = None, 
+        page: int = 1, 
+        page_size: int = 5000, 
+        raw: bool = False, 
         paginate: bool = False
+        ) -> Union[DataFrame, Response]:
+            """
+            Fetch the data based on the filter expression.
 
-        """
+            Parameters
+            ----------
+            
+            longName: Optional[Union[list[str], Series[str], str]]
+                Long name for the series., be default None
+            scenario: Optional[Union[list[str], Series[str], str]]
+                S&P Global's Energy and Climate Scenarios: Green Rules, Discord and Inflections (base planning scenario), and low emission cases: Accelerated CCS and Multitech Mitigation., be default None
+            modelVintage: Optional[Union[list[str], Series[str], str]]
+                Indicates the year of execution for the forecast model, providing the temporal context of the model's data and assumptions used in generating the forecast results., be default None
+            theme: Optional[Union[list[str], Series[str], str]]
+                Options available: real GDP, real GDP PPP basis, nominal GDP, nominal GDP PPP basis., be default None
+            country: Optional[Union[list[str], Series[str], str]]
+                Geography for which data is forecast., be default None
+            unit: Optional[Union[list[str], Series[str], str]]
+                Unit of measurement. Ex: billion real US dollars, billion nominal US dollars, be default None
+            year: Optional[Union[list[str], Series[str], str]]
+                Forecast year, includes actuals for historic values., be default None
+            value: Optional[Union[list[str], Series[str], str]]
+                GDP forecast value in billion real US dollars and in billion nominal US dollars., be default None
+            modifiedDate: Optional[Union[list[str], Series[str], str]]
+                The last modified date for the corresponding record., be default None
+            filter_exp: Optional[str] = None,
+            page: int = 1,
+            page_size: int = 5000,
+            raw: bool = False,
+            paginate: bool = False
 
-        filter_params: List[str] = []
-        filter_params.append(list_to_filter("scenario", scenario))
-        filter_params.append(list_to_filter("country", country))
-        filter_params.append(list_to_filter("year", year))
-        if year_gt is not None:
-            filter_params.append(f'year > "{year_gt}"')
-        if year_gte is not None:
-            filter_params.append(f'year >= "{year_gte}"')
-        if year_lt is not None:
-            filter_params.append(f'year < "{year_lt}"')
-        if year_lte is not None:
-            filter_params.append(f'year <= "{year_lte}"')
-        filter_params.append(list_to_filter("modifiedDate", modified_date))
-        if modified_date_gt is not None:
-            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
-        if modified_date_gte is not None:
-            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
-        if modified_date_lt is not None:
-            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
-        if modified_date_lte is not None:
-            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+            """
 
-        filter_params = [fp for fp in filter_params if fp != ""]
+            filter_params: List[str] = []
+            filter_params.append(list_to_filter("longName", long_name))
+            filter_params.append(list_to_filter("scenario", scenario))
+            filter_params.append(list_to_filter("modelVintage", model_vintage))
+            filter_params.append(list_to_filter("theme", theme))
+            filter_params.append(list_to_filter("country", country))
+            filter_params.append(list_to_filter("unit", unit))
+            filter_params.append(list_to_filter("year", year))
+            filter_params.append(list_to_filter("value", value))
+            filter_params.append(list_to_filter("modifiedDate", modified_date))
 
-        if filter_exp is None:
-            filter_exp = " AND ".join(filter_params)
-        elif len(filter_params) > 0:
-            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+            filter_params = [fp for fp in filter_params if fp != ""]
 
-        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+            if filter_exp is None:
+                filter_exp = " AND ".join(filter_params)
+            elif len(filter_params) > 0:
+                filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
 
-        response = get_data(
-            path=f"/carbon-scenarios/ies/v1/gdp",
-            params=params,
-            df_fn=self._convert_to_df,
-            raw=raw,
-            paginate=paginate,
-        )
-        return response
+            params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+            response = get_data(
+                path="/carbon-scenarios/ies/v1/gdp",
+                params=params,
+                df_fn=self._convert_to_df,
+                raw=raw,
+                paginate=paginate,
+            )
+            return response
 
     def get_ghg_emission(
         self,
         *,
+        long_name: Optional[Union[list[str], Series[str], str]] = None,
         scenario: Optional[Union[list[str], Series[str], str]] = None,
+        model_vintage: Optional[Union[list[str], Series[str], str]] = None,
         ccus_savings: Optional[Union[list[str], Series[str], str]] = None,
         sector: Optional[Union[list[str], Series[str], str]] = None,
         source_of_emissions: Optional[Union[list[str], Series[str], str]] = None,
@@ -514,6 +508,8 @@ class IntegratedEnergyScenarios:
         year_lte: Optional[int] = None,
         year_gt: Optional[int] = None,
         year_gte: Optional[int] = None,
+        unit: Optional[Union[list[str], Series[str], str]] = None,
+        value: Optional[Union[list[str], Series[str], str]] = None,
         modified_date: Optional[datetime] = None,
         modified_date_lt: Optional[datetime] = None,
         modified_date_lte: Optional[datetime] = None,
@@ -521,7 +517,7 @@ class IntegratedEnergyScenarios:
         modified_date_gte: Optional[datetime] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -563,14 +559,16 @@ class IntegratedEnergyScenarios:
             filter by `modified_date <= x`, by default None
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False
 
         """
 
         filter_params: List[str] = []
+        filter_params.append(list_to_filter("longName", long_name))
         filter_params.append(list_to_filter("scenario", scenario))
+        filter_params.append(list_to_filter("modelVintage", model_vintage))
         filter_params.append(list_to_filter("ccusSavings", ccus_savings))
         filter_params.append(list_to_filter("sector", sector))
         filter_params.append(list_to_filter("sourceOfEmissions", source_of_emissions))
@@ -584,6 +582,8 @@ class IntegratedEnergyScenarios:
             filter_params.append(f'year < "{year_lt}"')
         if year_lte is not None:
             filter_params.append(f'year <= "{year_lte}"')
+        filter_params.append(list_to_filter("unit", unit))
+        filter_params.append(list_to_filter("value", value))
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -604,7 +604,7 @@ class IntegratedEnergyScenarios:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/carbon-scenarios/ies/v1/ghg-emission",
+            path="/carbon-scenarios/ies/v1/ghg-emission",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -615,6 +615,7 @@ class IntegratedEnergyScenarios:
     def get_natural_gas_market(
         self,
         *,
+        long_name: Optional[Union[list[str], Series[str], str]] = None,
         scenario: Optional[Union[list[str], Series[str], str]] = None,
         subsector: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
@@ -623,6 +624,8 @@ class IntegratedEnergyScenarios:
         year_lte: Optional[int] = None,
         year_gt: Optional[int] = None,
         year_gte: Optional[int] = None,
+        unit: Optional[Union[list[str], Series[str], str]] = None,
+        value: Optional[Union[list[str], Series[str], str]] = None,
         modified_date: Optional[datetime] = None,
         modified_date_lt: Optional[datetime] = None,
         modified_date_lte: Optional[datetime] = None,
@@ -668,16 +671,18 @@ class IntegratedEnergyScenarios:
             filter by `modified_date <= x`, by default None
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False
 
         """
 
         filter_params: List[str] = []
+        filter_params.append(list_to_filter("longName", long_name))
         filter_params.append(list_to_filter("scenario", scenario))
         filter_params.append(list_to_filter("subsector", subsector))
         filter_params.append(list_to_filter("country", country))
+        filter_params.append(list_to_filter("unit", unit))
         filter_params.append(list_to_filter("year", year))
         if year_gt is not None:
             filter_params.append(f'year > "{year_gt}"')
@@ -687,6 +692,7 @@ class IntegratedEnergyScenarios:
             filter_params.append(f'year < "{year_lt}"')
         if year_lte is not None:
             filter_params.append(f'year <= "{year_lte}"')
+        filter_params.append(list_to_filter("value", value))
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -707,7 +713,7 @@ class IntegratedEnergyScenarios:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/carbon-scenarios/ies/v1/natural-gas-market",
+            path="/carbon-scenarios/ies/v1/natural-gas-market",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -718,6 +724,7 @@ class IntegratedEnergyScenarios:
     def get_oil_consumption_by_product(
         self,
         *,
+        long_name: Optional[Union[list[str], Series[str], str]] = None,
         scenario: Optional[Union[list[str], Series[str], str]] = None,
         energy_type: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
@@ -727,6 +734,7 @@ class IntegratedEnergyScenarios:
         year_lte: Optional[int] = None,
         year_gt: Optional[int] = None,
         year_gte: Optional[int] = None,
+        value: Optional[Union[list[str], Series[str], str]] = None,
         modified_date: Optional[datetime] = None,
         modified_date_lt: Optional[datetime] = None,
         modified_date_lte: Optional[datetime] = None,
@@ -737,94 +745,97 @@ class IntegratedEnergyScenarios:
         page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
-    ) -> Union[DataFrame, Response]:
-        """
-        The Oil Markets by Product dataset contains the outlooks to 2050 for S&P Global’s for total oil liquids demand by oil products. Data is provided in two units, in thousand barrel per day (kbbld) and in million tonne of oil equivalent (mtoe) for 1990-2050 timeframe in annual granularity for selected geographies.
+        ) -> Union[DataFrame, Response]:
+            """
+            The Oil Markets by Product dataset contains the outlooks to 2050 for S&P Global’s for total oil liquids demand by oil products. Data is provided in two units, in thousand barrel per day (kbbld) and in million tonne of oil equivalent (mtoe) for 1990-2050 timeframe in annual granularity for selected geographies.
 
-        Parameters
-        ----------
+            Parameters
+            ----------
 
-        scenario: Optional[Union[list[str], Series[str], str]]
-            S&P Global's Energy and Climate Scenarios: Green Rules, Discord and Inflections (base planning scenario), and low emission cases: Accelerated CCS and Multitech Mitigation., by default None
-        energy_type: Optional[Union[list[str], Series[str], str]]
-            Energy products: gasoline, aviation gasoline, gas diesel oil, residual fuel oil, liquefied petroleum gas, jet fuel, kerosene, naphtha, other liquids, crude oil (direct), and refinery losses and adjustments., by default None
-        country: Optional[Union[list[str], Series[str], str]]
-            Geography for which data is forecast., by default None
-        unit: Optional[Union[list[str], Series[str], str]]
-            Unit of measurement. Ex: kbbld (thousand barrels per day) , mtoe (million tonnes of oil equivalent), by default None
-        year: Optional[int], optional
-            Forecast year, includes actuals for historic values., by default None
-        year_gt: Optional[int], optional
-            filter by `year > x`, by default None
-        year_gte: Optional[int], optional
-            filter by `year >= x`, by default None
-        year_lt: Optional[int], optional
-            filter by `year < x`, by default None
-        year_lte: Optional[int], optional
-            filter by `year <= x`, by default None
-        modified_date: Optional[datetime], optional
-            The last modified date for the corresponding record., by default None
-        modified_date_gt: Optional[datetime], optional
-            filter by `modified_date > x`, by default None
-        modified_date_gte: Optional[datetime], optional
-            filter by `modified_date >= x`, by default None
-        modified_date_lt: Optional[datetime], optional
-            filter by `modified_date < x`, by default None
-        modified_date_lte: Optional[datetime], optional
-            filter by `modified_date <= x`, by default None
-        filter_exp: Optional[str] = None,
-        page: int = 1,
-        page_size: int = 1000,
-        raw: bool = False,
-        paginate: bool = False
+            scenario: Optional[Union[list[str], Series[str], str]]
+                S&P Global's Energy and Climate Scenarios: Green Rules, Discord and Inflections (base planning scenario), and low emission cases: Accelerated CCS and Multitech Mitigation., by default None
+            energy_type: Optional[Union[list[str], Series[str], str]]
+                Energy products: gasoline, aviation gasoline, gas diesel oil, residual fuel oil, liquefied petroleum gas, jet fuel, kerosene, naphtha, other liquids, crude oil (direct), and refinery losses and adjustments., by default None
+            country: Optional[Union[list[str], Series[str], str]]
+                Geography for which data is forecast., by default None
+            unit: Optional[Union[list[str], Series[str], str]]
+                Unit of measurement. Ex: kbbld (thousand barrels per day) , mtoe (million tonnes of oil equivalent), by default None
+            year: Optional[int], optional
+                Forecast year, includes actuals for historic values., by default None
+            year_gt: Optional[int], optional
+                filter by `year > x`, by default None
+            year_gte: Optional[int], optional
+                filter by `year >= x`, by default None
+            year_lt: Optional[int], optional
+                filter by `year < x`, by default None
+            year_lte: Optional[int], optional
+                filter by `year <= x`, by default None
+            modified_date: Optional[datetime], optional
+                The last modified date for the corresponding record., by default None
+            modified_date_gt: Optional[datetime], optional
+                filter by `modified_date > x`, by default None
+            modified_date_gte: Optional[datetime], optional
+                filter by `modified_date >= x`, by default None
+            modified_date_lt: Optional[datetime], optional
+                filter by `modified_date < x`, by default None
+            modified_date_lte: Optional[datetime], optional
+                filter by `modified_date <= x`, by default None
+            filter_exp: Optional[str] = None,
+            page: int = 1,
+            page_size: int = 5000,
+            raw: bool = False,
+            paginate: bool = False
 
-        """
+            """
 
-        filter_params: List[str] = []
-        filter_params.append(list_to_filter("scenario", scenario))
-        filter_params.append(list_to_filter("energyType", energy_type))
-        filter_params.append(list_to_filter("country", country))
-        filter_params.append(list_to_filter("unit", unit))
-        filter_params.append(list_to_filter("year", year))
-        if year_gt is not None:
-            filter_params.append(f'year > "{year_gt}"')
-        if year_gte is not None:
-            filter_params.append(f'year >= "{year_gte}"')
-        if year_lt is not None:
-            filter_params.append(f'year < "{year_lt}"')
-        if year_lte is not None:
-            filter_params.append(f'year <= "{year_lte}"')
-        filter_params.append(list_to_filter("modifiedDate", modified_date))
-        if modified_date_gt is not None:
-            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
-        if modified_date_gte is not None:
-            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
-        if modified_date_lt is not None:
-            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
-        if modified_date_lte is not None:
-            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+            filter_params: List[str] = []
+            filter_params.append(list_to_filter("longName", long_name))
+            filter_params.append(list_to_filter("scenario", scenario))
+            filter_params.append(list_to_filter("energyType", energy_type))
+            filter_params.append(list_to_filter("country", country))
+            filter_params.append(list_to_filter("unit", unit))
+            filter_params.append(list_to_filter("year", year))
+            if year_gt is not None:
+                filter_params.append(f'year > "{year_gt}"')
+            if year_gte is not None:
+                filter_params.append(f'year >= "{year_gte}"')
+            if year_lt is not None:
+                filter_params.append(f'year < "{year_lt}"')
+            if year_lte is not None:
+                filter_params.append(f'year <= "{year_lte}"')
+            filter_params.append(list_to_filter("value", value))
+            filter_params.append(list_to_filter("modifiedDate", modified_date))
+            if modified_date_gt is not None:
+                filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+            if modified_date_gte is not None:
+                filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+            if modified_date_lt is not None:
+                filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+            if modified_date_lte is not None:
+                filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
 
-        filter_params = [fp for fp in filter_params if fp != ""]
+            filter_params = [fp for fp in filter_params if fp != ""]
 
-        if filter_exp is None:
-            filter_exp = " AND ".join(filter_params)
-        elif len(filter_params) > 0:
-            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+            if filter_exp is None:
+                filter_exp = " AND ".join(filter_params)
+            elif len(filter_params) > 0:
+                filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
 
-        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+            params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
-        response = get_data(
-            path=f"/carbon-scenarios/ies/v1/oil-consumption-by-product",
-            params=params,
-            df_fn=self._convert_to_df,
-            raw=raw,
-            paginate=paginate,
-        )
-        return response
+            response = get_data(
+                path="/carbon-scenarios/ies/v1/oil-consumption-by-product",
+                params=params,
+                df_fn=self._convert_to_df,
+                raw=raw,
+                paginate=paginate,
+            )
+            return response
 
     def get_oil_consumption_by_sector(
         self,
         *,
+        long_name: Optional[Union[list[str], Series[str], str]] = None,
         scenario: Optional[Union[list[str], Series[str], str]] = None,
         subsector: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
@@ -834,6 +845,7 @@ class IntegratedEnergyScenarios:
         year_lte: Optional[int] = None,
         year_gt: Optional[int] = None,
         year_gte: Optional[int] = None,
+        value: Optional[Union[list[str], Series[str], str]] = None,
         modified_date: Optional[datetime] = None,
         modified_date_lt: Optional[datetime] = None,
         modified_date_lte: Optional[datetime] = None,
@@ -844,97 +856,102 @@ class IntegratedEnergyScenarios:
         page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
-    ) -> Union[DataFrame, Response]:
-        """
-        The Oil Markets by Sector dataset contains the outlooks to 2050 for S&P Global’s scenarios for total oil liquids demand by sectors. Data is provided in two units, in thousand barrel per day (kbbld) and in million tonne of oil equivalent (mtoe) for 1990-2050 timeframe in annual granularity for selected geographies.
+        ) -> Union[DataFrame, Response]:
+            """
+            The Oil Markets by Sector dataset contains the outlooks to 2050 for S&P Global’s scenarios for total oil liquids demand by sectors. Data is provided in two units, in thousand barrel per day (kbbld) and in million tonne of oil equivalent (mtoe) for 1990-2050 timeframe in annual granularity for selected geographies.
 
-        Parameters
-        ----------
+            Parameters
+            ----------
 
-        scenario: Optional[Union[list[str], Series[str], str]]
-            S&P Global's Energy and Climate Scenarios: Green Rules, Discord and Inflections (base planning scenario), and low emission cases: Accelerated CCS and Multitech Mitigation., by default None
-        subsector: Optional[Union[list[str], Series[str], str]]
-            Oil consumption sectors: residential, commercial, agricultural, industry, feedstocks, road transport, aviation transport, rail transport, shipping transport, other transport, power and heat, refinery, own use and other, and refinery losses and adjustments., by default None
-        country: Optional[Union[list[str], Series[str], str]]
-            Geography for which data is forecast., by default None
-        unit: Optional[Union[list[str], Series[str], str]]
-            Unit of measurement. Ex: kbbld (thousand barrels per day) , mtoe (million tonnes of oil equivalent), by default None
-        year: Optional[int], optional
-            Forecast year, includes actuals for historic values., by default None
-        year_gt: Optional[int], optional
-            filter by `year > x`, by default None
-        year_gte: Optional[int], optional
-            filter by `year >= x`, by default None
-        year_lt: Optional[int], optional
-            filter by `year < x`, by default None
-        year_lte: Optional[int], optional
-            filter by `year <= x`, by default None
-        modified_date: Optional[datetime], optional
-            The last modified date for the corresponding record., by default None
-        modified_date_gt: Optional[datetime], optional
-            filter by `modified_date > x`, by default None
-        modified_date_gte: Optional[datetime], optional
-            filter by `modified_date >= x`, by default None
-        modified_date_lt: Optional[datetime], optional
-            filter by `modified_date < x`, by default None
-        modified_date_lte: Optional[datetime], optional
-            filter by `modified_date <= x`, by default None
-        filter_exp: Optional[str] = None,
-        page: int = 1,
-        page_size: int = 1000,
-        raw: bool = False,
-        paginate: bool = False
+            scenario: Optional[Union[list[str], Series[str], str]]
+                S&P Global's Energy and Climate Scenarios: Green Rules, Discord and Inflections (base planning scenario), and low emission cases: Accelerated CCS and Multitech Mitigation., by default None
+            subsector: Optional[Union[list[str], Series[str], str]]
+                Oil consumption sectors: residential, commercial, agricultural, industry, feedstocks, road transport, aviation transport, rail transport, shipping transport, other transport, power and heat, refinery, own use and other, and refinery losses and adjustments., by default None
+            country: Optional[Union[list[str], Series[str], str]]
+                Geography for which data is forecast., by default None
+            unit: Optional[Union[list[str], Series[str], str]]
+                Unit of measurement. Ex: kbbld (thousand barrels per day) , mtoe (million tonnes of oil equivalent), by default None
+            year: Optional[int], optional
+                Forecast year, includes actuals for historic values., by default None
+            year_gt: Optional[int], optional
+                filter by `year > x`, by default None
+            year_gte: Optional[int], optional
+                filter by `year >= x`, by default None
+            year_lt: Optional[int], optional
+                filter by `year < x`, by default None
+            year_lte: Optional[int], optional
+                filter by `year <= x`, by default None
+            modified_date: Optional[datetime], optional
+                The last modified date for the corresponding record., by default None
+            modified_date_gt: Optional[datetime], optional
+                filter by `modified_date > x`, by default None
+            modified_date_gte: Optional[datetime], optional
+                filter by `modified_date >= x`, by default None
+            modified_date_lt: Optional[datetime], optional
+                filter by `modified_date < x`, by default None
+            modified_date_lte: Optional[datetime], optional
+                filter by `modified_date <= x`, by default None
+            filter_exp: Optional[str] = None,
+            page: int = 1,
+            page_size: int = 5000,
+            raw: bool = False,
+            paginate: bool = False
 
-        """
+            """
 
-        filter_params: List[str] = []
-        filter_params.append(list_to_filter("scenario", scenario))
-        filter_params.append(list_to_filter("subsector", subsector))
-        filter_params.append(list_to_filter("country", country))
-        filter_params.append(list_to_filter("unit", unit))
-        filter_params.append(list_to_filter("year", year))
-        if year_gt is not None:
-            filter_params.append(f'year > "{year_gt}"')
-        if year_gte is not None:
-            filter_params.append(f'year >= "{year_gte}"')
-        if year_lt is not None:
-            filter_params.append(f'year < "{year_lt}"')
-        if year_lte is not None:
-            filter_params.append(f'year <= "{year_lte}"')
-        filter_params.append(list_to_filter("modifiedDate", modified_date))
-        if modified_date_gt is not None:
-            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
-        if modified_date_gte is not None:
-            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
-        if modified_date_lt is not None:
-            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
-        if modified_date_lte is not None:
-            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+            filter_params: List[str] = []
+            filter_params.append(list_to_filter("longName", long_name))
+            filter_params.append(list_to_filter("scenario", scenario))
+            filter_params.append(list_to_filter("subsector", subsector))
+            filter_params.append(list_to_filter("country", country))
+            filter_params.append(list_to_filter("unit", unit))
+            filter_params.append(list_to_filter("year", year))
+            if year_gt is not None:
+                filter_params.append(f'year > "{year_gt}"')
+            if year_gte is not None:
+                filter_params.append(f'year >= "{year_gte}"')
+            if year_lt is not None:
+                filter_params.append(f'year < "{year_lt}"')
+            if year_lte is not None:
+                filter_params.append(f'year <= "{year_lte}"')
+            filter_params.append(list_to_filter("value", value))
+            filter_params.append(list_to_filter("modifiedDate", modified_date))
+            if modified_date_gt is not None:
+                filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+            if modified_date_gte is not None:
+                filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+            if modified_date_lt is not None:
+                filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+            if modified_date_lte is not None:
+                filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
 
-        filter_params = [fp for fp in filter_params if fp != ""]
+            filter_params = [fp for fp in filter_params if fp != ""]
 
-        if filter_exp is None:
-            filter_exp = " AND ".join(filter_params)
-        elif len(filter_params) > 0:
-            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+            if filter_exp is None:
+                filter_exp = " AND ".join(filter_params)
+            elif len(filter_params) > 0:
+                filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
 
-        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+            params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
-        response = get_data(
-            path=f"/carbon-scenarios/ies/v1/oil-consumption-by-sector",
-            params=params,
-            df_fn=self._convert_to_df,
-            raw=raw,
-            paginate=paginate,
-        )
-        return response
+            response = get_data(
+                path="/carbon-scenarios/ies/v1/oil-consumption-by-sector",
+                params=params,
+                df_fn=self._convert_to_df,
+                raw=raw,
+                paginate=paginate,
+            )
+            return response
 
     def get_population_by_age(
         self,
         *,
+        long_name: Optional[Union[list[str], Series[str], str]] = None,
         scenario: Optional[Union[list[str], Series[str], str]] = None,
         series: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
+        unit: Optional[Union[list[str], Series[str], str]] = None,
+        value: Optional[Union[list[str], Series[str], str]] = None,
         year: Optional[int] = None,
         year_lt: Optional[int] = None,
         year_lte: Optional[int] = None,
@@ -985,13 +1002,14 @@ class IntegratedEnergyScenarios:
             filter by `modified_date <= x`, by default None
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False
 
         """
 
         filter_params: List[str] = []
+        filter_params.append(list_to_filter("longName", long_name))
         filter_params.append(list_to_filter("scenario", scenario))
         filter_params.append(list_to_filter("series", series))
         filter_params.append(list_to_filter("country", country))
@@ -1005,6 +1023,8 @@ class IntegratedEnergyScenarios:
         if year_lte is not None:
             filter_params.append(f'year <= "{year_lte}"')
         filter_params.append(list_to_filter("modifiedDate", modified_date))
+        filter_params.append(list_to_filter("unit", unit))
+        filter_params.append(list_to_filter("value", value))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
         if modified_date_gte is not None:
@@ -1024,7 +1044,7 @@ class IntegratedEnergyScenarios:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/carbon-scenarios/ies/v1/population-by-age",
+            path="/carbon-scenarios/ies/v1/population-by-age",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -1035,9 +1055,12 @@ class IntegratedEnergyScenarios:
     def get_population_urban_rural(
         self,
         *,
+        long_name: Optional[Union[list[str], Series[str], str]] = None,
         scenario: Optional[Union[list[str], Series[str], str]] = None,
         series: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
+        unit: Optional[Union[list[str], Series[str], str]] = None,
+        value: Optional[Union[list[str], Series[str], str]] = None,
         year: Optional[int] = None,
         year_lt: Optional[int] = None,
         year_lte: Optional[int] = None,
@@ -1063,7 +1086,7 @@ class IntegratedEnergyScenarios:
         scenario: Optional[Union[list[str], Series[str], str]]
             S&P Global's Energy and Climate Scenarios: Green Rules, Discord and Inflections (base planning scenario), and low emission cases: Accelerated CCS and Multitech Mitigation., by default None
         series: Optional[Union[list[str], Series[str], str]]
-            Urban or rural population., by default None
+            Population series: Urban population, Rural population., by default None
         country: Optional[Union[list[str], Series[str], str]]
             Geography for which data is forecast., by default None
         year: Optional[int], optional
@@ -1088,13 +1111,14 @@ class IntegratedEnergyScenarios:
             filter by `modified_date <= x`, by default None
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False
 
         """
 
         filter_params: List[str] = []
+        filter_params.append(list_to_filter("longName", long_name))
         filter_params.append(list_to_filter("scenario", scenario))
         filter_params.append(list_to_filter("series", series))
         filter_params.append(list_to_filter("country", country))
@@ -1108,6 +1132,8 @@ class IntegratedEnergyScenarios:
         if year_lte is not None:
             filter_params.append(f'year <= "{year_lte}"')
         filter_params.append(list_to_filter("modifiedDate", modified_date))
+        filter_params.append(list_to_filter("unit", unit))
+        filter_params.append(list_to_filter("value", value))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
         if modified_date_gte is not None:
@@ -1127,7 +1153,7 @@ class IntegratedEnergyScenarios:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/carbon-scenarios/ies/v1/population-urban-rural",
+            path="/carbon-scenarios/ies/v1/population-urban-rural",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -1138,11 +1164,13 @@ class IntegratedEnergyScenarios:
     def get_power_market_by_technology(
         self,
         *,
+        long_name: Optional[Union[list[str], Series[str], str]] = None,
         scenario: Optional[Union[list[str], Series[str], str]] = None,
         energy_or_technology_type: Optional[Union[list[str], Series[str], str]] = None,
         theme: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         unit: Optional[Union[list[str], Series[str], str]] = None,
+        value: Optional[Union[list[str], Series[str], str]] = None,
         year: Optional[int] = None,
         year_lt: Optional[int] = None,
         year_lte: Optional[int] = None,
@@ -1197,17 +1225,16 @@ class IntegratedEnergyScenarios:
             filter by `modified_date <= x`, by default None
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False
 
         """
 
         filter_params: List[str] = []
+        filter_params.append(list_to_filter("longName", long_name))
         filter_params.append(list_to_filter("scenario", scenario))
-        filter_params.append(
-            list_to_filter("energyOrTechnologyType", energy_or_technology_type)
-        )
+        filter_params.append(list_to_filter("energyOrTechnologyType", energy_or_technology_type))
         filter_params.append(list_to_filter("theme", theme))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("unit", unit))
@@ -1221,6 +1248,7 @@ class IntegratedEnergyScenarios:
         if year_lte is not None:
             filter_params.append(f'year <= "{year_lte}"')
         filter_params.append(list_to_filter("modifiedDate", modified_date))
+        filter_params.append(list_to_filter("value", value))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
         if modified_date_gte is not None:
@@ -1240,7 +1268,7 @@ class IntegratedEnergyScenarios:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/carbon-scenarios/ies/v1/power-market-by-technology",
+            path="/carbon-scenarios/ies/v1/power-market-by-technology",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -1251,9 +1279,12 @@ class IntegratedEnergyScenarios:
     def get_power_market_demand(
         self,
         *,
+        long_name: Optional[Union[list[str], Series[str], str]] = None,
         scenario: Optional[Union[list[str], Series[str], str]] = None,
         subsector: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
+        unit: Optional[Union[list[str], Series[str], str]] = None,
+        value: Optional[Union[list[str], Series[str], str]] = None,
         year: Optional[int] = None,
         year_lt: Optional[int] = None,
         year_lte: Optional[int] = None,
@@ -1304,13 +1335,14 @@ class IntegratedEnergyScenarios:
             filter by `modified_date <= x`, by default None
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False
 
         """
 
         filter_params: List[str] = []
+        filter_params.append(list_to_filter("longName", long_name))
         filter_params.append(list_to_filter("scenario", scenario))
         filter_params.append(list_to_filter("subsector", subsector))
         filter_params.append(list_to_filter("country", country))
@@ -1323,7 +1355,9 @@ class IntegratedEnergyScenarios:
             filter_params.append(f'year < "{year_lt}"')
         if year_lte is not None:
             filter_params.append(f'year <= "{year_lte}"')
-        filter_params.append(list_to_filter("modifiedDate", modified_date))
+            filter_params.append(list_to_filter("modifiedDate", modified_date))
+        filter_params.append(list_to_filter("unit", unit))
+        filter_params.append(list_to_filter("value", value))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
         if modified_date_gte is not None:
@@ -1354,9 +1388,12 @@ class IntegratedEnergyScenarios:
     def get_primary_energy_demand(
         self,
         *,
+        long_name: Optional[Union[list[str], Series[str], str]] = None,
         scenario: Optional[Union[list[str], Series[str], str]] = None,
         energy_type: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
+        unit: Optional[Union[list[str], Series[str], str]] = None,
+        value: Optional[Union[list[str], Series[str], str]] = None,
         year: Optional[int] = None,
         year_lt: Optional[int] = None,
         year_lte: Optional[int] = None,
@@ -1407,13 +1444,14 @@ class IntegratedEnergyScenarios:
             filter by `modified_date <= x`, by default None
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False
 
         """
 
         filter_params: List[str] = []
+        filter_params.append(list_to_filter("longName", long_name))
         filter_params.append(list_to_filter("scenario", scenario))
         filter_params.append(list_to_filter("energyType", energy_type))
         filter_params.append(list_to_filter("country", country))
@@ -1427,6 +1465,8 @@ class IntegratedEnergyScenarios:
         if year_lte is not None:
             filter_params.append(f'year <= "{year_lte}"')
         filter_params.append(list_to_filter("modifiedDate", modified_date))
+        filter_params.append(list_to_filter("unit", unit))
+        filter_params.append(list_to_filter("value", value))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
         if modified_date_gte is not None:
@@ -1522,7 +1562,7 @@ class IntegratedEnergyScenarios:
             filter by `modified_date <= x`, by default None
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False
 
@@ -1644,7 +1684,7 @@ class IntegratedEnergyScenarios:
             filter by `modified_date <= x`, by default None
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False
 
@@ -1771,7 +1811,7 @@ class IntegratedEnergyScenarios:
             filter by `modified_date <= x`, by default None
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False
 
@@ -1909,7 +1949,7 @@ class IntegratedEnergyScenarios:
             filter by `modified_date <= x`, by default None
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False
 
