@@ -422,75 +422,100 @@ class IntegratedEnergyScenarios:
         theme: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         unit: Optional[Union[list[str], Series[str], str]] = None,
-        year: Optional[Union[list[str], Series[str], str]] = None,
+        year: Optional[int] = None,
+        year_lt: Optional[int] = None,
+        year_lte: Optional[int] = None,
+        year_gt: Optional[int] = None,
+        year_gte: Optional[int] = None,
+        modified_date: Optional[datetime] = None,
+        modified_date_lt: Optional[datetime] = None,
+        modified_date_lte: Optional[datetime] = None,
+        modified_date_gt: Optional[datetime] = None,
+        modified_date_gte: Optional[datetime] = None,
         value: Optional[Union[list[str], Series[str], str]] = None,
-        modified_date: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None, 
         page: int = 1, 
         page_size: int = 5000, 
         raw: bool = False, 
         paginate: bool = False
         ) -> Union[DataFrame, Response]:
-            """
-            Fetch the data based on the filter expression.
+        """
+        Fetch the data based on the filter expression.
 
-            Parameters
-            ----------
-            
-            longName: Optional[Union[list[str], Series[str], str]]
-                Long name for the series., be default None
-            scenario: Optional[Union[list[str], Series[str], str]]
-                S&P Global's Energy and Climate Scenarios: Green Rules, Discord and Inflections (base planning scenario), and low emission cases: Accelerated CCS and Multitech Mitigation., be default None
-            modelVintage: Optional[Union[list[str], Series[str], str]]
-                Indicates the year of execution for the forecast model, providing the temporal context of the model's data and assumptions used in generating the forecast results., be default None
-            theme: Optional[Union[list[str], Series[str], str]]
-                Options available: real GDP, real GDP PPP basis, nominal GDP, nominal GDP PPP basis., be default None
-            country: Optional[Union[list[str], Series[str], str]]
-                Geography for which data is forecast., be default None
-            unit: Optional[Union[list[str], Series[str], str]]
-                Unit of measurement. Ex: billion real US dollars, billion nominal US dollars, be default None
-            year: Optional[Union[list[str], Series[str], str]]
-                Forecast year, includes actuals for historic values., be default None
-            value: Optional[Union[list[str], Series[str], str]]
-                GDP forecast value in billion real US dollars and in billion nominal US dollars., be default None
-            modifiedDate: Optional[Union[list[str], Series[str], str]]
-                The last modified date for the corresponding record., be default None
-            filter_exp: Optional[str] = None,
-            page: int = 1,
-            page_size: int = 5000,
-            raw: bool = False,
-            paginate: bool = False
+        Parameters
+        ----------
+        
+        longName: Optional[Union[list[str], Series[str], str]]
+            Long name for the series., be default None
+        scenario: Optional[Union[list[str], Series[str], str]]
+            S&P Global's Energy and Climate Scenarios: Green Rules, Discord and Inflections (base planning scenario), and low emission cases: Accelerated CCS and Multitech Mitigation., be default None
+        modelVintage: Optional[Union[list[str], Series[str], str]]
+            Indicates the year of execution for the forecast model, providing the temporal context of the model's data and assumptions used in generating the forecast results., be default None
+        theme: Optional[Union[list[str], Series[str], str]]
+            Options available: real GDP, real GDP PPP basis, nominal GDP, nominal GDP PPP basis., be default None
+        country: Optional[Union[list[str], Series[str], str]]
+            Geography for which data is forecast., be default None
+        unit: Optional[Union[list[str], Series[str], str]]
+            Unit of measurement. Ex: billion real US dollars, billion nominal US dollars, be default None
+        year: Optional[Union[list[str], Series[str], str]]
+            Forecast year, includes actuals for historic values., be default None
+        value: Optional[Union[list[str], Series[str], str]]
+            GDP forecast value in billion real US dollars and in billion nominal US dollars., be default None
+        modifiedDate: Optional[Union[list[str], Series[str], str]]
+            The last modified date for the corresponding record., be default None
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False
 
-            """
+        """
 
-            filter_params: List[str] = []
-            filter_params.append(list_to_filter("longName", long_name))
-            filter_params.append(list_to_filter("scenario", scenario))
-            filter_params.append(list_to_filter("modelVintage", model_vintage))
-            filter_params.append(list_to_filter("theme", theme))
-            filter_params.append(list_to_filter("country", country))
-            filter_params.append(list_to_filter("unit", unit))
-            filter_params.append(list_to_filter("year", year))
-            filter_params.append(list_to_filter("value", value))
-            filter_params.append(list_to_filter("modifiedDate", modified_date))
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("longName", long_name))
+        filter_params.append(list_to_filter("scenario", scenario))
+        filter_params.append(list_to_filter("modelVintage", model_vintage))
+        filter_params.append(list_to_filter("theme", theme))
+        filter_params.append(list_to_filter("country", country))
+        filter_params.append(list_to_filter("unit", unit))
+        filter_params.append(list_to_filter("year", year))
+        filter_params.append(list_to_filter("value", value))
+        filter_params.append(list_to_filter("year", year))
+        if year_gt is not None:
+            filter_params.append(f'year > "{year_gt}"')
+        if year_gte is not None:
+            filter_params.append(f'year >= "{year_gte}"')
+        if year_lt is not None:
+            filter_params.append(f'year < "{year_lt}"')
+        if year_lte is not None:
+            filter_params.append(f'year <= "{year_lte}"')
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+        if modified_date_gt is not None:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
 
-            filter_params = [fp for fp in filter_params if fp != ""]
+        filter_params = [fp for fp in filter_params if fp != ""]
 
-            if filter_exp is None:
-                filter_exp = " AND ".join(filter_params)
-            elif len(filter_params) > 0:
-                filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
 
-            params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
-            response = get_data(
-                path="/carbon-scenarios/ies/v1/gdp",
-                params=params,
-                df_fn=self._convert_to_df,
-                raw=raw,
-                paginate=paginate,
-            )
-            return response
+        response = get_data(
+            path="/carbon-scenarios/ies/v1/gdp",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
 
     def get_ghg_emission(
         self,
