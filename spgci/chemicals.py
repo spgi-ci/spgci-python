@@ -57,7 +57,51 @@ class Chemicals:
         self,
         dataset: _datasets,
         columns: Optional[Union[list[str], str]],
+        filter_exp: Optional[str] = None,
     ) -> DataFrame:
+        """
+        Get unique values for specified columns in a dataset, optionally filtered by an expression.
+
+        This method is crucial for data discovery and validation before making actual data queries.
+        Use this to understand what values are available in the dataset and what combinations
+        actually exist before attempting to filter your main data queries.
+
+        Args:
+            dataset (str): The dataset name converted from method name using kebab-case format:
+                - get_region_supply_demand_balance → "region-supply-demand-balance"
+                - get_demand_latest → "demand-latest"
+                - get_cargo_flows → "cargo-flows"
+            columns (list[str] or str): Column names to get unique values for.
+                - Use camelCase format: ["commodity", "region", "outlookHorizon"]
+                - Can be single string: "commodity"
+                - Can be multiple columns: ["commodity", "region", "outlookHorizon"]
+            filter_exp (str, optional): Filter expression to limit results to specific subsets.
+                Use ci.utilities.build_filter_expression() to construct this properly.
+
+        Returns:
+            pd.DataFrame: DataFrame with unique combinations of the specified columns,
+            optionally filtered by the provided expression.
+
+        Example Usage:
+            # Step 1: Get all available commodities
+            commodities = rp.get_unique_values('demand-latest', 'commodity')
+
+            # Step 2: Get filtered combinations for specific commodities and regions
+            selected_commodities = ["Jet fuel", "Jet/Kero"]
+            selected_regions = ["Europe"]
+
+            filter_exp = ci.utilities.build_filter_expression({
+                "commodity": selected_commodities,
+                "region": selected_regions
+            })
+
+            combos = rp.get_unique_values(
+                'demand-latest',
+                ['commodity', 'region', 'outlookHorizon', 'vintageDate'],
+                filter_exp=filter_exp
+            )
+        """
+
         dataset_to_path = {
             "capacity": "analytics/v1/chemicals/capacity",
             "production": "analytics/v1/chemicals/production",
@@ -87,16 +131,36 @@ class Chemicals:
             raise ValueError(
                 f"dataset '{dataset}' not found ",
             )
-            return
         else:
             path = dataset_to_path[dataset]
 
         col_value = ", ".join(columns) if isinstance(columns, list) else columns or ""
         params = {"GroupBy": col_value, "pageSize": 5000}
 
+        if filter_exp is not None:
+            params.update({"filter": filter_exp})
+
         def to_df(resp: Response):
             j = resp.json()
-            return DataFrame(j["aggResultValue"])
+            df = pd.json_normalize(j["aggResultValue"])
+            columns_dt = [
+                "vintageDate",
+                "reportForDate",
+                "historicalEdgeDate",
+                "modifiedDate",
+                "eventBeginDate",
+                "validFrom",
+                "validTo",
+                "startDate",
+                "endDate",
+                "publishDate",
+                "date",
+                "lastModifiedDate",
+            ]
+            for c in columns_dt:
+                if c in df.columns:
+                    df[c] = pd.to_datetime(df[c], utc=True, format="ISO8601", errors="coerce")
+            return df
 
         return get_data(path, params, to_df, paginate=True)
 
@@ -1734,85 +1798,6 @@ class Chemicals:
             paginate=paginate,
         )
         return response
-
-    @staticmethod
-    def _convert_to_df(resp: Response) -> pd.DataFrame:
-        j = resp.json()
-        df = pd.json_normalize(j["results"])  # type: ignore
-
-        if "eventBeginDate" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["eventBeginDate"] = pd.to_datetime(
-                    df["eventBeginDate"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["eventBeginDate"] = pd.to_datetime(df["eventBeginDate"], errors="coerce", utc=True)  # type: ignore
-
-        if "validFrom" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["validFrom"] = pd.to_datetime(
-                    df["validFrom"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["validFrom"] = pd.to_datetime(df["validFrom"], errors="coerce", utc=True)  # type: ignore
-
-        if "validTo" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["validTo"] = pd.to_datetime(
-                    df["validTo"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["validTo"] = pd.to_datetime(df["validTo"], errors="coerce", utc=True)  # type: ignore
-
-        if "modifiedDate" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["modifiedDate"] = pd.to_datetime(
-                    df["modifiedDate"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["modifiedDate"] = pd.to_datetime(df["modifiedDate"], errors="coerce", utc=True)  # type: ignore
-
-        if "startDate" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["startDate"] = pd.to_datetime(
-                    df["startDate"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["startDate"] = pd.to_datetime(df["startDate"], errors="coerce", utc=True)  # type: ignore
-
-        if "endDate" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["endDate"] = pd.to_datetime(
-                    df["endDate"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["endDate"] = pd.to_datetime(df["endDate"], errors="coerce", utc=True)  # type: ignore
-
-        if "publishDate" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["publishDate"] = pd.to_datetime(
-                    df["publishDate"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["publishDate"] = pd.to_datetime(df["publishDate"], errors="coerce", utc=True)  # type: ignore
-
-        if "date" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["date"] = pd.to_datetime(
-                    df["date"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["date"] = pd.to_datetime(df["date"], errors="coerce", utc=True)  # type: ignore
-
-        if "lastModifiedDate" in df.columns:
-            if parse(pd.__version__) >= parse("2"):
-                df["lastModifiedDate"] = pd.to_datetime(
-                    df["lastModifiedDate"], utc=True, format="ISO8601", errors="coerce"
-                )
-            else:
-                df["lastModifiedDate"] = pd.to_datetime(df["lastModifiedDate"], errors="coerce", utc=True)  # type: ignore
-
-        return df
 
     def get_capacity(
         self,
@@ -4724,3 +4709,83 @@ class Chemicals:
             paginate=paginate,
         )
         return response
+
+
+    @staticmethod
+    def _convert_to_df(resp: Response) -> pd.DataFrame:
+        j = resp.json()
+        df = pd.json_normalize(j["results"])  # type: ignore
+
+        if "eventBeginDate" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["eventBeginDate"] = pd.to_datetime(
+                    df["eventBeginDate"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["eventBeginDate"] = pd.to_datetime(df["eventBeginDate"], errors="coerce", utc=True)  # type: ignore
+
+        if "validFrom" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["validFrom"] = pd.to_datetime(
+                    df["validFrom"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["validFrom"] = pd.to_datetime(df["validFrom"], errors="coerce", utc=True)  # type: ignore
+
+        if "validTo" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["validTo"] = pd.to_datetime(
+                    df["validTo"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["validTo"] = pd.to_datetime(df["validTo"], errors="coerce", utc=True)  # type: ignore
+
+        if "modifiedDate" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["modifiedDate"] = pd.to_datetime(
+                    df["modifiedDate"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["modifiedDate"] = pd.to_datetime(df["modifiedDate"], errors="coerce", utc=True)  # type: ignore
+
+        if "startDate" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["startDate"] = pd.to_datetime(
+                    df["startDate"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["startDate"] = pd.to_datetime(df["startDate"], errors="coerce", utc=True)  # type: ignore
+
+        if "endDate" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["endDate"] = pd.to_datetime(
+                    df["endDate"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["endDate"] = pd.to_datetime(df["endDate"], errors="coerce", utc=True)  # type: ignore
+
+        if "publishDate" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["publishDate"] = pd.to_datetime(
+                    df["publishDate"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["publishDate"] = pd.to_datetime(df["publishDate"], errors="coerce", utc=True)  # type: ignore
+
+        if "date" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["date"] = pd.to_datetime(
+                    df["date"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["date"] = pd.to_datetime(df["date"], errors="coerce", utc=True)  # type: ignore
+
+        if "lastModifiedDate" in df.columns:
+            if parse(pd.__version__) >= parse("2"):
+                df["lastModifiedDate"] = pd.to_datetime(
+                    df["lastModifiedDate"], utc=True, format="ISO8601", errors="coerce"
+                )
+            else:
+                df["lastModifiedDate"] = pd.to_datetime(df["lastModifiedDate"], errors="coerce", utc=True)  # type: ignore
+
+        return df
