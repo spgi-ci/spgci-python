@@ -17,29 +17,38 @@ from pandas import Series
 from typing_extensions import TypeGuard
 from enum import Enum
 from datetime import date
+from functools import partial
 
 T = TypeVar("T", bound=Enum)
 
 
-def build_filter_expression(filters: Dict[str, Any]) -> str:
+def build_filter_expression_with_strategy(
+    filters: Dict[str, Any], strategy: str
+) -> str:
     """
-    Build a complete filter expression from a dictionary of field filters.
-
+    Build a complete filter expression from a dictionary of field filters with a specified strategy.
     Args:
         filters: Dict with field names as keys and filter values as values
-
+        strategy: The strategy to use for list_to_filter
     Returns:
         Complete filter expression string
     """
     filter_parts = []
-
     for field_name, items in filters.items():
         if items is not None:  # Skip None values
-            filter_part = list_to_filter(field_name, items)
+            filter_part = list_to_filter(field_name, items, strategy=strategy)
             if filter_part:  # Only add non-empty filters
                 filter_parts.append(filter_part)
-
     return " AND ".join(filter_parts)
+
+
+# Create specialized versions using partial
+wrd_build_filter_expression = partial(
+    build_filter_expression_with_strategy, strategy="odata"
+)
+build_filter_expression = partial(
+    build_filter_expression_with_strategy, strategy="platts"
+)
 
 
 def list_to_filter(

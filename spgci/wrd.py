@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from __future__ import annotations
-from typing import Union, Optional
+from typing import Union, Optional, Literal
 from requests import Response
 from pandas import Series, DataFrame, to_datetime, json_normalize  # type: ignore
 from spgci.api_client import get_data, Paginator
@@ -41,6 +41,14 @@ class WorldRefineryData:
     """
 
     _endpoint = "odata/refinery-data/v2.2/"
+
+    _datasets = Literal[
+        "capacity",
+        "runs",
+        "yields",
+        "outages",
+        "ownership",
+    ]
 
     class RefTypes(Enum):
         """World Refinery Database Reference Data Type"""
@@ -122,6 +130,98 @@ class WorldRefineryData:
             return Paginator(False, "$skip", total_pages)
 
         return Paginator(True, "$skip", total_pages, pg_type="odata")
+
+    def get_unique_values(
+        self,
+        dataset: _datasets,
+        columns: Optional[Union[list[str], str]],
+        filter_exp: Optional[str] = None,
+    ) -> DataFrame:
+        """
+        Get unique values for specified columns in a dataset, optionally filtered by an expression.
+
+        This method is crucial for data discovery and validation before making actual data queries.
+        Use this to understand what values are available in the dataset and what combinations
+        actually exist before attempting to filter your main data queries.
+
+        Args:
+            dataset (str): The dataset name converted from method name using kebab-case format:
+                - get_region_supply_demand_balance → "region-supply-demand-balance"
+                - get_demand_latest → "demand-latest"
+                - get_cargo_flows → "cargo-flows"
+            columns (list[str] or str): Column names to get unique values for.
+                - Use camelCase format: ["commodity", "region", "outlookHorizon"]
+                - Can be single string: "commodity"
+                - Can be multiple columns: ["commodity", "region", "outlookHorizon"]
+            filter_exp (str, optional): Filter expression to limit results to specific subsets.
+                Use ci.utilities.build_filter_expression() to construct this properly.
+
+        Returns:
+            pd.DataFrame: DataFrame with unique combinations of the specified columns,
+            optionally filtered by the provided expression.
+
+        Example Usage:
+            # Step 1: Get all available commodities
+            commodities = rp.get_unique_values('demand-latest', 'commodity')
+
+            # Step 2: Get filtered combinations for specific commodities and regions
+            selected_commodities = ["Jet fuel", "Jet/Kero"]
+            selected_regions = ["Europe"]
+
+            filter_exp = ci.utilities.build_filter_expression({
+                "commodity": selected_commodities,
+                "region": selected_regions
+            })
+
+            combos = rp.get_unique_values(
+                'demand-latest',
+                ['commodity', 'region', 'outlookHorizon', 'vintageDate'],
+                filter_exp=filter_exp
+            )
+        """
+
+        dataset_to_path = {
+            "capacity": "odata/refinery-data/v2.2/capacity",
+            "outages": "odata/refinery-data/v2.2/outages",
+            "runs": "odata/refinery-data/v2.2/runs",
+            "yields": "odata/refinery-data/v2.2/yields",
+            "ownership": "odata/refinery-data/v2.2/ownership",
+        }
+
+        if dataset not in dataset_to_path:
+            valid = "\n".join(dataset_to_path.keys())
+            print(f"Dataset '{dataset}' not found. Valid Datasets:\n", valid)
+            raise ValueError(
+                f"dataset '{dataset}' not found ",
+            )
+        else:
+            path = dataset_to_path[dataset]
+
+        col_value = ", ".join(columns) if isinstance(columns, list) else columns or ""
+        params = {
+            "$apply": f"groupby(({col_value}))",
+            "pageSize": 1000,
+            "$count": "true",
+        }
+
+        if filter_exp is not None:
+            params.update({"$filter": filter_exp})
+
+        qs = urlencode(params, quote_via=quote)
+
+        def to_df(resp: Response):
+            j = resp.json()
+            df = json_normalize(j["value"])
+            df = df[df.columns.drop("@odata.id")]
+            return df
+
+        return get_data(
+            f"{path}?{qs}",
+            params={},
+            df_fn=to_df,
+            paginate=True,
+            paginate_fn=self._paginate,
+        )
 
     def get_capacity(
         self,
@@ -1359,7 +1459,7 @@ class WorldRefineryData:
             "$count": "true",
         }
 
-        groupby = "OutageId, RefineryId, Owner/Name, Refinery/Country/Name, Refinery/Region/Name, PlanningStatus, ProcessUnit/Name"
+        groupby = "OutageId, RefineryId, Owner/Name, Refinery/Name, Refinery/Operator/Name, Refinery/Country/Name, Refinery/Region/Name, PlanningStatus, ProcessUnit/Name"
         aggregate = "OutageVol_MBD with max as OutageVol_MBD, Date with max as end_date, Date with min as start_date"
         apply_string = f"groupby(({groupby}), aggregate({aggregate}))"
         params["$apply"] = apply_string
