@@ -154,7 +154,7 @@ class WorldRefineryData:
                 - Can be single string: "commodity"
                 - Can be multiple columns: ["commodity", "region", "outlookHorizon"]
             filter_exp (str, optional): Filter expression to limit results to specific subsets.
-                Use ci.utilities.build_filter_expression() to construct this properly.
+                Use ci.utilities.wrd_build_filter_expression() to construct this properly.
 
         Returns:
             pd.DataFrame: DataFrame with unique combinations of the specified columns,
@@ -168,7 +168,7 @@ class WorldRefineryData:
             selected_commodities = ["Jet fuel", "Jet/Kero"]
             selected_regions = ["Europe"]
 
-            filter_exp = ci.utilities.build_filter_expression({
+            filter_exp = ci.utilities.wrd_build_filter_expression({
                 "commodity": selected_commodities,
                 "region": selected_regions
             })
@@ -241,7 +241,7 @@ class WorldRefineryData:
         region: Optional[Union[str, list[str], "Series[str]"]] = None,
         filter_exp: Optional[str] = None,
         skip: int = 0,
-        page_size: int = 1000,
+        page_size: int = 5000,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[Response, DataFrame]:
@@ -281,7 +281,7 @@ class WorldRefineryData:
         skip : int, optional
             pass-thru ``$skip`` query param to skip a certain number of records, by default 0
         page_size : int, optional
-            pass-thru ``pageSize`` query param to request a particular page size, by default 1000
+            pass-thru ``pageSize`` query param to request a particular page size, by default 5000
         paginate : bool, optional
             whether to auto-paginate the response, by default False
         raw : bool, optional
@@ -378,7 +378,7 @@ class WorldRefineryData:
         region: Optional[Union[str, list[str], "Series[str]"]] = None,
         filter_exp: Optional[str] = None,
         skip: int = 0,
-        page_size: int = 1000,
+        page_size: int = 5000,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[Response, DataFrame]:
@@ -416,7 +416,7 @@ class WorldRefineryData:
         skip : int, optional
             pass-thru ``$skip`` query param to skip a certain number of records, by default 0
         page_size : int, optional
-            pass-thru ``pageSize`` query param to request a particular page size, by default 1000
+            pass-thru ``pageSize`` query param to request a particular page size, by default 5000
         paginate : bool, optional
             whether to auto-paginate the response, by default False
         raw : bool, optional
@@ -512,7 +512,7 @@ class WorldRefineryData:
         region: Optional[Union[str, list[str], "Series[str]"]] = None,
         filter_exp: Optional[str] = None,
         skip: int = 0,
-        page_size: int = 1000,
+        page_size: int = 5000,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[Response, DataFrame]:
@@ -550,7 +550,7 @@ class WorldRefineryData:
         skip : int, optional
             pass-thru ``$skip`` query param to skip a certain number of records, by default 0
         page_size : int, optional
-            pass-thru ``pageSize`` query param to request a particular page size, by default 1000
+            pass-thru ``pageSize`` query param to request a particular page size, by default 5000
         paginate : bool, optional
             whether to auto-paginate the response, by default False
         raw : bool, optional
@@ -698,7 +698,7 @@ class WorldRefineryData:
         # modified_date_lte: Optional[date] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[Response, DataFrame]:
@@ -744,7 +744,7 @@ class WorldRefineryData:
         page : int, optional
             pass-thru ``page`` query param to skip a certain number of records, by default 1
         page_size : int, optional
-            pass-thru ``pageSize`` query param to request a particular page size, by default 1000
+            pass-thru ``pageSize`` query param to request a particular page size, by default 5000
         paginate : bool, optional
             whether to auto-paginate the response, by default False
         raw : bool, optional
@@ -1032,7 +1032,7 @@ class WorldRefineryData:
         region: Optional[Union[str, list[str], "Series[str]"]] = None,
         filter_exp: Optional[str] = None,
         skip: int = 0,
-        page_size: int = 1000,
+        page_size: int = 5000,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[Response, DataFrame]:
@@ -1066,7 +1066,7 @@ class WorldRefineryData:
         skip : int, optional
             pass-thru ``$skip`` query param to skip a certain number of records, by default 0
         page_size : int, optional
-            pass-thru ``pageSize`` query param to request a particular page size, by default 1000
+            pass-thru ``pageSize`` query param to request a particular page size, by default 5000
         paginate : bool, optional
             whether to auto-paginate the response, by default False
         raw : bool, optional
@@ -1153,7 +1153,7 @@ class WorldRefineryData:
         margin_type: Optional[Union[str, list[str], "Series[str]"]] = None,
         filter_exp: Optional[str] = None,
         skip: int = 0,
-        page_size: int = 1000,
+        page_size: int = 5000,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[Response, DataFrame]:
@@ -1179,7 +1179,7 @@ class WorldRefineryData:
         skip : int, optional
             pass-thru ``$skip`` query param to skip a certain number of records, by default 0
         page_size : int, optional
-            pass-thru ``pageSize`` query param to request a particular page size, by default 1000
+            pass-thru ``pageSize`` query param to request a particular page size, by default 5000
         paginate : bool, optional
             whether to auto-paginate the response, by default False
         raw : bool, optional
