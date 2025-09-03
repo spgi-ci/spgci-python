@@ -200,7 +200,7 @@ class WorldRefineryData:
         col_value = ", ".join(columns) if isinstance(columns, list) else columns or ""
         params = {
             "$apply": f"groupby(({col_value}))",
-            "pageSize": 1000,
+            "pageSize": 5000,
             "$count": "true",
         }
 
@@ -234,6 +234,7 @@ class WorldRefineryData:
         quarter: Optional[Union[int, list[int], "Series[int]"]] = None,
         refinery_id: Optional[Union[int, list[int], "Series[int]"]] = None,
         owner: Optional[Union[str, list[str], "Series[str]"]] = None,
+        operator: Optional[Union[str, list[str], "Series[str]"]] = None,
         capacity_id: Optional[Union[int, list[int], "Series[int]"]] = None,
         capacity_status_id: Optional[Union[int, list[int], "Series[int]"]] = None,
         process_unit: Optional[Union[str, list[str], "Series[str]"]] = None,
@@ -266,6 +267,8 @@ class WorldRefineryData:
             filter by refineryId, by default None
         owner : Optional[Union[str, list[str], Series[str]]], optional
             filter by Owner/Name, by default None
+        operator : Optional[Union[str, list[str], Series[str]]], optional
+            filter by Refinery/Operator/Name, by default None
         capacity_id : Optional[Union[int, list[int], Series[int]]], optional
             filter by capacityId, by default None
         capacity_status_id : Optional[Union[int, list[int], Series[int]]], optional
@@ -314,6 +317,7 @@ class WorldRefineryData:
         filter_params.append(odata_list_to_filter("Quarter", quarter))
         filter_params.append(odata_list_to_filter("RefineryId", refinery_id))
         filter_params.append(odata_list_to_filter("Owner/Name", owner))
+        filter_params.append(odata_list_to_filter("Refinery/Operator/Name", operator))
         filter_params.append(odata_list_to_filter("CapacityId", capacity_id))
         filter_params.append(
             odata_list_to_filter("CapacityStatusId", capacity_status_id)
@@ -372,6 +376,7 @@ class WorldRefineryData:
         quarter: Optional[Union[int, list[int], "Series[int]"]] = None,
         refinery_id: Optional[Union[int, list[int], "Series[int]"]] = None,
         owner: Optional[Union[str, list[str], "Series[int]"]] = None,
+        operator: Optional[Union[str, list[str], "Series[int]"]] = None,
         capacity_status_id: Optional[Union[int, list[int], "Series[int]"]] = None,
         process_unit: Optional[Union[str, list[str], "Series[str]"]] = None,
         country: Optional[Union[str, list[str], "Series[str]"]] = None,
@@ -403,6 +408,8 @@ class WorldRefineryData:
             filter by refineryId, by default None
         owner : Optional[Union[str, list[str], Series[str]]], optional
             filter by Owner/Name, by default None
+        operator : Optional[Union[str, list[str], Series[str]]], optional
+            filter by Refinery/Operator/Name, by default None
         capacity_status_id : Optional[Union[int, list[int], Series[int]]], optional
             filter by CapacityStatusId, by default None
         process_unit : Optional[Union[str, list[str], Series[str]]], optional
@@ -455,6 +462,7 @@ class WorldRefineryData:
         filter_params.append(odata_list_to_filter("ProcessUnit/Name", process_unit))
         filter_params.append(odata_list_to_filter("Refinery/Country/Name", country))
         filter_params.append(odata_list_to_filter("Refinery/Region/Name", region))
+        filter_params.append(odata_list_to_filter("Refinery/Operator/Name", operator))
 
         if year_gt:
             filter_params.append(f"year gt {year_gt}")
@@ -506,6 +514,7 @@ class WorldRefineryData:
         quarter: Optional[Union[int, list[int], "Series[int]"]] = None,
         refinery_id: Optional[Union[int, list[int], "Series[int]"]] = None,
         owner: Optional[Union[str, list[str], "Series[str]"]] = None,
+        operator: Optional[Union[str, list[str], "Series[str]"]] = None,
         capacity_status_id: Optional[Union[int, list[int], "Series[int]"]] = None,
         process_unit: Optional[Union[str, list[str], "Series[str]"]] = None,
         country: Optional[Union[str, list[str], "Series[str]"]] = None,
@@ -537,6 +546,8 @@ class WorldRefineryData:
             filter by refineryId, by default None
         owner : Optional[Union[str, list[str], Series[str]]], optional
             filter by Owner/Name, by default None
+        operator : Optional[Union[str, list[str], Series[str]]], optional
+            filter by Refinery/Operator/Name, by default None
         capacity_status_id : Optional[Union[int, list[int], Series[int]]], optional
             filter by CapacityStatusId, by default None
         process_unit : Optional[Union[str, list[str], Series[str]]], optional
@@ -588,6 +599,7 @@ class WorldRefineryData:
         )
         filter_params.append(odata_list_to_filter("ProcessUnit/Name", process_unit))
         filter_params.append(odata_list_to_filter("Refinery/Country/Name", country))
+        filter_params.append(odata_list_to_filter("Refinery/Operator/Name", operator))
         filter_params.append(odata_list_to_filter("Refinery/Region/Name", region))
 
         if year_gt:
@@ -1028,6 +1040,7 @@ class WorldRefineryData:
         quarter: Optional[Union[int, list[int], "Series[int]"]] = None,
         refinery_id: Optional[Union[int, list[int], "Series[int]"]] = None,
         owner: Optional[Union[str, list[str], "Series[str]"]] = None,
+        operator: Optional[Union[str, list[str], "Series[str]"]] = None,
         country: Optional[Union[str, list[str], "Series[str]"]] = None,
         region: Optional[Union[str, list[str], "Series[str]"]] = None,
         filter_exp: Optional[str] = None,
@@ -1057,6 +1070,8 @@ class WorldRefineryData:
             filter by refineryId, by default None
         owner : Optional[Union[str, list[str], Series[str]]], optional
             filter by Owner/Name, by default None
+        operator : Optional[Union[str, list[str], Series[str]]], optional
+            filter by Refinery/Operator/Name, by default None
         country : Optional[Union[str, list[str], Series[str]]], optional
             filter by Refinery/Country/Name, by default None
         region : Optional[Union[str, list[str], Series[str]]], optional
@@ -1101,6 +1116,7 @@ class WorldRefineryData:
         filter_params.append(odata_list_to_filter("RefineryId", refinery_id))
         filter_params.append(odata_list_to_filter("Owner/Name", owner))
         filter_params.append(odata_list_to_filter("Refinery/Country/Name", country))
+        filter_params.append(odata_list_to_filter("Refinery/Operator/Name", operator))
         filter_params.append(odata_list_to_filter("Refinery/Region/Name", region))
 
         if year_gt:
@@ -1312,6 +1328,7 @@ class WorldRefineryData:
         end_date_lte: Optional[date] = None,
         refinery_id: Optional[Union[int, list[int], "Series[int]"]] = None,
         owner: Optional[Union[str, list[str], "Series[str]"]] = None,
+        operator: Optional[Union[str, list[str], "Series[str]"]] = None,
         process_unit: Optional[Union[str, list[str], "Series[str]"]] = None,
         planning_status: Optional[Union[str, list[str], "Series[str]"]] = None,
         outage_id: Optional[Union[int, list[int], "Series[int]"]] = None,
@@ -1324,7 +1341,7 @@ class WorldRefineryData:
         region: Optional[Union[str, list[str], "Series[str]"]] = None,
         filter_exp: Optional[str] = None,
         skip: int = 0,
-        page_size: int = 1000,
+        page_size: int = 5000,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[Response, DataFrame]:
@@ -1357,6 +1374,8 @@ class WorldRefineryData:
             filter by refineryId, by default None
         owner : Optional[Union[str, list[str], Series[str]]], optional
             filter by Owner/Name, by default None
+        operator : Optional[Union[str, list[str], Series[str]]], optional
+            filter by Refinery/Operator/Name, by default None
         process_unit : Optional[Union[str, list[str], Series[str]]], optional
             filter by ProcessUnit/Name, by default None
         planning_status : Optional[Union[str, list[str], Series[str]]], optional
@@ -1418,6 +1437,7 @@ class WorldRefineryData:
         filter_params.append(odata_list_to_filter("OutageId", outage_id))
         filter_params.append(odata_list_to_filter("Refinery/Country/Name", country))
         filter_params.append(odata_list_to_filter("Refinery/Region/Name", region))
+        filter_params.append(odata_list_to_filter("Refinery/Operator/Name", operator))
 
         if start_date_gt:
             filter_params.append(f"start_date gt {start_date_gt}")
