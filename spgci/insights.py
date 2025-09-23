@@ -41,6 +41,7 @@ class Insights:
    ``get_heards`` get heards, assessments summaries, market information summaries and tenders.\n
     ``get_subscriber_notes`` get subscriber notes.\n
     ``get_content`` get insights by ID.\n
+    ``get_packages`` get package content from the /v1/search/packages endpoint.\n
 
     """
 
@@ -235,13 +236,13 @@ class Insights:
         path = "/v1/search/heards"
         filter_params: list[str] = []
 
-        if updated_date_gt != None:
+        if updated_date_gt is not None:
             filter_params.append(f'updatedDate > "{updated_date_gt}"')
-        if updated_date_gte != None:
+        if updated_date_gte is not None:
             filter_params.append(f'updatedDate >= "{updated_date_gte}"')
-        if updated_date_lt != None:
+        if updated_date_lt is not None:
             filter_params.append(f'updatedDate < "{updated_date_lt}"')
-        if updated_date_lte != None:
+        if updated_date_lte is not None:
             filter_params.append(f'updatedDate <= "{updated_date_lte}"')
 
         filter_params.append(list_to_filter("geography", geography))
@@ -384,13 +385,13 @@ class Insights:
         path = "/v1/search/story/latest-news"
         filter_params: list[str] = []
 
-        if updated_date_gt != None:
+        if updated_date_gt is not None:
             filter_params.append(f'updatedDate > "{updated_date_gt}"')
-        if updated_date_gte != None:
+        if updated_date_gte is not None:
             filter_params.append(f'updatedDate >= "{updated_date_gte}"')
-        if updated_date_lt != None:
+        if updated_date_lt is not None:
             filter_params.append(f'updatedDate < "{updated_date_lt}"')
-        if updated_date_lte != None:
+        if updated_date_lte is not None:
             filter_params.append(f'updatedDate <= "{updated_date_lte}"')
 
         filter_params.append(list_to_filter("geography", geography))
@@ -534,13 +535,13 @@ class Insights:
         path = "/v1/search/story/spotlights"
         filter_params: list[str] = []
 
-        if updated_date_gt != None:
+        if updated_date_gt is not None:
             filter_params.append(f'updatedDate > "{updated_date_gt}"')
-        if updated_date_gte != None:
+        if updated_date_gte is not None:
             filter_params.append(f'updatedDate >= "{updated_date_gte}"')
-        if updated_date_lt != None:
+        if updated_date_lt is not None:
             filter_params.append(f'updatedDate < "{updated_date_lt}"')
-        if updated_date_lte != None:
+        if updated_date_lte is not None:
             filter_params.append(f'updatedDate <= "{updated_date_lte}"')
 
         filter_params.append(list_to_filter("geography", geography))
@@ -684,13 +685,13 @@ class Insights:
         path = "/v1/search/story/top-news"
         filter_params: list[str] = []
 
-        if updated_date_gt != None:
+        if updated_date_gt is not None:
             filter_params.append(f'updatedDate > "{updated_date_gt}"')
-        if updated_date_gte != None:
+        if updated_date_gte is not None:
             filter_params.append(f'updatedDate >= "{updated_date_gte}"')
-        if updated_date_lt != None:
+        if updated_date_lt is not None:
             filter_params.append(f'updatedDate < "{updated_date_lt}"')
-        if updated_date_lte != None:
+        if updated_date_lte is not None:
             filter_params.append(f'updatedDate <= "{updated_date_lte}"')
 
         filter_params.append(list_to_filter("geography", geography))
@@ -834,13 +835,13 @@ class Insights:
         path = "/v1/search/story"
         filter_params: list[str] = []
 
-        if updated_date_gt != None:
+        if updated_date_gt is not None:
             filter_params.append(f'updatedDate > "{updated_date_gt}"')
-        if updated_date_gte != None:
+        if updated_date_gte is not None:
             filter_params.append(f'updatedDate >= "{updated_date_gte}"')
-        if updated_date_lt != None:
+        if updated_date_lt is not None:
             filter_params.append(f'updatedDate < "{updated_date_lt}"')
-        if updated_date_lte != None:
+        if updated_date_lte is not None:
             filter_params.append(f'updatedDate <= "{updated_date_lte}"')
 
         filter_params.append(list_to_filter("geography", geography))
@@ -1070,5 +1071,152 @@ class Insights:
             params=params,
             raw=raw,
             df_fn=self._content_to_df,
+        )
+    
+    def get_packages(
+        self,
+        *,
+        q: Optional[str] = None,
+        geography: Optional[Union[list[str], "Series[str]", str]] = None,
+        commodity: Optional[Union[list[str], "Series[str]", str]] = None,
+        service_line: Optional[Union[list[str], "Series[str]", str]] = None,
+        page_number: Optional[Union[list[str], "Series[str]", str]] = None,
+        pricing_region: Optional[Union[list[str], "Series[str]", str]] = None,
+        publication: Optional[Union[list[str], "Series[str]", str]] = None,
+        sector: Optional[Union[list[str], "Series[str]", str]] = None,
+        content_type: Optional[
+            Union[
+                list[str],
+                "Series[str]",
+                str,
+            ]
+        ] = None,
+        company: Optional[Union[list[str], "Series[str]", str]] = None,
+        updated_date: Optional[datetime] = None,
+        updated_date_gt: Optional[datetime] = None,
+        updated_date_gte: Optional[datetime] = None,
+        updated_date_lt: Optional[datetime] = None,
+        updated_date_lte: Optional[datetime] = None,
+        field: Optional[str]= None,
+        strip_html: bool = False,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        paginate: bool = False,
+        raw: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Fetch package content from the /v1/search/packages endpoint, showing the id and title
+
+        Parameters
+        ----------
+        q : Optional[str], optional
+            filter across fields using free text search, by default None
+        geography : Optional[Union[list[str], Series[str], str]], optional
+            filter by geography, by default None
+        commodity : Optional[Union[list[str], Series[str], str]], optional
+            filter by commodity, by default None
+        service_line : Optional[Union[list[str], Series[str], str]], optional
+            filter by serviceLine, by default None
+        page_number : Optional[Union[list[str], Series[str], str]], optional
+            filter by pageNumber, by default None
+        pricing_region : Optional[Union[list[str], Series[str], str]], optional
+            filter by pricingRegion, by default None
+        publication : Optional[Union[list[str], Series[str], str]], optional
+            filter by publication, by default None
+        sector : Optional[Union[list[str], Series[str], str]], optional
+            filter by sector, by default None
+        content_type : Optional[Union[list[str], Series[str], str]], optional
+            filter by contentType, by default None
+        company : Optional[Union[list[str], Series[str], str]], optional
+            filter by company, by default None
+        updated_date : Optional[datetime], optional
+            filter by ``updatedDate = x`` , by default None
+        updated_date_gt : Optional[datetime], optional
+            filter by ``updatedDate > x`` , by default None
+        updated_date_gte : Optional[datetime], optional
+            filter by ``updatedDate >= x`` , by default None
+        updated_date_lt : Optional[datetime], optional
+            filter by ``updatedDate < x`` , by default None
+        updated_date_lte : Optional[datetime], optional
+            filter by ``updatedDate <= x`` , by default None
+        field : Optional[str], optional
+            pass-thru ``field`` query param to select which columns to return, by default "body"
+        strip_html : bool, optional
+            remove html tags, encoding and ``\n`` from ``headline``, ``body`` and ``lead`` , by default False
+        filter_exp : Optional[str], optional
+            pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
+        page : int, optional
+            pass-thru ``page`` query param to request a particular page of results, by default 1
+        page_size : int, optional
+            pass-thru ``pageSize`` query param to request a particular page size, by default 1000
+        paginate : bool, optional
+            whether to auto-paginate the response, by default False
+        raw : bool, optional
+            return a ``requests.Response`` instead of a ``DataFrame``, by default False
+
+        Returns
+        -------
+        Union[pd.DataFrame, Response]
+            DataFrame
+                DataFrame of the ``response.json()``
+            Response
+                Raw ``requests.Response`` object
+
+        Examples
+        --------
+        **Fetch all packages**
+        >>> ci.Insights().get_packages()
+
+        **Search for today's packages**
+        >>> ci.Insights().get_packages(updated_date=datetime.date.today())
+
+        **Stripping HTML Tags**
+        >>> ci.Insights().get_packages(q="energy", strip_html=True)
+        """
+        path = "/v1/search/packages"
+        filter_params: list[str] = []
+
+        if updated_date_gt is not None:
+            filter_params.append(f'updatedDate > "{updated_date_gt}"')
+        if updated_date_gte is not None:
+            filter_params.append(f'updatedDate >= "{updated_date_gte}"')
+        if updated_date_lt is not None:
+            filter_params.append(f'updatedDate < "{updated_date_lt}"')
+        if updated_date_lte is not None:
+            filter_params.append(f'updatedDate <= "{updated_date_lte}"')
+
+        filter_params.append(list_to_filter("geography", geography))
+        filter_params.append(list_to_filter("serviceLine", service_line))
+        filter_params.append(list_to_filter("pageNumber", page_number))
+        filter_params.append(list_to_filter("pricingRegion", pricing_region))
+        filter_params.append(list_to_filter("publication", publication))
+        filter_params.append(list_to_filter("sector", sector))
+        filter_params.append(list_to_filter("contentType", content_type))
+        filter_params.append(list_to_filter("commodity", commodity))
+        filter_params.append(list_to_filter("company", company))
+        filter_params.append(list_to_filter("updatedDate", updated_date))
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        else:
+            filter_exp += " AND " + " AND ".join(filter_params)
+
+        params = {
+            "filter": filter_exp,
+            "page": page,
+            "pageSize": page_size,
+            "q": q,
+            "field": field,
+        }
+        return get_data(
+            path=f"{self._path}{path}",
+            params=params,
+            paginate=paginate,
+            raw=raw,
+            paginate_fn=self._paginate,
+            df_fn=partial(self._to_df, strip_html=strip_html),
         )
 
