@@ -5406,7 +5406,7 @@ class AmericasGas:
         volume: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -5484,7 +5484,7 @@ class AmericasGas:
              Volume., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -5625,7 +5625,7 @@ class AmericasGas:
         create_date_gte: Optional[datetime] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -5767,7 +5767,7 @@ class AmericasGas:
              filter by `create_date <= x`, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -5946,7 +5946,7 @@ class AmericasGas:
         data_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -6064,7 +6064,7 @@ class AmericasGas:
              A true or false return if the record is active., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -6219,7 +6219,7 @@ class AmericasGas:
         data_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -6337,7 +6337,7 @@ class AmericasGas:
              A true or false return if the record is active., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -6485,7 +6485,7 @@ class AmericasGas:
         volume: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -6563,7 +6563,7 @@ class AmericasGas:
              Volume., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -6704,7 +6704,7 @@ class AmericasGas:
         create_date_gte: Optional[datetime] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -6846,7 +6846,7 @@ class AmericasGas:
              filter by `create_date <= x`, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -7025,7 +7025,7 @@ class AmericasGas:
         data_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -7143,7 +7143,7 @@ class AmericasGas:
              A true or false return if the record is active., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -7298,7 +7298,7 @@ class AmericasGas:
         data_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -7416,7 +7416,7 @@ class AmericasGas:
              A true or false return if the record is active., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 1000,
+         page_size: int = 5000,
          raw: bool = False,
          paginate: bool = False
 
@@ -7524,6 +7524,1046 @@ class AmericasGas:
             paginate=paginate,
         )
         return response
+
+    def get_tariff_rate_data(
+        self,
+        *,
+        last_modified_date: Optional[datetime] = None,
+        last_modified_date_lt: Optional[datetime] = None,
+        last_modified_date_lte: Optional[datetime] = None,
+        last_modified_date_gt: Optional[datetime] = None,
+        last_modified_date_gte: Optional[datetime] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_name: Optional[Union[list[str], Series[str], str]] = None,
+        service_type_id: Optional[Union[list[str], Series[str], str]] = None,
+        rate_name: Optional[Union[list[str], Series[str], str]] = None,
+        rate_item_name: Optional[Union[list[str], Series[str], str]] = None,
+        rate_description: Optional[Union[list[str], Series[str], str]] = None,
+        rate_type_id: Optional[Union[list[str], Series[str], str]] = None,
+        rate_amount: Optional[Union[list[str], Series[str], str]] = None,
+        rate_unit_id: Optional[Union[list[str], Series[str], str]] = None,
+        rate_unit: Optional[Union[list[str], Series[str], str]] = None,
+        rate_frequency_id: Optional[Union[list[str], Series[str], str]] = None,
+        rate_frequency: Optional[Union[list[str], Series[str], str]] = None,
+        season_id: Optional[Union[list[str], Series[str], str]] = None,
+        season: Optional[Union[list[str], Series[str], str]] = None,
+        gas_unit_id: Optional[Union[list[str], Series[str], str]] = None,
+        gas_unit_name: Optional[Union[list[str], Series[str], str]] = None,
+        zone_id_receipt: Optional[Union[list[str], Series[str], str]] = None,
+        receipt_zone: Optional[Union[list[str], Series[str], str]] = None,
+        zone_id_delivery: Optional[Union[list[str], Series[str], str]] = None,
+        delivery_zone: Optional[Union[list[str], Series[str], str]] = None,
+        date_effective: Optional[date] = None,
+        date_effective_lt: Optional[date] = None,
+        date_effective_lte: Optional[date] = None,
+        date_effective_gt: Optional[date] = None,
+        date_effective_gte: Optional[date] = None,
+        date_superceded: Optional[datetime] = None,
+        date_superceded_lt: Optional[datetime] = None,
+        date_superceded_lte: Optional[datetime] = None,
+        date_superceded_gt: Optional[datetime] = None,
+        date_superceded_gte: Optional[datetime] = None,
+        date_issued: Optional[datetime] = None,
+        date_issued_lt: Optional[datetime] = None,
+        date_issued_lte: Optional[datetime] = None,
+        date_issued_gt: Optional[datetime] = None,
+        date_issued_gte: Optional[datetime] = None,
+        valid_from: Optional[datetime] = None,
+        valid_from_lt: Optional[datetime] = None,
+        valid_from_lte: Optional[datetime] = None,
+        valid_from_gt: Optional[datetime] = None,
+        valid_from_gte: Optional[datetime] = None,
+        valid_to: Optional[datetime] = None,
+        valid_to_lt: Optional[datetime] = None,
+        valid_to_lte: Optional[datetime] = None,
+        valid_to_gt: Optional[datetime] = None,
+        valid_to_gte: Optional[datetime] = None,
+        data_active: Optional[Union[list[str], Series[str], str]] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Natural gas pipeline tariff rates contains the posted pipeline's applicable charges for transportation service on their system from source to destination.
+
+        Parameters
+        ----------
+
+         last_modified_date: Optional[datetime], optional
+             Date and time the record was last updated., by default None
+         last_modified_date_gt: Optional[datetime], optional
+             filter by `last_modified_date > x`, by default None
+         last_modified_date_gte: Optional[datetime], optional
+             filter by `last_modified_date >= x`, by default None
+         last_modified_date_lt: Optional[datetime], optional
+             filter by `last_modified_date < x`, by default None
+         last_modified_date_lte: Optional[datetime], optional
+             filter by `last_modified_date <= x`, by default None
+         pipeline_id: Optional[Union[list[str], Series[str], str]]
+             The ID given to a pipeline system, utilizes legacy Bentek pipeline ids when applicable., by default None
+         pipeline_name: Optional[Union[list[str], Series[str], str]]
+             The display name of a pipeline system, utilizes legacy Bentek names when applicable., by default None
+         service_type_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the service type., by default None
+         rate_name: Optional[Union[list[str], Series[str], str]]
+             The specific name or identifier assigned to a particular rate or charge in the pipeline tariff., by default None
+         rate_item_name: Optional[Union[list[str], Series[str], str]]
+             The specific name or description of the rate or charge being applied., by default None
+         rate_description: Optional[Union[list[str], Series[str], str]]
+             The category or classification of the rate being applied., by default None
+         rate_type_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the rate type., by default None
+         rate_amount: Optional[Union[list[str], Series[str], str]]
+             The numerical value or percentage associated with the rate or charge., by default None
+         rate_unit_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the rate unit., by default None
+         rate_unit: Optional[Union[list[str], Series[str], str]]
+             The unit of measurement used to quantify the monetary value or percentage associated with the rate or charge., by default None
+         rate_frequency_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the rate frequency., by default None
+         rate_frequency: Optional[Union[list[str], Series[str], str]]
+             The frequency at which the rate or charge is applied or calculated., by default None
+         season_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the season., by default None
+         season: Optional[Union[list[str], Series[str], str]]
+             Season per gas industry standards (April - October in the same year = summer and November - March bridge the calendar years = winter)., by default None
+         gas_unit_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the gas unit., by default None
+         gas_unit_name: Optional[Union[list[str], Series[str], str]]
+             The unit of measurement used to quantify the volume or quantity of gas being transported or supplied., by default None
+         zone_id_receipt: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the receipt zone., by default None
+         receipt_zone: Optional[Union[list[str], Series[str], str]]
+             A designated area where the gas is received or collected from., by default None
+         zone_id_delivery: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the delivery zone., by default None
+         delivery_zone: Optional[Union[list[str], Series[str], str]]
+             A designated area where the gas is delivered or transported to., by default None
+         date_effective: Optional[date], optional
+             The date when the rate becomes effective., by default None
+         date_effective_gt: Optional[date], optional
+             filter by `date_effective > x`, by default None
+         date_effective_gte: Optional[date], optional
+             filter by `date_effective >= x`, by default None
+         date_effective_lt: Optional[date], optional
+             filter by `date_effective < x`, by default None
+         date_effective_lte: Optional[date], optional
+             filter by `date_effective <= x`, by default None
+         date_superceded: Optional[datetime], optional
+             The date when the rate is superceded by a new effective rate., by default None
+         date_superceded_gt: Optional[datetime], optional
+             filter by `date_superceded > x`, by default None
+         date_superceded_gte: Optional[datetime], optional
+             filter by `date_superceded >= x`, by default None
+         date_superceded_lt: Optional[datetime], optional
+             filter by `date_superceded < x`, by default None
+         date_superceded_lte: Optional[datetime], optional
+             filter by `date_superceded <= x`, by default None
+         date_issued: Optional[datetime], optional
+             The date when the rate was issued., by default None
+         date_issued_gt: Optional[datetime], optional
+             filter by `date_issued > x`, by default None
+         date_issued_gte: Optional[datetime], optional
+             filter by `date_issued >= x`, by default None
+         date_issued_lt: Optional[datetime], optional
+             filter by `date_issued < x`, by default None
+         date_issued_lte: Optional[datetime], optional
+             filter by `date_issued <= x`, by default None
+         valid_from: Optional[datetime], optional
+             The date and time stamp of when the record was valid from., by default None
+         valid_from_gt: Optional[datetime], optional
+             filter by `valid_from > x`, by default None
+         valid_from_gte: Optional[datetime], optional
+             filter by `valid_from >= x`, by default None
+         valid_from_lt: Optional[datetime], optional
+             filter by `valid_from < x`, by default None
+         valid_from_lte: Optional[datetime], optional
+             filter by `valid_from <= x`, by default None
+         valid_to: Optional[datetime], optional
+             The date and time stamp of when the record was valid to., by default None
+         valid_to_gt: Optional[datetime], optional
+             filter by `valid_to > x`, by default None
+         valid_to_gte: Optional[datetime], optional
+             filter by `valid_to >= x`, by default None
+         valid_to_lt: Optional[datetime], optional
+             filter by `valid_to < x`, by default None
+         valid_to_lte: Optional[datetime], optional
+             filter by `valid_to <= x`, by default None
+         data_active: Optional[Union[list[str], Series[str], str]]
+             A true or false return if the record is active., by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("lastModifiedDate", last_modified_date))
+        if last_modified_date_gt is not None:
+            filter_params.append(f'lastModifiedDate > "{last_modified_date_gt}"')
+        if last_modified_date_gte is not None:
+            filter_params.append(f'lastModifiedDate >= "{last_modified_date_gte}"')
+        if last_modified_date_lt is not None:
+            filter_params.append(f'lastModifiedDate < "{last_modified_date_lt}"')
+        if last_modified_date_lte is not None:
+            filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
+        filter_params.append(list_to_filter("pipelineName", pipeline_name))
+        filter_params.append(list_to_filter("serviceTypeId", service_type_id))
+        filter_params.append(list_to_filter("rateName", rate_name))
+        filter_params.append(list_to_filter("rateItemName", rate_item_name))
+        filter_params.append(list_to_filter("rateDescription", rate_description))
+        filter_params.append(list_to_filter("rateTypeId", rate_type_id))
+        filter_params.append(list_to_filter("rateAmount", rate_amount))
+        filter_params.append(list_to_filter("rateUnitId", rate_unit_id))
+        filter_params.append(list_to_filter("rateUnit", rate_unit))
+        filter_params.append(list_to_filter("rateFrequencyId", rate_frequency_id))
+        filter_params.append(list_to_filter("rateFrequency", rate_frequency))
+        filter_params.append(list_to_filter("seasonId", season_id))
+        filter_params.append(list_to_filter("season", season))
+        filter_params.append(list_to_filter("gasUnitId", gas_unit_id))
+        filter_params.append(list_to_filter("gasUnitName", gas_unit_name))
+        filter_params.append(list_to_filter("zoneIdReceipt", zone_id_receipt))
+        filter_params.append(list_to_filter("receiptZone", receipt_zone))
+        filter_params.append(list_to_filter("zoneIdDelivery", zone_id_delivery))
+        filter_params.append(list_to_filter("deliveryZone", delivery_zone))
+        filter_params.append(list_to_filter("dateEffective", date_effective))
+        if date_effective_gt is not None:
+            filter_params.append(f'dateEffective > "{date_effective_gt}"')
+        if date_effective_gte is not None:
+            filter_params.append(f'dateEffective >= "{date_effective_gte}"')
+        if date_effective_lt is not None:
+            filter_params.append(f'dateEffective < "{date_effective_lt}"')
+        if date_effective_lte is not None:
+            filter_params.append(f'dateEffective <= "{date_effective_lte}"')
+        filter_params.append(list_to_filter("dateSuperceded", date_superceded))
+        if date_superceded_gt is not None:
+            filter_params.append(f'dateSuperceded > "{date_superceded_gt}"')
+        if date_superceded_gte is not None:
+            filter_params.append(f'dateSuperceded >= "{date_superceded_gte}"')
+        if date_superceded_lt is not None:
+            filter_params.append(f'dateSuperceded < "{date_superceded_lt}"')
+        if date_superceded_lte is not None:
+            filter_params.append(f'dateSuperceded <= "{date_superceded_lte}"')
+        filter_params.append(list_to_filter("dateIssued", date_issued))
+        if date_issued_gt is not None:
+            filter_params.append(f'dateIssued > "{date_issued_gt}"')
+        if date_issued_gte is not None:
+            filter_params.append(f'dateIssued >= "{date_issued_gte}"')
+        if date_issued_lt is not None:
+            filter_params.append(f'dateIssued < "{date_issued_lt}"')
+        if date_issued_lte is not None:
+            filter_params.append(f'dateIssued <= "{date_issued_lte}"')
+        filter_params.append(list_to_filter("validFrom", valid_from))
+        if valid_from_gt is not None:
+            filter_params.append(f'validFrom > "{valid_from_gt}"')
+        if valid_from_gte is not None:
+            filter_params.append(f'validFrom >= "{valid_from_gte}"')
+        if valid_from_lt is not None:
+            filter_params.append(f'validFrom < "{valid_from_lt}"')
+        if valid_from_lte is not None:
+            filter_params.append(f'validFrom <= "{valid_from_lte}"')
+        filter_params.append(list_to_filter("validTo", valid_to))
+        if valid_to_gt is not None:
+            filter_params.append(f'validTo > "{valid_to_gt}"')
+        if valid_to_gte is not None:
+            filter_params.append(f'validTo >= "{valid_to_gte}"')
+        if valid_to_lt is not None:
+            filter_params.append(f'validTo < "{valid_to_lt}"')
+        if valid_to_lte is not None:
+            filter_params.append(f'validTo <= "{valid_to_lte}"')
+        filter_params.append(list_to_filter("dataActive", data_active))
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/analytics/gas/na-gas/v1/tariff-rate-data",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+
+    def get_index_of_customer_data(
+        self,
+        *,
+        year: Optional[Union[list[str], Series[str], str]] = None,
+        quarter: Optional[Union[list[str], Series[str], str]] = None,
+        ioc_key: Optional[Union[list[str], Series[str], str]] = None,
+        last_modified_date: Optional[datetime] = None,
+        last_modified_date_lt: Optional[datetime] = None,
+        last_modified_date_lte: Optional[datetime] = None,
+        last_modified_date_gt: Optional[datetime] = None,
+        last_modified_date_gte: Optional[datetime] = None,
+        pipeline_filer_name: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_name: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
+        shipper_name: Optional[Union[list[str], Series[str], str]] = None,
+        point_name: Optional[Union[list[str], Series[str], str]] = None,
+        legacy_point_logic_point_id: Optional[
+            Union[list[str], Series[str], str]
+        ] = None,
+        legacy_point_logic_lci_id: Optional[Union[list[str], Series[str], str]] = None,
+        component_point_id: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_primary: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_i_d_primary: Optional[Union[list[str], Series[str], str]] = None,
+        dir: Optional[Union[list[str], Series[str], str]] = None,
+        loc_prop: Optional[Union[list[str], Series[str], str]] = None,
+        zone: Optional[Union[list[str], Series[str], str]] = None,
+        county: Optional[Union[list[str], Series[str], str]] = None,
+        county_id: Optional[Union[list[str], Series[str], str]] = None,
+        state: Optional[Union[list[str], Series[str], str]] = None,
+        state_id: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region_id: Optional[Union[list[str], Series[str], str]] = None,
+        region: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
+        max_trans: Optional[Union[list[float], Series[float], float]] = None,
+        max_storage: Optional[Union[list[float], Series[float], float]] = None,
+        point_max_trans: Optional[Union[list[float], Series[float], float]] = None,
+        point_max_stor: Optional[Union[list[float], Series[float], float]] = None,
+        uom: Optional[Union[list[str], Series[str], str]] = None,
+        agent: Optional[Union[list[str], Series[str], str]] = None,
+        rate_schedule: Optional[Union[list[str], Series[str], str]] = None,
+        contract_number: Optional[Union[list[str], Series[str], str]] = None,
+        contract_start_date: Optional[datetime] = None,
+        contract_start_date_lt: Optional[datetime] = None,
+        contract_start_date_lte: Optional[datetime] = None,
+        contract_start_date_gt: Optional[datetime] = None,
+        contract_start_date_gte: Optional[datetime] = None,
+        contract_end_date: Optional[datetime] = None,
+        contract_end_date_lt: Optional[datetime] = None,
+        contract_end_date_lte: Optional[datetime] = None,
+        contract_end_date_gt: Optional[datetime] = None,
+        contract_end_date_gte: Optional[datetime] = None,
+        contract_months: Optional[Union[list[float], Series[float], float]] = None,
+        roll_over_period: Optional[Union[list[float], Series[float], float]] = None,
+        negotiated_rate: Optional[Union[list[str], Series[str], str]] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Quarterly interstate pipeline data that represents an index of all of its firm transportation and storage customers under contract as of the first day of the calendar quarter. Contractual data is sourced from FERC form 549B.
+
+        Parameters
+        ----------
+
+         year: Optional[Union[list[str], Series[str], str]]
+             The year of when the record was reported., by default None
+         quarter: Optional[Union[list[str], Series[str], str]]
+             The quarter of when the record was reported., by default None
+         ioc_key: Optional[Union[list[str], Series[str], str]]
+             IOCKEY represents a unique Contract, Shipper, or Point combination., by default None
+         last_modified_date: Optional[datetime], optional
+             Date and time the record was last updated., by default None
+         last_modified_date_gt: Optional[datetime], optional
+             filter by `last_modified_date > x`, by default None
+         last_modified_date_gte: Optional[datetime], optional
+             filter by `last_modified_date >= x`, by default None
+         last_modified_date_lt: Optional[datetime], optional
+             filter by `last_modified_date < x`, by default None
+         last_modified_date_lte: Optional[datetime], optional
+             filter by `last_modified_date <= x`, by default None
+         pipeline_filer_name: Optional[Union[list[str], Series[str], str]]
+             The filer name of a pipeline system., by default None
+         pipeline_name: Optional[Union[list[str], Series[str], str]]
+             The display name of a pipeline system, utilizes legacy Bentek names when applicable., by default None
+         pipeline_id: Optional[Union[list[str], Series[str], str]]
+             The ID given to a pipeline system, utilizes legacy Bentek pipeline ids when applicable., by default None
+         shipper_name: Optional[Union[list[str], Series[str], str]]
+             The name of the company responsible for transporting natural gas from the production or supply source to the end consumer., by default None
+         point_name: Optional[Union[list[str], Series[str], str]]
+             The display name of a meter or point, utilizes legacy Bentek point name when applicable., by default None
+         legacy_point_logic_point_id: Optional[Union[list[str], Series[str], str]]
+             Point ID for a meter used by the legacy PointLogic service., by default None
+         legacy_point_logic_lci_id: Optional[Union[list[str], Series[str], str]]
+             Alternative point ID for a meter used by the legacy PointLogic service., by default None
+         component_point_id: Optional[Union[list[str], Series[str], str]]
+             Point ID for a meter used by the Americas Gas service., by default None
+         meter_type_primary: Optional[Union[list[str], Series[str], str]]
+             The primary type of classification and purpose of a meter or point, utilizes legacy PointLogic definitions., by default None
+         meter_type_i_d_primary: Optional[Union[list[str], Series[str], str]]
+             An ID for the primary type of classification and purpose of a meter or point, utilizes legacy PointLogic definitions and ID., by default None
+         dir: Optional[Union[list[str], Series[str], str]]
+             Direction indicates the orientation of a point such as receipt, delivery, bi-directional or the reported flow direction of segment or compressor. These codes are from the NAESB Business Practice Standards Manual relating to the Capacity Release - Firm Transportation and Storage - Award Notice (Award Download), N1 Record. M2 - Receipt Point MQ - Delivery Point MV - Mainline S8 - Pipeline Segment defined by 2 Point records (second of 2 Point records) S9 - Pipeline Segment defined by 1 Point record (or first of 2 Point records) SB - Storage Area IJ - Injection Point WR - Withdrawal Point., by default None
+         loc_prop: Optional[Union[list[str], Series[str], str]]
+             The location propriety code reported by the pipeline for a specific meter., by default None
+         zone: Optional[Union[list[str], Series[str], str]]
+             A designation for where on the pipeline system the point is located, corresponding to a pipeline’s operational and market design. Zonal information is sourced from the legacy Bentek service., by default None
+         county: Optional[Union[list[str], Series[str], str]]
+             The political boundaries of a defined county within a US state in which a meter or point resides., by default None
+         county_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the county within a US state in which a meter or point resides, utilizes legacy Bentek IDs., by default None
+         state: Optional[Union[list[str], Series[str], str]]
+             The political boundaries that define a state or province within country., by default None
+         state_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the state or province utilizes legacy Bentek IDs., by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
+         sub_region_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic subregion., by default None
+         region: Optional[Union[list[str], Series[str], str]]
+             A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
+         region_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic region., by default None
+         max_trans: Optional[Union[list[float], Series[float], float]]
+             Maximum quantity of natural gas that can be transported per day., by default None
+         max_storage: Optional[Union[list[float], Series[float], float]]
+             Maximum quantity or the largest quantity of natural gas the pipeline is obligated to store for the Shipper under the contract., by default None
+         point_max_trans: Optional[Union[list[float], Series[float], float]]
+             The maximum amount of natural gas that can be transported to a specific point per day., by default None
+         point_max_stor: Optional[Union[list[float], Series[float], float]]
+             The maximum amount of natural gas that can be stored at a specific point., by default None
+         uom: Optional[Union[list[str], Series[str], str]]
+             Unit of measure., by default None
+         agent: Optional[Union[list[str], Series[str], str]]
+             The company or entity responsible for the natural gas trading.  Agent or Asset Manager., by default None
+         rate_schedule: Optional[Union[list[str], Series[str], str]]
+             The specific rate schedule associated with the contract.  The rate is the as reported rate on the FERC Form 2 or 2A., by default None
+         contract_number: Optional[Union[list[str], Series[str], str]]
+             The unique identifier for the contract., by default None
+         contract_start_date: Optional[datetime], optional
+             Start date of the contract., by default None
+         contract_start_date_gt: Optional[datetime], optional
+             filter by `contract_start_date > x`, by default None
+         contract_start_date_gte: Optional[datetime], optional
+             filter by `contract_start_date >= x`, by default None
+         contract_start_date_lt: Optional[datetime], optional
+             filter by `contract_start_date < x`, by default None
+         contract_start_date_lte: Optional[datetime], optional
+             filter by `contract_start_date <= x`, by default None
+         contract_end_date: Optional[datetime], optional
+             End date of the contract., by default None
+         contract_end_date_gt: Optional[datetime], optional
+             filter by `contract_end_date > x`, by default None
+         contract_end_date_gte: Optional[datetime], optional
+             filter by `contract_end_date >= x`, by default None
+         contract_end_date_lt: Optional[datetime], optional
+             filter by `contract_end_date < x`, by default None
+         contract_end_date_lte: Optional[datetime], optional
+             filter by `contract_end_date <= x`, by default None
+         contract_months: Optional[Union[list[float], Series[float], float]]
+             Total number of months for the contract., by default None
+         roll_over_period: Optional[Union[list[float], Series[float], float]]
+             The number of days in the roll-over period after which the contract can be renewed or extended. Also known as evergreen period. If the contract continues on a monthly basis then 31 should be entered; if annual enter 365; if unknown leave blank., by default None
+         negotiated_rate: Optional[Union[list[str], Series[str], str]]
+             Indicates whether the rate was negotiated (Yes/No)., by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("year", year))
+        filter_params.append(list_to_filter("quarter", quarter))
+        filter_params.append(list_to_filter("iocKey", ioc_key))
+        filter_params.append(list_to_filter("lastModifiedDate", last_modified_date))
+        if last_modified_date_gt is not None:
+            filter_params.append(f'lastModifiedDate > "{last_modified_date_gt}"')
+        if last_modified_date_gte is not None:
+            filter_params.append(f'lastModifiedDate >= "{last_modified_date_gte}"')
+        if last_modified_date_lt is not None:
+            filter_params.append(f'lastModifiedDate < "{last_modified_date_lt}"')
+        if last_modified_date_lte is not None:
+            filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
+        filter_params.append(list_to_filter("pipelineFilerName", pipeline_filer_name))
+        filter_params.append(list_to_filter("pipelineName", pipeline_name))
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
+        filter_params.append(list_to_filter("shipperName", shipper_name))
+        filter_params.append(list_to_filter("pointName", point_name))
+        filter_params.append(
+            list_to_filter("legacyPointLogicPointId", legacy_point_logic_point_id)
+        )
+        filter_params.append(
+            list_to_filter("legacyPointLogicLciId", legacy_point_logic_lci_id)
+        )
+        filter_params.append(list_to_filter("componentPointId", component_point_id))
+        filter_params.append(list_to_filter("meterTypePrimary", meter_type_primary))
+        filter_params.append(
+            list_to_filter("meterTypeIDPrimary", meter_type_i_d_primary)
+        )
+        filter_params.append(list_to_filter("dir", dir))
+        filter_params.append(list_to_filter("locProp", loc_prop))
+        filter_params.append(list_to_filter("zone", zone))
+        filter_params.append(list_to_filter("county", county))
+        filter_params.append(list_to_filter("countyId", county_id))
+        filter_params.append(list_to_filter("state", state))
+        filter_params.append(list_to_filter("stateId", state_id))
+        filter_params.append(list_to_filter("subRegion", sub_region))
+        filter_params.append(list_to_filter("subRegionId", sub_region_id))
+        filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("regionId", region_id))
+        filter_params.append(list_to_filter("maxTrans", max_trans))
+        filter_params.append(list_to_filter("maxStorage", max_storage))
+        filter_params.append(list_to_filter("pointMaxTrans", point_max_trans))
+        filter_params.append(list_to_filter("pointMaxStor", point_max_stor))
+        filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("agent", agent))
+        filter_params.append(list_to_filter("rateSchedule", rate_schedule))
+        filter_params.append(list_to_filter("contractNumber", contract_number))
+        filter_params.append(list_to_filter("contractStartDate", contract_start_date))
+        if contract_start_date_gt is not None:
+            filter_params.append(f'contractStartDate > "{contract_start_date_gt}"')
+        if contract_start_date_gte is not None:
+            filter_params.append(f'contractStartDate >= "{contract_start_date_gte}"')
+        if contract_start_date_lt is not None:
+            filter_params.append(f'contractStartDate < "{contract_start_date_lt}"')
+        if contract_start_date_lte is not None:
+            filter_params.append(f'contractStartDate <= "{contract_start_date_lte}"')
+        filter_params.append(list_to_filter("contractEndDate", contract_end_date))
+        if contract_end_date_gt is not None:
+            filter_params.append(f'contractEndDate > "{contract_end_date_gt}"')
+        if contract_end_date_gte is not None:
+            filter_params.append(f'contractEndDate >= "{contract_end_date_gte}"')
+        if contract_end_date_lt is not None:
+            filter_params.append(f'contractEndDate < "{contract_end_date_lt}"')
+        if contract_end_date_lte is not None:
+            filter_params.append(f'contractEndDate <= "{contract_end_date_lte}"')
+        filter_params.append(list_to_filter("contractMonths", contract_months))
+        filter_params.append(list_to_filter("rollOverPeriod", roll_over_period))
+        filter_params.append(list_to_filter("negotiatedRate", negotiated_rate))
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/analytics/gas/na-gas/v1/index-of-customer-data",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+
+    def get_production_oil_data(
+        self,
+        *,
+        flow_date: date,
+        flow_date_lt: Optional[date] = None,
+        flow_date_lte: Optional[date] = None,
+        flow_date_gt: Optional[date] = None,
+        flow_date_gte: Optional[date] = None,
+        last_modified_date: Optional[datetime] = None,
+        last_modified_date_lt: Optional[datetime] = None,
+        last_modified_date_lte: Optional[datetime] = None,
+        last_modified_date_gt: Optional[datetime] = None,
+        last_modified_date_gte: Optional[datetime] = None,
+        date_frequency: Optional[Union[list[str], Series[str], str]] = None,
+        date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
+        model_id: Optional[Union[list[str], Series[str], str]] = None,
+        model_type: Optional[Union[list[str], Series[str], str]] = None,
+        model_type_id: Optional[Union[list[str], Series[str], str]] = None,
+        market_type: Optional[Union[list[str], Series[str], str]] = None,
+        market_type_id: Optional[Union[list[str], Series[str], str]] = None,
+        function_type: Optional[Union[list[str], Series[str], str]] = None,
+        function_type_id: Optional[Union[list[str], Series[str], str]] = None,
+        point_of_view: Optional[Union[list[str], Series[str], str]] = None,
+        domain: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
+        region: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
+        subregion: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
+        state: Optional[Union[list[str], Series[str], str]] = None,
+        state_id: Optional[Union[list[str], Series[str], str]] = None,
+        producing_area: Optional[Union[list[str], Series[str], str]] = None,
+        producing_area_id: Optional[Union[list[str], Series[str], str]] = None,
+        padd: Optional[Union[list[str], Series[str], str]] = None,
+        padd_name: Optional[Union[list[str], Series[str], str]] = None,
+        uom: Optional[Union[list[str], Series[str], str]] = None,
+        volume: Optional[Union[list[str], Series[str], str]] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Crude oil production by both PADD and by the geographical hierarchies utilized for natural gas production dataset expressed at a monthly average granularity.
+
+        Parameters
+        ----------
+
+         flow_date: date
+             The calendar date or gas day the activity occurred.
+         flow_date_gt: Optional[date], optional
+             filter by `flow_date > x`, by default None
+         flow_date_gte: Optional[date], optional
+             filter by `flow_date >= x`, by default None
+         flow_date_lt: Optional[date], optional
+             filter by `flow_date < x`, by default None
+         flow_date_lte: Optional[date], optional
+             filter by `flow_date <= x`, by default None
+         last_modified_date: Optional[datetime], optional
+             Date and time the record was last updated., by default None
+         last_modified_date_gt: Optional[datetime], optional
+             filter by `last_modified_date > x`, by default None
+         last_modified_date_gte: Optional[datetime], optional
+             filter by `last_modified_date >= x`, by default None
+         last_modified_date_lt: Optional[datetime], optional
+             filter by `last_modified_date < x`, by default None
+         last_modified_date_lte: Optional[datetime], optional
+             filter by `last_modified_date <= x`, by default None
+         date_frequency: Optional[Union[list[str], Series[str], str]]
+             Oil production can only be Monthly, Seasonal, Annual., by default None
+         date_frequency_desc: Optional[Union[list[str], Series[str], str]]
+             The time period averages of the dataset such as Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
+         model_id: Optional[Union[list[str], Series[str], str]]
+             Internal use, Model ID value., by default None
+         model_type: Optional[Union[list[str], Series[str], str]]
+             Model types can vary among supply, demand and other market fundamentals. The type describes the fundamentals the model output represents., by default None
+         model_type_id: Optional[Union[list[str], Series[str], str]]
+             ID associated with Model type., by default None
+         market_type: Optional[Union[list[str], Series[str], str]]
+             Oil market type relates to the point of view data, such as country, region, subregion, special area or producing area., by default None
+         market_type_id: Optional[Union[list[str], Series[str], str]]
+             ID associated with Market type., by default None
+         function_type: Optional[Union[list[str], Series[str], str]]
+             The name of the Function Type such as prediction, aggregation, allocation, ten year average., by default None
+         function_type_id: Optional[Union[list[str], Series[str], str]]
+             The ID given to a Function Type such as 1 is prediction, 2 is aggregation, 3 is allocation, 4 is ten year average., by default None
+         point_of_view: Optional[Union[list[str], Series[str], str]]
+             Point of View for the values. Point of view based on a geographic hierarchy of country, region, subregion, or producing area., by default None
+         domain: Optional[Union[list[str], Series[str], str]]
+             US Lower-48, Canada and Mexico., by default None
+         domain_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the domain., by default None
+         region: Optional[Union[list[str], Series[str], str]]
+             A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
+         region_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic region., by default None
+         subregion: Optional[Union[list[str], Series[str], str]]
+             A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
+         subregion_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic subregion., by default None
+         state: Optional[Union[list[str], Series[str], str]]
+             The political boundaries that define a state or province within country., by default None
+         state_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the state or province utilizes legacy Bentek IDs., by default None
+         producing_area: Optional[Union[list[str], Series[str], str]]
+             Defined aggregation of counties within a state that is a best fit representation of prominent oil and gas plays and basins., by default None
+         producing_area_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for a defined Producing Area utilizes legacy PointLogic IDs., by default None
+         padd: Optional[Union[list[str], Series[str], str]]
+             Petroleum Administration for Defense Districts (PADDs) are geographic aggregations of the 50 States and the District of Columbia into five districts: PADD 1 is the East Coast, PADD 2 the Midwest, PADD 3 the Gulf Coast, PADD 4 the Rocky Mountain Region, and PADD 5 the West Coast., by default None
+         padd_name: Optional[Union[list[str], Series[str], str]]
+             Petroleum Administration for Defense Districts (PADDs) are geographic aggregations of the 50 States and the District of Columbia into five districts., by default None
+         uom: Optional[Union[list[str], Series[str], str]]
+             Unit of measure., by default None
+         volume: Optional[Union[list[str], Series[str], str]]
+             Volume., by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("flowDate", flow_date))
+        if flow_date_gt is not None:
+            filter_params.append(f'flowDate > "{flow_date_gt}"')
+        if flow_date_gte is not None:
+            filter_params.append(f'flowDate >= "{flow_date_gte}"')
+        if flow_date_lt is not None:
+            filter_params.append(f'flowDate < "{flow_date_lt}"')
+        if flow_date_lte is not None:
+            filter_params.append(f'flowDate <= "{flow_date_lte}"')
+        filter_params.append(list_to_filter("lastModifiedDate", last_modified_date))
+        if last_modified_date_gt is not None:
+            filter_params.append(f'lastModifiedDate > "{last_modified_date_gt}"')
+        if last_modified_date_gte is not None:
+            filter_params.append(f'lastModifiedDate >= "{last_modified_date_gte}"')
+        if last_modified_date_lt is not None:
+            filter_params.append(f'lastModifiedDate < "{last_modified_date_lt}"')
+        if last_modified_date_lte is not None:
+            filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
+        filter_params.append(list_to_filter("dateFrequency", date_frequency))
+        filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
+        filter_params.append(list_to_filter("modelId", model_id))
+        filter_params.append(list_to_filter("modelType", model_type))
+        filter_params.append(list_to_filter("modelTypeId", model_type_id))
+        filter_params.append(list_to_filter("marketType", market_type))
+        filter_params.append(list_to_filter("marketTypeId", market_type_id))
+        filter_params.append(list_to_filter("functionType", function_type))
+        filter_params.append(list_to_filter("functionTypeId", function_type_id))
+        filter_params.append(list_to_filter("pointOfView", point_of_view))
+        filter_params.append(list_to_filter("domain", domain))
+        filter_params.append(list_to_filter("domainId", domain_id))
+        filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("regionId", region_id))
+        filter_params.append(list_to_filter("subregion", subregion))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
+        filter_params.append(list_to_filter("state", state))
+        filter_params.append(list_to_filter("stateId", state_id))
+        filter_params.append(list_to_filter("producingArea", producing_area))
+        filter_params.append(list_to_filter("producingAreaId", producing_area_id))
+        filter_params.append(list_to_filter("padd", padd))
+        filter_params.append(list_to_filter("paddName", padd_name))
+        filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("volume", volume))
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/analytics/gas/na-gas/v1/production-oil-data",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+
+    def get_facility_flow_data(
+        self,
+        *,
+        flow_date: date,
+        flow_date_lt: Optional[date] = None,
+        flow_date_lte: Optional[date] = None,
+        flow_date_gt: Optional[date] = None,
+        flow_date_gte: Optional[date] = None,
+        last_modified_date: Optional[datetime] = None,
+        last_modified_date_lt: Optional[datetime] = None,
+        last_modified_date_lte: Optional[datetime] = None,
+        last_modified_date_gt: Optional[datetime] = None,
+        last_modified_date_gte: Optional[datetime] = None,
+        date_frequency: Optional[Union[list[str], Series[str], str]] = None,
+        date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
+        facility_type: Optional[Union[list[str], Series[str], str]] = None,
+        facility_type_id: Optional[Union[list[str], Series[str], str]] = None,
+        view_type: Optional[Union[list[str], Series[str], str]] = None,
+        view_type_id: Optional[Union[list[str], Series[str], str]] = None,
+        name: Optional[Union[list[str], Series[str], str]] = None,
+        model_id: Optional[Union[list[str], Series[str], str]] = None,
+        component_point_id: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_name: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
+        point_name: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_primary: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_id_primary: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_secondary: Optional[Union[list[str], Series[str], str]] = None,
+        meter_type_id_secondary: Optional[Union[list[str], Series[str], str]] = None,
+        flow_direction: Optional[Union[list[str], Series[str], str]] = None,
+        flow_direction_code: Optional[Union[list[str], Series[str], str]] = None,
+        flow_direction_id: Optional[Union[list[str], Series[str], str]] = None,
+        zone: Optional[Union[list[str], Series[str], str]] = None,
+        connecting_party: Optional[Union[list[str], Series[str], str]] = None,
+        loc_prop: Optional[Union[list[str], Series[str], str]] = None,
+        domain: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
+        region: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
+        subregion: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
+        state: Optional[Union[list[str], Series[str], str]] = None,
+        state_id: Optional[Union[list[str], Series[str], str]] = None,
+        county: Optional[Union[list[str], Series[str], str]] = None,
+        county_id: Optional[Union[list[str], Series[str], str]] = None,
+        producing_area: Optional[Union[list[str], Series[str], str]] = None,
+        producing_area_id: Optional[Union[list[str], Series[str], str]] = None,
+        padd_name: Optional[Union[list[str], Series[str], str]] = None,
+        plant_field_name: Optional[Union[list[str], Series[str], str]] = None,
+        plant_field_code: Optional[Union[list[str], Series[str], str]] = None,
+        utility_company_name: Optional[Union[list[str], Series[str], str]] = None,
+        utility_company_id: Optional[str] = None,
+        utility_company_id_lt: Optional[str] = None,
+        utility_company_id_lte: Optional[str] = None,
+        utility_company_id_gt: Optional[str] = None,
+        utility_company_id_gte: Optional[str] = None,
+        nerc_region: Optional[Union[list[str], Series[str], str]] = None,
+        balancing_authority_name: Optional[Union[list[str], Series[str], str]] = None,
+        balancing_authority_code: Optional[Union[list[str], Series[str], str]] = None,
+        sector_name: Optional[Union[list[str], Series[str], str]] = None,
+        storage_reservoir_name: Optional[Union[list[str], Series[str], str]] = None,
+        storage_field_type: Optional[Union[list[str], Series[str], str]] = None,
+        eia_storage_region: Optional[Union[list[str], Series[str], str]] = None,
+        uom: Optional[Union[list[str], Series[str], str]] = None,
+        volume: Optional[Union[list[str], Series[str], str]] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Facility level data and flows refer to curated datasets or aggregated information from specific meters in interstate gas pipeline flows. This data includes details about natural gas power plants, processing plants, storage facilities, and the activity from and to LNG plants.
+
+        Parameters
+        ----------
+
+         flow_date: date
+             The calendar date or gas day the activity occurred.
+         flow_date_gt: Optional[date], optional
+             filter by `flow_date > x`, by default None
+         flow_date_gte: Optional[date], optional
+             filter by `flow_date >= x`, by default None
+         flow_date_lt: Optional[date], optional
+             filter by `flow_date < x`, by default None
+         flow_date_lte: Optional[date], optional
+             filter by `flow_date <= x`, by default None
+         last_modified_date: Optional[datetime], optional
+             Date and time the record was last updated., by default None
+         last_modified_date_gt: Optional[datetime], optional
+             filter by `last_modified_date > x`, by default None
+         last_modified_date_gte: Optional[datetime], optional
+             filter by `last_modified_date >= x`, by default None
+         last_modified_date_lt: Optional[datetime], optional
+             filter by `last_modified_date < x`, by default None
+         last_modified_date_lte: Optional[datetime], optional
+             filter by `last_modified_date <= x`, by default None
+         date_frequency: Optional[Union[list[str], Series[str], str]]
+             Daily, Weekly, Monthly, Seasonal, Annual., by default None
+         date_frequency_desc: Optional[Union[list[str], Series[str], str]]
+             The time period averages of the dataset such as Daily, Weekly, Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
+         facility_type: Optional[Union[list[str], Series[str], str]]
+             The type of facility that is being served by the pipeline such as Gas Processing Plant, Power Plant, Storage, LNG Feedgas or LNG Sendout., by default None
+         facility_type_id: Optional[Union[list[str], Series[str], str]]
+             The facility type ID is a numeric value (1 to 5) that corresponds to the sequential order of the facility types described., by default None
+         view_type: Optional[Union[list[str], Series[str], str]]
+             The nature of the line item data and its time series. Facility view type contains the named facility and applicable metadata. Sample view type details the underlining meter-level data in the aggregated Facility view type., by default None
+         view_type_id: Optional[Union[list[str], Series[str], str]]
+             The ID given to a view type where Facility is equal to 1 and Sample 2., by default None
+         name: Optional[Union[list[str], Series[str], str]]
+             The name of the facility., by default None
+         model_id: Optional[Union[list[str], Series[str], str]]
+             Internal use, Model ID value., by default None
+         component_point_id: Optional[Union[list[str], Series[str], str]]
+             Point ID for a meter used by the Americas Gas service., by default None
+         pipeline_name: Optional[Union[list[str], Series[str], str]]
+             The display name of a pipeline system, utilizes legacy Bentek names when applicable., by default None
+         pipeline_id: Optional[Union[list[str], Series[str], str]]
+             The ID given to a pipeline system, utilizes legacy Bentek pipeline ids when applicable., by default None
+         point_name: Optional[Union[list[str], Series[str], str]]
+             The display name of a meter or point, utilizes legacy Bentek point name when applicable., by default None
+         meter_type_primary: Optional[Union[list[str], Series[str], str]]
+             The primary type of classification and purpose of a meter or point, utilizes legacy PointLogic definitions., by default None
+         meter_type_id_primary: Optional[Union[list[str], Series[str], str]]
+             An ID for the primary type of classification and purpose of a meter or point, utilizes legacy PointLogic definitions and ID., by default None
+         meter_type_secondary: Optional[Union[list[str], Series[str], str]]
+             A secondary type classification and purpose of a meter or point, meant to provide an extra level of detail, utilizes legacy Bentek definitions., by default None
+         meter_type_id_secondary: Optional[Union[list[str], Series[str], str]]
+             A secondary type classification and purpose of a meter or point, meant to provide an extra level of detail and utilizes legacy Bentek ids., by default None
+         flow_direction: Optional[Union[list[str], Series[str], str]]
+             Flow direction indicates the orientation of a point such as receipt, delivery, bi-directional or the reported flow direction of segment or compressor. Attribute is sourced from legacy PointLogic. Flow direction is primary to the similar and secondary attribute of Location Type., by default None
+         flow_direction_code: Optional[Union[list[str], Series[str], str]]
+             A one letter code for Flow Direction such as ‘R’ for receipt or ‘D’ for delivery. Attribute is sourced from legacy PointLogic. Flow direction is primary to the similar and secondary attribute of Location Type., by default None
+         flow_direction_id: Optional[Union[list[str], Series[str], str]]
+             Flow direction identification number for the orientation of a point such as receipt, delivery, bi-directional or the reported flow direction of segment or compressor. Attribute is sourced from legacy PointLogic. Flow direction is primary to the similar and secondary attribute of Location Type., by default None
+         zone: Optional[Union[list[str], Series[str], str]]
+             A designation for where on the pipeline system the point is located, corresponding to a pipeline’s operational and market design. Zonal information is sourced from the legacy Bentek service., by default None
+         connecting_party: Optional[Union[list[str], Series[str], str]]
+             The downstream connecting business name of a meter as reported by the pipeline, utilizes legacy Bentek service., by default None
+         loc_prop: Optional[Union[list[str], Series[str], str]]
+             The location propriety code reported by the pipeline for a specific meter., by default None
+         domain: Optional[Union[list[str], Series[str], str]]
+             US Lower-48, Canada and Mexico., by default None
+         domain_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the domain., by default None
+         region: Optional[Union[list[str], Series[str], str]]
+             A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
+         region_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic region., by default None
+         subregion: Optional[Union[list[str], Series[str], str]]
+             A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
+         subregion_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic subregion., by default None
+         state: Optional[Union[list[str], Series[str], str]]
+             The political boundaries that define a state or province within country., by default None
+         state_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the state or province utilizes legacy Bentek IDs., by default None
+         county: Optional[Union[list[str], Series[str], str]]
+             The political boundaries of a defined county within a US state in which a meter or point resides., by default None
+         county_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the county within a US state in which a meter or point resides, utilizes legacy Bentek IDs., by default None
+         producing_area: Optional[Union[list[str], Series[str], str]]
+             Defined aggregation of counties within a state that is a best fit representation of prominent oil and gas plays and basins., by default None
+         producing_area_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for a defined Producing Area, utilizes legacy PointLogic IDs., by default None
+         padd_name: Optional[Union[list[str], Series[str], str]]
+             Petroleum Administration for Defense Districts (PADDs) are geographic aggregations of the 50 States and the District of Columbia into five districts., by default None
+         plant_field_name: Optional[Union[list[str], Series[str], str]]
+             The plant or field name where the facility resides. When applicable, the name will align to EIA-860 or EIA-191 data., by default None
+         plant_field_code: Optional[Union[list[str], Series[str], str]]
+             The plant or field code where the facility resides. When applicable, the code will align to EIA-860 or EIA-191 data., by default None
+         utility_company_name: Optional[Union[list[str], Series[str], str]]
+             The name of the utility company that owns or operates the facility. When applicable, the name will align to EIA-860 or EIA-191 data., by default None
+         utility_company_id: Optional[str], optional
+             The assigned ID of the utility company that owns or operates the facility. When applicable, the name will align to EIA-860 or EIA-191 data., by default None
+         utility_company_id_gt: Optional[str], optional
+             filter by `utility_company_id > x`, by default None
+         utility_company_id_gte: Optional[str], optional
+             filter by `utility_company_id >= x`, by default None
+         utility_company_id_lt: Optional[str], optional
+             filter by `utility_company_id < x`, by default None
+         utility_company_id_lte: Optional[str], optional
+             filter by `utility_company_id <= x`, by default None
+         nerc_region: Optional[Union[list[str], Series[str], str]]
+             North American Reliability Council region., by default None
+         balancing_authority_name: Optional[Union[list[str], Series[str], str]]
+             The name of a balancing authority. When applicable, the name will align to EIA-860., by default None
+         balancing_authority_code: Optional[Union[list[str], Series[str], str]]
+             The code assigned to a balancing authority by the FERC. When applicable, the name will align to EIA-860., by default None
+         sector_name: Optional[Union[list[str], Series[str], str]]
+             The sector which the facility resides. Power for example can be an IPP Non-CHP = Independent Power Producer and Not a commercial combined heat and power plant aka: cogen facility. When applicable, the name will align to EIA-860., by default None
+         storage_reservoir_name: Optional[Union[list[str], Series[str], str]]
+             The name of the storage reservoir. When applicable, the name will align to EIA-191., by default None
+         storage_field_type: Optional[Union[list[str], Series[str], str]]
+             The type of storage field. When applicable, the name will align to EIA-191., by default None
+         eia_storage_region: Optional[Union[list[str], Series[str], str]]
+             The storage region names as assigned by the EIA- Energy Information Administration., by default None
+         uom: Optional[Union[list[str], Series[str], str]]
+             Unit of measure., by default None
+         volume: Optional[Union[list[str], Series[str], str]]
+             Volume., by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("flowDate", flow_date))
+        if flow_date_gt is not None:
+            filter_params.append(f'flowDate > "{flow_date_gt}"')
+        if flow_date_gte is not None:
+            filter_params.append(f'flowDate >= "{flow_date_gte}"')
+        if flow_date_lt is not None:
+            filter_params.append(f'flowDate < "{flow_date_lt}"')
+        if flow_date_lte is not None:
+            filter_params.append(f'flowDate <= "{flow_date_lte}"')
+        filter_params.append(list_to_filter("lastModifiedDate", last_modified_date))
+        if last_modified_date_gt is not None:
+            filter_params.append(f'lastModifiedDate > "{last_modified_date_gt}"')
+        if last_modified_date_gte is not None:
+            filter_params.append(f'lastModifiedDate >= "{last_modified_date_gte}"')
+        if last_modified_date_lt is not None:
+            filter_params.append(f'lastModifiedDate < "{last_modified_date_lt}"')
+        if last_modified_date_lte is not None:
+            filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
+        filter_params.append(list_to_filter("dateFrequency", date_frequency))
+        filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
+        filter_params.append(list_to_filter("facilityType", facility_type))
+        filter_params.append(list_to_filter("facilityTypeId", facility_type_id))
+        filter_params.append(list_to_filter("viewType", view_type))
+        filter_params.append(list_to_filter("viewTypeId", view_type_id))
+        filter_params.append(list_to_filter("name", name))
+        filter_params.append(list_to_filter("modelId", model_id))
+        filter_params.append(list_to_filter("componentPointId", component_point_id))
+        filter_params.append(list_to_filter("pipelineName", pipeline_name))
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
+        filter_params.append(list_to_filter("pointName", point_name))
+        filter_params.append(list_to_filter("meterTypePrimary", meter_type_primary))
+        filter_params.append(
+            list_to_filter("meterTypeIdPrimary", meter_type_id_primary)
+        )
+        filter_params.append(list_to_filter("meterTypeSecondary", meter_type_secondary))
+        filter_params.append(
+            list_to_filter("meterTypeIdSecondary", meter_type_id_secondary)
+        )
+        filter_params.append(list_to_filter("flowDirection", flow_direction))
+        filter_params.append(list_to_filter("flowDirectionCode", flow_direction_code))
+        filter_params.append(list_to_filter("flowDirectionId", flow_direction_id))
+        filter_params.append(list_to_filter("zone", zone))
+        filter_params.append(list_to_filter("connectingParty", connecting_party))
+        filter_params.append(list_to_filter("locProp", loc_prop))
+        filter_params.append(list_to_filter("domain", domain))
+        filter_params.append(list_to_filter("domainId", domain_id))
+        filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("regionId", region_id))
+        filter_params.append(list_to_filter("subregion", subregion))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
+        filter_params.append(list_to_filter("state", state))
+        filter_params.append(list_to_filter("stateId", state_id))
+        filter_params.append(list_to_filter("county", county))
+        filter_params.append(list_to_filter("countyId", county_id))
+        filter_params.append(list_to_filter("producingArea", producing_area))
+        filter_params.append(list_to_filter("producingAreaId", producing_area_id))
+        filter_params.append(list_to_filter("paddName", padd_name))
+        filter_params.append(list_to_filter("plantFieldName", plant_field_name))
+        filter_params.append(list_to_filter("plantFieldCode", plant_field_code))
+        filter_params.append(list_to_filter("utilityCompanyName", utility_company_name))
+        filter_params.append(list_to_filter("utilityCompanyId", utility_company_id))
+        if utility_company_id_gt is not None:
+            filter_params.append(f'utilityCompanyId > "{utility_company_id_gt}"')
+        if utility_company_id_gte is not None:
+            filter_params.append(f'utilityCompanyId >= "{utility_company_id_gte}"')
+        if utility_company_id_lt is not None:
+            filter_params.append(f'utilityCompanyId < "{utility_company_id_lt}"')
+        if utility_company_id_lte is not None:
+            filter_params.append(f'utilityCompanyId <= "{utility_company_id_lte}"')
+        filter_params.append(list_to_filter("nercRegion", nerc_region))
+        filter_params.append(
+            list_to_filter("balancingAuthorityName", balancing_authority_name)
+        )
+        filter_params.append(
+            list_to_filter("balancingAuthorityCode", balancing_authority_code)
+        )
+        filter_params.append(list_to_filter("sectorName", sector_name))
+        filter_params.append(
+            list_to_filter("storageReservoirName", storage_reservoir_name)
+        )
+        filter_params.append(list_to_filter("storageFieldType", storage_field_type))
+        filter_params.append(list_to_filter("eiaStorageRegion", eia_storage_region))
+        filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("volume", volume))
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/analytics/gas/na-gas/v1/facility-flow-data",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+
+
 
     @staticmethod
     def _convert_to_df(resp: Response) -> pd.DataFrame:
