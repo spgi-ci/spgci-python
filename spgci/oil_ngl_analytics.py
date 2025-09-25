@@ -29,6 +29,8 @@ class OilNGLAnalytics:
         "arbflow-arbitrage",
         "oil-inventory",
         "oil-inventory-latest",
+        "oil-price-forecast",
+        "oil-price-forecast-latest",
         "refinery-production",
         "refinery-production-latest",
         "refinery-runs",
@@ -92,6 +94,8 @@ class OilNGLAnalytics:
             "arbflow-arbitrage": "analytics/fuels-refining/v1/arbflow/arbitrage",
             "oil-inventory": "analytics/fuels-refining/v1/oil-inventory",
             "oil-inventory-latest": "analytics/fuels-refining/v1/oil-inventory/latest",
+            "oil-price-forecast": "analytics/energy-price-forecast/v1/epf",
+            "oil-price-forecast-latest": "analytics/energy-price-forecast/v1/epf/latest",
             "refinery-production": "analytics/fuels-refining/v1/refinery-production",
             "refinery-production-latest": "analytics/fuels-refining/v1/refinery-production/latest",
             "refinery-runs": "analytics/fuels-refining/v1/refinery-runs",
@@ -113,17 +117,24 @@ class OilNGLAnalytics:
 
         col_value = ", ".join(columns) if isinstance(columns, list) else columns or ""
         params = {"GroupBy": col_value, "pageSize": 5000}
-        
+
         if filter_exp is not None:
             params.update({"filter": filter_exp})
 
         def to_df(resp: Response):
             j = resp.json()
             df = pd.json_normalize(j["aggResultValue"])
-            columns_dt = ["vintageDate", "reportForDate", "historicalEdgeDate", "modifiedDate"]
+            columns_dt = [
+                "vintageDate",
+                "reportForDate",
+                "historicalEdgeDate",
+                "modifiedDate",
+            ]
             for c in columns_dt:
                 if c in df.columns:
-                    df[c] = pd.to_datetime(df[c], utc=True, format="ISO8601", errors="coerce")
+                    df[c] = pd.to_datetime(
+                        df[c], utc=True, format="ISO8601", errors="coerce"
+                    )
             return df
 
         return get_data(path, params, to_df, paginate=True)
@@ -2540,9 +2551,6 @@ class OilNGLAnalytics:
             paginate=paginate,
         )
         return response
-
-
-    
 
     @staticmethod
     def _convert_to_df(resp: Response) -> pd.DataFrame:
