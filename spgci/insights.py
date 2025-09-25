@@ -1077,6 +1077,8 @@ class Insights:
         self,
         *,
         q: Optional[str] = None,
+        title: Optional[str] = None,
+        mime_type: Optional[str] = None,
         geography: Optional[Union[list[str], "Series[str]", str]] = None,
         commodity: Optional[Union[list[str], "Series[str]", str]] = None,
         service_line: Optional[Union[list[str], "Series[str]", str]] = None,
@@ -1196,6 +1198,8 @@ class Insights:
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("company", company))
         filter_params.append(list_to_filter("updatedDate", updated_date))
+        filter_params.append(list_to_filter("publication", title))
+        filter_params.append(list_to_filter("mimeType", mime_type))
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
