@@ -6186,7 +6186,7 @@ class AmericasGas:
     def get_notices_data(
         self,
         *,
-        posting_date_time: datetime,
+        posting_date_time: Optional[datetime] = None,
         posting_date_time_lt: Optional[datetime] = None,
         posting_date_time_lte: Optional[datetime] = None,
         posting_date_time_gt: Optional[datetime] = None,
