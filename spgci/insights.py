@@ -114,6 +114,9 @@ class Insights:
             if "lead" in df.columns:
                 df["lead"] = df["lead"].str.replace(r"<.*?>", " ", regex=True)  # type: ignore
                 df["lead"] = df["lead"].apply(lambda s: html.unescape(str(s)).replace("\n", " "))  # type: ignore
+            if "summary" in df.columns:
+                df["summary"] = df["summary"].str.replace(r"<.*?>", " ", regex=True)  # type: ignore
+                df["summary"] = df["summary"].apply(lambda s: html.unescape(str(s)).replace("\n", " "))  # type: ignore
 
         return df
 
