@@ -1073,6 +1073,7 @@ class Insights:
             path=f"{self._path}{path}",
             params=params,
             raw=raw,
+            paginate_fn=lambda resp: type('NoPaginator', (), {'has_more_pages': False})(),
             df_fn=self._content_to_df,
         )
     
