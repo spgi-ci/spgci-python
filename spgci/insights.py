@@ -114,6 +114,9 @@ class Insights:
             if "lead" in df.columns:
                 df["lead"] = df["lead"].str.replace(r"<.*?>", " ", regex=True)  # type: ignore
                 df["lead"] = df["lead"].apply(lambda s: html.unescape(str(s)).replace("\n", " "))  # type: ignore
+            if "summary" in df.columns:
+                df["summary"] = df["summary"].str.replace(r"<.*?>", " ", regex=True)  # type: ignore
+                df["summary"] = df["summary"].apply(lambda s: html.unescape(str(s)).replace("\n", " "))  # type: ignore
 
         return df
 
@@ -1070,6 +1073,7 @@ class Insights:
             path=f"{self._path}{path}",
             params=params,
             raw=raw,
+            paginate_fn=lambda resp: type('NoPaginator', (), {'has_more_pages': False})(),
             df_fn=self._content_to_df,
         )
     
@@ -1077,6 +1081,8 @@ class Insights:
         self,
         *,
         q: Optional[str] = None,
+        title: Optional[str] = None,
+        mime_type: Optional[str] = None,
         geography: Optional[Union[list[str], "Series[str]", str]] = None,
         commodity: Optional[Union[list[str], "Series[str]", str]] = None,
         service_line: Optional[Union[list[str], "Series[str]", str]] = None,
@@ -1101,7 +1107,7 @@ class Insights:
         strip_html: bool = False,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 5000,
+        page_size: int = 1000,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -1196,6 +1202,8 @@ class Insights:
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("company", company))
         filter_params.append(list_to_filter("updatedDate", updated_date))
+        filter_params.append(list_to_filter("publication", title))
+        filter_params.append(list_to_filter("mimeType", mime_type))
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
