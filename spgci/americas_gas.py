@@ -866,7 +866,7 @@ class AmericasGas:
     def get_modeled_demand_actual(
         self,
         *,
-        flow_date: date,
+        flow_date: Optional[date] = None,
         flow_date_lt: Optional[date] = None,
         flow_date_lte: Optional[date] = None,
         flow_date_gt: Optional[date] = None,
@@ -911,8 +911,8 @@ class AmericasGas:
         Parameters
         ----------
 
-         flow_date: date
-             The calendar date or gas day the activity occurred.
+         flow_date: Optional[date], optional
+             The calendar date or gas day the activity occurred., by default None
          flow_date_gt: Optional[date], optional
              filter by `flow_date > x`, by default None
          flow_date_gte: Optional[date], optional
@@ -1053,7 +1053,7 @@ class AmericasGas:
     def get_natural_gas_production(
         self,
         *,
-        flow_date: date,
+        flow_date: Optional[date] = None,
         flow_date_lt: Optional[date] = None,
         flow_date_lte: Optional[date] = None,
         flow_date_gt: Optional[date] = None,
@@ -1233,7 +1233,7 @@ class AmericasGas:
     def get_population_weighted_weather(
         self,
         *,
-        flow_date: date,
+        flow_date: Optional[date] = None,
         flow_date_lt: Optional[date] = None,
         flow_date_lte: Optional[date] = None,
         flow_date_gt: Optional[date] = None,
@@ -1295,7 +1295,7 @@ class AmericasGas:
         Parameters
         ----------
 
-         flow_date: date
+         flow_date: date, optional
              The calendar date or gas day the activity occurred.
          flow_date_gt: Optional[date], optional
              filter by `flow_date > x`, by default None
@@ -5580,7 +5580,7 @@ class AmericasGas:
     def get_no_notice_flow_data(
         self,
         *,
-        flow_date: date,
+        flow_date: Optional[date] = None,
         flow_date_lt: Optional[date] = None,
         flow_date_lte: Optional[date] = None,
         flow_date_gt: Optional[date] = None,
@@ -5657,7 +5657,7 @@ class AmericasGas:
         Parameters
         ----------
 
-         flow_date: date
+         flow_date: Optional[date],
              The calendar date or gas day the activity occurred.
          flow_date_gt: Optional[date], optional
              filter by `flow_date > x`, by default None
@@ -7007,7 +7007,7 @@ class AmericasGas:
     def get_production_oil_data(
         self,
         *,
-        flow_date: date,
+        flow_date: Optional[date] = None,
         flow_date_lt: Optional[date] = None,
         flow_date_lte: Optional[date] = None,
         flow_date_gt: Optional[date] = None,
@@ -7053,7 +7053,7 @@ class AmericasGas:
         Parameters
         ----------
 
-         flow_date: date
+         flow_date: Optional[date], optional
              The calendar date or gas day the activity occurred.
          flow_date_gt: Optional[date], optional
              filter by `flow_date > x`, by default None
@@ -7195,7 +7195,7 @@ class AmericasGas:
     def get_facility_flow_data(
         self,
         *,
-        flow_date: date,
+        flow_date: Optional[date] = None,
         flow_date_lt: Optional[date] = None,
         flow_date_lte: Optional[date] = None,
         flow_date_gt: Optional[date] = None,
@@ -7269,7 +7269,7 @@ class AmericasGas:
         Parameters
         ----------
 
-         flow_date: date
+         flow_date: Optional[date], optional
              The calendar date or gas day the activity occurred.
          flow_date_gt: Optional[date], optional
              filter by `flow_date > x`, by default None
@@ -7498,6 +7498,517 @@ class AmericasGas:
 
         response = get_data(
             path=f"/analytics/gas/na-gas/v1/facility-flow-data",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+    
+    def get_market_balances_data(
+        self,
+        *,
+        flow_date: Optional[date] = None,
+        flow_date_lt: Optional[date] = None,
+        flow_date_lte: Optional[date] = None,
+        flow_date_gt: Optional[date] = None,
+        flow_date_gte: Optional[date] = None,
+        last_modified_date: Optional[datetime] = None,
+        last_modified_date_lt: Optional[datetime] = None,
+        last_modified_date_lte: Optional[datetime] = None,
+        last_modified_date_gt: Optional[datetime] = None,
+        last_modified_date_gte: Optional[datetime] = None,
+        date_frequency: Optional[Union[list[str], Series[str], str]] = None,
+        date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
+        domain: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
+        region: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
+        subregion: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
+        geography_type: Optional[Union[list[str], Series[str], str]] = None,
+        geography_pov: Optional[Union[list[str], Series[str], str]] = None,
+        geography_pov_id: Optional[Union[list[str], Series[str], str]] = None,
+        model_id: Optional[Union[list[str], Series[str], str]] = None,
+        concept: Optional[Union[list[str], Series[str], str]] = None,
+        category: Optional[Union[list[str], Series[str], str]] = None,
+        row_order_ranking: Optional[Union[list[str], Series[str], str]] = None,
+        uom: Optional[Union[list[str], Series[str], str]] = None,
+        value: Optional[Union[list[str], Series[str], str]] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        A detailed accounting of all supply and demand elements pertaining to a domain, region, or subregion. Volumes are expressed in million cubic feet per day (MMcf/d).
+
+        Parameters
+        ----------
+
+         flow_date: Optional[date], optional
+             The calendar date or gas day the activity occurred.
+         flow_date_gt: Optional[date], optional
+             filter by `flow_date > x`, by default None
+         flow_date_gte: Optional[date], optional
+             filter by `flow_date >= x`, by default None
+         flow_date_lt: Optional[date], optional
+             filter by `flow_date < x`, by default None
+         flow_date_lte: Optional[date], optional
+             filter by `flow_date <= x`, by default None
+         last_modified_date: Optional[datetime], optional
+             Date and time the record was last updated., by default None
+         last_modified_date_gt: Optional[datetime], optional
+             filter by `last_modified_date > x`, by default None
+         last_modified_date_gte: Optional[datetime], optional
+             filter by `last_modified_date >= x`, by default None
+         last_modified_date_lt: Optional[datetime], optional
+             filter by `last_modified_date < x`, by default None
+         last_modified_date_lte: Optional[datetime], optional
+             filter by `last_modified_date <= x`, by default None
+         date_frequency: Optional[Union[list[str], Series[str], str]]
+             Daily, Weekly, Monthly, Seasonal, Annual., by default None
+         date_frequency_desc: Optional[Union[list[str], Series[str], str]]
+             The time period averages of the dataset such as Daily, Weekly, Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
+         domain: Optional[Union[list[str], Series[str], str]]
+             US Lower-48, Canada and Mexico., by default None
+         domain_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the domain., by default None
+         region: Optional[Union[list[str], Series[str], str]]
+             A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
+         region_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic region., by default None
+         subregion: Optional[Union[list[str], Series[str], str]]
+             A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
+         subregion_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic subregion., by default None
+         geography_type: Optional[Union[list[str], Series[str], str]]
+             Geography type for the point of view based on geographic hierarchy of country, region, subregion, substate, or special area., by default None
+         geography_pov: Optional[Union[list[str], Series[str], str]]
+             Geography point of view based on geographic hierarchy of country, region, subregion, substate, or special area., by default None
+         geography_pov_id: Optional[Union[list[str], Series[str], str]]
+             An ID for the geography point of view., by default None
+         model_id: Optional[Union[list[str], Series[str], str]]
+             Internal use, Model ID value., by default None
+         concept: Optional[Union[list[str], Series[str], str]]
+             Data concept such as Supply, Demand, LNG, Storage, Flows, etc., by default None
+         category: Optional[Union[list[str], Series[str], str]]
+             Category that is unique within a Concept., by default None
+         row_order_ranking: Optional[Union[list[str], Series[str], str]]
+             A number used to define a consistent row order of the data within a geography point of view., by default None
+         uom: Optional[Union[list[str], Series[str], str]]
+             Unit of measure., by default None
+         value: Optional[Union[list[str], Series[str], str]]
+             Value of the record., by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 1000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("flowDate", flow_date))
+        if flow_date_gt is not None:
+            filter_params.append(f'flowDate > "{flow_date_gt}"')
+        if flow_date_gte is not None:
+            filter_params.append(f'flowDate >= "{flow_date_gte}"')
+        if flow_date_lt is not None:
+            filter_params.append(f'flowDate < "{flow_date_lt}"')
+        if flow_date_lte is not None:
+            filter_params.append(f'flowDate <= "{flow_date_lte}"')
+        filter_params.append(list_to_filter("lastModifiedDate", last_modified_date))
+        if last_modified_date_gt is not None:
+            filter_params.append(f'lastModifiedDate > "{last_modified_date_gt}"')
+        if last_modified_date_gte is not None:
+            filter_params.append(f'lastModifiedDate >= "{last_modified_date_gte}"')
+        if last_modified_date_lt is not None:
+            filter_params.append(f'lastModifiedDate < "{last_modified_date_lt}"')
+        if last_modified_date_lte is not None:
+            filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
+        filter_params.append(list_to_filter("dateFrequency", date_frequency))
+        filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
+        filter_params.append(list_to_filter("domain", domain))
+        filter_params.append(list_to_filter("domainId", domain_id))
+        filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("regionId", region_id))
+        filter_params.append(list_to_filter("subregion", subregion))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
+        filter_params.append(list_to_filter("geographyType", geography_type))
+        filter_params.append(list_to_filter("geographyPov", geography_pov))
+        filter_params.append(list_to_filter("geographyPovId", geography_pov_id))
+        filter_params.append(list_to_filter("modelId", model_id))
+        filter_params.append(list_to_filter("concept", concept))
+        filter_params.append(list_to_filter("category", category))
+        filter_params.append(list_to_filter("rowOrderRanking", row_order_ranking))
+        filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("value", value))
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/analytics/gas/na-gas/v1/market-balances-data",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+
+    def get_regional_summaries_flowdata(
+        self,
+        *,
+        flow_date: Optional[date] = None,
+        flow_date_lt: Optional[date] = None,
+        flow_date_lte: Optional[date] = None,
+        flow_date_gt: Optional[date] = None,
+        flow_date_gte: Optional[date] = None,
+        last_modified_date: Optional[datetime] = None,
+        last_modified_date_lt: Optional[datetime] = None,
+        last_modified_date_lte: Optional[datetime] = None,
+        last_modified_date_gt: Optional[datetime] = None,
+        last_modified_date_gte: Optional[datetime] = None,
+        date_frequency: Optional[Union[list[str], Series[str], str]] = None,
+        date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
+        model_id: Optional[Union[list[str], Series[str], str]] = None,
+        view_type: Optional[Union[list[str], Series[str], str]] = None,
+        view_type_id: Optional[Union[list[str], Series[str], str]] = None,
+        domain: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
+        region: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
+        subregion: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
+        geography_pov: Optional[Union[list[str], Series[str], str]] = None,
+        geography_pov_id: Optional[Union[list[str], Series[str], str]] = None,
+        name: Optional[Union[list[str], Series[str], str]] = None,
+        row_order_ranking: Optional[Union[list[str], Series[str], str]] = None,
+        neighboring_geography: Optional[Union[list[str], Series[str], str]] = None,
+        neighboring_geography_id: Optional[Union[list[str], Series[str], str]] = None,
+        volume: Optional[Union[list[str], Series[str], str]] = None,
+        uom: Optional[Union[list[str], Series[str], str]] = None,
+        data_active: Optional[Union[list[str], Series[str], str]] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Regional flows are aggregated summaries of natural gas pipeline flows between defined geographies. Pipeline Summaries provide a pipeline by pipeline accounting of the regional flows between defined geographies.
+
+        Parameters
+        ----------
+
+         flow_date: Optional[date]
+             The calendar date or gas day the activity occurred.
+         flow_date_gt: Optional[date], optional
+             filter by `flow_date > x`, by default None
+         flow_date_gte: Optional[date], optional
+             filter by `flow_date >= x`, by default None
+         flow_date_lt: Optional[date], optional
+             filter by `flow_date < x`, by default None
+         flow_date_lte: Optional[date], optional
+             filter by `flow_date <= x`, by default None
+         last_modified_date: Optional[datetime], optional
+             Date and time the record was last updated., by default None
+         last_modified_date_gt: Optional[datetime], optional
+             filter by `last_modified_date > x`, by default None
+         last_modified_date_gte: Optional[datetime], optional
+             filter by `last_modified_date >= x`, by default None
+         last_modified_date_lt: Optional[datetime], optional
+             filter by `last_modified_date < x`, by default None
+         last_modified_date_lte: Optional[datetime], optional
+             filter by `last_modified_date <= x`, by default None
+         date_frequency: Optional[Union[list[str], Series[str], str]]
+             Daily, Weekly, Monthly, Seasonal, Annual., by default None
+         date_frequency_desc: Optional[Union[list[str], Series[str], str]]
+             The time period averages of the dataset such as Daily, Weekly, Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
+         model_id: Optional[Union[list[str], Series[str], str]]
+             Internal use, Model ID value., by default None
+         view_type: Optional[Union[list[str], Series[str], str]]
+             The name of the View Type such as Country Summary, Region Summary, Region Detail, Subregion Detail. Additional and more granular view types exist for the Gulf Coast region such as Gulf Coast: Subregion Summary, Gulf Coast: Substate Detail and Gulf Coast: Special Area Detail., by default None
+         view_type_id: Optional[Union[list[str], Series[str], str]]
+             The ID given to a View Type. Country Summary =1, Region Summary =2, Region Detail =3, Subregion Detail =4, Gulf Coast: Subregion Summary =5, Gulf Coast: Substate Detail =6, Gulf Coast: Special Area Detail =7, by default None
+         domain: Optional[Union[list[str], Series[str], str]]
+             US Lower-48, Canada or Mexico., by default None
+         domain_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the domain., by default None
+         region: Optional[Union[list[str], Series[str], str]]
+             A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
+         region_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic region., by default None
+         subregion: Optional[Union[list[str], Series[str], str]]
+             A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
+         subregion_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic subregion., by default None
+         geography_pov: Optional[Union[list[str], Series[str], str]]
+             Geography point of view based on geographic hierarchy of country, region, subregion, substate, or special area., by default None
+         geography_pov_id: Optional[Union[list[str], Series[str], str]]
+             An ID for the geography point of view., by default None
+         name: Optional[Union[list[str], Series[str], str]]
+             Name of the pipeline summary or regional flows., by default None
+         row_order_ranking: Optional[Union[list[str], Series[str], str]]
+             A number used to define a consistent row order of the data within a geography point of view., by default None
+         neighboring_geography: Optional[Union[list[str], Series[str], str]]
+             Neighboring geography point of view based on geographic hierarchy of country, region, subregion, substate, or special area., by default None
+         neighboring_geography_id: Optional[Union[list[str], Series[str], str]]
+             An ID for the neighboring geography point of view., by default None
+         volume: Optional[Union[list[str], Series[str], str]]
+             Volume., by default None
+         uom: Optional[Union[list[str], Series[str], str]]
+             Unit of measure., by default None
+         data_active: Optional[Union[list[str], Series[str], str]]
+             A true or false return if the record is active., by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 1000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("flowDate", flow_date))
+        if flow_date_gt is not None:
+            filter_params.append(f'flowDate > "{flow_date_gt}"')
+        if flow_date_gte is not None:
+            filter_params.append(f'flowDate >= "{flow_date_gte}"')
+        if flow_date_lt is not None:
+            filter_params.append(f'flowDate < "{flow_date_lt}"')
+        if flow_date_lte is not None:
+            filter_params.append(f'flowDate <= "{flow_date_lte}"')
+        filter_params.append(list_to_filter("lastModifiedDate", last_modified_date))
+        if last_modified_date_gt is not None:
+            filter_params.append(f'lastModifiedDate > "{last_modified_date_gt}"')
+        if last_modified_date_gte is not None:
+            filter_params.append(f'lastModifiedDate >= "{last_modified_date_gte}"')
+        if last_modified_date_lt is not None:
+            filter_params.append(f'lastModifiedDate < "{last_modified_date_lt}"')
+        if last_modified_date_lte is not None:
+            filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
+        filter_params.append(list_to_filter("dateFrequency", date_frequency))
+        filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
+        filter_params.append(list_to_filter("modelId", model_id))
+        filter_params.append(list_to_filter("viewType", view_type))
+        filter_params.append(list_to_filter("viewTypeId", view_type_id))
+        filter_params.append(list_to_filter("domain", domain))
+        filter_params.append(list_to_filter("domainId", domain_id))
+        filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("regionId", region_id))
+        filter_params.append(list_to_filter("subregion", subregion))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
+        filter_params.append(list_to_filter("geographyPov", geography_pov))
+        filter_params.append(list_to_filter("geographyPovId", geography_pov_id))
+        filter_params.append(list_to_filter("name", name))
+        filter_params.append(list_to_filter("rowOrderRanking", row_order_ranking))
+        filter_params.append(
+            list_to_filter("neighboringGeography", neighboring_geography)
+        )
+        filter_params.append(
+            list_to_filter("neighboringGeographyId", neighboring_geography_id)
+        )
+        filter_params.append(list_to_filter("volume", volume))
+        filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("dataActive", data_active))
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/analytics/gas/na-gas/v1/regional-summaries-flowdata",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+    
+
+    def get_storage_data(
+        self,
+        *,
+        flow_date: Optional[date] = None,
+        flow_date_lt: Optional[date] = None,
+        flow_date_lte: Optional[date] = None,
+        flow_date_gt: Optional[date] = None,
+        flow_date_gte: Optional[date] = None,
+        last_modified_date: Optional[datetime] = None,
+        last_modified_date_lt: Optional[datetime] = None,
+        last_modified_date_lte: Optional[datetime] = None,
+        last_modified_date_gt: Optional[datetime] = None,
+        last_modified_date_gte: Optional[datetime] = None,
+        date_frequency: Optional[Union[list[str], Series[str], str]] = None,
+        date_frequency_desc: Optional[Union[list[str], Series[str], str]] = None,
+        source: Optional[Union[list[str], Series[str], str]] = None,
+        view_type: Optional[Union[list[str], Series[str], str]] = None,
+        view_type_id: Optional[Union[list[str], Series[str], str]] = None,
+        value_type: Optional[Union[list[str], Series[str], str]] = None,
+        value_type_id: Optional[Union[list[str], Series[str], str]] = None,
+        domain: Optional[Union[list[str], Series[str], str]] = None,
+        domain_id: Optional[Union[list[str], Series[str], str]] = None,
+        region: Optional[Union[list[str], Series[str], str]] = None,
+        region_id: Optional[Union[list[str], Series[str], str]] = None,
+        subregion: Optional[Union[list[str], Series[str], str]] = None,
+        subregion_id: Optional[Union[list[str], Series[str], str]] = None,
+        geography_pov: Optional[Union[list[str], Series[str], str]] = None,
+        geography_pov_id: Optional[Union[list[str], Series[str], str]] = None,
+        geography_type: Optional[Union[list[str], Series[str], str]] = None,
+        model_id: Optional[Union[list[str], Series[str], str]] = None,
+        working_capacity: Optional[Union[list[str], Series[str], str]] = None,
+        utilization: Optional[Union[list[str], Series[str], str]] = None,
+        uom: Optional[Union[list[str], Series[str], str]] = None,
+        volume: Optional[Union[list[str], Series[str], str]] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Underground natural gas storage data and metrics detailing inventory and activity for both Americas Gas geographies and EIA regions.
+
+        Parameters
+        ----------
+
+         flow_date: Optional[date]
+             The calendar date or gas day the activity occurred.
+         flow_date_gt: Optional[date], optional
+             filter by `flow_date > x`, by default None
+         flow_date_gte: Optional[date], optional
+             filter by `flow_date >= x`, by default None
+         flow_date_lt: Optional[date], optional
+             filter by `flow_date < x`, by default None
+         flow_date_lte: Optional[date], optional
+             filter by `flow_date <= x`, by default None
+         last_modified_date: Optional[datetime], optional
+             Date and time the record was last updated., by default None
+         last_modified_date_gt: Optional[datetime], optional
+             filter by `last_modified_date > x`, by default None
+         last_modified_date_gte: Optional[datetime], optional
+             filter by `last_modified_date >= x`, by default None
+         last_modified_date_lt: Optional[datetime], optional
+             filter by `last_modified_date < x`, by default None
+         last_modified_date_lte: Optional[datetime], optional
+             filter by `last_modified_date <= x`, by default None
+         date_frequency: Optional[Union[list[str], Series[str], str]]
+             Daily, Weekly, Monthly, Seasonal, Annual., by default None
+         date_frequency_desc: Optional[Union[list[str], Series[str], str]]
+             The time period averages of the dataset such as Daily, Weekly, Monthly, Seasonal, Annual. Weekly date frequencies are based on the defined EIA storage week of Friday-Thursday. Seasonal date frequencies define Summer as April to October and Winter as November to March., by default None
+         source: Optional[Union[list[str], Series[str], str]]
+             Source of the data, EIA or Americas Gas., by default None
+         view_type: Optional[Union[list[str], Series[str], str]]
+             The type of view, which can be either Inventory, Activity, or Sample., by default None
+         view_type_id: Optional[Union[list[str], Series[str], str]]
+             The ID given to a view type where Inventory is equal to 1, Activity 2 and Sample 3., by default None
+         value_type: Optional[Union[list[str], Series[str], str]]
+             The types of values presented in the view, such as Actual/Estimate, 5-Year Average, Delta to 5-Year Average, 5-Year Maximum, 5-Year Minimum, Last Year, Delta to Last Year, Delta to 5-Year Maximum, Delta to 5-Year Minimum., by default None
+         value_type_id: Optional[Union[list[str], Series[str], str]]
+             The ID given to a value type numbered 1 through 9 listed in order as expressed in Value Type description., by default None
+         domain: Optional[Union[list[str], Series[str], str]]
+             US Lower-48, Canada and Mexico., by default None
+         domain_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the domain., by default None
+         region: Optional[Union[list[str], Series[str], str]]
+             A defined geographic region within the Americas Gas service. Regions are an aggregation of states or provinces within a country., by default None
+         region_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic region., by default None
+         subregion: Optional[Union[list[str], Series[str], str]]
+             A defined geographic subregion within the Americas Gas service. A substate geography is sometimes referred to as a subregion. Subregions are an aggregation of specific counties within a region and a country., by default None
+         subregion_id: Optional[Union[list[str], Series[str], str]]
+             A unique identification number for the geographic subregion., by default None
+         geography_pov: Optional[Union[list[str], Series[str], str]]
+             Geography point of view based on geographic hierarchy of country, region, subregion, substate, or special area., by default None
+         geography_pov_id: Optional[Union[list[str], Series[str], str]]
+             An ID for the geography point of view., by default None
+         geography_type: Optional[Union[list[str], Series[str], str]]
+             Geography type for the point of view based on geographic hierarchy of country, region, subregion, substate, or special area., by default None
+         model_id: Optional[Union[list[str], Series[str], str]]
+             Internal use, Model ID value., by default None
+         working_capacity: Optional[Union[list[str], Series[str], str]]
+             Estimates for working storage capacity of a given geography. These estimates are based historical analysis of actual inventory and may vary from theoretical or published figures., by default None
+         utilization: Optional[Union[list[str], Series[str], str]]
+             Utilization rate in decimal form or in percentage terms. Utilization is calculated by dividing the volume by its working capacity., by default None
+         uom: Optional[Union[list[str], Series[str], str]]
+             Unit of measure., by default None
+         volume: Optional[Union[list[str], Series[str], str]]
+             Volume., by default None
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 1000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("flowDate", flow_date))
+        if flow_date_gt is not None:
+            filter_params.append(f'flowDate > "{flow_date_gt}"')
+        if flow_date_gte is not None:
+            filter_params.append(f'flowDate >= "{flow_date_gte}"')
+        if flow_date_lt is not None:
+            filter_params.append(f'flowDate < "{flow_date_lt}"')
+        if flow_date_lte is not None:
+            filter_params.append(f'flowDate <= "{flow_date_lte}"')
+        filter_params.append(list_to_filter("lastModifiedDate", last_modified_date))
+        if last_modified_date_gt is not None:
+            filter_params.append(f'lastModifiedDate > "{last_modified_date_gt}"')
+        if last_modified_date_gte is not None:
+            filter_params.append(f'lastModifiedDate >= "{last_modified_date_gte}"')
+        if last_modified_date_lt is not None:
+            filter_params.append(f'lastModifiedDate < "{last_modified_date_lt}"')
+        if last_modified_date_lte is not None:
+            filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
+        filter_params.append(list_to_filter("dateFrequency", date_frequency))
+        filter_params.append(list_to_filter("dateFrequencyDesc", date_frequency_desc))
+        filter_params.append(list_to_filter("source", source))
+        filter_params.append(list_to_filter("viewType", view_type))
+        filter_params.append(list_to_filter("viewTypeId", view_type_id))
+        filter_params.append(list_to_filter("valueType", value_type))
+        filter_params.append(list_to_filter("valueTypeId", value_type_id))
+        filter_params.append(list_to_filter("domain", domain))
+        filter_params.append(list_to_filter("domainId", domain_id))
+        filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("regionId", region_id))
+        filter_params.append(list_to_filter("subregion", subregion))
+        filter_params.append(list_to_filter("subregionId", subregion_id))
+        filter_params.append(list_to_filter("geographyPov", geography_pov))
+        filter_params.append(list_to_filter("geographyPovId", geography_pov_id))
+        filter_params.append(list_to_filter("geographyType", geography_type))
+        filter_params.append(list_to_filter("modelId", model_id))
+        filter_params.append(list_to_filter("workingCapacity", working_capacity))
+        filter_params.append(list_to_filter("utilization", utilization))
+        filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("volume", volume))
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+
+        response = get_data(
+            path=f"/analytics/gas/na-gas/v1/storage-data",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
