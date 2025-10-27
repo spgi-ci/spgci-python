@@ -56,11 +56,23 @@ mdd = ci.MarketData()
 mdd.get_symbols(commodity="Crude oil")
 # DataFrame of symbols with commodity = "Crude oil".
 
-mdd.get_mdcs(subscribed_only=True)
+mdd.get_symbol(subscribed only=True)
 # DataFrame of all Market Data Categories you are subscribed to.
 
 mdd.get_assessments_by_mdc_current(mdc="ET")
 # DataFrame of current assessments for all symbols in the Market Data Category "ET".
+
+mdd.get_assessments_by_mdc_historical(mdc="ET")
+# DataFrame of historical assessments for all symbols in the Market Data Category "ET"
+
+mdd.get_mdcs()
+# DataFrame for Market Data Categories (MDCs) available
+
+mdd.get_assessments_by_symbol_current(symbol="PMABQ00")
+# DataFrame for symbol assements for the current latest date
+
+mdd.get_assessments_by_symbol_historical(symbol="PMABQ00")
+# DataFrame for symbol assements for historical data from the earliest date possible
 ```
 
 ### Forward Curves
@@ -152,8 +164,10 @@ wrd.get_outages(refinery_id=245)
 
 ```python
 import spgci as ci
+import datetime
 
 ni = ci.Insights()
+two_weeks_ago = today - datetime.timedelta(days=14)
 
 ni.get_stories(q="Suez", content_type=ni.ContentType.MarketCommentary)
 # DataFrame of articles related to "Suez" where the content type is "Market Commentary".
@@ -163,6 +177,15 @@ ni.get_subscriber_notes(q="Naptha")
 
 ni.get_heards(q="Steel", content_type=ni.HeardsContentType.Heard, geography=['Europe', 'Middle East'], strip_html=True)
 # DataFrame of all Heards related to "Steel" where the geography is in ("Europe", "Middle East") with HTML Tags removed from the headline and body.
+
+ni.get_content(id="169b5f45-04e4-43f2-b83b-ecc16f96be55")
+# DataFrame to see more content details in an article ID
+
+ni.get_spotlights(updated_date_gte=two_weeks_ago)
+# DataFrame for spotlights articles from two weeks ago to today
+ni.get_spotlights(updated_date_gte=two_weeks_ago,strip_html=True)
+# DataFrame for spotlights articles from two weeks ago to today, with HTML tags stripped
+
 ```
 
 ### Global Oil Demand
@@ -183,28 +206,6 @@ od.get_demand(product=products["productName"][:3], year_gte=2023)
 
 od.get_demand_archive(scenario_id=150, country="Norway")
 # DataFrame of an archived (March 2023) forecast of monthly oil demand for Norway.
-```
-
-### North America Natural Gas Analytics
-
-```python
-import spgci as ci
-from datetime import date
-
-ng = ci.NANaturalGasAnalytics()
-
-ng.get_pipelines(state="NJ", facility_type="Interconnect")
-# DataFrame of pipelines in "NJ" with facility type "Interconnect"
-
-ng.get_pipelines(pipeline_name="Algonquin")
-# DataFrame of pipelines with name "Algonquin"
-
-ng.get_pipeline_flows(pipeline_id=32)
-# DataFrame of flows for pipeline_id 32 (Algonquin) for last 2 days.
-
-d = date(2023, 7, 24)
-ng.get_pipeline_flows(nomination_cycle="I2", gasdate=d)
-# DataFrame of all pipeline flows during the I2 nomination cycle on gas date 2023-07-24
 
 ```
 
@@ -486,20 +487,20 @@ agri.get_price_purchase_forecast(commodity="corn", reporting_region="United Stat
 # DataFrame of the price purchase forecast for corn in the United States in USD for the period from January 1, 2023 to December 31, 2024.
 ```
 
-### Americas Gas
+### Americas Gas (Gaslytics)
 
 ```python
 import spgci as ci
 
-na = ci.AmericasGas()
+ag = ci.AmericasGas()
 
-na.get_pipeline_flows(date_frequency="Monthly", subregion="New England", meter_type_primary="Power")
+ag.get_pipeline_flows(date_frequency="Monthly", subregion="New England", meter_type_primary="Power")
 # DataFrame of monthly pipeline flows for Power as a primary meter type in New England
 
-na.get_modeled_demand_actual(flow_date="2025-07-07")
+ag.get_modeled_demand_actual(flow_date="2025-07-07")
 # DataFrame of actual modeled demand for a specific date
 
-na.get_outlook_marketbalances_prices(
+ag.get_outlook_marketbalances_prices(
     date_frequency="Summer",
     domain="Canada",
     category="LNG exports",
@@ -508,6 +509,18 @@ na.get_outlook_marketbalances_prices(
 )
 # DataFrame of market balances and prices outlook for Canadian LNG exports for the 2025 Long Term Outlook
 
-na.get_unique_values("outlook-marketbalances-prices", "region")
+ag.get_unique_values("outlook-marketbalances-prices", "region")
 # DataFrame the unique values in a dataset and column, e.g. the regions available in outlook market balances prices dataset
+
+ag.get_tariff_rate_data(pipeline_name="Northern Border",rate_frequency="Unit Rate",rate_name="Firm Transporta")
+# DataFrame for tariff rate data in Northern Border, specifying for unit rate frequency and Firm Transporta
+
+ag.get_pipeline_profiles_data(pipeline_id=18)
+# DataFrame for pipeline profiles data filtered by ID number
+
+ag.get_reference_data_geography(state="Alberta")
+# DataFrame for reference data by on geography/state
+
+ag.get_market_balances_data(flow_date_gte="2025-10-14")
+# DataFrame for market balances data on flow date
 ```
