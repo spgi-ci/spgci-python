@@ -44,7 +44,7 @@ class Chemicals:
         "country-supply-demand-balance",
         "region-supply-demand-balance",
         "world-supply-demand-balance",
-        "long-term_prices",
+        "long-term-prices",
         "short-term-prices",
         "capacity-events",
         "average-annual-capacities",
