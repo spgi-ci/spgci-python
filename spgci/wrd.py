@@ -703,11 +703,11 @@ class WorldRefineryData:
         outage_vol_gte: Optional[float] = None,
         outage_vol_lt: Optional[float] = None,
         outage_vol_lte: Optional[float] = None,
-        # modified_date: Optional[Union[date, list[date], "Series[date]"]] = None,
-        # modified_date_gt: Optional[date] = None,
-        # modified_date_gte: Optional[date] = None,
-        # modified_date_lt: Optional[date] = None,
-        # modified_date_lte: Optional[date] = None,
+        modified_date: Optional[Union[date, list[date], "Series[date]"]] = None,
+        modified_date_gt: Optional[date] = None,
+        modified_date_gte: Optional[date] = None,
+        modified_date_lt: Optional[date] = None,
+        modified_date_lte: Optional[date] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
@@ -788,7 +788,7 @@ class WorldRefineryData:
         filter_params.append(list_to_filter("planningStatus", planning_status))
         filter_params.append(list_to_filter("processUnitName", process_unit))
         filter_params.append(list_to_filter("outageVol_MBD", outage_vol))
-        # filter_params.append(list_to_filter("modifiedDate", modified_date))
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
         filter_params.append(list_to_filter("createdDate", created_date))
 
         if created_date_gt:
@@ -800,14 +800,14 @@ class WorldRefineryData:
         if created_date_lte:
             filter_params.append(f'createdDate <= "{created_date_lte}"')
 
-        # if modified_date_gt:
-        #     filter_params.append(f'modifiedDate > "{modified_date_gt}"')
-        # if modified_date_gte:
-        #     filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
-        # if modified_date_lt:
-        #     filter_params.append(f'modifiedDate < "{modified_date_lt}"')
-        # if modified_date_lte:
-        #     filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
+        if modified_date_gt:
+            filter_params.append(f'modifiedDate > "{modified_date_gt}"')
+        if modified_date_gte:
+            filter_params.append(f'modifiedDate >= "{modified_date_gte}"')
+        if modified_date_lt:
+            filter_params.append(f'modifiedDate < "{modified_date_lt}"')
+        if modified_date_lte:
+            filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
 
         if outage_vol_gt:
             filter_params.append(f"OutageVol_MBD > {outage_vol_gt}")
