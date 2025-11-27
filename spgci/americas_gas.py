@@ -43,7 +43,12 @@ class AmericasGas:
         "tariff-rate-data",
         "index-of-customer-data",
         "production-oil-data",
-        "facility-flow-data"
+        "facility-flow-data",
+        "market-balances-data",
+        "regional-summaries-flowdata",
+        "storage-data",
+        "pipeline-flows-essentials-delta",
+        "pipeline-flows-essentials-history"
     ]
     
     def get_unique_values(
@@ -66,6 +71,10 @@ class AmericasGas:
         -------
         DataFrame
             DataFrame of unique values for the specified columns.
+            Examples
+        --------
+        >>> na.get_unique_values("pipeline-flows-essentials-history", "locationType", pipelineId=1)
+        >>> na.get_unique_values("pipeline-flows", ["flowDate", "pipelineId"], flowDate="2025-11-26")
         """
         dataset_to_path = {
             "reference-data-pipeline-flows": "/analytics/gas/na-gas/v1/reference-data/pipeline-flows",
@@ -85,7 +94,12 @@ class AmericasGas:
             "tariff-rate-data": "/analytics/gas/na-gas/v1/tariff-rate-data",
             "index-of-customer-data" : "/analytics/gas/na-gas/v1/index-of-customer-data",
             "production-oil-data" : "/analytics/gas/na-gas/v1/production-oil-data",
-            "facility-flow-data" : "/analytics/gas/na-gas/v1/facility-flow-data"
+            "facility-flow-data" : "/analytics/gas/na-gas/v1/facility-flow-data",
+            "market-balances-data" : "/analytics/gas/na-gas/v1/market-balances-data",
+            "regional-summaries-flow-data" : "/analytics/gas/na-gas/v1/regional-summaries-flow-data",
+            "storage-data" : "/analytics/gas/na-gas/v1/storage-data",
+            "pipeline-flows-essentials-delta": "/analytics/gas/na-gas/v1/pipeline-flows-essentials-delta",
+            "pipeline-flows-essentials-history": "/analytics/gas/na-gas/v1/pipeline-flows-essentials-history"
             
         }
 
@@ -862,6 +876,392 @@ class AmericasGas:
         )
         return response
     
+    
+    def get_pipeline_flows_essentials_delta(
+        self,
+        *,
+        day: Optional[Union[list[str], Series[str], str]] = None,
+        year: Optional[Union[list[str], Series[str], str]] = None,
+        month: Optional[Union[list[str], Series[str], str]] = None,
+        reason: Optional[Union[list[str], Series[str], str]] = None,
+        queue_id: Optional[Union[list[str], Series[str], str]] = None,
+        valid_to: Optional[datetime] = None,
+        valid_to_lt: Optional[datetime] = None,
+        valid_to_lte: Optional[datetime] = None,
+        valid_to_gt: Optional[datetime] = None,
+        valid_to_gte: Optional[datetime] = None,
+        flow_date: Optional[date] = None,
+        flow_date_lt: Optional[date] = None,
+        flow_date_lte: Optional[date] = None,
+        flow_date_gt: Optional[date] = None,
+        flow_date_gte: Optional[date] = None,
+        valid_from: Optional[datetime] = None,
+        data_active: Optional[Union[list[bool], Series[bool], bool]] = None,
+        data_source: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
+        component_id: Optional[Union[list[str], Series[str], str]] = None,
+        utilization: Optional[str] = None,
+        utilization_lt: Optional[str] = None,
+        utilization_lte: Optional[str] = None,
+        utilization_gt: Optional[str] = None,
+        utilization_gte: Optional[str] = None,
+        location_type: Optional[Union[list[str], Series[str], str]] = None,
+        design_capacity: Optional[str] = None,
+        design_capacity_lt: Optional[str] = None,
+        design_capacity_lte: Optional[str] = None,
+        design_capacity_gt: Optional[str] = None,
+        design_capacity_gte: Optional[str] = None,
+        nomination_cycle: Optional[Union[list[str], Series[str], str]] = None,
+        scheduled_volume: Optional[str] = None,
+        scheduled_volume_lt: Optional[str] = None,
+        scheduled_volume_lte: Optional[str] = None,
+        scheduled_volume_gt: Optional[str] = None,
+        scheduled_volume_gte: Optional[str] = None,
+        last_modified_date: Optional[datetime] = None,
+        last_modified_date_lt: Optional[datetime] = None,
+        last_modified_date_lte: Optional[datetime] = None,
+        last_modified_date_gt: Optional[datetime] = None,
+        last_modified_date_gte: Optional[datetime] = None,
+        interruptible_flow: Optional[Union[list[str], Series[str], str]] = None,
+        component_create_date: Optional[datetime] = None,
+        component_create_date_lt: Optional[datetime] = None,
+        component_create_date_lte: Optional[datetime] = None,
+        component_create_date_gt: Optional[datetime] = None,
+        component_create_date_gte: Optional[datetime] = None,
+        operational_capacity: Optional[str] = None,
+        operational_capacity_lt: Optional[str] = None,
+        operational_capacity_lte: Optional[str] = None,
+        operational_capacity_gt: Optional[str] = None,
+        operational_capacity_gte: Optional[str] = None,
+        operationally_available: Optional[str] = None,
+        operationally_available_lt: Optional[str] = None,
+        operationally_available_lte: Optional[str] = None,
+        operationally_available_gt: Optional[str] = None,
+        operationally_available_gte: Optional[str] = None,
+        field: Optional[Union[list[str], Series[str], str]] = None,
+        filter_exp: Optional[str] = None,
+        sort: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Query the Pipeline Flows Essentials Delta endpoint.
+        """
+
+        filter_params: List[str] = []
+
+        filter_params.append(list_to_filter("day", day))
+        filter_params.append(list_to_filter("year", year))
+        filter_params.append(list_to_filter("month", month))
+        filter_params.append(list_to_filter("reason", reason))
+        filter_params.append(list_to_filter("queueId", queue_id))
+        filter_params.append(list_to_filter("dataActive", data_active))
+        filter_params.append(list_to_filter("dataSource", data_source))
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
+        filter_params.append(list_to_filter("componentId", component_id))
+        filter_params.append(list_to_filter("locationType", location_type))
+        filter_params.append(list_to_filter("nominationCycle", nomination_cycle))
+        filter_params.append(list_to_filter("interruptibleFlow", interruptible_flow))
+
+        filter_params.append(list_to_filter("validTo", valid_to))
+        if valid_to_gt is not None:
+            filter_params.append(f'validTo > "{valid_to_gt}"')
+        if valid_to_gte is not None:
+            filter_params.append(f'validTo >= "{valid_to_gte}"')
+        if valid_to_lt is not None:
+            filter_params.append(f'validTo < "{valid_to_lt}"')
+        if valid_to_lte is not None:
+            filter_params.append(f'validTo <= "{valid_to_lte}"')
+
+        filter_params.append(list_to_filter("flowDate", flow_date))
+        if flow_date_gt is not None:
+            filter_params.append(f'flowDate > "{flow_date_gt}"')
+        if flow_date_gte is not None:
+            filter_params.append(f'flowDate >= "{flow_date_gte}"')
+        if flow_date_lt is not None:
+            filter_params.append(f'flowDate < "{flow_date_lt}"')
+        if flow_date_lte is not None:
+            filter_params.append(f'flowDate <= "{flow_date_lte}"')
+
+        filter_params.append(list_to_filter("validFrom", valid_from))
+
+        filter_params.append(list_to_filter("componentCreateDate", component_create_date))
+        if component_create_date_gt is not None:
+            filter_params.append(f'componentCreateDate > "{component_create_date_gt}"')
+        if component_create_date_gte is not None:
+            filter_params.append(f'componentCreateDate >= "{component_create_date_gte}"')
+        if component_create_date_lt is not None:
+            filter_params.append(f'componentCreateDate < "{component_create_date_lt}"')
+        if component_create_date_lte is not None:
+            filter_params.append(f'componentCreateDate <= "{component_create_date_lte}"')
+
+        filter_params.append(list_to_filter("lastModifiedDate", last_modified_date))
+        if last_modified_date_gt is not None:
+            filter_params.append(f'lastModifiedDate > "{last_modified_date_gt}"')
+        if last_modified_date_gte is not None:
+            filter_params.append(f'lastModifiedDate >= "{last_modified_date_gte}"')
+        if last_modified_date_lt is not None:
+            filter_params.append(f'lastModifiedDate < "{last_modified_date_lt}"')
+        if last_modified_date_lte is not None:
+            filter_params.append(f'lastModifiedDate <= "{last_modified_date_lte}"')
+
+        filter_params.append(list_to_filter("scheduledVolume", scheduled_volume))
+        if scheduled_volume_gt is not None:
+            filter_params.append(f'scheduledVolume > "{scheduled_volume_gt}"')
+        if scheduled_volume_gte is not None:
+            filter_params.append(f'scheduledVolume >= "{scheduled_volume_gte}"')
+        if scheduled_volume_lt is not None:
+            filter_params.append(f'scheduledVolume < "{scheduled_volume_lt}"')
+        if scheduled_volume_lte is not None:
+            filter_params.append(f'scheduledVolume <= "{scheduled_volume_lte}"')
+
+        filter_params.append(list_to_filter("utilization", utilization))
+        if utilization_gt is not None:
+            filter_params.append(f'utilization > "{utilization_gt}"')
+        if utilization_gte is not None:
+            filter_params.append(f'utilization >= "{utilization_gte}"')
+        if utilization_lt is not None:
+            filter_params.append(f'utilization < "{utilization_lt}"')
+        if utilization_lte is not None:
+            filter_params.append(f'utilization <= "{utilization_lte}"')
+
+        filter_params.append(list_to_filter("designCapacity", design_capacity))
+        if design_capacity_gt is not None:
+            filter_params.append(f'designCapacity > "{design_capacity_gt}"')
+        if design_capacity_gte is not None:
+            filter_params.append(f'designCapacity >= "{design_capacity_gte}"')
+        if design_capacity_lt is not None:
+            filter_params.append(f'designCapacity < "{design_capacity_lt}"')
+        if design_capacity_lte is not None:
+            filter_params.append(f'designCapacity <= "{design_capacity_lte}"')
+
+        filter_params.append(list_to_filter("operationalCapacity", operational_capacity))
+        if operational_capacity_gt is not None:
+            filter_params.append(f'operationalCapacity > "{operational_capacity_gt}"')
+        if operational_capacity_gte is not None:
+            filter_params.append(f'operationalCapacity >= "{operational_capacity_gte}"')
+        if operational_capacity_lt is not None:
+            filter_params.append(f'operationalCapacity < "{operational_capacity_lt}"')
+        if operational_capacity_lte is not None:
+            filter_params.append(f'operationalCapacity <= "{operational_capacity_lte}"')
+
+        filter_params.append(list_to_filter("operationallyAvailable", operationally_available))
+        if operationally_available_gt is not None:
+            filter_params.append(f'operationallyAvailable > "{operationally_available_gt}"')
+        if operationally_available_gte is not None:
+            filter_params.append(f'operationallyAvailable >= "{operationally_available_gte}"')
+        if operationally_available_lt is not None:
+            filter_params.append(f'operationallyAvailable < "{operationally_available_lt}"')
+        if operationally_available_lte is not None:
+            filter_params.append(f'operationallyAvailable <= "{operationally_available_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params) if len(filter_params) > 0 else None
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+        if field is not None:
+            params["field"] = ",".join(field) if isinstance(field, list) else str(field)
+        if sort is not None:
+            params["sort"] = sort
+
+        response = get_data(
+            path="/analytics/gas/na-gas/v1/pipeline-flows-essentials-delta",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
+
+    def get_pipeline_flows_essentials_history(
+        self,
+        *,
+        day: Optional[Union[list[str], Series[str], str]] = None,
+        year: Optional[Union[list[str], Series[str], str]] = None,
+        month: Optional[Union[list[str], Series[str], str]] = None,
+        pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
+        component_id: Optional[Union[list[str], Series[str], str]] = None,
+        flow_date: Optional[date] = None,
+        flow_date_lt: Optional[date] = None,
+        flow_date_lte: Optional[date] = None,
+        flow_date_gt: Optional[date] = None,
+        flow_date_gte: Optional[date] = None,
+        queue_id: Optional[Union[list[str], Series[str], str]] = None,
+        nomination_cycle: Optional[Union[list[str], Series[str], str]] = None,
+        location_type: Optional[Union[list[str], Series[str], str]] = None,
+        scheduled_volume: Optional[str] = None,
+        scheduled_volume_lt: Optional[str] = None,
+        scheduled_volume_lte: Optional[str] = None,
+        scheduled_volume_gt: Optional[str] = None,
+        scheduled_volume_gte: Optional[str] = None,
+        utilization: Optional[str] = None,
+        utilization_lt: Optional[str] = None,
+        utilization_lte: Optional[str] = None,
+        utilization_gt: Optional[str] = None,
+        utilization_gte: Optional[str] = None,
+        design_capacity: Optional[str] = None,
+        design_capacity_lt: Optional[str] = None,
+        design_capacity_lte: Optional[str] = None,
+        design_capacity_gt: Optional[str] = None,
+        design_capacity_gte: Optional[str] = None,
+        operational_capacity: Optional[str] = None,
+        operational_capacity_lt: Optional[str] = None,
+        operational_capacity_lte: Optional[str] = None,
+        operational_capacity_gt: Optional[str] = None,
+        operational_capacity_gte: Optional[str] = None,
+        operationally_available: Optional[str] = None,
+        operationally_available_lt: Optional[str] = None,
+        operationally_available_lte: Optional[str] = None,
+        operationally_available_gt: Optional[str] = None,
+        operationally_available_gte: Optional[str] = None,
+        interruptible_flow: Optional[Union[list[str], Series[str], str]] = None,
+        data_source: Optional[Union[list[str], Series[str], str]] = None,
+        data_active: Optional[Union[list[bool], Series[bool], bool]] = None,
+        component_create_date: Optional[datetime] = None,
+        component_create_date_lt: Optional[datetime] = None,
+        component_create_date_lte: Optional[datetime] = None,
+        component_create_date_gt: Optional[datetime] = None,
+        component_create_date_gte: Optional[datetime] = None,
+        valid_from: Optional[datetime] = None,
+        valid_to: Optional[datetime] = None,
+        valid_to_lt: Optional[datetime] = None,
+        valid_to_lte: Optional[datetime] = None,
+        valid_to_gt: Optional[datetime] = None,
+        valid_to_gte: Optional[datetime] = None,
+        reason: Optional[Union[list[str], Series[str], str]] = None,
+        field: Optional[Union[list[str], Series[str], str]] = None,
+        filter_exp: Optional[str] = None,
+        sort: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Query the Pipeline Flows Essentials History endpoint.
+        """
+
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("day", day))
+        filter_params.append(list_to_filter("year", year))
+        filter_params.append(list_to_filter("month", month))
+        filter_params.append(list_to_filter("pipelineId", pipeline_id))
+        filter_params.append(list_to_filter("componentId", component_id))
+        filter_params.append(list_to_filter("queueId", queue_id))
+        filter_params.append(list_to_filter("nominationCycle", nomination_cycle))
+        filter_params.append(list_to_filter("locationType", location_type))
+
+        filter_params.append(list_to_filter("flowDate", flow_date))
+        if flow_date_gt is not None:
+            filter_params.append(f'flowDate > "{flow_date_gt}"')
+        if flow_date_gte is not None:
+            filter_params.append(f'flowDate >= "{flow_date_gte}"')
+        if flow_date_lt is not None:
+            filter_params.append(f'flowDate < "{flow_date_lt}"')
+        if flow_date_lte is not None:
+            filter_params.append(f'flowDate <= "{flow_date_lte}"')
+
+        filter_params.append(list_to_filter("scheduledVolume", scheduled_volume))
+        if scheduled_volume_gt is not None:
+            filter_params.append(f'scheduledVolume > "{scheduled_volume_gt}"')
+        if scheduled_volume_gte is not None:
+            filter_params.append(f'scheduledVolume >= "{scheduled_volume_gte}"')
+        if scheduled_volume_lt is not None:
+            filter_params.append(f'scheduledVolume < "{scheduled_volume_lt}"')
+        if scheduled_volume_lte is not None:
+            filter_params.append(f'scheduledVolume <= "{scheduled_volume_lte}"')
+
+        filter_params.append(list_to_filter("utilization", utilization))
+        if utilization_gt is not None:
+            filter_params.append(f'utilization > "{utilization_gt}"')
+        if utilization_gte is not None:
+            filter_params.append(f'utilization >= "{utilization_gte}"')
+        if utilization_lt is not None:
+            filter_params.append(f'utilization < "{utilization_lt}"')
+        if utilization_lte is not None:
+            filter_params.append(f'utilization <= "{utilization_lte}"')
+
+        filter_params.append(list_to_filter("designCapacity", design_capacity))
+        if design_capacity_gt is not None:
+            filter_params.append(f'designCapacity > "{design_capacity_gt}"')
+        if design_capacity_gte is not None:
+            filter_params.append(f'designCapacity >= "{design_capacity_gte}"')
+        if design_capacity_lt is not None:
+            filter_params.append(f'designCapacity < "{design_capacity_lt}"')
+        if design_capacity_lte is not None:
+            filter_params.append(f'designCapacity <= "{design_capacity_lte}"')
+
+        filter_params.append(list_to_filter("operationalCapacity", operational_capacity))
+        if operational_capacity_gt is not None:
+            filter_params.append(f'operationalCapacity > "{operational_capacity_gt}"')
+        if operational_capacity_gte is not None:
+            filter_params.append(f'operationalCapacity >= "{operational_capacity_gte}"')
+        if operational_capacity_lt is not None:
+            filter_params.append(f'operationalCapacity < "{operational_capacity_lt}"')
+        if operational_capacity_lte is not None:
+            filter_params.append(f'operationalCapacity <= "{operational_capacity_lte}"')
+
+        filter_params.append(list_to_filter("operationallyAvailable", operationally_available))
+        if operationally_available_gt is not None:
+            filter_params.append(f'operationallyAvailable > "{operationally_available_gt}"')
+        if operationally_available_gte is not None:
+            filter_params.append(f'operationallyAvailable >= "{operationally_available_gte}"')
+        if operationally_available_lt is not None:
+            filter_params.append(f'operationallyAvailable < "{operationally_available_lt}"')
+        if operationally_available_lte is not None:
+            filter_params.append(f'operationallyAvailable <= "{operationally_available_lte}"')
+
+        filter_params.append(list_to_filter("interruptibleFlow", interruptible_flow))
+        filter_params.append(list_to_filter("dataSource", data_source))
+        filter_params.append(list_to_filter("dataActive", data_active))
+        filter_params.append(list_to_filter("componentCreateDate", component_create_date))
+        if component_create_date_gt is not None:
+            filter_params.append(f'componentCreateDate > "{component_create_date_gt}"')
+        if component_create_date_gte is not None:
+            filter_params.append(f'componentCreateDate >= "{component_create_date_gte}"')
+        if component_create_date_lt is not None:
+            filter_params.append(f'componentCreateDate < "{component_create_date_lt}"')
+        if component_create_date_lte is not None:
+            filter_params.append(f'componentCreateDate <= "{component_create_date_lte}"')
+
+        filter_params.append(list_to_filter("validTo", valid_to))
+        if valid_to_gt is not None:
+            filter_params.append(f'validTo > "{valid_to_gt}"')
+        if valid_to_gte is not None:
+            filter_params.append(f'validTo >= "{valid_to_gte}"')
+        if valid_to_lt is not None:
+            filter_params.append(f'validTo < "{valid_to_lt}"')
+        if valid_to_lte is not None:
+            filter_params.append(f'validTo <= "{valid_to_lte}"')
+
+        filter_params.append(list_to_filter("validFrom", valid_from))
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params) if len(filter_params) > 0 else None
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+        if field is not None:
+            params["field"] = ",".join(field) if isinstance(field, list) else str(field)
+        if sort is not None:
+            params["sort"] = sort
+
+        response = get_data(
+            path="/analytics/gas/na-gas/v1/pipeline-flows-essentials-history",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
 
     def get_modeled_demand_actual(
         self,
@@ -8015,8 +8415,6 @@ class AmericasGas:
             paginate=paginate,
         )
         return response
-
-
 
 
     @staticmethod
