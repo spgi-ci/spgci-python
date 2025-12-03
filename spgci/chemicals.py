@@ -159,7 +159,9 @@ class Chemicals:
             ]
             for c in columns_dt:
                 if c in df.columns:
-                    df[c] = pd.to_datetime(df[c], utc=True, format="ISO8601", errors="coerce")
+                    df[c] = pd.to_datetime(
+                        df[c], utc=True, format="ISO8601", errors="coerce"
+                    )
             return df
 
         return get_data(path, params, to_df, paginate=True)
@@ -2699,7 +2701,7 @@ class Chemicals:
             filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
         filter_params.append(list_to_filter("isActive", is_active))
         filter_params.append(list_to_filter("application", application))
-        filter_params.append(list_to_filter("derivative_product", derivative_product))
+        filter_params.append(list_to_filter("derivativeProduct", derivative_product))
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
@@ -4709,7 +4711,6 @@ class Chemicals:
             paginate=paginate,
         )
         return response
-
 
     @staticmethod
     def _convert_to_df(resp: Response) -> pd.DataFrame:
