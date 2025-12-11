@@ -177,9 +177,13 @@ class Chemicals:
         commodity: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         owner: Optional[Union[list[str], Series[str], str]] = None,
         outage_type: Optional[Union[list[str], Series[str], str]] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         capacity: Optional[float] = None,
         capacity_lt: Optional[float] = None,
         capacity_lte: Optional[float] = None,
@@ -217,7 +221,7 @@ class Chemicals:
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
         """
-        Plant outage data including run rates, capacity loss, estimated start/end dates and products affected
+        Event based plant outage data including run rates, capacity loss, estimated start/end dates and products affected
 
         Parameters
         ----------
@@ -238,72 +242,80 @@ class Chemicals:
              Name for Country (geography), by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          owner: Optional[Union[list[str], Series[str], str]]
              Plant operator (producer), by default None
          outage_type: Optional[Union[list[str], Series[str], str]]
              Outage Type (like Planned, Unplanned, Economic Run Cut etc), by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
+             Name for Unit of Measure (volume), by default None
          capacity: Optional[float], optional
              Capacity Value, by default None
          capacity_gt: Optional[float], optional
-             filter by '' capacity > x '', by default None
+             filter by `capacity > x`, by default None
          capacity_gte: Optional[float], optional
-             filter by capacity, by default None
+             filter by `capacity >= x`, by default None
          capacity_lt: Optional[float], optional
-             filter by capacity, by default None
+             filter by `capacity < x`, by default None
          capacity_lte: Optional[float], optional
-             filter by capacity, by default None
+             filter by `capacity <= x`, by default None
          capacity_down: Optional[float], optional
              Capacity Loss, by default None
          capacity_down_gt: Optional[float], optional
-             filter by '' capacity_down > x '', by default None
+             filter by `capacity_down > x`, by default None
          capacity_down_gte: Optional[float], optional
-             filter by capacity_down, by default None
+             filter by `capacity_down >= x`, by default None
          capacity_down_lt: Optional[float], optional
-             filter by capacity_down, by default None
+             filter by `capacity_down < x`, by default None
          capacity_down_lte: Optional[float], optional
-             filter by capacity_down, by default None
+             filter by `capacity_down <= x`, by default None
          run_rate: Optional[float], optional
              Run Rate, by default None
          run_rate_gt: Optional[float], optional
-             filter by '' run_rate > x '', by default None
+             filter by `run_rate > x`, by default None
          run_rate_gte: Optional[float], optional
-             filter by run_rate, by default None
+             filter by `run_rate >= x`, by default None
          run_rate_lt: Optional[float], optional
-             filter by run_rate, by default None
+             filter by `run_rate < x`, by default None
          run_rate_lte: Optional[float], optional
-             filter by run_rate, by default None
+             filter by `run_rate <= x`, by default None
          modified_date: Optional[datetime], optional
              Date when the data is last modified, by default None
          modified_date_gt: Optional[datetime], optional
-             filter by '' modified_date > x '', by default None
+             filter by `modified_date > x`, by default None
          modified_date_gte: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date >= x`, by default None
          modified_date_lt: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date < x`, by default None
          modified_date_lte: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date <= x`, by default None
          start_date: Optional[datetime], optional
              Start Date, by default None
          start_date_gt: Optional[datetime], optional
-             filter by '' start_date > x '', by default None
+             filter by `start_date > x`, by default None
          start_date_gte: Optional[datetime], optional
-             filter by start_date, by default None
+             filter by `start_date >= x`, by default None
          start_date_lt: Optional[datetime], optional
-             filter by start_date, by default None
+             filter by `start_date < x`, by default None
          start_date_lte: Optional[datetime], optional
-             filter by start_date, by default None
+             filter by `start_date <= x`, by default None
          end_date: Optional[datetime], optional
              End Date, by default None
          end_date_gt: Optional[datetime], optional
-             filter by '' end_date > x '', by default None
+             filter by `end_date > x`, by default None
          end_date_gte: Optional[datetime], optional
-             filter by end_date, by default None
+             filter by `end_date >= x`, by default None
          end_date_lt: Optional[datetime], optional
-             filter by end_date, by default None
+             filter by `end_date < x`, by default None
          end_date_lte: Optional[datetime], optional
-             filter by end_date, by default None
+             filter by `end_date <= x`, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
          page_size: int = 5000,
@@ -311,9 +323,8 @@ class Chemicals:
          paginate: bool = False
 
         """
-
         filter_params: List[str] = []
-        filter_params.append(list_to_filter("unit_name", unit_name))
+        filter_params.append(list_to_filter("unitName", unit_name))
         filter_params.append(list_to_filter("productionUnitCode", production_unit_code))
         filter_params.append(list_to_filter("alertStatus", alert_status))
         filter_params.append(list_to_filter("outageId", outage_id))
@@ -321,9 +332,13 @@ class Chemicals:
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("owner", owner))
         filter_params.append(list_to_filter("outageType", outage_type))
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("capacity", capacity))
         if capacity_gt is not None:
             filter_params.append(f'capacity > "{capacity_gt}"')
@@ -333,7 +348,7 @@ class Chemicals:
             filter_params.append(f'capacity < "{capacity_lt}"')
         if capacity_lte is not None:
             filter_params.append(f'capacity <= "{capacity_lte}"')
-        filter_params.append(list_to_filter("capacity_down", capacity_down))
+        filter_params.append(list_to_filter("capacityDown", capacity_down))
         if capacity_down_gt is not None:
             filter_params.append(f'capacityDown > "{capacity_down_gt}"')
         if capacity_down_gte is not None:
@@ -360,7 +375,7 @@ class Chemicals:
             filter_params.append(f'modifiedDate < "{modified_date_lt}"')
         if modified_date_lte is not None:
             filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
-        filter_params.append(list_to_filter("start_date", start_date))
+        filter_params.append(list_to_filter("startDate", start_date))
         if start_date_gt is not None:
             filter_params.append(f'startDate > "{start_date_gt}"')
         if start_date_gte is not None:
@@ -389,7 +404,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/assets/outages/",
+            path=f"/analytics/v2/chemicals/assets/outages/",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -408,9 +423,13 @@ class Chemicals:
         commodity: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         owner: Optional[Union[list[str], Series[str], str]] = None,
         outage_type: Optional[Union[list[str], Series[str], str]] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         capacity: Optional[float] = None,
         capacity_lt: Optional[float] = None,
         capacity_lte: Optional[float] = None,
@@ -465,11 +484,19 @@ class Chemicals:
              Name for Country (geography), by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          owner: Optional[Union[list[str], Series[str], str]]
              Plant operator (producer), by default None
          outage_type: Optional[Union[list[str], Series[str], str]]
              Outage Type (like Planned, Unplanned, Economic Run Cut etc), by default None
          uom: Optional[Union[list[str], Series[str], str]]
+             Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
          capacity: Optional[float], optional
              Capacity Value, by default None
@@ -532,17 +559,21 @@ class Chemicals:
         """
 
         filter_params: List[str] = []
-        filter_params.append(list_to_filter("unit_name", unit_name))
+        filter_params.append(list_to_filter("unitName", unit_name))
         filter_params.append(list_to_filter("productionUnitCode", production_unit_code))
         filter_params.append(list_to_filter("alertStatus", alert_status))
-        filter_params.append(list_to_filter("outage_id", outage_id))
-        filter_params.append(list_to_filter("plant_code", plant_code))
+        filter_params.append(list_to_filter("outageId", outage_id))
+        filter_params.append(list_to_filter("plantCode", plant_code))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("owner", owner))
-        filter_params.append(list_to_filter("outage_type", outage_type))
+        filter_params.append(list_to_filter("outageType", outage_type))
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("capacity", capacity))
         if capacity_gt is not None:
             filter_params.append(f'capacity > "{capacity_gt}"')
@@ -552,15 +583,15 @@ class Chemicals:
             filter_params.append(f'capacity < "{capacity_lt}"')
         if capacity_lte is not None:
             filter_params.append(f'capacity <= "{capacity_lte}"')
-        filter_params.append(list_to_filter("capacity_down", capacity_down))
+        filter_params.append(list_to_filter("capacityDown", capacity_down))
         if capacity_down_gt is not None:
-            filter_params.append(f'capacity_down > "{capacity_down_gt}"')
+            filter_params.append(f'capacityDown > "{capacity_down_gt}"')
         if capacity_down_gte is not None:
-            filter_params.append(f'capacity_down >= "{capacity_down_gte}"')
+            filter_params.append(f'capacityDown >= "{capacity_down_gte}"')
         if capacity_down_lt is not None:
-            filter_params.append(f'capacity_down < "{capacity_down_lt}"')
+            filter_params.append(f'capacityDown < "{capacity_down_lt}"')
         if capacity_down_lte is not None:
-            filter_params.append(f'capacity_down <= "{capacity_down_lte}"')
+            filter_params.append(f'capacityDown <= "{capacity_down_lte}"')
         filter_params.append(list_to_filter("runRate", run_rate))
         if run_rate_gt is not None:
             filter_params.append(f'runRate > "{run_rate_gt}"')
@@ -600,7 +631,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/assets/outages/time-series-outages",
+            path=f"/analytics/v2/chemicals/assets/outages/time-series-outages",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -621,6 +652,9 @@ class Chemicals:
         state: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         event_begin_date: Optional[date] = None,
         event_begin_date_lt: Optional[date] = None,
         event_begin_date_lte: Optional[date] = None,
@@ -633,6 +667,7 @@ class Chemicals:
         value_gt: Optional[float] = None,
         value_gte: Optional[float] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         owner: Optional[Union[list[str], Series[str], str]] = None,
         ownership_period: Optional[Union[list[str], Series[str], str]] = None,
         valid_from: Optional[datetime] = None,
@@ -651,7 +686,7 @@ class Chemicals:
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
         reason: Optional[Union[list[str], Series[str], str]] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
@@ -659,7 +694,7 @@ class Chemicals:
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
         """
-        Global chemical production capacity events (such as expand, reduce, startup, shutdown, etc.) by plant with company, location and production route details
+        Global chemical production capacity events (such as expand, reduce, startup, shutdown, etc.) by plant with company, location and production route details (Function)
 
         Parameters
         ----------
@@ -684,29 +719,37 @@ class Chemicals:
              Name for Country (geography), by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          event_begin_date: Optional[date], optional
              Date of Event, by default None
          event_begin_date_gt: Optional[date], optional
-             filter by '' event_begin_date > x '', by default None
+             filter by `event_begin_date > x`, by default None
          event_begin_date_gte: Optional[date], optional
-             filter by event_begin_date, by default None
+             filter by `event_begin_date >= x`, by default None
          event_begin_date_lt: Optional[date], optional
-             filter by event_begin_date, by default None
+             filter by `event_begin_date < x`, by default None
          event_begin_date_lte: Optional[date], optional
-             filter by event_begin_date, by default None
+             filter by `event_begin_date <= x`, by default None
          event_type: Optional[Union[list[str], Series[str], str]]
              Event Type (like Expand, Reduce, Startup, Shutdown, Restart etc.), by default None
          value: Optional[float], optional
              Data Value, by default None
          value_gt: Optional[float], optional
-             filter by '' value > x '', by default None
+             filter by `value > x`, by default None
          value_gte: Optional[float], optional
-             filter by value, by default None
+             filter by `value >= x`, by default None
          value_lt: Optional[float], optional
-             filter by value, by default None
+             filter by `value < x`, by default None
          value_lte: Optional[float], optional
-             filter by value, by default None
+             filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
+             Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
          owner: Optional[Union[list[str], Series[str], str]]
              Plant operator (producer), by default None
@@ -715,37 +758,37 @@ class Chemicals:
          valid_from: Optional[datetime], optional
              As of date for when the data is updated, by default None
          valid_from_gt: Optional[datetime], optional
-             filter by '' valid_from > x '', by default None
+             filter by `valid_from > x`, by default None
          valid_from_gte: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from >= x`, by default None
          valid_from_lt: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from < x`, by default None
          valid_from_lte: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from <= x`, by default None
          valid_to: Optional[datetime], optional
              End Date of Record Validity, by default None
          valid_to_gt: Optional[datetime], optional
-             filter by '' valid_to > x '', by default None
+             filter by `valid_to > x`, by default None
          valid_to_gte: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to >= x`, by default None
          valid_to_lt: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to < x`, by default None
          valid_to_lte: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to <= x`, by default None
          modified_date: Optional[datetime], optional
              Date when the data is last modified, by default None
          modified_date_gt: Optional[datetime], optional
-             filter by '' modified_date > x '', by default None
+             filter by `modified_date > x`, by default None
          modified_date_gte: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date >= x`, by default None
          modified_date_lt: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date < x`, by default None
          modified_date_lte: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date <= x`, by default None
          reason: Optional[Union[list[str], Series[str], str]]
              Reason for having this record, by default None
-         is_active: Optional[Union[list[bool], Series[bool], bool]]
-             If the record is active, by default True
+         is_active: Optional[Union[list[str], Series[str], str]]
+             If the record is active, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
          page_size: int = 5000,
@@ -765,6 +808,9 @@ class Chemicals:
         filter_params.append(list_to_filter("state", state))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("top_region", top_region))
+        filter_params.append(list_to_filter("mid_region", mid_region))
+        filter_params.append(list_to_filter("sub_region", sub_region))
         filter_params.append(list_to_filter("eventBeginDate", event_begin_date))
         if event_begin_date_gt is not None:
             filter_params.append(f'eventBeginDate > "{event_begin_date_gt}"')
@@ -785,6 +831,7 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("owner", owner))
         filter_params.append(list_to_filter("ownershipPeriod", ownership_period))
         filter_params.append(list_to_filter("validFrom", valid_from))
@@ -827,7 +874,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/assets/capacity-events",
+            path=f"/analytics/v2/chemicals/assets/capacity-events",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -848,6 +895,9 @@ class Chemicals:
         state: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         year: Optional[int] = None,
         year_lt: Optional[int] = None,
         year_lte: Optional[int] = None,
@@ -859,6 +909,7 @@ class Chemicals:
         average_annual_capacity_gt: Optional[float] = None,
         average_annual_capacity_gte: Optional[float] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         owner: Optional[Union[list[str], Series[str], str]] = None,
         ownership_period: Optional[Union[list[str], Series[str], str]] = None,
         valid_from: Optional[datetime] = None,
@@ -877,7 +928,7 @@ class Chemicals:
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
         reason: Optional[Union[list[str], Series[str], str]] = None,
-        is_active: Optional[Union[list[bool], Series[bool], bool]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
@@ -885,7 +936,7 @@ class Chemicals:
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
         """
-        Annual global chemical production capacity by plant with company, location and production route details
+        Annual global chemical production capacity by plant with company, location and production route details (Function)
 
         Parameters
         ----------
@@ -910,27 +961,35 @@ class Chemicals:
              Name for Country (geography), by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          year: Optional[int], optional
              Date of Data value, by default None
          year_gt: Optional[int], optional
-             filter by '' year > x '', by default None
+             filter by `year > x`, by default None
          year_gte: Optional[int], optional
-             filter by year, by default None
+             filter by `year >= x`, by default None
          year_lt: Optional[int], optional
-             filter by year, by default None
+             filter by `year < x`, by default None
          year_lte: Optional[int], optional
-             filter by year, by default None
+             filter by `year <= x`, by default None
          average_annual_capacity: Optional[float], optional
              Data Value, by default None
          average_annual_capacity_gt: Optional[float], optional
-             filter by '' average_annual_capacity > x '', by default None
+             filter by `average_annual_capacity > x`, by default None
          average_annual_capacity_gte: Optional[float], optional
-             filter by average_annual_capacity, by default None
+             filter by `average_annual_capacity >= x`, by default None
          average_annual_capacity_lt: Optional[float], optional
-             filter by average_annual_capacity, by default None
+             filter by `average_annual_capacity < x`, by default None
          average_annual_capacity_lte: Optional[float], optional
-             filter by average_annual_capacity, by default None
+             filter by `average_annual_capacity <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
+             Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
          owner: Optional[Union[list[str], Series[str], str]]
              Plant operator (producer), by default None
@@ -939,37 +998,37 @@ class Chemicals:
          valid_from: Optional[datetime], optional
              As of date for when the data is updated, by default None
          valid_from_gt: Optional[datetime], optional
-             filter by '' valid_from > x '', by default None
+             filter by `valid_from > x`, by default None
          valid_from_gte: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from >= x`, by default None
          valid_from_lt: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from < x`, by default None
          valid_from_lte: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from <= x`, by default None
          valid_to: Optional[datetime], optional
              End Date of Record Validity, by default None
          valid_to_gt: Optional[datetime], optional
-             filter by '' valid_to > x '', by default None
+             filter by `valid_to > x`, by default None
          valid_to_gte: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to >= x`, by default None
          valid_to_lt: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to < x`, by default None
          valid_to_lte: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to <= x`, by default None
          modified_date: Optional[datetime], optional
              Date when the data is last modified, by default None
          modified_date_gt: Optional[datetime], optional
-             filter by '' modified_date > x '', by default None
+             filter by `modified_date > x`, by default None
          modified_date_gte: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date >= x`, by default None
          modified_date_lt: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date < x`, by default None
          modified_date_lte: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date <= x`, by default None
          reason: Optional[Union[list[str], Series[str], str]]
              Reason for having this record, by default None
          is_active: Optional[Union[list[str], Series[str], str]]
-             If the record is active, by default True
+             If the record is active, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
          page_size: int = 5000,
@@ -977,7 +1036,6 @@ class Chemicals:
          paginate: bool = False
 
         """
-
         filter_params: List[str] = []
         filter_params.append(list_to_filter("productionUnitCode", production_unit_code))
         filter_params.append(list_to_filter("commodity", commodity))
@@ -989,6 +1047,9 @@ class Chemicals:
         filter_params.append(list_to_filter("state", state))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("year", year))
         if year_gt is not None:
             filter_params.append(f'year > "{year_gt}"')
@@ -998,26 +1059,17 @@ class Chemicals:
             filter_params.append(f'year < "{year_lt}"')
         if year_lte is not None:
             filter_params.append(f'year <= "{year_lte}"')
-        filter_params.append(
-            list_to_filter("averageAnnualCapacity", average_annual_capacity)
-        )
+        filter_params.append(list_to_filter("averageAnnualCapacity", average_annual_capacity))
         if average_annual_capacity_gt is not None:
-            filter_params.append(
-                f'averageAnnualCapacity > "{average_annual_capacity_gt}"'
-            )
+            filter_params.append(f'averageAnnualCapacity > "{average_annual_capacity_gt}"')
         if average_annual_capacity_gte is not None:
-            filter_params.append(
-                f'averageAnnualCapacity >= "{average_annual_capacity_gte}"'
-            )
+            filter_params.append(f'averageAnnualCapacity >= "{average_annual_capacity_gte}"')
         if average_annual_capacity_lt is not None:
-            filter_params.append(
-                f'averageAnnualCapacity < "{average_annual_capacity_lt}"'
-            )
+            filter_params.append(f'averageAnnualCapacity < "{average_annual_capacity_lt}"')
         if average_annual_capacity_lte is not None:
-            filter_params.append(
-                f'averageAnnualCapacity <= "{average_annual_capacity_lte}"'
-            )
+            filter_params.append(f'averageAnnualCapacity <= "{average_annual_capacity_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("owner", owner))
         filter_params.append(list_to_filter("ownershipPeriod", ownership_period))
         filter_params.append(list_to_filter("validFrom", valid_from))
@@ -1060,7 +1112,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/assets/average-annual-capacities",
+            path=f"/analytics/v2/chemicals/assets/average-annual-capacities",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -1068,6 +1120,7 @@ class Chemicals:
         )
         return response
 
+    
     def get_capacity_to_consume(
         self,
         *,
@@ -1081,8 +1134,11 @@ class Chemicals:
         state: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
-        feedstock: Optional[Union[list[str], Series[str], str]] = None,
+        derivative: Optional[Union[list[str], Series[str], str]] = None,
         year: Optional[int] = None,
         year_lt: Optional[int] = None,
         year_lte: Optional[int] = None,
@@ -1094,6 +1150,7 @@ class Chemicals:
         value_gt: Optional[float] = None,
         value_gte: Optional[float] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         owner: Optional[Union[list[str], Series[str], str]] = None,
         ownership_period: Optional[Union[list[str], Series[str], str]] = None,
         valid_from: Optional[datetime] = None,
@@ -1112,7 +1169,7 @@ class Chemicals:
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
         reason: Optional[Union[list[str], Series[str], str]] = None,
-        is_active: Optional[Union[list[bool], Series[bool], bool]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
@@ -1120,7 +1177,7 @@ class Chemicals:
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
         """
-        Capacities to consume by plant with company, location and production route details
+        Capacities to consume by plant with company, location and production route details (Function)
 
         Parameters
         ----------
@@ -1145,31 +1202,39 @@ class Chemicals:
              Name for Country (geography), by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          concept: Optional[Union[list[str], Series[str], str]]
              Concept that describes what the dataset is, by default None
-         feedstock: Optional[Union[list[str], Series[str], str]]
-             Raw material used in chemical production, by default None
+         derivative: Optional[Union[list[str], Series[str], str]]
+             Chemical compounds derived from raw materials through chemical processes, by default None
          year: Optional[int], optional
              Date of Data value, by default None
          year_gt: Optional[int], optional
-             filter by '' year > x '', by default None
+             filter by `year > x`, by default None
          year_gte: Optional[int], optional
-             filter by year, by default None
+             filter by `year >= x`, by default None
          year_lt: Optional[int], optional
-             filter by year, by default None
+             filter by `year < x`, by default None
          year_lte: Optional[int], optional
-             filter by year, by default None
+             filter by `year <= x`, by default None
          value: Optional[float], optional
              Data Value, by default None
          value_gt: Optional[float], optional
-             filter by '' value > x '', by default None
+             filter by `value > x`, by default None
          value_gte: Optional[float], optional
-             filter by value, by default None
+             filter by `value >= x`, by default None
          value_lt: Optional[float], optional
-             filter by value, by default None
+             filter by `value < x`, by default None
          value_lte: Optional[float], optional
-             filter by value, by default None
+             filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
+             Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
          owner: Optional[Union[list[str], Series[str], str]]
              Plant operator (producer), by default None
@@ -1178,37 +1243,37 @@ class Chemicals:
          valid_from: Optional[datetime], optional
              As of date for when the data is updated, by default None
          valid_from_gt: Optional[datetime], optional
-             filter by '' valid_from > x '', by default None
+             filter by `valid_from > x`, by default None
          valid_from_gte: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from >= x`, by default None
          valid_from_lt: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from < x`, by default None
          valid_from_lte: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from <= x`, by default None
          valid_to: Optional[datetime], optional
              End Date of Record Validity, by default None
          valid_to_gt: Optional[datetime], optional
-             filter by '' valid_to > x '', by default None
+             filter by `valid_to > x`, by default None
          valid_to_gte: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to >= x`, by default None
          valid_to_lt: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to < x`, by default None
          valid_to_lte: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to <= x`, by default None
          modified_date: Optional[datetime], optional
              Date when the data is last modified, by default None
          modified_date_gt: Optional[datetime], optional
-             filter by '' modified_date > x '', by default None
+             filter by `modified_date > x`, by default None
          modified_date_gte: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date >= x`, by default None
          modified_date_lt: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date < x`, by default None
          modified_date_lte: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date <= x`, by default None
          reason: Optional[Union[list[str], Series[str], str]]
              Reason for having this record, by default None
-         is_active: Optional[Union[list[bool], Series[bool], bool]]
-             If the record is active, by default True
+         is_active: Optional[Union[list[str], Series[str], str]]
+             If the record is active, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
          page_size: int = 5000,
@@ -1216,7 +1281,6 @@ class Chemicals:
          paginate: bool = False
 
         """
-
         filter_params: List[str] = []
         filter_params.append(list_to_filter("productionUnitCode", production_unit_code))
         filter_params.append(list_to_filter("commodity", commodity))
@@ -1228,8 +1292,11 @@ class Chemicals:
         filter_params.append(list_to_filter("state", state))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("concept", concept))
-        filter_params.append(list_to_filter("feedstock", feedstock))
+        filter_params.append(list_to_filter("derivative", derivative))
         filter_params.append(list_to_filter("year", year))
         if year_gt is not None:
             filter_params.append(f'year > "{year_gt}"')
@@ -1249,6 +1316,7 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("owner", owner))
         filter_params.append(list_to_filter("ownershipPeriod", ownership_period))
         filter_params.append(list_to_filter("validFrom", valid_from))
@@ -1291,7 +1359,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/assets/capacity-to-consume",
+            path=f"/analytics/v2/chemicals/assets/capacity-to-consume",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -1299,10 +1367,15 @@ class Chemicals:
         )
         return response
 
+
     def get_long_term_prices(
         self,
         *,
-        scenario_id: Optional[Union[list[int], Series[int], int]] = None,
+        scenario_id: Optional[int] = None,
+        scenario_id_lt: Optional[int] = None,
+        scenario_id_lte: Optional[int] = None,
+        scenario_id_gt: Optional[int] = None,
+        scenario_id_gte: Optional[int] = None,
         scenario_description: Optional[Union[list[str], Series[str], str]] = None,
         series_description: Optional[Union[list[str], Series[str], str]] = None,
         commodity: Optional[Union[list[str], Series[str], str]] = None,
@@ -1311,6 +1384,7 @@ class Chemicals:
         delivery_region: Optional[Union[list[str], Series[str], str]] = None,
         shipping_terms: Optional[Union[list[str], Series[str], str]] = None,
         currency: Optional[Union[list[str], Series[str], str]] = None,
+        currency_name: Optional[Union[list[str], Series[str], str]] = None,
         contract_type: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         data_type: Optional[Union[list[str], Series[str], str]] = None,
@@ -1320,6 +1394,7 @@ class Chemicals:
         value_gt: Optional[float] = None,
         value_gte: Optional[float] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         publish_date: Optional[datetime] = None,
         publish_date_lt: Optional[datetime] = None,
         publish_date_lte: Optional[datetime] = None,
@@ -1345,8 +1420,11 @@ class Chemicals:
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[bool], Series[bool], bool]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
@@ -1359,8 +1437,16 @@ class Chemicals:
         Parameters
         ----------
 
-         scenario_id: Optional[Union[list[int], Series[int], int]], optional
+         scenario_id: Optional[int], optional
              Scenario ID, by default None
+         scenario_id_gt: Optional[int], optional
+             filter by `scenario_id > x`, by default None
+         scenario_id_gte: Optional[int], optional
+             filter by `scenario_id >= x`, by default None
+         scenario_id_lt: Optional[int], optional
+             filter by `scenario_id < x`, by default None
+         scenario_id_lte: Optional[int], optional
+             filter by `scenario_id <= x`, by default None
          scenario_description: Optional[Union[list[str], Series[str], str]]
              Scenario Description, by default None
          series_description: Optional[Union[list[str], Series[str], str]]
@@ -1377,6 +1463,8 @@ class Chemicals:
              Shipping Terms, by default None
          currency: Optional[Union[list[str], Series[str], str]]
              Currency, by default None
+         currency_name: Optional[Union[list[str], Series[str], str]]
+             Name for Currency, by default None
          contract_type: Optional[Union[list[str], Series[str], str]]
              Contract Type, by default None
          concept: Optional[Union[list[str], Series[str], str]]
@@ -1386,69 +1474,77 @@ class Chemicals:
          value: Optional[float], optional
              Data Value, by default None
          value_gt: Optional[float], optional
-             filter by '' value > x '', by default None
+             filter by `value > x`, by default None
          value_gte: Optional[float], optional
-             filter by value, by default None
+             filter by `value >= x`, by default None
          value_lt: Optional[float], optional
-             filter by value, by default None
+             filter by `value < x`, by default None
          value_lte: Optional[float], optional
-             filter by value, by default None
+             filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
+             Unit of Measure full name from SPOT, by default None
          publish_date: Optional[datetime], optional
              Publish Date, by default None
          publish_date_gt: Optional[datetime], optional
-             filter by '' publish_date > x '', by default None
+             filter by `publish_date > x`, by default None
          publish_date_gte: Optional[datetime], optional
-             filter by publish_date, by default None
+             filter by `publish_date >= x`, by default None
          publish_date_lt: Optional[datetime], optional
-             filter by publish_date, by default None
+             filter by `publish_date < x`, by default None
          publish_date_lte: Optional[datetime], optional
-             filter by publish_date, by default None
+             filter by `publish_date <= x`, by default None
          year: Optional[int], optional
              year, by default None
          year_gt: Optional[int], optional
-             filter by '' year > x '', by default None
+             filter by `year > x`, by default None
          year_gte: Optional[int], optional
-             filter by year, by default None
+             filter by `year >= x`, by default None
          year_lt: Optional[int], optional
-             filter by year, by default None
+             filter by `year < x`, by default None
          year_lte: Optional[int], optional
-             filter by year, by default None
+             filter by `year <= x`, by default None
          valid_to: Optional[datetime], optional
              End Date of Record Validity, by default None
          valid_to_gt: Optional[datetime], optional
-             filter by '' valid_to > x '', by default None
+             filter by `valid_to > x`, by default None
          valid_to_gte: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to >= x`, by default None
          valid_to_lt: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to < x`, by default None
          valid_to_lte: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to <= x`, by default None
          valid_from: Optional[datetime], optional
              As of date for when the data is updated, by default None
          valid_from_gt: Optional[datetime], optional
-             filter by '' valid_from > x '', by default None
+             filter by `valid_from > x`, by default None
          valid_from_gte: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from >= x`, by default None
          valid_from_lt: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from < x`, by default None
          valid_from_lte: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from <= x`, by default None
          modified_date: Optional[datetime], optional
              Date when the data is last modified, by default None
          modified_date_gt: Optional[datetime], optional
-             filter by '' modified_date > x '', by default None
+             filter by `modified_date > x`, by default None
          modified_date_gte: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date >= x`, by default None
          modified_date_lt: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date < x`, by default None
          modified_date_lte: Optional[datetime], optional
-             filter by modified_date, by default None
-         is_active: Optional[Union[list[bool], Series[bool], bool]]
-             If the record is active, by default True
+             filter by `modified_date <= x`, by default None
+         is_active: Optional[Union[list[str], Series[str], str]]
+             If the record is active, by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
          page_size: int = 5000,
@@ -1456,9 +1552,16 @@ class Chemicals:
          paginate: bool = False
 
         """
-
         filter_params: List[str] = []
         filter_params.append(list_to_filter("scenarioId", scenario_id))
+        if scenario_id_gt is not None:
+            filter_params.append(f'scenarioId > "{scenario_id_gt}"')
+        if scenario_id_gte is not None:
+            filter_params.append(f'scenarioId >= "{scenario_id_gte}"')
+        if scenario_id_lt is not None:
+            filter_params.append(f'scenarioId < "{scenario_id_lt}"')
+        if scenario_id_lte is not None:
+            filter_params.append(f'scenarioId <= "{scenario_id_lte}"')
         filter_params.append(
             list_to_filter("scenarioDescription", scenario_description)
         )
@@ -1471,6 +1574,7 @@ class Chemicals:
         filter_params.append(list_to_filter("deliveryRegion", delivery_region))
         filter_params.append(list_to_filter("shippingTerms", shipping_terms))
         filter_params.append(list_to_filter("currency", currency))
+        filter_params.append(list_to_filter("currencyName", currency_name))
         filter_params.append(list_to_filter("contractType", contract_type))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("dataType", data_type))
@@ -1484,6 +1588,7 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("publishDate", publish_date))
         if publish_date_gt is not None:
             filter_params.append(f'publishDate > "{publish_date_gt}"')
@@ -1531,6 +1636,9 @@ class Chemicals:
             filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
         filter_params.append(list_to_filter("isActive", is_active))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
@@ -1542,7 +1650,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/price-forecast/long-term-prices",
+            path=f"/analytics/v2/chemicals/price-forecast/long-term-prices",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -1553,7 +1661,11 @@ class Chemicals:
     def get_short_term_prices(
         self,
         *,
-        scenario_id: Optional[Union[list[int], Series[int], int]] = None,
+        scenario_id: Optional[int] = None,
+        scenario_id_lt: Optional[int] = None,
+        scenario_id_lte: Optional[int] = None,
+        scenario_id_gt: Optional[int] = None,
+        scenario_id_gte: Optional[int] = None,
         scenario_description: Optional[Union[list[str], Series[str], str]] = None,
         series_description: Optional[Union[list[str], Series[str], str]] = None,
         commodity: Optional[Union[list[str], Series[str], str]] = None,
@@ -1562,6 +1674,7 @@ class Chemicals:
         delivery_region: Optional[Union[list[str], Series[str], str]] = None,
         shipping_terms: Optional[Union[list[str], Series[str], str]] = None,
         currency: Optional[Union[list[str], Series[str], str]] = None,
+        currency_name: Optional[Union[list[str], Series[str], str]] = None,
         contract_type: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         data_type: Optional[Union[list[str], Series[str], str]] = None,
@@ -1571,6 +1684,7 @@ class Chemicals:
         value_gt: Optional[float] = None,
         value_gte: Optional[float] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         publish_date: Optional[datetime] = None,
         publish_date_lt: Optional[datetime] = None,
         publish_date_lte: Optional[datetime] = None,
@@ -1596,8 +1710,11 @@ class Chemicals:
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[bool], Series[bool], bool]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
@@ -1612,6 +1729,14 @@ class Chemicals:
 
          scenario_id: Optional[int], optional
              Scenario ID, by default None
+         scenario_id_gt: Optional[int], optional
+             filter by `scenario_id > x`, by default None
+         scenario_id_gte: Optional[int], optional
+             filter by `scenario_id >= x`, by default None
+         scenario_id_lt: Optional[int], optional
+             filter by `scenario_id < x`, by default None
+         scenario_id_lte: Optional[int], optional
+             filter by `scenario_id <= x`, by default None
          scenario_description: Optional[Union[list[str], Series[str], str]]
              Scenario Description, by default None
          series_description: Optional[Union[list[str], Series[str], str]]
@@ -1628,6 +1753,8 @@ class Chemicals:
              Shipping Terms, by default None
          currency: Optional[Union[list[str], Series[str], str]]
              Currency, by default None
+         currency_name: Optional[Union[list[str], Series[str], str]]
+             Name for Currency, by default None
          contract_type: Optional[Union[list[str], Series[str], str]]
              Contract Type, by default None
          concept: Optional[Union[list[str], Series[str], str]]
@@ -1637,69 +1764,77 @@ class Chemicals:
          value: Optional[float], optional
              Data Value, by default None
          value_gt: Optional[float], optional
-             filter by '' value > x '', by default None
+             filter by `value > x`, by default None
          value_gte: Optional[float], optional
-             filter by value, by default None
+             filter by `value >= x`, by default None
          value_lt: Optional[float], optional
-             filter by value, by default None
+             filter by `value < x`, by default None
          value_lte: Optional[float], optional
-             filter by value, by default None
+             filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
-             Name for Unit of Measure (volume), by default None
+             Unit of Measure code, by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
+             Full name of the Unit of Measure, by default None
          publish_date: Optional[datetime], optional
              Publish Date, by default None
          publish_date_gt: Optional[datetime], optional
-             filter by '' publish_date > x '', by default None
+             filter by `publish_date > x`, by default None
          publish_date_gte: Optional[datetime], optional
-             filter by publish_date, by default None
+             filter by `publish_date >= x`, by default None
          publish_date_lt: Optional[datetime], optional
-             filter by publish_date, by default None
+             filter by `publish_date < x`, by default None
          publish_date_lte: Optional[datetime], optional
-             filter by publish_date, by default None
+             filter by `publish_date <= x`, by default None
          date: Optional[date], optional
              year, by default None
          date_gt: Optional[date], optional
-             filter by '' date > x '', by default None
+             filter by `date > x`, by default None
          date_gte: Optional[date], optional
-             filter by date, by default None
+             filter by `date >= x`, by default None
          date_lt: Optional[date], optional
-             filter by date, by default None
+             filter by `date < x`, by default None
          date_lte: Optional[date], optional
-             filter by date, by default None
+             filter by `date <= x`, by default None
          valid_to: Optional[datetime], optional
              End Date of Record Validity, by default None
          valid_to_gt: Optional[datetime], optional
-             filter by '' valid_to > x '', by default None
+             filter by `valid_to > x`, by default None
          valid_to_gte: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to >= x`, by default None
          valid_to_lt: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to < x`, by default None
          valid_to_lte: Optional[datetime], optional
-             filter by valid_to, by default None
+             filter by `valid_to <= x`, by default None
          valid_from: Optional[datetime], optional
              As of date for when the data is updated, by default None
          valid_from_gt: Optional[datetime], optional
-             filter by '' valid_from > x '', by default None
+             filter by `valid_from > x`, by default None
          valid_from_gte: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from >= x`, by default None
          valid_from_lt: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from < x`, by default None
          valid_from_lte: Optional[datetime], optional
-             filter by valid_from, by default None
+             filter by `valid_from <= x`, by default None
          modified_date: Optional[datetime], optional
              Date when the data is last modified, by default None
          modified_date_gt: Optional[datetime], optional
-             filter by '' modified_date > x '', by default None
+             filter by `modified_date > x`, by default None
          modified_date_gte: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date >= x`, by default None
          modified_date_lt: Optional[datetime], optional
-             filter by modified_date, by default None
+             filter by `modified_date < x`, by default None
          modified_date_lte: Optional[datetime], optional
-             filter by modified_date, by default None
-         is_active: Optional[Union[list[bool], Series[bool], bool]]
-             If the record is active, by default True
+             filter by `modified_date <= x`, by default None
+         is_active: Optional[Union[list[str], Series[str], str]]
+             If the record is active, by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
          page_size: int = 5000,
@@ -1707,9 +1842,16 @@ class Chemicals:
          paginate: bool = False
 
         """
-
         filter_params: List[str] = []
         filter_params.append(list_to_filter("scenarioId", scenario_id))
+        if scenario_id_gt is not None:
+            filter_params.append(f'scenarioId > "{scenario_id_gt}"')
+        if scenario_id_gte is not None:
+            filter_params.append(f'scenarioId >= "{scenario_id_gte}"')
+        if scenario_id_lt is not None:
+            filter_params.append(f'scenarioId < "{scenario_id_lt}"')
+        if scenario_id_lte is not None:
+            filter_params.append(f'scenarioId <= "{scenario_id_lte}"')
         filter_params.append(
             list_to_filter("scenarioDescription", scenario_description)
         )
@@ -1722,6 +1864,7 @@ class Chemicals:
         filter_params.append(list_to_filter("deliveryRegion", delivery_region))
         filter_params.append(list_to_filter("shippingTerms", shipping_terms))
         filter_params.append(list_to_filter("currency", currency))
+        filter_params.append(list_to_filter("currencyName", currency_name))
         filter_params.append(list_to_filter("contractType", contract_type))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("dataType", data_type))
@@ -1735,6 +1878,7 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("publishDate", publish_date))
         if publish_date_gt is not None:
             filter_params.append(f'publishDate > "{publish_date_gt}"')
@@ -1782,6 +1926,9 @@ class Chemicals:
             filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
         filter_params.append(list_to_filter("isActive", is_active))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
@@ -1793,7 +1940,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/price-forecast/short-term-prices",
+            path=f"/analytics/v2/chemicals/price-forecast/short-term-prices",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -1801,32 +1948,33 @@ class Chemicals:
         )
         return response
 
+    
     def get_capacity(
         self,
         *,
         forecast_period: Optional[Union[list[str], Series[str], str]] = None,
-        scenario_id: Optional[int] = None,
-        scenario_id_lt: Optional[int] = None,
-        scenario_id_lte: Optional[int] = None,
-        scenario_id_gt: Optional[int] = None,
-        scenario_id_gte: Optional[int] = None,
+        scenario_id: Optional[Union[list[int], Series[int], int]] = None,
         scenario_description: Optional[Union[list[str], Series[str], str]] = None,
         commodity: Optional[Union[list[str], Series[str], str]] = None,
         production_route: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         date: Optional[date] = None,
         date_lt: Optional[date] = None,
         date_lte: Optional[date] = None,
         date_gt: Optional[date] = None,
         date_gte: Optional[date] = None,
-        value: Optional[float] = None,
-        value_lt: Optional[float] = None,
-        value_lte: Optional[float] = None,
-        value_gt: Optional[float] = None,
-        value_gte: Optional[float] = None,
+        value: Optional[str] = None,
+        value_lt: Optional[str] = None,
+        value_lte: Optional[str] = None,
+        value_gt: Optional[str] = None,
+        value_gte: Optional[str] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         data_type: Optional[Union[list[str], Series[str], str]] = None,
         valid_to: Optional[date] = None,
         valid_to_lt: Optional[date] = None,
@@ -1843,10 +1991,10 @@ class Chemicals:
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = True,
+        is_active: Optional[Union[list[bool], Series[bool], bool]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 5000,
+        page_size: int = 1000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -1858,16 +2006,8 @@ class Chemicals:
 
          forecast_period: Optional[Union[list[str], Series[str], str]]
              Long term or short term, by default None
-         scenario_id: Optional[int], optional
-             Scenario ID, by default None
-         scenario_id_gt: Optional[int], optional
-             filter by `scenario_id > x`, by default None
-         scenario_id_gte: Optional[int], optional
-             filter by `scenario_id >= x`, by default None
-         scenario_id_lt: Optional[int], optional
-             filter by `scenario_id < x`, by default None
-         scenario_id_lte: Optional[int], optional
-             filter by `scenario_id <= x`, by default None
+         scenario_id: Optional[Union[list[int], Series[int], int]]
+             Scenario Id, by default None
          scenario_description: Optional[Union[list[str], Series[str], str]]
              Scenario Description, by default None
          commodity: Optional[Union[list[str], Series[str], str]]
@@ -1875,9 +2015,15 @@ class Chemicals:
          production_route: Optional[Union[list[str], Series[str], str]]
              Name for Production Route, by default None
          country: Optional[Union[list[str], Series[str], str]]
-             Name for Country (geography), by default None
+             Country, by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          concept: Optional[Union[list[str], Series[str], str]]
              Concept that describes what the dataset is, by default None
          date: Optional[date], optional
@@ -1902,6 +2048,8 @@ class Chemicals:
              filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
+             Unit of Measure full name from SPOT, by default None
          data_type: Optional[Union[list[str], Series[str], str]]
              Data Type (history or forecast), by default None
          valid_to: Optional[date], optional
@@ -1934,27 +2082,18 @@ class Chemicals:
              filter by `modified_date < x`, by default None
          modified_date_lte: Optional[datetime], optional
              filter by `modified_date <= x`, by default None
-         is_active: Optional[Union[list[str], Series[str], str]]
+         is_active: Optional[Union[list[bool], Series[bool], bool]]
              If the record is active, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
-         page_size: int = 5000,
+         page_size: int = 1000,
          raw: bool = False,
          paginate: bool = False
 
         """
-
         filter_params: List[str] = []
         filter_params.append(list_to_filter("forecastPeriod", forecast_period))
         filter_params.append(list_to_filter("scenarioId", scenario_id))
-        if scenario_id_gt is not None:
-            filter_params.append(f'scenarioId > "{scenario_id_gt}"')
-        if scenario_id_gte is not None:
-            filter_params.append(f'scenarioId >= "{scenario_id_gte}"')
-        if scenario_id_lt is not None:
-            filter_params.append(f'scenarioId < "{scenario_id_lt}"')
-        if scenario_id_lte is not None:
-            filter_params.append(f'scenarioId <= "{scenario_id_lte}"')
         filter_params.append(
             list_to_filter("scenarioDescription", scenario_description)
         )
@@ -1962,6 +2101,9 @@ class Chemicals:
         filter_params.append(list_to_filter("productionRoute", production_route))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("date", date))
         if date_gt is not None:
@@ -1982,6 +2124,7 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("dataType", data_type))
         filter_params.append(list_to_filter("validTo", valid_to))
         if valid_to_gt is not None:
@@ -2022,7 +2165,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/capacity",
+            path=f"/analytics/v2/chemicals/capacity",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -2044,18 +2187,22 @@ class Chemicals:
         production_route: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         date: Optional[date] = None,
         date_lt: Optional[date] = None,
         date_lte: Optional[date] = None,
         date_gt: Optional[date] = None,
         date_gte: Optional[date] = None,
-        value: Optional[float] = None,
-        value_lt: Optional[float] = None,
-        value_lte: Optional[float] = None,
-        value_gt: Optional[float] = None,
-        value_gte: Optional[float] = None,
+        value: Optional[str] = None,
+        value_lt: Optional[str] = None,
+        value_lte: Optional[str] = None,
+        value_gt: Optional[str] = None,
+        value_gte: Optional[str] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         data_type: Optional[Union[list[str], Series[str], str]] = None,
         valid_to: Optional[date] = None,
         valid_to_lt: Optional[date] = None,
@@ -2072,7 +2219,7 @@ class Chemicals:
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
@@ -2104,9 +2251,15 @@ class Chemicals:
          production_route: Optional[Union[list[str], Series[str], str]]
              Name for Production Route, by default None
          country: Optional[Union[list[str], Series[str], str]]
-             Name for Country (geography), by default None
+             Country, by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          concept: Optional[Union[list[str], Series[str], str]]
              Concept that describes what the dataset is, by default None
          date: Optional[date], optional
@@ -2131,6 +2284,8 @@ class Chemicals:
              filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
+             Unit of Measure full name from SPOT, by default None
          data_type: Optional[Union[list[str], Series[str], str]]
              Data Type (history or forecast), by default None
          valid_to: Optional[date], optional
@@ -2172,25 +2327,25 @@ class Chemicals:
          paginate: bool = False
 
         """
-
         filter_params: List[str] = []
         filter_params.append(list_to_filter("forecastPeriod", forecast_period))
         filter_params.append(list_to_filter("scenarioId", scenario_id))
         if scenario_id_gt is not None:
-            filter_params.append(f'scenarioId > "{scenario_id_gt}"')
+            filter_params.append(f'scenario_id > "{scenario_id_gt}"')
         if scenario_id_gte is not None:
-            filter_params.append(f'scenarioId >= "{scenario_id_gte}"')
+            filter_params.append(f'scenario_id >= "{scenario_id_gte}"')
         if scenario_id_lt is not None:
-            filter_params.append(f'scenarioId < "{scenario_id_lt}"')
+            filter_params.append(f'scenario_id < "{scenario_id_lt}"')
         if scenario_id_lte is not None:
-            filter_params.append(f'scenarioId <= "{scenario_id_lte}"')
-        filter_params.append(
-            list_to_filter("scenarioDescription", scenario_description)
-        )
+            filter_params.append(f'scenario_id <= "{scenario_id_lte}"')
+        filter_params.append(list_to_filter("scenarioDescription", scenario_description))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("productionRoute", production_route))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("date", date))
         if date_gt is not None:
@@ -2211,25 +2366,26 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("dataType", data_type))
         filter_params.append(list_to_filter("validTo", valid_to))
         if valid_to_gt is not None:
-            filter_params.append(f'validTo > "{valid_to_gt}"')
+            filter_params.append(f'valid_to > "{valid_to_gt}"')
         if valid_to_gte is not None:
-            filter_params.append(f'validTo >= "{valid_to_gte}"')
+            filter_params.append(f'valid_to >= "{valid_to_gte}"')
         if valid_to_lt is not None:
-            filter_params.append(f'validTo < "{valid_to_lt}"')
+            filter_params.append(f'valid_to < "{valid_to_lt}"')
         if valid_to_lte is not None:
-            filter_params.append(f'validTo <= "{valid_to_lte}"')
+            filter_params.append(f'valid_to <= "{valid_to_lte}"')
         filter_params.append(list_to_filter("validFrom", valid_from))
         if valid_from_gt is not None:
-            filter_params.append(f'validFrom > "{valid_from_gt}"')
+            filter_params.append(f'valid_from > "{valid_from_gt}"')
         if valid_from_gte is not None:
-            filter_params.append(f'validFrom >= "{valid_from_gte}"')
+            filter_params.append(f'valid_from >= "{valid_from_gte}"')
         if valid_from_lt is not None:
-            filter_params.append(f'validFrom < "{valid_from_lt}"')
+            filter_params.append(f'valid_from < "{valid_from_lt}"')
         if valid_from_lte is not None:
-            filter_params.append(f'validFrom <= "{valid_from_lte}"')
+            filter_params.append(f'valid_from <= "{valid_from_lte}"')
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -2251,7 +2407,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/production",
+            path=f"/analytics/v2/chemicals/production",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -2273,18 +2429,22 @@ class Chemicals:
         production_route: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         date: Optional[date] = None,
         date_lt: Optional[date] = None,
         date_lte: Optional[date] = None,
         date_gt: Optional[date] = None,
         date_gte: Optional[date] = None,
-        value: Optional[float] = None,
-        value_lt: Optional[float] = None,
-        value_lte: Optional[float] = None,
-        value_gt: Optional[float] = None,
-        value_gte: Optional[float] = None,
+        value: Optional[str] = None,
+        value_lt: Optional[str] = None,
+        value_lte: Optional[str] = None,
+        value_gt: Optional[str] = None,
+        value_gte: Optional[str] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         data_type: Optional[Union[list[str], Series[str], str]] = None,
         valid_to: Optional[date] = None,
         valid_to_lt: Optional[date] = None,
@@ -2301,104 +2461,112 @@ class Chemicals:
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
-    ) -> Union[DataFrame, Response]:
+        ) -> Union[DataFrame, Response]:
         """
         Capacity Utilization data for a product
 
         Parameters
         ----------
 
-         forecast_period: Optional[Union[list[str], Series[str], str]]
-             Long term or short term, by default None
-         scenario_id: Optional[int], optional
-             Scenario ID, by default None
-         scenario_id_gt: Optional[int], optional
-             filter by `scenario_id > x`, by default None
-         scenario_id_gte: Optional[int], optional
-             filter by `scenario_id >= x`, by default None
-         scenario_id_lt: Optional[int], optional
-             filter by `scenario_id < x`, by default None
-         scenario_id_lte: Optional[int], optional
-             filter by `scenario_id <= x`, by default None
-         scenario_description: Optional[Union[list[str], Series[str], str]]
-             Scenario Description, by default None
-         commodity: Optional[Union[list[str], Series[str], str]]
-             Name for Product (chemical commodity), by default None
-         production_route: Optional[Union[list[str], Series[str], str]]
-             Name for Production Route, by default None
-         country: Optional[Union[list[str], Series[str], str]]
-             Name for Country (geography), by default None
-         region: Optional[Union[list[str], Series[str], str]]
-             Name for Region (geography), by default None
-         concept: Optional[Union[list[str], Series[str], str]]
-             Concept that describes what the dataset is, by default None
-         date: Optional[date], optional
-             Date, by default None
-         date_gt: Optional[date], optional
-             filter by `date > x`, by default None
-         date_gte: Optional[date], optional
-             filter by `date >= x`, by default None
-         date_lt: Optional[date], optional
-             filter by `date < x`, by default None
-         date_lte: Optional[date], optional
-             filter by `date <= x`, by default None
-         value: Optional[str], optional
-             Data Value, by default None
-         value_gt: Optional[str], optional
-             filter by `value > x`, by default None
-         value_gte: Optional[str], optional
-             filter by `value >= x`, by default None
-         value_lt: Optional[str], optional
-             filter by `value < x`, by default None
-         value_lte: Optional[str], optional
-             filter by `value <= x`, by default None
-         uom: Optional[Union[list[str], Series[str], str]]
-             Name for Unit of Measure (volume), by default None
-         data_type: Optional[Union[list[str], Series[str], str]]
-             Data Type (history or forecast), by default None
-         valid_to: Optional[date], optional
-             End Date of Record Validity, by default None
-         valid_to_gt: Optional[date], optional
-             filter by `valid_to > x`, by default None
-         valid_to_gte: Optional[date], optional
-             filter by `valid_to >= x`, by default None
-         valid_to_lt: Optional[date], optional
-             filter by `valid_to < x`, by default None
-         valid_to_lte: Optional[date], optional
-             filter by `valid_to <= x`, by default None
-         valid_from: Optional[date], optional
-             As of date for when the data is updated, by default None
-         valid_from_gt: Optional[date], optional
-             filter by `valid_from > x`, by default None
-         valid_from_gte: Optional[date], optional
-             filter by `valid_from >= x`, by default None
-         valid_from_lt: Optional[date], optional
-             filter by `valid_from < x`, by default None
-         valid_from_lte: Optional[date], optional
-             filter by `valid_from <= x`, by default None
-         modified_date: Optional[datetime], optional
-             Date when the data is last modified, by default None
-         modified_date_gt: Optional[datetime], optional
-             filter by `modified_date > x`, by default None
-         modified_date_gte: Optional[datetime], optional
-             filter by `modified_date >= x`, by default None
-         modified_date_lt: Optional[datetime], optional
-             filter by `modified_date < x`, by default None
-         modified_date_lte: Optional[datetime], optional
-             filter by `modified_date <= x`, by default None
-         is_active: Optional[Union[list[str], Series[str], str]]
-             If the record is active, by default None
-         filter_exp: Optional[str] = None,
-         page: int = 1,
-         page_size: int = 5000,
-         raw: bool = False,
-         paginate: bool = False
+        forecast_period: Optional[Union[list[str], Series[str], str]]
+            Long term or short term, by default None
+        scenario_id: Optional[int], optional
+            Scenario ID, by default None
+        scenario_id_gt: Optional[int], optional
+            filter by `scenario_id > x`, by default None
+        scenario_id_gte: Optional[int], optional
+            filter by `scenario_id >= x`, by default None
+        scenario_id_lt: Optional[int], optional
+            filter by `scenario_id < x`, by default None
+        scenario_id_lte: Optional[int], optional
+            filter by `scenario_id <= x`, by default None
+        scenario_description: Optional[Union[list[str], Series[str], str]]
+            Scenario Description, by default None
+        commodity: Optional[Union[list[str], Series[str], str]]
+            Name for Product (chemical commodity), by default None
+        production_route: Optional[Union[list[str], Series[str], str]]
+            Name for Production Route, by default None
+        country: Optional[Union[list[str], Series[str], str]]
+            Country, by default None
+        region: Optional[Union[list[str], Series[str], str]]
+            Name for Region (geography), by default None
+        top_region: Optional[Union[list[str], Series[str], str]]
+            Name for the highest-level geographic region (e.g., EMEA), by default None
+        mid_region: Optional[Union[list[str], Series[str], str]]
+            Name for the middle-level geographic region (e.g., Europe), by default None
+        sub_region: Optional[Union[list[str], Series[str], str]]
+            Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
+        concept: Optional[Union[list[str], Series[str], str]]
+            Concept that describes what the dataset is, by default None
+        date: Optional[date], optional
+            Date, by default None
+        date_gt: Optional[date], optional
+            filter by `date > x`, by default None
+        date_gte: Optional[date], optional
+            filter by `date >= x`, by default None
+        date_lt: Optional[date], optional
+            filter by `date < x`, by default None
+        date_lte: Optional[date], optional
+            filter by `date <= x`, by default None
+        value: Optional[str], optional
+            Data Value, by default None
+        value_gt: Optional[str], optional
+            filter by `value > x`, by default None
+        value_gte: Optional[str], optional
+            filter by `value >= x`, by default None
+        value_lt: Optional[str], optional
+            filter by `value < x`, by default None
+        value_lte: Optional[str], optional
+            filter by `value <= x`, by default None
+        uom: Optional[Union[list[str], Series[str], str]]
+            Name for Unit of Measure (volume), by default None
+        uom_name: Optional[Union[list[str], Series[str], str]]
+            Unit of Measure full name from SPOT, by default None
+        data_type: Optional[Union[list[str], Series[str], str]]
+            Data Type (history or forecast), by default None
+        valid_to: Optional[date], optional
+            End Date of Record Validity, by default None
+        valid_to_gt: Optional[date], optional
+            filter by `valid_to > x`, by default None
+        valid_to_gte: Optional[date], optional
+            filter by `valid_to >= x`, by default None
+        valid_to_lt: Optional[date], optional
+            filter by `valid_to < x`, by default None
+        valid_to_lte: Optional[date], optional
+            filter by `valid_to <= x`, by default None
+        valid_from: Optional[date], optional
+            As of date for when the data is updated, by default None
+        valid_from_gt: Optional[date], optional
+            filter by `valid_from > x`, by default None
+        valid_from_gte: Optional[date], optional
+            filter by `valid_from >= x`, by default None
+        valid_from_lt: Optional[date], optional
+            filter by `valid_from < x`, by default None
+        valid_from_lte: Optional[date], optional
+            filter by `valid_from <= x`, by default None
+        modified_date: Optional[datetime], optional
+            Date when the data is last modified, by default None
+        modified_date_gt: Optional[datetime], optional
+            filter by `modified_date > x`, by default None
+        modified_date_gte: Optional[datetime], optional
+            filter by `modified_date >= x`, by default None
+        modified_date_lt: Optional[datetime], optional
+            filter by `modified_date < x`, by default None
+        modified_date_lte: Optional[datetime], optional
+            filter by `modified_date <= x`, by default None
+        is_active: Optional[Union[list[str], Series[str], str]]
+            If the record is active, by default None
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False
 
         """
 
@@ -2406,13 +2574,13 @@ class Chemicals:
         filter_params.append(list_to_filter("forecastPeriod", forecast_period))
         filter_params.append(list_to_filter("scenarioId", scenario_id))
         if scenario_id_gt is not None:
-            filter_params.append(f'scenarioId > "{scenario_id_gt}"')
+            filter_params.append(f'scenario_id > "{scenario_id_gt}"')
         if scenario_id_gte is not None:
-            filter_params.append(f'scenarioId >= "{scenario_id_gte}"')
+            filter_params.append(f'scenario_id >= "{scenario_id_gte}"')
         if scenario_id_lt is not None:
-            filter_params.append(f'scenarioId < "{scenario_id_lt}"')
+            filter_params.append(f'scenario_id < "{scenario_id_lt}"')
         if scenario_id_lte is not None:
-            filter_params.append(f'scenarioId <= "{scenario_id_lte}"')
+            filter_params.append(f'scenario_id <= "{scenario_id_lte}"')
         filter_params.append(
             list_to_filter("scenarioDescription", scenario_description)
         )
@@ -2420,6 +2588,9 @@ class Chemicals:
         filter_params.append(list_to_filter("productionRoute", production_route))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("date", date))
         if date_gt is not None:
@@ -2440,25 +2611,26 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("dataType", data_type))
         filter_params.append(list_to_filter("validTo", valid_to))
         if valid_to_gt is not None:
-            filter_params.append(f'validTo > "{valid_to_gt}"')
+            filter_params.append(f'valid_to > "{valid_to_gt}"')
         if valid_to_gte is not None:
-            filter_params.append(f'validTo >= "{valid_to_gte}"')
+            filter_params.append(f'valid_to >= "{valid_to_gte}"')
         if valid_to_lt is not None:
-            filter_params.append(f'validTo < "{valid_to_lt}"')
+            filter_params.append(f'valid_to < "{valid_to_lt}"')
         if valid_to_lte is not None:
-            filter_params.append(f'validTo <= "{valid_to_lte}"')
+            filter_params.append(f'valid_to <= "{valid_to_lte}"')
         filter_params.append(list_to_filter("validFrom", valid_from))
         if valid_from_gt is not None:
-            filter_params.append(f'validFrom > "{valid_from_gt}"')
+            filter_params.append(f'valid_from > "{valid_from_gt}"')
         if valid_from_gte is not None:
-            filter_params.append(f'validFrom >= "{valid_from_gte}"')
+            filter_params.append(f'valid_from >= "{valid_from_gte}"')
         if valid_from_lt is not None:
-            filter_params.append(f'validFrom < "{valid_from_lt}"')
+            filter_params.append(f'valid_from < "{valid_from_lt}"')
         if valid_from_lte is not None:
-            filter_params.append(f'validFrom <= "{valid_from_lte}"')
+            filter_params.append(f'valid_from <= "{valid_from_lte}"')
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -2480,7 +2652,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/capacity-utilization",
+            path=f"/analytics/v2/chemicals/capacity-utilization",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -2492,27 +2664,27 @@ class Chemicals:
         self,
         *,
         forecast_period: Optional[Union[list[str], Series[str], str]] = None,
-        scenario_id: Optional[int] = None,
-        scenario_id_lt: Optional[int] = None,
-        scenario_id_lte: Optional[int] = None,
-        scenario_id_gt: Optional[int] = None,
-        scenario_id_gte: Optional[int] = None,
+        scenario_id: Optional[Union[list[int], Series[int], int]] = None,
         scenario_description: Optional[Union[list[str], Series[str], str]] = None,
         commodity: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         date: Optional[date] = None,
         date_lt: Optional[date] = None,
         date_lte: Optional[date] = None,
         date_gt: Optional[date] = None,
         date_gte: Optional[date] = None,
-        value: Optional[float] = None,
-        value_lt: Optional[float] = None,
-        value_lte: Optional[float] = None,
-        value_gt: Optional[float] = None,
-        value_gte: Optional[float] = None,
+        value: Optional[str] = None,
+        value_lt: Optional[str] = None,
+        value_lte: Optional[str] = None,
+        value_gt: Optional[str] = None,
+        value_gte: Optional[str] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         data_type: Optional[Union[list[str], Series[str], str]] = None,
         valid_to: Optional[date] = None,
         valid_to_lt: Optional[date] = None,
@@ -2529,7 +2701,7 @@ class Chemicals:
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         application: Optional[Union[list[str], Series[str], str]] = None,
         derivative_product: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
@@ -2546,24 +2718,22 @@ class Chemicals:
 
          forecast_period: Optional[Union[list[str], Series[str], str]]
              Long term or short term, by default None
-         scenario_id: Optional[int], optional
-             Scenario ID, by default None
-         scenario_id_gt: Optional[int], optional
-             filter by `scenario_id > x`, by default None
-         scenario_id_gte: Optional[int], optional
-             filter by `scenario_id >= x`, by default None
-         scenario_id_lt: Optional[int], optional
-             filter by `scenario_id < x`, by default None
-         scenario_id_lte: Optional[int], optional
-             filter by `scenario_id <= x`, by default None
+         scenario_id: Optional[Union[list[int], Series[int], int]]
+             Scenario Id, by default None
          scenario_description: Optional[Union[list[str], Series[str], str]]
              Scenario Description, by default None
          commodity: Optional[Union[list[str], Series[str], str]]
              Name for Product (chemical commodity), by default None
          country: Optional[Union[list[str], Series[str], str]]
-             Name for Country (geography), by default None
+             Country, by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          concept: Optional[Union[list[str], Series[str], str]]
              Concept that describes what the dataset is, by default None
          date: Optional[date], optional
@@ -2588,6 +2758,8 @@ class Chemicals:
              filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
+             Unit of Measure full name from SPOT, by default None
          data_type: Optional[Union[list[str], Series[str], str]]
              Data Type (history or forecast), by default None
          valid_to: Optional[date], optional
@@ -2625,7 +2797,7 @@ class Chemicals:
          application: Optional[Union[list[str], Series[str], str]]
              Product(chemical commodity) Application, by default None
          derivative_product: Optional[Union[list[str], Series[str], str]]
-             Derivative Product (chemical commodity), by default None
+             Name for Product (chemical commodity), by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
          page_size: int = 5000,
@@ -2633,24 +2805,18 @@ class Chemicals:
          paginate: bool = False
 
         """
-
         filter_params: List[str] = []
         filter_params.append(list_to_filter("forecastPeriod", forecast_period))
         filter_params.append(list_to_filter("scenarioId", scenario_id))
-        if scenario_id_gt is not None:
-            filter_params.append(f'scenarioId > "{scenario_id_gt}"')
-        if scenario_id_gte is not None:
-            filter_params.append(f'scenarioId >= "{scenario_id_gte}"')
-        if scenario_id_lt is not None:
-            filter_params.append(f'scenarioId < "{scenario_id_lt}"')
-        if scenario_id_lte is not None:
-            filter_params.append(f'scenarioId <= "{scenario_id_lte}"')
         filter_params.append(
             list_to_filter("scenarioDescription", scenario_description)
         )
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("date", date))
         if date_gt is not None:
@@ -2671,25 +2837,26 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("dataType", data_type))
         filter_params.append(list_to_filter("validTo", valid_to))
         if valid_to_gt is not None:
-            filter_params.append(f'validTo > "{valid_to_gt}"')
+            filter_params.append(f'valid_to > "{valid_to_gt}"')
         if valid_to_gte is not None:
-            filter_params.append(f'validTo >= "{valid_to_gte}"')
+            filter_params.append(f'valid_to >= "{valid_to_gte}"')
         if valid_to_lt is not None:
-            filter_params.append(f'validTo < "{valid_to_lt}"')
+            filter_params.append(f'valid_to < "{valid_to_lt}"')
         if valid_to_lte is not None:
-            filter_params.append(f'validTo <= "{valid_to_lte}"')
+            filter_params.append(f'valid_to <= "{valid_to_lte}"')
         filter_params.append(list_to_filter("validFrom", valid_from))
         if valid_from_gt is not None:
-            filter_params.append(f'validFrom > "{valid_from_gt}"')
+            filter_params.append(f'valid_from > "{valid_from_gt}"')
         if valid_from_gte is not None:
-            filter_params.append(f'validFrom >= "{valid_from_gte}"')
+            filter_params.append(f'valid_from >= "{valid_from_gte}"')
         if valid_from_lt is not None:
-            filter_params.append(f'validFrom < "{valid_from_lt}"')
+            filter_params.append(f'valid_from < "{valid_from_lt}"')
         if valid_from_lte is not None:
-            filter_params.append(f'validFrom <= "{valid_from_lte}"')
+            filter_params.append(f'valid_from <= "{valid_from_lte}"')
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -2713,7 +2880,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/demand-by-derivative",
+            path=f"/analytics/v2/chemicals/demand-by-derivative",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -2734,18 +2901,22 @@ class Chemicals:
         commodity: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         date: Optional[date] = None,
         date_lt: Optional[date] = None,
         date_lte: Optional[date] = None,
         date_gt: Optional[date] = None,
         date_gte: Optional[date] = None,
-        value: Optional[float] = None,
-        value_lt: Optional[float] = None,
-        value_lte: Optional[float] = None,
-        value_gt: Optional[float] = None,
-        value_gte: Optional[float] = None,
+        value: Optional[str] = None,
+        value_lt: Optional[str] = None,
+        value_lte: Optional[str] = None,
+        value_gt: Optional[str] = None,
+        value_gte: Optional[str] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         data_type: Optional[Union[list[str], Series[str], str]] = None,
         valid_to: Optional[date] = None,
         valid_to_lt: Optional[date] = None,
@@ -2762,7 +2933,7 @@ class Chemicals:
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         end_use: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
@@ -2793,9 +2964,15 @@ class Chemicals:
          commodity: Optional[Union[list[str], Series[str], str]]
              Name for Product (chemical commodity), by default None
          country: Optional[Union[list[str], Series[str], str]]
-             Name for Country (geography), by default None
+             Country, by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          concept: Optional[Union[list[str], Series[str], str]]
              Concept that describes what the dataset is, by default None
          date: Optional[date], optional
@@ -2820,6 +2997,8 @@ class Chemicals:
              filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
+             Unit of Measure full name from SPOT, by default None
          data_type: Optional[Union[list[str], Series[str], str]]
              Data Type (history or forecast), by default None
          valid_to: Optional[date], optional
@@ -2863,24 +3042,24 @@ class Chemicals:
          paginate: bool = False
 
         """
-
         filter_params: List[str] = []
         filter_params.append(list_to_filter("forecastPeriod", forecast_period))
         filter_params.append(list_to_filter("scenarioId", scenario_id))
         if scenario_id_gt is not None:
-            filter_params.append(f'scenarioId > "{scenario_id_gt}"')
+            filter_params.append(f'scenario_id > "{scenario_id_gt}"')
         if scenario_id_gte is not None:
-            filter_params.append(f'scenarioId >= "{scenario_id_gte}"')
+            filter_params.append(f'scenario_id >= "{scenario_id_gte}"')
         if scenario_id_lt is not None:
-            filter_params.append(f'scenarioId < "{scenario_id_lt}"')
+            filter_params.append(f'scenario_id < "{scenario_id_lt}"')
         if scenario_id_lte is not None:
-            filter_params.append(f'scenarioId <= "{scenario_id_lte}"')
-        filter_params.append(
-            list_to_filter("scenarioDescription", scenario_description)
-        )
+            filter_params.append(f'scenario_id <= "{scenario_id_lte}"')
+        filter_params.append(list_to_filter("scenarioDescription", scenario_description))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("date", date))
         if date_gt is not None:
@@ -2901,25 +3080,26 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("dataType", data_type))
         filter_params.append(list_to_filter("validTo", valid_to))
         if valid_to_gt is not None:
-            filter_params.append(f'validTo > "{valid_to_gt}"')
+            filter_params.append(f'valid_to > "{valid_to_gt}"')
         if valid_to_gte is not None:
-            filter_params.append(f'validTo >= "{valid_to_gte}"')
+            filter_params.append(f'valid_to >= "{valid_to_gte}"')
         if valid_to_lt is not None:
-            filter_params.append(f'validTo < "{valid_to_lt}"')
+            filter_params.append(f'valid_to < "{valid_to_lt}"')
         if valid_to_lte is not None:
-            filter_params.append(f'validTo <= "{valid_to_lte}"')
+            filter_params.append(f'valid_to <= "{valid_to_lte}"')
         filter_params.append(list_to_filter("validFrom", valid_from))
         if valid_from_gt is not None:
-            filter_params.append(f'validFrom > "{valid_from_gt}"')
+            filter_params.append(f'valid_from > "{valid_from_gt}"')
         if valid_from_gte is not None:
-            filter_params.append(f'validFrom >= "{valid_from_gte}"')
+            filter_params.append(f'valid_from >= "{valid_from_gte}"')
         if valid_from_lt is not None:
-            filter_params.append(f'validFrom < "{valid_from_lt}"')
+            filter_params.append(f'valid_from < "{valid_from_lt}"')
         if valid_from_lte is not None:
-            filter_params.append(f'validFrom <= "{valid_from_lte}"')
+            filter_params.append(f'valid_from <= "{valid_from_lte}"')
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -2942,7 +3122,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/demand-by-end-use",
+            path=f"/analytics/v2/chemicals/demand-by-end-use",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -2963,18 +3143,22 @@ class Chemicals:
         commodity: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         date: Optional[date] = None,
         date_lt: Optional[date] = None,
         date_lte: Optional[date] = None,
         date_gt: Optional[date] = None,
         date_gte: Optional[date] = None,
-        value: Optional[float] = None,
-        value_lt: Optional[float] = None,
-        value_lte: Optional[float] = None,
-        value_gt: Optional[float] = None,
-        value_gte: Optional[float] = None,
+        value: Optional[str] = None,
+        value_lt: Optional[str] = None,
+        value_lte: Optional[str] = None,
+        value_gt: Optional[str] = None,
+        value_gte: Optional[str] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         data_type: Optional[Union[list[str], Series[str], str]] = None,
         valid_to: Optional[date] = None,
         valid_to_lt: Optional[date] = None,
@@ -2991,7 +3175,7 @@ class Chemicals:
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
@@ -3021,9 +3205,15 @@ class Chemicals:
          commodity: Optional[Union[list[str], Series[str], str]]
              Name for Product (chemical commodity), by default None
          country: Optional[Union[list[str], Series[str], str]]
-             Name for Country (geography), by default None
+             Country, by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          concept: Optional[Union[list[str], Series[str], str]]
              Concept that describes what the dataset is, by default None
          date: Optional[date], optional
@@ -3048,6 +3238,8 @@ class Chemicals:
              filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
+             Unit of Measure full name from SPOT, by default None
          data_type: Optional[Union[list[str], Series[str], str]]
              Data Type (history or forecast), by default None
          valid_to: Optional[date], optional
@@ -3094,19 +3286,20 @@ class Chemicals:
         filter_params.append(list_to_filter("forecastPeriod", forecast_period))
         filter_params.append(list_to_filter("scenarioId", scenario_id))
         if scenario_id_gt is not None:
-            filter_params.append(f'scenarioId > "{scenario_id_gt}"')
+            filter_params.append(f'scenario_id > "{scenario_id_gt}"')
         if scenario_id_gte is not None:
-            filter_params.append(f'scenarioId >= "{scenario_id_gte}"')
+            filter_params.append(f'scenario_id >= "{scenario_id_gte}"')
         if scenario_id_lt is not None:
-            filter_params.append(f'scenarioId < "{scenario_id_lt}"')
+            filter_params.append(f'scenario_id < "{scenario_id_lt}"')
         if scenario_id_lte is not None:
-            filter_params.append(f'scenarioId <= "{scenario_id_lte}"')
-        filter_params.append(
-            list_to_filter("scenarioDescription", scenario_description)
-        )
+            filter_params.append(f'scenario_id <= "{scenario_id_lte}"')
+        filter_params.append(list_to_filter("scenarioDescription", scenario_description))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("date", date))
         if date_gt is not None:
@@ -3127,25 +3320,26 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("dataType", data_type))
         filter_params.append(list_to_filter("validTo", valid_to))
         if valid_to_gt is not None:
-            filter_params.append(f'validTo > "{valid_to_gt}"')
+            filter_params.append(f'valid_to > "{valid_to_gt}"')
         if valid_to_gte is not None:
-            filter_params.append(f'validTo >= "{valid_to_gte}"')
+            filter_params.append(f'valid_to >= "{valid_to_gte}"')
         if valid_to_lt is not None:
-            filter_params.append(f'validTo < "{valid_to_lt}"')
+            filter_params.append(f'valid_to < "{valid_to_lt}"')
         if valid_to_lte is not None:
-            filter_params.append(f'validTo <= "{valid_to_lte}"')
+            filter_params.append(f'valid_to <= "{valid_to_lte}"')
         filter_params.append(list_to_filter("validFrom", valid_from))
         if valid_from_gt is not None:
-            filter_params.append(f'validFrom > "{valid_from_gt}"')
+            filter_params.append(f'valid_from > "{valid_from_gt}"')
         if valid_from_gte is not None:
-            filter_params.append(f'validFrom >= "{valid_from_gte}"')
+            filter_params.append(f'valid_from >= "{valid_from_gte}"')
         if valid_from_lt is not None:
-            filter_params.append(f'validFrom < "{valid_from_lt}"')
+            filter_params.append(f'valid_from < "{valid_from_lt}"')
         if valid_from_lte is not None:
-            filter_params.append(f'validFrom <= "{valid_from_lte}"')
+            filter_params.append(f'valid_from <= "{valid_from_lte}"')
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -3167,7 +3361,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/trade",
+            path=f"/analytics/v2/chemicals/trade",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -3188,18 +3382,22 @@ class Chemicals:
         commodity: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         date: Optional[date] = None,
         date_lt: Optional[date] = None,
         date_lte: Optional[date] = None,
         date_gt: Optional[date] = None,
         date_gte: Optional[date] = None,
-        value: Optional[float] = None,
-        value_lt: Optional[float] = None,
-        value_lte: Optional[float] = None,
-        value_gt: Optional[float] = None,
-        value_gte: Optional[float] = None,
+        value: Optional[str] = None,
+        value_lt: Optional[str] = None,
+        value_lte: Optional[str] = None,
+        value_gt: Optional[str] = None,
+        value_gte: Optional[str] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         data_type: Optional[Union[list[str], Series[str], str]] = None,
         valid_to: Optional[date] = None,
         valid_to_lt: Optional[date] = None,
@@ -3246,9 +3444,15 @@ class Chemicals:
          commodity: Optional[Union[list[str], Series[str], str]]
              Name for Product (chemical commodity), by default None
          country: Optional[Union[list[str], Series[str], str]]
-             Name for Country (geography), by default None
+             Country, by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          concept: Optional[Union[list[str], Series[str], str]]
              Concept that describes what the dataset is, by default None
          date: Optional[date], optional
@@ -3273,6 +3477,8 @@ class Chemicals:
              filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
+             Unit of Measure full name from SPOT, by default None
          data_type: Optional[Union[list[str], Series[str], str]]
              Data Type (history or forecast), by default None
          valid_to: Optional[date], optional
@@ -3319,19 +3525,20 @@ class Chemicals:
         filter_params.append(list_to_filter("forecastPeriod", forecast_period))
         filter_params.append(list_to_filter("scenarioId", scenario_id))
         if scenario_id_gt is not None:
-            filter_params.append(f'scenarioId > "{scenario_id_gt}"')
+            filter_params.append(f'scenario_id > "{scenario_id_gt}"')
         if scenario_id_gte is not None:
-            filter_params.append(f'scenarioId >= "{scenario_id_gte}"')
+            filter_params.append(f'scenario_id >= "{scenario_id_gte}"')
         if scenario_id_lt is not None:
-            filter_params.append(f'scenarioId < "{scenario_id_lt}"')
+            filter_params.append(f'scenario_id < "{scenario_id_lt}"')
         if scenario_id_lte is not None:
-            filter_params.append(f'scenarioId <= "{scenario_id_lte}"')
-        filter_params.append(
-            list_to_filter("scenarioDescription", scenario_description)
-        )
+            filter_params.append(f'scenario_id <= "{scenario_id_lte}"')
+        filter_params.append(list_to_filter("scenarioDescription", scenario_description))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("date", date))
         if date_gt is not None:
@@ -3352,25 +3559,26 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("dataType", data_type))
         filter_params.append(list_to_filter("validTo", valid_to))
         if valid_to_gt is not None:
-            filter_params.append(f'validTo > "{valid_to_gt}"')
+            filter_params.append(f'valid_to > "{valid_to_gt}"')
         if valid_to_gte is not None:
-            filter_params.append(f'validTo >= "{valid_to_gte}"')
+            filter_params.append(f'valid_to >= "{valid_to_gte}"')
         if valid_to_lt is not None:
-            filter_params.append(f'validTo < "{valid_to_lt}"')
+            filter_params.append(f'valid_to < "{valid_to_lt}"')
         if valid_to_lte is not None:
-            filter_params.append(f'validTo <= "{valid_to_lte}"')
+            filter_params.append(f'valid_to <= "{valid_to_lte}"')
         filter_params.append(list_to_filter("validFrom", valid_from))
         if valid_from_gt is not None:
-            filter_params.append(f'validFrom > "{valid_from_gt}"')
+            filter_params.append(f'valid_from > "{valid_from_gt}"')
         if valid_from_gte is not None:
-            filter_params.append(f'validFrom >= "{valid_from_gte}"')
+            filter_params.append(f'valid_from >= "{valid_from_gte}"')
         if valid_from_lt is not None:
-            filter_params.append(f'validFrom < "{valid_from_lt}"')
+            filter_params.append(f'valid_from < "{valid_from_lt}"')
         if valid_from_lte is not None:
-            filter_params.append(f'validFrom <= "{valid_from_lte}"')
+            filter_params.append(f'valid_from <= "{valid_from_lte}"')
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -3392,7 +3600,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/inventory-change",
+            path=f"/analytics/v2/chemicals/inventory-change",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -3404,27 +3612,27 @@ class Chemicals:
         self,
         *,
         forecast_period: Optional[Union[list[str], Series[str], str]] = None,
-        scenario_id: Optional[int] = None,
-        scenario_id_lt: Optional[int] = None,
-        scenario_id_lte: Optional[int] = None,
-        scenario_id_gt: Optional[int] = None,
-        scenario_id_gte: Optional[int] = None,
+        scenario_id: Optional[Union[list[int], Series[int], int]] = None,
         scenario_description: Optional[Union[list[str], Series[str], str]] = None,
         commodity: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         date: Optional[date] = None,
         date_lt: Optional[date] = None,
         date_lte: Optional[date] = None,
         date_gt: Optional[date] = None,
         date_gte: Optional[date] = None,
-        value: Optional[float] = None,
-        value_lt: Optional[float] = None,
-        value_lte: Optional[float] = None,
-        value_gt: Optional[float] = None,
-        value_gte: Optional[float] = None,
+        value: Optional[str] = None,
+        value_lt: Optional[str] = None,
+        value_lte: Optional[str] = None,
+        value_gt: Optional[str] = None,
+        value_gte: Optional[str] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         data_type: Optional[Union[list[str], Series[str], str]] = None,
         valid_to: Optional[date] = None,
         valid_to_lt: Optional[date] = None,
@@ -3441,7 +3649,7 @@ class Chemicals:
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
@@ -3456,24 +3664,22 @@ class Chemicals:
 
          forecast_period: Optional[Union[list[str], Series[str], str]]
              Long term or short term, by default None
-         scenario_id: Optional[int], optional
-             Scenario ID, by default None
-         scenario_id_gt: Optional[int], optional
-             filter by `scenario_id > x`, by default None
-         scenario_id_gte: Optional[int], optional
-             filter by `scenario_id >= x`, by default None
-         scenario_id_lt: Optional[int], optional
-             filter by `scenario_id < x`, by default None
-         scenario_id_lte: Optional[int], optional
-             filter by `scenario_id <= x`, by default None
+         scenario_id: Optional[Union[list[int], Series[int], int]]
+             Scenario Id, by default None
          scenario_description: Optional[Union[list[str], Series[str], str]]
              Scenario Description, by default None
          commodity: Optional[Union[list[str], Series[str], str]]
              Name for Product (chemical commodity), by default None
          country: Optional[Union[list[str], Series[str], str]]
-             Name for Country (geography), by default None
+             Country, by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          concept: Optional[Union[list[str], Series[str], str]]
              Concept that describes what the dataset is, by default None
          date: Optional[date], optional
@@ -3498,6 +3704,8 @@ class Chemicals:
              filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
+             Unit of Measure full name from SPOT, by default None
          data_type: Optional[Union[list[str], Series[str], str]]
              Data Type (history or forecast), by default None
          valid_to: Optional[date], optional
@@ -3539,24 +3747,16 @@ class Chemicals:
          paginate: bool = False
 
         """
-
         filter_params: List[str] = []
         filter_params.append(list_to_filter("forecastPeriod", forecast_period))
         filter_params.append(list_to_filter("scenarioId", scenario_id))
-        if scenario_id_gt is not None:
-            filter_params.append(f'scenarioId > "{scenario_id_gt}"')
-        if scenario_id_gte is not None:
-            filter_params.append(f'scenarioId >= "{scenario_id_gte}"')
-        if scenario_id_lt is not None:
-            filter_params.append(f'scenarioId < "{scenario_id_lt}"')
-        if scenario_id_lte is not None:
-            filter_params.append(f'scenarioId <= "{scenario_id_lte}"')
-        filter_params.append(
-            list_to_filter("scenarioDescription", scenario_description)
-        )
+        filter_params.append(list_to_filter("scenarioDescription", scenario_description))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("date", date))
         if date_gt is not None:
@@ -3577,25 +3777,26 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("dataType", data_type))
         filter_params.append(list_to_filter("validTo", valid_to))
         if valid_to_gt is not None:
-            filter_params.append(f'validTo > "{valid_to_gt}"')
+            filter_params.append(f'valid_to > "{valid_to_gt}"')
         if valid_to_gte is not None:
-            filter_params.append(f'validTo >= "{valid_to_gte}"')
+            filter_params.append(f'valid_to >= "{valid_to_gte}"')
         if valid_to_lt is not None:
-            filter_params.append(f'validTo < "{valid_to_lt}"')
+            filter_params.append(f'valid_to < "{valid_to_lt}"')
         if valid_to_lte is not None:
-            filter_params.append(f'validTo <= "{valid_to_lte}"')
+            filter_params.append(f'valid_to <= "{valid_to_lte}"')
         filter_params.append(list_to_filter("validFrom", valid_from))
         if valid_from_gt is not None:
-            filter_params.append(f'validFrom > "{valid_from_gt}"')
+            filter_params.append(f'valid_from > "{valid_from_gt}"')
         if valid_from_gte is not None:
-            filter_params.append(f'validFrom >= "{valid_from_gte}"')
+            filter_params.append(f'valid_from >= "{valid_from_gte}"')
         if valid_from_lt is not None:
-            filter_params.append(f'validFrom < "{valid_from_lt}"')
+            filter_params.append(f'valid_from < "{valid_from_lt}"')
         if valid_from_lte is not None:
-            filter_params.append(f'validFrom <= "{valid_from_lte}"')
+            filter_params.append(f'valid_from <= "{valid_from_lte}"')
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -3617,7 +3818,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/total-supply",
+            path=f"/analytics/v2/chemicals/total-supply",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -3629,27 +3830,27 @@ class Chemicals:
         self,
         *,
         forecast_period: Optional[Union[list[str], Series[str], str]] = None,
-        scenario_id: Optional[int] = None,
-        scenario_id_lt: Optional[int] = None,
-        scenario_id_lte: Optional[int] = None,
-        scenario_id_gt: Optional[int] = None,
-        scenario_id_gte: Optional[int] = None,
+        scenario_id: Optional[Union[list[int], Series[int], int]] = None,
         scenario_description: Optional[Union[list[str], Series[str], str]] = None,
         commodity: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         date: Optional[date] = None,
         date_lt: Optional[date] = None,
         date_lte: Optional[date] = None,
         date_gt: Optional[date] = None,
         date_gte: Optional[date] = None,
-        value: Optional[float] = None,
-        value_lt: Optional[float] = None,
-        value_lte: Optional[float] = None,
-        value_gt: Optional[float] = None,
-        value_gte: Optional[float] = None,
+        value: Optional[str] = None,
+        value_lt: Optional[str] = None,
+        value_lte: Optional[str] = None,
+        value_gt: Optional[str] = None,
+        value_gte: Optional[str] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         data_type: Optional[Union[list[str], Series[str], str]] = None,
         valid_to: Optional[date] = None,
         valid_to_lt: Optional[date] = None,
@@ -3666,7 +3867,7 @@ class Chemicals:
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
@@ -3678,110 +3879,17 @@ class Chemicals:
 
         Parameters
         ----------
-
-         forecast_period: Optional[Union[list[str], Series[str], str]]
-             Long term or short term, by default None
-         scenario_id: Optional[int], optional
-             Scenario ID, by default None
-         scenario_id_gt: Optional[int], optional
-             filter by `scenario_id > x`, by default None
-         scenario_id_gte: Optional[int], optional
-             filter by `scenario_id >= x`, by default None
-         scenario_id_lt: Optional[int], optional
-             filter by `scenario_id < x`, by default None
-         scenario_id_lte: Optional[int], optional
-             filter by `scenario_id <= x`, by default None
-         scenario_description: Optional[Union[list[str], Series[str], str]]
-             Scenario Description, by default None
-         commodity: Optional[Union[list[str], Series[str], str]]
-             Name for Product (chemical commodity), by default None
-         country: Optional[Union[list[str], Series[str], str]]
-             Name for Country (geography), by default None
-         region: Optional[Union[list[str], Series[str], str]]
-             Name for Region (geography), by default None
-         concept: Optional[Union[list[str], Series[str], str]]
-             Concept that describes what the dataset is, by default None
-         date: Optional[date], optional
-             Date, by default None
-         date_gt: Optional[date], optional
-             filter by `date > x`, by default None
-         date_gte: Optional[date], optional
-             filter by `date >= x`, by default None
-         date_lt: Optional[date], optional
-             filter by `date < x`, by default None
-         date_lte: Optional[date], optional
-             filter by `date <= x`, by default None
-         value: Optional[str], optional
-             Data Value, by default None
-         value_gt: Optional[str], optional
-             filter by `value > x`, by default None
-         value_gte: Optional[str], optional
-             filter by `value >= x`, by default None
-         value_lt: Optional[str], optional
-             filter by `value < x`, by default None
-         value_lte: Optional[str], optional
-             filter by `value <= x`, by default None
-         uom: Optional[Union[list[str], Series[str], str]]
-             Name for Unit of Measure (volume), by default None
-         data_type: Optional[Union[list[str], Series[str], str]]
-             Data Type (history or forecast), by default None
-         valid_to: Optional[date], optional
-             End Date of Record Validity, by default None
-         valid_to_gt: Optional[date], optional
-             filter by `valid_to > x`, by default None
-         valid_to_gte: Optional[date], optional
-             filter by `valid_to >= x`, by default None
-         valid_to_lt: Optional[date], optional
-             filter by `valid_to < x`, by default None
-         valid_to_lte: Optional[date], optional
-             filter by `valid_to <= x`, by default None
-         valid_from: Optional[date], optional
-             As of date for when the data is updated, by default None
-         valid_from_gt: Optional[date], optional
-             filter by `valid_from > x`, by default None
-         valid_from_gte: Optional[date], optional
-             filter by `valid_from >= x`, by default None
-         valid_from_lt: Optional[date], optional
-             filter by `valid_from < x`, by default None
-         valid_from_lte: Optional[date], optional
-             filter by `valid_from <= x`, by default None
-         modified_date: Optional[datetime], optional
-             Date when the data is last modified, by default None
-         modified_date_gt: Optional[datetime], optional
-             filter by `modified_date > x`, by default None
-         modified_date_gte: Optional[datetime], optional
-             filter by `modified_date >= x`, by default None
-         modified_date_lt: Optional[datetime], optional
-             filter by `modified_date < x`, by default None
-         modified_date_lte: Optional[datetime], optional
-             filter by `modified_date <= x`, by default None
-         is_active: Optional[Union[list[str], Series[str], str]]
-             If the record is active, by default None
-         filter_exp: Optional[str] = None,
-         page: int = 1,
-         page_size: int = 5000,
-         raw: bool = False,
-         paginate: bool = False
-
         """
-
         filter_params: List[str] = []
         filter_params.append(list_to_filter("forecastPeriod", forecast_period))
         filter_params.append(list_to_filter("scenarioId", scenario_id))
-        if scenario_id_gt is not None:
-            filter_params.append(f'scenarioId > "{scenario_id_gt}"')
-        if scenario_id_gte is not None:
-            filter_params.append(f'scenarioId >= "{scenario_id_gte}"')
-        if scenario_id_lt is not None:
-            filter_params.append(f'scenarioId < "{scenario_id_lt}"')
-        if scenario_id_lte is not None:
-            filter_params.append(f'scenarioId <= "{scenario_id_lte}"')
-        filter_params.append(
-            list_to_filter("scenarioDescription", scenario_description)
-        )
+        filter_params.append(list_to_filter("scenarioDescription", scenario_description))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("date", date))
         if date_gt is not None:
@@ -3802,25 +3910,26 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("dataType", data_type))
         filter_params.append(list_to_filter("validTo", valid_to))
         if valid_to_gt is not None:
-            filter_params.append(f'validTo > "{valid_to_gt}"')
+            filter_params.append(f'valid_to > "{valid_to_gt}"')
         if valid_to_gte is not None:
-            filter_params.append(f'validTo >= "{valid_to_gte}"')
+            filter_params.append(f'valid_to >= "{valid_to_gte}"')
         if valid_to_lt is not None:
-            filter_params.append(f'validTo < "{valid_to_lt}"')
+            filter_params.append(f'valid_to < "{valid_to_lt}"')
         if valid_to_lte is not None:
-            filter_params.append(f'validTo <= "{valid_to_lte}"')
+            filter_params.append(f'valid_to <= "{valid_to_lte}"')
         filter_params.append(list_to_filter("validFrom", valid_from))
         if valid_from_gt is not None:
-            filter_params.append(f'validFrom > "{valid_from_gt}"')
+            filter_params.append(f'valid_from > "{valid_from_gt}"')
         if valid_from_gte is not None:
-            filter_params.append(f'validFrom >= "{valid_from_gte}"')
+            filter_params.append(f'valid_from >= "{valid_from_gte}"')
         if valid_from_lt is not None:
-            filter_params.append(f'validFrom < "{valid_from_lt}"')
+            filter_params.append(f'valid_from < "{valid_from_lt}"')
         if valid_from_lte is not None:
-            filter_params.append(f'validFrom <= "{valid_from_lte}"')
+            filter_params.append(f'valid_from <= "{valid_from_lte}"')
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -3842,7 +3951,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/total-demand",
+            path=f"/analytics/v2/chemicals/total-demand",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -3854,26 +3963,28 @@ class Chemicals:
         self,
         *,
         forecast_period: Optional[Union[list[str], Series[str], str]] = None,
-        scenario_id: Optional[int] = None,
-        scenario_id_lt: Optional[int] = None,
-        scenario_id_lte: Optional[int] = None,
-        scenario_id_gt: Optional[int] = None,
-        scenario_id_gte: Optional[int] = None,
+        scenario_id: Optional[Union[list[int], Series[int], int]] = None,
         scenario_description: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         date: Optional[date] = None,
         date_lt: Optional[date] = None,
         date_lte: Optional[date] = None,
         date_gt: Optional[date] = None,
         date_gte: Optional[date] = None,
-        value: Optional[float] = None,
-        value_lt: Optional[float] = None,
-        value_lte: Optional[float] = None,
-        value_gt: Optional[float] = None,
-        value_gte: Optional[float] = None,
+        value: Optional[str] = None,
+        value_lt: Optional[str] = None,
+        value_lte: Optional[str] = None,
+        value_gt: Optional[str] = None,
+        value_gte: Optional[str] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
+        currency: Optional[Union[list[str], Series[str], str]] = None,
+        currency_name: Optional[Union[list[str], Series[str], str]] = None,
         valid_from: Optional[date] = None,
         valid_from_lt: Optional[date] = None,
         valid_from_lte: Optional[date] = None,
@@ -3884,7 +3995,7 @@ class Chemicals:
         valid_to_lte: Optional[date] = None,
         valid_to_gt: Optional[date] = None,
         valid_to_gte: Optional[date] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         last_modified_date: Optional[datetime] = None,
         last_modified_date_lt: Optional[datetime] = None,
         last_modified_date_lte: Optional[datetime] = None,
@@ -3904,24 +4015,22 @@ class Chemicals:
 
          forecast_period: Optional[Union[list[str], Series[str], str]]
              Long term or short term, by default None
-         scenario_id: Optional[int], optional
-             Scenario ID, by default None
-         scenario_id_gt: Optional[int], optional
-             filter by `scenario_id > x`, by default None
-         scenario_id_gte: Optional[int], optional
-             filter by `scenario_id >= x`, by default None
-         scenario_id_lt: Optional[int], optional
-             filter by `scenario_id < x`, by default None
-         scenario_id_lte: Optional[int], optional
-             filter by `scenario_id <= x`, by default None
+         scenario_id: Optional[Union[list[int], Series[int], int]]
+             Scenario Id, by default None
          scenario_description: Optional[Union[list[str], Series[str], str]]
              Scenario Description, by default None
          concept: Optional[Union[list[str], Series[str], str]]
              Concept that describes what the dataset is, by default None
          country: Optional[Union[list[str], Series[str], str]]
-             Name for Country (geography), by default None
+             Country, by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          date: Optional[date], optional
              Date, by default None
          date_gt: Optional[date], optional
@@ -3944,6 +4053,12 @@ class Chemicals:
              filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
+             Unit of Measure full name from SPOT, by default None
+         currency: Optional[Union[list[str], Series[str], str]]
+             Currency, by default None
+         currency_name: Optional[Union[list[str], Series[str], str]]
+             Name for Currency, by default None
          valid_from: Optional[date], optional
              As of date for when the data is updated, by default None
          valid_from_gt: Optional[date], optional
@@ -3983,24 +4098,16 @@ class Chemicals:
          paginate: bool = False
 
         """
-
         filter_params: List[str] = []
         filter_params.append(list_to_filter("forecastPeriod", forecast_period))
         filter_params.append(list_to_filter("scenarioId", scenario_id))
-        if scenario_id_gt is not None:
-            filter_params.append(f'scenarioId > "{scenario_id_gt}"')
-        if scenario_id_gte is not None:
-            filter_params.append(f'scenarioId >= "{scenario_id_gte}"')
-        if scenario_id_lt is not None:
-            filter_params.append(f'scenarioId < "{scenario_id_lt}"')
-        if scenario_id_lte is not None:
-            filter_params.append(f'scenarioId <= "{scenario_id_lte}"')
-        filter_params.append(
-            list_to_filter("scenarioDescription", scenario_description)
-        )
+        filter_params.append(list_to_filter("scenarioDescription", scenario_description))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("date", date))
         if date_gt is not None:
             filter_params.append(f'date > "{date_gt}"')
@@ -4020,6 +4127,9 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
+        filter_params.append(list_to_filter("currency", currency))
+        filter_params.append(list_to_filter("currencyName", currency_name))
         filter_params.append(list_to_filter("validFrom", valid_from))
         if valid_from_gt is not None:
             filter_params.append(f'validFrom > "{valid_from_gt}"')
@@ -4059,7 +4169,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/assumptions",
+            path=f"/analytics/v2/chemicals/assumptions",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -4075,6 +4185,9 @@ class Chemicals:
         forecast_period: Optional[Union[list[str], Series[str], str]] = None,
         commodity: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         country: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         display_order: Optional[Union[list[int], Series[int], int]] = None,
@@ -4086,18 +4199,19 @@ class Chemicals:
         date_gt: Optional[date] = None,
         date_gte: Optional[date] = None,
         data_type: Optional[Union[list[str], Series[str], str]] = None,
-        value: Optional[float] = None,
-        value_lt: Optional[float] = None,
-        value_lte: Optional[float] = None,
-        value_gt: Optional[float] = None,
-        value_gte: Optional[float] = None,
+        value: Optional[str] = None,
+        value_lt: Optional[str] = None,
+        value_lte: Optional[str] = None,
+        value_gt: Optional[str] = None,
+        value_gte: Optional[str] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         modified_date: Optional[datetime] = None,
         modified_date_lt: Optional[datetime] = None,
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         valid_to: Optional[date] = None,
         valid_to_lt: Optional[date] = None,
         valid_to_lte: Optional[date] = None,
@@ -4130,8 +4244,14 @@ class Chemicals:
              Name for Product (chemical commodity), by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          country: Optional[Union[list[str], Series[str], str]]
-             Name for Country (geography), by default None
+             Country, by default None
          concept: Optional[Union[list[str], Series[str], str]]
              Concept that describes what the dataset is, by default None
          display_order: Optional[Union[list[int], Series[int], int]]
@@ -4164,6 +4284,8 @@ class Chemicals:
              filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
+             Unit of Measure full name from SPOT, by default None
          modified_date: Optional[datetime], optional
              Date when the data is last modified, by default None
          modified_date_gt: Optional[datetime], optional
@@ -4203,21 +4325,19 @@ class Chemicals:
          paginate: bool = False
 
         """
-
         filter_params: List[str] = []
         filter_params.append(list_to_filter("scenarioId", scenario_id))
-        filter_params.append(
-            list_to_filter("scenarioDescription", scenario_description)
-        )
+        filter_params.append(list_to_filter("scenarioDescription", scenario_description))
         filter_params.append(list_to_filter("forecastPeriod", forecast_period))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("displayOrder", display_order))
-        filter_params.append(
-            list_to_filter("supplyDemandComponent", supply_demand_component)
-        )
+        filter_params.append(list_to_filter("supplyDemandComponent", supply_demand_component))
         filter_params.append(list_to_filter("componentDriver", component_driver))
         filter_params.append(list_to_filter("date", date))
         if date_gt is not None:
@@ -4239,6 +4359,7 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -4251,22 +4372,22 @@ class Chemicals:
         filter_params.append(list_to_filter("isActive", is_active))
         filter_params.append(list_to_filter("validTo", valid_to))
         if valid_to_gt is not None:
-            filter_params.append(f'validTo > "{valid_to_gt}"')
+            filter_params.append(f'valid_to > "{valid_to_gt}"')
         if valid_to_gte is not None:
-            filter_params.append(f'validTo >= "{valid_to_gte}"')
+            filter_params.append(f'valid_to >= "{valid_to_gte}"')
         if valid_to_lt is not None:
-            filter_params.append(f'validTo < "{valid_to_lt}"')
+            filter_params.append(f'valid_to < "{valid_to_lt}"')
         if valid_to_lte is not None:
-            filter_params.append(f'validTo <= "{valid_to_lte}"')
+            filter_params.append(f'valid_to <= "{valid_to_lte}"')
         filter_params.append(list_to_filter("validFrom", valid_from))
         if valid_from_gt is not None:
-            filter_params.append(f'validFrom > "{valid_from_gt}"')
+            filter_params.append(f'valid_from > "{valid_from_gt}"')
         if valid_from_gte is not None:
-            filter_params.append(f'validFrom >= "{valid_from_gte}"')
+            filter_params.append(f'valid_from >= "{valid_from_gte}"')
         if valid_from_lt is not None:
-            filter_params.append(f'validFrom < "{valid_from_lt}"')
+            filter_params.append(f'valid_from < "{valid_from_lt}"')
         if valid_from_lte is not None:
-            filter_params.append(f'validFrom <= "{valid_from_lte}"')
+            filter_params.append(f'valid_from <= "{valid_from_lte}"')
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
@@ -4278,7 +4399,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/country-supply-demand-balance",
+            path=f"/analytics/v2/chemicals/country-supply-demand-balance",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -4294,6 +4415,9 @@ class Chemicals:
         forecast_period: Optional[Union[list[str], Series[str], str]] = None,
         commodity: Optional[Union[list[str], Series[str], str]] = None,
         region: Optional[Union[list[str], Series[str], str]] = None,
+        top_region: Optional[Union[list[str], Series[str], str]] = None,
+        mid_region: Optional[Union[list[str], Series[str], str]] = None,
+        sub_region: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         display_order: Optional[Union[list[int], Series[int], int]] = None,
         supply_demand_component: Optional[Union[list[str], Series[str], str]] = None,
@@ -4304,18 +4428,19 @@ class Chemicals:
         date_gt: Optional[date] = None,
         date_gte: Optional[date] = None,
         data_type: Optional[Union[list[str], Series[str], str]] = None,
-        value: Optional[float] = None,
-        value_lt: Optional[float] = None,
-        value_lte: Optional[float] = None,
-        value_gt: Optional[float] = None,
-        value_gte: Optional[float] = None,
+        value: Optional[str] = None,
+        value_lt: Optional[str] = None,
+        value_lte: Optional[str] = None,
+        value_gt: Optional[str] = None,
+        value_gte: Optional[str] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         modified_date: Optional[datetime] = None,
         modified_date_lt: Optional[datetime] = None,
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         valid_to: Optional[date] = None,
         valid_to_lt: Optional[date] = None,
         valid_to_lte: Optional[date] = None,
@@ -4348,6 +4473,12 @@ class Chemicals:
              Name for Product (chemical commodity), by default None
          region: Optional[Union[list[str], Series[str], str]]
              Name for Region (geography), by default None
+         top_region: Optional[Union[list[str], Series[str], str]]
+             Name for the highest-level geographic region (e.g., EMEA), by default None
+         mid_region: Optional[Union[list[str], Series[str], str]]
+             Name for the middle-level geographic region (e.g., Europe), by default None
+         sub_region: Optional[Union[list[str], Series[str], str]]
+             Name for the smaller, distinct area within a larger region (e.g., Eastern Europe), by default None
          concept: Optional[Union[list[str], Series[str], str]]
              Concept that describes what the dataset is, by default None
          display_order: Optional[Union[list[int], Series[int], int]]
@@ -4380,6 +4511,8 @@ class Chemicals:
              filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
+             Unit of Measure full name from SPOT, by default None
          modified_date: Optional[datetime], optional
              Date when the data is last modified, by default None
          modified_date_gt: Optional[datetime], optional
@@ -4419,20 +4552,18 @@ class Chemicals:
          paginate: bool = False
 
         """
-
         filter_params: List[str] = []
         filter_params.append(list_to_filter("scenarioId", scenario_id))
-        filter_params.append(
-            list_to_filter("scenarioDescription", scenario_description)
-        )
+        filter_params.append(list_to_filter("scenarioDescription", scenario_description))
         filter_params.append(list_to_filter("forecastPeriod", forecast_period))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("region", region))
+        filter_params.append(list_to_filter("topRegion", top_region))
+        filter_params.append(list_to_filter("midRegion", mid_region))
+        filter_params.append(list_to_filter("subRegion", sub_region))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("displayOrder", display_order))
-        filter_params.append(
-            list_to_filter("supplyDemandComponent", supply_demand_component)
-        )
+        filter_params.append(list_to_filter("supplyDemandComponent", supply_demand_component))
         filter_params.append(list_to_filter("componentDriver", component_driver))
         filter_params.append(list_to_filter("date", date))
         if date_gt is not None:
@@ -4454,6 +4585,7 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -4493,7 +4625,7 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/region-supply-demand-balance",
+            path=f"/analytics/v2/chemicals/region-supply-demand-balance",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
@@ -4518,18 +4650,19 @@ class Chemicals:
         date_gt: Optional[date] = None,
         date_gte: Optional[date] = None,
         data_type: Optional[Union[list[str], Series[str], str]] = None,
-        value: Optional[float] = None,
-        value_lt: Optional[float] = None,
-        value_lte: Optional[float] = None,
-        value_gt: Optional[float] = None,
-        value_gte: Optional[float] = None,
+        value: Optional[str] = None,
+        value_lt: Optional[str] = None,
+        value_lte: Optional[str] = None,
+        value_gt: Optional[str] = None,
+        value_gte: Optional[str] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
+        uom_name: Optional[Union[list[str], Series[str], str]] = None,
         modified_date: Optional[datetime] = None,
         modified_date_lt: Optional[datetime] = None,
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = True,
+        is_active: Optional[Union[list[str], Series[str], str]] = None,
         valid_to: Optional[date] = None,
         valid_to_lt: Optional[date] = None,
         valid_to_lte: Optional[date] = None,
@@ -4592,6 +4725,8 @@ class Chemicals:
              filter by `value <= x`, by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Name for Unit of Measure (volume), by default None
+         uom_name: Optional[Union[list[str], Series[str], str]]
+             Unit of Measure full name from SPOT, by default None
          modified_date: Optional[datetime], optional
              Date when the data is last modified, by default None
          modified_date_gt: Optional[datetime], optional
@@ -4631,19 +4766,14 @@ class Chemicals:
          paginate: bool = False
 
         """
-
         filter_params: List[str] = []
         filter_params.append(list_to_filter("scenarioId", scenario_id))
-        filter_params.append(
-            list_to_filter("scenarioDescription", scenario_description)
-        )
+        filter_params.append(list_to_filter("scenarioDescription", scenario_description))
         filter_params.append(list_to_filter("forecastPeriod", forecast_period))
         filter_params.append(list_to_filter("commodity", commodity))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("displayOrder", display_order))
-        filter_params.append(
-            list_to_filter("supplyDemandComponent", supply_demand_component)
-        )
+        filter_params.append(list_to_filter("supplyDemandComponent", supply_demand_component))
         filter_params.append(list_to_filter("componentDriver", component_driver))
         filter_params.append(list_to_filter("date", date))
         if date_gt is not None:
@@ -4665,6 +4795,7 @@ class Chemicals:
         if value_lte is not None:
             filter_params.append(f'value <= "{value_lte}"')
         filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("uomName", uom_name))
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -4677,22 +4808,22 @@ class Chemicals:
         filter_params.append(list_to_filter("isActive", is_active))
         filter_params.append(list_to_filter("validTo", valid_to))
         if valid_to_gt is not None:
-            filter_params.append(f'validTo > "{valid_to_gt}"')
+            filter_params.append(f'valid_to > "{valid_to_gt}"')
         if valid_to_gte is not None:
-            filter_params.append(f'validTo >= "{valid_to_gte}"')
+            filter_params.append(f'valid_to >= "{valid_to_gte}"')
         if valid_to_lt is not None:
-            filter_params.append(f'validTo < "{valid_to_lt}"')
+            filter_params.append(f'valid_to < "{valid_to_lt}"')
         if valid_to_lte is not None:
-            filter_params.append(f'validTo <= "{valid_to_lte}"')
+            filter_params.append(f'valid_to <= "{valid_to_lte}"')
         filter_params.append(list_to_filter("validFrom", valid_from))
         if valid_from_gt is not None:
-            filter_params.append(f'validFrom > "{valid_from_gt}"')
+            filter_params.append(f'valid_from > "{valid_from_gt}"')
         if valid_from_gte is not None:
-            filter_params.append(f'validFrom >= "{valid_from_gte}"')
+            filter_params.append(f'valid_from >= "{valid_from_gte}"')
         if valid_from_lt is not None:
-            filter_params.append(f'validFrom < "{valid_from_lt}"')
+            filter_params.append(f'valid_from < "{valid_from_lt}"')
         if valid_from_lte is not None:
-            filter_params.append(f'validFrom <= "{valid_from_lte}"')
+            filter_params.append(f'valid_from <= "{valid_from_lte}"')
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
@@ -4704,13 +4835,14 @@ class Chemicals:
         params = {"page": page, "pageSize": page_size, "filter": filter_exp}
 
         response = get_data(
-            path=f"/analytics/v1/chemicals/world-supply-demand-balance",
+            path=f"/analytics/v2/chemicals/world-supply-demand-balance",
             params=params,
             df_fn=self._convert_to_df,
             raw=raw,
             paginate=paginate,
         )
         return response
+
 
     @staticmethod
     def _convert_to_df(resp: Response) -> pd.DataFrame:
