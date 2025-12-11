@@ -159,7 +159,9 @@ class Chemicals:
             ]
             for c in columns_dt:
                 if c in df.columns:
-                    df[c] = pd.to_datetime(df[c], utc=True, format="ISO8601", errors="coerce")
+                    df[c] = pd.to_datetime(
+                        df[c], utc=True, format="ISO8601", errors="coerce"
+                    )
             return df
 
         return get_data(path, params, to_df, paginate=True)
