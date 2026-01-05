@@ -24,12 +24,6 @@ import pandas as pd
 
 
 class Chemicals:
-    _endpoint = "api/v1/"
-    _reference_endpoint = "reference/v1/"
-    _ts_owner_capacity_event_endpoint = "/capacity-events"
-    _ts_owner_avg_annual_capacity_endpoint = "/average-annual-capacities"
-    _ts_owner_capacity_consume_endpoint = "/capacity-to-consume"
-
     _datasets = Literal[
         "capacity",
         "production",
@@ -103,26 +97,26 @@ class Chemicals:
         """
 
         dataset_to_path = {
-            "capacity": "analytics/v1/chemicals/capacity",
-            "production": "analytics/v1/chemicals/production",
-            "capacity-utilization": "analytics/v1/chemicals/capacity-utilization",
-            "demand-by-derivative": "analytics/v1/chemicals/demand-by-derivative",
-            "demand-by-end-use": "analytics/v1/chemicals/demand-by-end-use",
-            "trade": "analytics/v1/chemicals/trade",
-            "inventory-change": "analytics/v1/chemicals/inventory-change",
-            "total-supply": "analytics/v1/chemicals/total-supply",
-            "total-demand": "analytics/v1/chemicals/total-demand",
-            "assumptions": "analytics/v1/chemicals/assumptions",
-            "country-supply-demand-balance": "analytics/v1/chemicals/country-supply-demand-balance",
-            "region-supply-demand-balance": "analytics/v1/chemicals/region-supply-demand-balance",
-            "world-supply-demand-balance": "analytics/v1/chemicals/world-supply-demand-balance",
-            "long-term-prices": "analytics/v1/chemicals/price-forecast/long-term-prices",
-            "short-term-prices": "analytics/v1/chemicals/price-forecast/short-term-prices",
-            "capacity-events": "analytics/v1/chemicals/assets/capacity-events",
-            "average-annual-capacities": "analytics/v1/chemicals/assets/average-annual-capacities",
-            "capacity-to-consume": "analytics/v1/chemicals/assets/capacity-to-consume",
-            "outages": "analytics/v1/chemicals/assets/outages",
-            "time-series-outages": "analytics/v1/chemicals/assets/outages/time-series-outages",
+            "capacity": "analytics/v2/chemicals/capacity",
+            "production": "analytics/v2/chemicals/production",
+            "capacity-utilization": "analytics/v2/chemicals/capacity-utilization",
+            "demand-by-derivative": "analytics/v2/chemicals/demand-by-derivative",
+            "demand-by-end-use": "analytics/v2/chemicals/demand-by-end-use",
+            "trade": "analytics/v2/chemicals/trade",
+            "inventory-change": "analytics/v2/chemicals/inventory-change",
+            "total-supply": "analytics/v2/chemicals/total-supply",
+            "total-demand": "analytics/v2/chemicals/total-demand",
+            "assumptions": "analytics/v2/chemicals/assumptions",
+            "country-supply-demand-balance": "analytics/v2/chemicals/country-supply-demand-balance",
+            "region-supply-demand-balance": "analytics/v2/chemicals/region-supply-demand-balance",
+            "world-supply-demand-balance": "analytics/v2/chemicals/world-supply-demand-balance",
+            "long-term-prices": "analytics/v2/chemicals/price-forecast/long-term-prices",
+            "short-term-prices": "analytics/v2/chemicals/price-forecast/short-term-prices",
+            "capacity-events": "analytics/v2/chemicals/assets/capacity-events",
+            "average-annual-capacities": "analytics/v2/chemicals/assets/average-annual-capacities",
+            "capacity-to-consume": "analytics/v2/chemicals/assets/capacity-to-consume",
+            "outages": "analytics/v2/chemicals/assets/outages",
+            "time-series-outages": "analytics/v2/chemicals/assets/outages/time-series-outages",
         }
 
         if dataset not in dataset_to_path:
