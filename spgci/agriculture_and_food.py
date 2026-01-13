@@ -58,21 +58,49 @@ class AgriAndFood:
         self,
         dataset: _datasets,
         columns: Optional[Union[list[str], str]],
+        filter_exp: Optional[str] = None,
     ) -> DataFrame:
         """
-        Get unique values for the given dataset and columns.
+        Get unique values for specified columns in a dataset, optionally filtered by an expression.
 
-        Parameters
-        ----------
-        dataset: _datasets
-            The dataset to query.
-        columns: Optional[Union[list[str], str]]
-            The columns to group by, by default None.
+        This method is crucial for data discovery and validation before making actual data queries.
+        Use this to understand what values are available in the dataset and what combinations
+        actually exist before attempting to filter your main data queries.
 
-        Returns
-        -------
-        DataFrame
-            The unique values as a DataFrame.
+        Args:
+            dataset (str): The dataset name converted from method name using kebab-case format:
+                - get_region_supply_demand_balance → "region-supply-demand-balance"
+                - get_demand_latest → "demand-latest"
+                - get_cargo_flows → "cargo-flows"
+            columns (list[str] or str): Column names to get unique values for.
+                - Use camelCase format: ["commodity", "region", "outlookHorizon"]
+                - Can be single string: "commodity"
+                - Can be multiple columns: ["commodity", "region", "outlookHorizon"]
+            filter_exp (str, optional): Filter expression to limit results to specific subsets.
+                Use ci.utilities.build_filter_expression() to construct this properly.
+
+        Returns:
+            pd.DataFrame: DataFrame with unique combinations of the specified columns,
+            optionally filtered by the provided expression.
+
+        Example Usage:
+            # Step 1: Get all available commodities
+            commodities = rp.get_unique_values('demand-latest', 'commodity')
+
+            # Step 2: Get filtered combinations for specific commodities and regions
+            selected_commodities = ["Jet fuel", "Jet/Kero"]
+            selected_regions = ["Europe"]
+
+            filter_exp = ci.utilities.build_filter_expression({
+                "commodity": selected_commodities,
+                "region": selected_regions
+            })
+
+            combos = rp.get_unique_values(
+                'demand-latest',
+                ['commodity', 'region', 'outlookHorizon', 'vintageDate'],
+                filter_exp=filter_exp
+            )
         """
         dataset_to_path = {
             "cost-of-production": "analytics/agri-food/v1/cost-of-production",
@@ -98,7 +126,6 @@ class AgriAndFood:
             return DataFrame(j["aggResultValue"])
 
         return get_data(path, params, to_df, paginate=True)
-
 
     def get_cost_of_production(
         self,
@@ -234,7 +261,6 @@ class AgriAndFood:
             paginate=paginate,
         )
         return response
-
 
     def get_global_long_term_forecast(
         self,
@@ -386,7 +412,6 @@ class AgriAndFood:
             paginate=paginate,
         )
         return response
-    
 
     def get_price_purchase_forecast(
         self,
