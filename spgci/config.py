@@ -31,8 +31,8 @@ appkey: str = os.getenv("SPGCI_APPKEY", "")
 #: Enable agent mode to restrict certain behaviors
 is_agent: bool = os.getenv("SPGCI_AGENTMODE", "").lower() in ("true", "1", "yes", "on")
 
-#: Token context var
-token_ctx = contextvars.ContextVar("token", default=None)
+#: Token context var - initialize with env variable if present
+token_ctx = contextvars.ContextVar("token", default=os.getenv("SPGCI_TOKEN"))
 
 
 def set_token(token: str):
@@ -59,7 +59,7 @@ proxies: Dict[str, str] = {
 auth: Union[AuthBase, None] = None
 
 #: Version of the SPGCI Pkg
-version = "0.0.74"
+version = "0.0.75"
 
 #: time to sleep between api calls
 sleep_time = 0
