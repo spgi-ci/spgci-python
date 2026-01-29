@@ -1,4 +1,4 @@
-# Copyright 2025 S&P Global Commodity Insights
+# Copyright 2026 S&P Global Energy (previously S&P Global Commodity Insights)
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -1042,7 +1042,8 @@ class Insights:
         self,
         id: str,
         raw: bool = False,
-    ) -> Union[DataFrame, Response]:
+        download: Optional[Union[bool, str]] = False,
+    ) -> Union[DataFrame, Response, str]:
         """
         Fetch a single piece of content with all available fields.
 
@@ -1065,17 +1066,52 @@ class Insights:
         **Get By ID**
         >>> ci.Insights().get_content(id="169b5f45-04e4-43f2-b83b-ecc16f96be55")
 
+        # Add new parameter to download content, e.g. pdf file
+        >>> ci.Insights().get_content(id="02ed2748-1262-45e1-ad97-9629e29e0274",download=True)
+
+        # Report name can be specified when downloading, otherwise the file will be named using the content ID
+        >>> ci.Insights().get_content(id="02ed2748-1262-45e1-ad97-9629e29e0274", download="my_report.pdf")
+
         """
         path = f"/v1/content/{id}"
 
         params = {}
-        return get_data(
+        result = get_data(
             path=f"{self._path}{path}",
             params=params,
             raw=raw,
             paginate_fn=lambda resp: type('NoPaginator', (), {'has_more_pages': False})(),
             df_fn=self._content_to_df,
         )
+
+        # If a non-JSON response (like a PDF) was returned, allow optional download
+        if isinstance(result, Response):
+            content_type = result.headers.get("content-type", "").lower()
+            if "application/pdf" in content_type:
+                if download:
+                    # determine filename from Content-Disposition if present
+                    cd = result.headers.get("content-disposition", "")
+                    filename = None
+                    if "filename=" in cd:
+                        try:
+                            filename = cd.split("filename=")[-1].strip().strip('"').strip("'")
+                        except Exception:
+                            filename = None
+
+                    if isinstance(download, str) and download.strip() != "":
+                        filepath = download
+                    else:
+                        filepath = filename or f"{id}.pdf"
+
+                    with open(filepath, "wb") as fh:
+                        fh.write(result.content)
+
+                    return filepath
+
+            # return raw response for caller to handle other binary content
+            return result
+
+        return result
     
     def get_packages(
         self,
