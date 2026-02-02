@@ -1,4 +1,4 @@
-# Copyright 2025 S&P Global Commodity Insights
+# Copyright 2026 S&P Global Energy (previously S&P Global Commodity Insights)
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -138,6 +138,13 @@ def get_data(
             )
         return response
 
+    # If the server returned non-JSON content (for example a PDF attachment),
+    # return the raw response so callers can handle binary payloads instead
+    # of attempting to decode JSON.
+    content_type = response.headers.get("content-type", "").lower()
+    if "application/json" not in content_type and not content_type.startswith("text/"):
+        return response
+    
     df: DataFrame = df_fn(response)
     pagination = paginate_fn(response)
 

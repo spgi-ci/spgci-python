@@ -183,8 +183,15 @@ ni.get_content(id="169b5f45-04e4-43f2-b83b-ecc16f96be55")
 
 ni.get_spotlights(updated_date_gte=two_weeks_ago)
 # DataFrame for spotlights articles from two weeks ago to today
+
 ni.get_spotlights(updated_date_gte=two_weeks_ago,strip_html=True)
 # DataFrame for spotlights articles from two weeks ago to today, with HTML tags stripped
+
+ni.get_content(id="02ed2748-1262-45e1-ad97-9629e29e0274",download=True)
+# Download file from get_content endpoint, e.g. pdf file
+
+ni.get_content(id="02ed2748-1262-45e1-ad97-9629e29e0274", download="my_report.pdf")
+# Report name can be specified when downloading, otherwise the file will be named using the content ID
 
 ```
 
