@@ -32,17 +32,21 @@ appkey: str = os.getenv("SPGCI_APPKEY", "")
 is_agent: bool = os.getenv("SPGCI_AGENTMODE", "").lower() in ("true", "1", "yes", "on")
 
 #: Token context var - initialize with env variable if present
-token_ctx = contextvars.ContextVar("token", default=os.getenv("SPGCI_TOKEN"))
+token_ctx = contextvars.ContextVar("token", default=None)
+
+
+def get_token() -> Optional[str]:
+    """get token"""
+    token = token_ctx.get()
+    # If no token set via set_token(), check environment
+    if token is None:
+        token = os.getenv("SPGCI_TOKEN")
+    return token
 
 
 def set_token(token: str):
     """set token"""
     token_ctx.set(token)
-
-
-def get_token() -> str:
-    """get token"""
-    return token_ctx.get()
 
 
 #: Set the base url used when making HTTP calls
