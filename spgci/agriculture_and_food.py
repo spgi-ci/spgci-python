@@ -121,6 +121,9 @@ class AgriAndFood:
         col_value = ", ".join(columns) if isinstance(columns, list) else columns or ""
         params = {"groupBy": col_value, "pageSize": 5000}
 
+        if filter_exp is not None:
+            params.update({"filter": filter_exp})
+
         def to_df(resp: Response):
             j = resp.json()
             return DataFrame(j["aggResultValue"])
