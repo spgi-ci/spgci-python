@@ -184,3 +184,37 @@ def is_int_list(lst: Collection[Any]) -> TypeGuard[List[float]]:
     return all(isinstance(x, float) for x in lst) or all(
         isinstance(x, int) for x in lst
     )
+
+
+def profile_data(df):
+    """Quick data profile to inform analytical decisions"""
+    profile = {
+        "shape": df.shape,
+        "nulls": df.isnull()
+        .sum()[df.isnull().sum() > 0]
+        .to_dict(),  # Only show cols with nulls
+        "categorical_cols": {},
+        "numeric_cols": {},
+        "date_cols": {},
+    }
+
+    # Categorical columns
+    for col in df.select_dtypes(include=["object", "category"]):
+        profile["categorical_cols"][col] = {
+            "unique": df[col].nunique(),
+            "top_values": df[col].value_counts().head(5).to_dict(),
+        }
+
+    # Numeric columns
+    for col in df.select_dtypes(include=["number"]):
+        profile["numeric_cols"][col] = df[col].describe().to_dict()
+
+    # Date/datetime columns
+    for col in df.select_dtypes(include=["datetime64", "datetime"]):
+        profile["date_cols"][col] = {
+            "min": df[col].min(),
+            "max": df[col].max(),
+            "range": str(df[col].max() - df[col].min()),
+        }
+
+    return profile
