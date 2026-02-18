@@ -132,6 +132,7 @@ class MarketData:
         *,
         symbol: Optional[Union[list[str], "Series[str]", str]] = None,
         bate: Optional[Union[list[str], "Series[str]", str]] = None,
+        is_corrected: Optional[Union[list[str], "Series[str]", str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 10000,
@@ -177,13 +178,12 @@ class MarketData:
         **Multiple Symbols and Bates**
         >>> ci.MarketData().get_assessments_symbol_current(symbol=["PCAAS00", "PCAAT00"], bate=["c", "h"])
         """
-        filter_params: List[str] = []
 
+        filter_params: List[str] = []
         filter_params.append(list_to_filter("symbol", symbol))
         filter_params.append(list_to_filter("bate", bate))
-
+        filter_params.append(list_to_filter("isCorrected", is_corrected))
         filter_params = [fp for fp in filter_params if fp != ""]
-
         if filter_exp is None:
             filter_exp = " AND ".join(filter_params)
         elif len(filter_params) > 0:
@@ -211,6 +211,7 @@ class MarketData:
         *,
         symbol: Optional[Union[list[str], "Series[str]", str]] = None,
         bate: Optional[Union[list[str], "Series[str]", str]] = None,
+        is_corrected: Optional[Union[list[str], "Series[str]", str]] = None,
         assess_date: Optional[date] = None,
         assess_date_lt: Optional[date] = None,
         assess_date_lte: Optional[date] = None,
@@ -291,11 +292,11 @@ class MarketData:
         >>> d2 = date(2023, 2, 1)
         >>> ci.MarketData().get_assessments_symbol_historical(symbol=["PCAAS00", "PCAAT00"], assess_date_gte=d1, assess_date_lte=d2])
         """
-        filter_params: List[str] = []
 
+        filter_params: List[str] = []
         filter_params.append(list_to_filter("symbol", symbol))
         filter_params.append(list_to_filter("bate", bate))
-
+        filter_params.append(list_to_filter("isCorrected", is_corrected))
         if assess_date != None:
             filter_params.append(f'assessDate: "{assess_date}"')
         if assess_date_gt != None:
@@ -306,7 +307,6 @@ class MarketData:
             filter_params.append(f'assessDate < "{assess_date_lt}"')
         if assess_date_lte != None:
             filter_params.append(f'assessDate <= "{assess_date_lte}"')
-
         if modified_date != None:
             filter_params.append(f'modDate: "{modified_date}"')
         if modified_date_gt != None:
@@ -317,9 +317,7 @@ class MarketData:
             filter_params.append(f'modDate < "{modified_date_lt}"')
         if modified_date_lte != None:
             filter_params.append(f'modDate <= "{modified_date_lte}"')
-
         filter_params = [fp for fp in filter_params if fp != ""]
-
         if filter_exp is None:
             filter_exp = " AND ".join(filter_params)
         elif len(filter_params) > 0:
@@ -341,6 +339,7 @@ class MarketData:
         *,
         mdc: str,
         bate: Optional[Union[list[str], "Series[str]", str]] = None,
+        is_corrected: Optional[Union[list[str], "Series[str]", str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 10000,
@@ -389,12 +388,12 @@ class MarketData:
         **Turn off auto pagination**
         >>> ci.MarketData().get_assessments_by_mdc_current(mdc="ET", paginate=false)
         """
+
         filter_params: List[str] = []
         filter_params.append(f'MDC: "{mdc}"')
         filter_params.append(list_to_filter("bate", bate))
-
+        filter_params.append(list_to_filter("isCorrected", is_corrected))
         filter_params = [fp for fp in filter_params if fp != ""]
-
         if filter_exp is None:
             filter_exp = " AND ".join(filter_params)
         elif len(filter_params) > 0:
@@ -420,6 +419,7 @@ class MarketData:
         self,
         *,
         mdc: str,
+        is_corrected: Optional[Union[list[str], "Series[str]", str]] = None,
         assess_date: Optional[date] = None,
         assess_date_lt: Optional[date] = None,
         assess_date_lte: Optional[date] = None,
@@ -498,10 +498,11 @@ class MarketData:
         >>> d2 = date(2023,2,1)
         >>> ci.MarketData().get_assessments_by_mdc_historical(mdc="ET", assess_date_gte=d1, assess_date_lte=d2)
         """
+
         filter_params: List[str] = []
         filter_params.append(f'MDC: "{mdc}"')
         filter_params.append(list_to_filter("bate", bate))
-
+        filter_params.append(list_to_filter("isCorrected", is_corrected))
         if assess_date != None:
             filter_params.append(f'assessDate: "{assess_date}"')
         if assess_date_gt != None:
@@ -512,7 +513,6 @@ class MarketData:
             filter_params.append(f'assessDate < "{assess_date_lt}"')
         if assess_date_lte != None:
             filter_params.append(f'assessDate <= "{assess_date_lte}"')
-
         if modified_date != None:
             filter_params.append(f'modDate: "{modified_date}"')
         if modified_date_gt != None:
@@ -523,9 +523,7 @@ class MarketData:
             filter_params.append(f'modDate < "{modified_date_lt}"')
         if modified_date_lte != None:
             filter_params.append(f'modDate <= "{modified_date_lte}"')
-
         filter_params = [fp for fp in filter_params if fp != ""]
-
         if filter_exp is None:
             filter_exp = " AND ".join(filter_params)
         elif len(filter_params) > 0:
@@ -720,3 +718,503 @@ class MarketData:
             raw=raw,
             paginate_fn=_nop_paginate,
         )
+    
+    def get_corrections_by_symbol(
+        self,
+        *,
+        symbol: Optional[Union[list[str], "Series[str]", str]] = None,
+        bate: Optional[Union[list[str], "Series[str]", str]] = None,
+        assess_date: Optional[date] = None,
+        assess_date_lt: Optional[date] = None,
+        assess_date_lte: Optional[date] = None,
+        assess_date_gt: Optional[date] = None,
+        assess_date_gte: Optional[date] = None,
+        modified_date: Optional[date] = None,
+        modified_date_lt: Optional[date] = None,
+        modified_date_lte: Optional[date] = None,
+        modified_date_gt: Optional[date] = None,
+        modified_date_gte: Optional[date] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 10000,
+        paginate: bool = False,
+        raw: bool = False,
+    ) -> Union[pd.DataFrame, Response]:
+        """
+        Fetch Correction data by Symbol from the Market Data API.
+
+        Parameters
+        ----------
+        symbol : Optional[Union[list[str], Series[str], str]], optional
+            filter by symbol, by default None (required)
+        bate : Optional[Union[list[str], Series[str], str]], optional
+            filter by bate, by default None
+        assess_date : Optional[date], optional
+            filter by ``assessDate = x`` , by default None
+        assess_date_lt : Optional[date], optional
+            filter by ``assessDate < x``, by default None
+        assess_date_lte : Optional[date], optional
+            filter by ``assessDate <= x``, by default None
+        assess_date_gt : Optional[date], optional
+            filter by ``assessDate > x``, by default None
+        assess_date_gte : Optional[date], optional
+            filter by ``assessDate >= x``, by default None
+        modified_date : Optional[date], optional
+            filter by ``modDate = x`` , by default None
+        modified_date_lt: Optional[date], optional
+            filter by ``modDate < x``, by default None
+        modified_date_lte : Optional[date], optional
+            filter by ``modDate <= x``, by default None
+        modified_date_gt : Optional[date], optional
+            filter by ``modDate > x``, by default None
+        modified_date_gte : Optional[date], optional
+            filter by ``modDate >= x``, by default None
+        filter_exp : Optional[str], optional
+            pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
+        page : int, optional
+            pass-thru ``page`` query param to request a particular page of results, by default 1
+        page_size : int, optional
+            pass-thru ``pageSize`` query param to request a particular page size, by default 10000
+        paginate : bool, optional
+            whether to auto-paginate the response, by default False
+        raw : bool, optional
+            return a ``requests.Response`` instead of a ``DataFrame``, by default False
+
+        Returns
+        -------
+        Union[pd.DataFrame, Response]
+            DataFrame
+                DataFrame of the ``response.json()``
+            Response
+                Raw ``requests.Response`` object
+
+        Examples
+        --------
+        **Simple**
+        >>> ci.MarketData().get_corrections_by_symbol(symbol="PCAAS00")
+
+        **Multiple Symbols and Bates**
+        >>> ci.MarketData().get_corrections_by_symbol(symbol=["PCAAS00", "PCAAT00"], bate=["c", "h"])
+
+        **Date Range**
+        >>> d1 = date(2023, 1, 1)
+        >>> d2 = date(2023, 2, 1)
+        >>> ci.MarketData().get_corrections_by_symbol(symbol=["PCAAS00", "PCAAT00"], assess_date_gte=d1, assess_date_lte=d2)
+        """
+        filter_params: List[str] = []
+
+        filter_params.append(list_to_filter("symbol", symbol))
+        filter_params.append(list_to_filter("bate", bate))
+
+        if assess_date is not None:
+            filter_params.append(f'assessDate: "{assess_date}"')
+        if assess_date_gt is not None:
+            filter_params.append(f'assessDate > "{assess_date_gt}"')
+        if assess_date_gte is not None:
+            filter_params.append(f'assessDate >= "{assess_date_gte}"')
+        if assess_date_lt is not None:
+            filter_params.append(f'assessDate < "{assess_date_lt}"')
+        if assess_date_lte is not None:
+            filter_params.append(f'assessDate <= "{assess_date_lte}"')
+
+        if modified_date is not None:
+            filter_params.append(f'modDate: "{modified_date}"')
+        if modified_date_gt is not None:
+            filter_params.append(f'modDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        endpoint_path = "correction/symbol"
+        params = {
+            "filter": filter_exp,
+            "page": page,
+            "pageSize": page_size,
+        }
+        return get_data(
+            path=f"{self._path}{endpoint_path}",
+            df_fn=self._convert_to_df,
+            paginate_fn=self._paginate,
+            params=params,
+            paginate=paginate,
+            raw=raw,
+        )
+    
+    def get_corrections_by_symbol_bate(
+        self,
+        *,
+        symbolbate: Optional[Union[list[str], "Series[str]", str]] = None,
+        assess_date: Optional[date] = None,
+        assess_date_lt: Optional[date] = None,
+        assess_date_lte: Optional[date] = None,
+        assess_date_gt: Optional[date] = None,
+        assess_date_gte: Optional[date] = None,
+        modified_date: Optional[date] = None,
+        modified_date_lt: Optional[date] = None,
+        modified_date_lte: Optional[date] = None,
+        modified_date_gt: Optional[date] = None,
+        modified_date_gte: Optional[date] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 10000,
+        paginate: bool = False,
+        raw: bool = False,
+        ) -> Union[pd.DataFrame, Response]:
+        """
+        Fetch Correction data by Symbol-Bate combination from the Market Data API.
+
+        Parameters
+        ----------
+        symbolbate : Optional[Union[list[str], Series[str], str]], optional
+            filter by symbolbate (e.g., "IGBAP21-u"), by default None (required)
+        assess_date : Optional[date], optional
+            filter by ``assessDate = x`` , by default None
+        assess_date_lt : Optional[date], optional
+            filter by ``assessDate < x``, by default None
+        assess_date_lte : Optional[date], optional
+            filter by ``assessDate <= x``, by default None
+        assess_date_gt : Optional[date], optional
+            filter by ``assessDate > x``, by default None
+        assess_date_gte : Optional[date], optional
+            filter by ``assessDate >= x``, by default None
+        modified_date : Optional[date], optional
+            filter by ``modDate = x`` , by default None
+        modified_date_lt: Optional[date], optional
+            filter by ``modDate < x``, by default None
+        modified_date_lte : Optional[date], optional
+            filter by ``modDate <= x``, by default None
+        modified_date_gt : Optional[date], optional
+            filter by ``modDate > x``, by default None
+        modified_date_gte : Optional[date], optional
+            filter by ``modDate >= x``, by default None
+        filter_exp : Optional[str], optional
+            pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
+        page : int, optional
+            pass-thru ``page`` query param to request a particular page of results, by default 1
+        page_size : int, optional
+            pass-thru ``pageSize`` query param to request a particular page size, by default 10000
+        paginate : bool, optional
+            whether to auto-paginate the response, by default False
+        raw : bool, optional
+            return a ``requests.Response`` instead of a ``DataFrame``, by default False
+
+        Returns
+        -------
+        Union[pd.DataFrame, Response]
+            DataFrame
+            DataFrame of the ``response.json()``
+            Response
+            Raw ``requests.Response`` object
+
+        Examples
+        --------
+        **Simple**
+        >>> ci.MarketData().get_corrections_by_symbol_bate(symbolbate="IGBAP21-u")
+
+        **Multiple Symbol-Bate**
+        >>> ci.MarketData().get_corrections_by_symbol_bate(symbolbate=["IGBAP21-u", "PCAAS00-c"])
+
+        **Date Range**
+        >>> d1 = date(2023, 1, 1)
+        >>> d2 = date(2023, 2, 1)
+        >>> ci.MarketData().get_corrections_by_symbol_bate(symbolbate=["IGBAP21-u"], assess_date_gte=d1, assess_date_lte=d2)
+        """
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("symbolbate", symbolbate))
+
+        if assess_date is not None:
+            filter_params.append(f'assessDate: "{assess_date}"')
+        if assess_date_gt is not None:
+            filter_params.append(f'assessDate > "{assess_date_gt}"')
+        if assess_date_gte is not None:
+            filter_params.append(f'assessDate >= "{assess_date_gte}"')
+        if assess_date_lt is not None:
+            filter_params.append(f'assessDate < "{assess_date_lt}"')
+        if assess_date_lte is not None:
+            filter_params.append(f'assessDate <= "{assess_date_lte}"')
+
+        if modified_date is not None:
+            filter_params.append(f'modDate: "{modified_date}"')
+        if modified_date_gt is not None:
+            filter_params.append(f'modDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        endpoint_path = "correction/symbol-bate"
+        params = {
+            "filter": filter_exp,
+            "page": page,
+            "pageSize": page_size,
+        }
+        return get_data(
+            path=f"{self._path}{endpoint_path}",
+            df_fn=self._convert_to_df,
+            paginate_fn=self._paginate,
+            params=params,
+            paginate=paginate,
+            raw=raw,
+        )
+
+    def get_corrections_by_mdc(
+        self,
+        *,
+        mdc: Optional[Union[list[str], "Series[str]", str]] = None,
+        assess_date: Optional[date] = None,
+        assess_date_lt: Optional[date] = None,
+        assess_date_lte: Optional[date] = None,
+        assess_date_gt: Optional[date] = None,
+        assess_date_gte: Optional[date] = None,
+        modified_date: Optional[date] = None,
+        modified_date_lt: Optional[date] = None,
+        modified_date_lte: Optional[date] = None,
+        modified_date_gt: Optional[date] = None,
+        modified_date_gte: Optional[date] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 10000,
+        paginate: bool = False,
+        raw: bool = False,
+        ) -> Union[pd.DataFrame, Response]:
+        """
+        Fetch Correction data by MDC from the Market Data API.
+
+        Parameters
+        ----------
+        mdc : Optional[Union[list[str], Series[str], str]], optional
+            filter by Market Data Category, by default None (required)
+        assess_date : Optional[date], optional
+            filter by ``assessDate = x`` , by default None
+        assess_date_lt : Optional[date], optional
+            filter by ``assessDate < x``, by default None
+        assess_date_lte : Optional[date], optional
+            filter by ``assessDate <= x``, by default None
+        assess_date_gt : Optional[date], optional
+            filter by ``assessDate > x``, by default None
+        assess_date_gte : Optional[date], optional
+            filter by ``assessDate >= x``, by default None
+        modified_date : Optional[date], optional
+            filter by ``modDate = x`` , by default None
+        modified_date_lt: Optional[date], optional
+            filter by ``modDate < x``, by default None
+        modified_date_lte : Optional[date], optional
+            filter by ``modDate <= x``, by default None
+        modified_date_gt : Optional[date], optional
+            filter by ``modDate > x``, by default None
+        modified_date_gte : Optional[date], optional
+            filter by ``modDate >= x``, by default None
+        filter_exp : Optional[str], optional
+            pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
+        page : int, optional
+            pass-thru ``page`` query param to request a particular page of results, by default 1
+        page_size : int, optional
+            pass-thru ``pageSize`` query param to request a particular page size, by default 10000
+        paginate : bool, optional
+            whether to auto-paginate the response, by default False
+        raw : bool, optional
+            return a ``requests.Response`` instead of a ``DataFrame``, by default False
+
+        Returns
+        -------
+        Union[pd.DataFrame, Response]
+            DataFrame
+            DataFrame of the ``response.json()``
+            Response
+            Raw ``requests.Response`` object
+
+        Examples
+        --------
+        **Simple**
+        >>> ci.MarketData().get_corrections_by_mdc(mdc="IF")
+
+        **Multiple MDCs**
+        >>> ci.MarketData().get_corrections_by_mdc(mdc=["IF", "ET"])
+
+        **Date Range**
+        >>> d1 = date(2023, 1, 1)
+        >>> d2 = date(2023, 2, 1)
+        >>> ci.MarketData().get_corrections_by_mdc(mdc=["IF"], assess_date_gte=d1, assess_date_lte=d2)
+        """
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("mdc", mdc))
+
+        if assess_date is not None:
+            filter_params.append(f'assessDate: "{assess_date}"')
+        if assess_date_gt is not None:
+            filter_params.append(f'assessDate > "{assess_date_gt}"')
+        if assess_date_gte is not None:
+            filter_params.append(f'assessDate >= "{assess_date_gte}"')
+        if assess_date_lt is not None:
+            filter_params.append(f'assessDate < "{assess_date_lt}"')
+        if assess_date_lte is not None:
+            filter_params.append(f'assessDate <= "{assess_date_lte}"')
+
+        if modified_date is not None:
+            filter_params.append(f'modDate: "{modified_date}"')
+        if modified_date_gt is not None:
+            filter_params.append(f'modDate > "{modified_date_gt}"')
+        if modified_date_gte is not None:
+            filter_params.append(f'modDate >= "{modified_date_gte}"')
+        if modified_date_lt is not None:
+            filter_params.append(f'modDate < "{modified_date_lt}"')
+        if modified_date_lte is not None:
+            filter_params.append(f'modDate <= "{modified_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        endpoint_path = "correction/mdc"
+        params = {
+            "filter": filter_exp,
+            "page": page,
+            "pageSize": page_size,
+        }
+        return get_data(
+            path=f"{self._path}{endpoint_path}",
+            df_fn=self._convert_to_df,
+            paginate_fn=self._paginate,
+            params=params,
+            paginate=paginate,
+            raw=raw,
+        )
+
+    def get_corrections_by_modified_date(
+        self,
+        *,
+        modified_date: Optional[Union[list[str], "Series[str]", str, date]] = None,
+        filter_exp: Optional[str] = None,
+        field: Optional[str] = None,
+        sort: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 10000,
+        paginate: bool = False,
+        raw: bool = False,
+    ) -> Union[pd.DataFrame, Response]:
+        """
+        Fetch Correction data by Modified Date from the Market Data API.
+
+        Parameters
+        ----------
+        modified_date : Optional[Union[list[str], Series[str], str, date]], optional
+            filter by modified date, by default None (required)
+        filter_exp : Optional[str], optional
+            pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
+        field : Optional[str], optional
+            Use this parameter to return optional fields in the API response. If not passed, all default fields are returned. Example: "mdc"
+        sort : Optional[str], optional
+            Specify the order in which the data should be ordered. Example: "assessDate:desc"
+        page : int, optional
+            pass-thru ``page`` query param to request a particular page of results, by default 1
+        page_size : int, optional
+            pass-thru ``pageSize`` query param to request a particular page size, by default 10000
+        paginate : bool, optional
+            whether to auto-paginate the response, by default False
+        raw : bool, optional
+            return a ``requests.Response`` instead of a ``DataFrame``, by default False
+
+        Returns
+        -------
+        Union[pd.DataFrame, Response]
+            DataFrame
+            DataFrame of the ``response.json()``
+            Response
+            Raw ``requests.Response`` object
+
+        Examples
+        --------
+        **Simple**
+        >>> ci.MarketData().get_corrections_by_modified_date(modified_date="2019-07-10")
+
+        **Multiple Dates**
+        >>> ci.MarketData().get_corrections_by_modified_date(modified_date=["2019-07-10", "2020-01-01"])
+        """
+        filter_params: List[str] = []
+        filter_params.append(list_to_filter("modDate", modified_date))
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        endpoint_path = "correction/modified-date"
+        params = {
+            "filter": filter_exp,
+            "page": page,
+            "pageSize": page_size,
+        }
+        if field is not None:
+            params["field"] = field
+        if sort is not None:
+            params["sort"] = sort
+        return get_data(
+            path=f"{self._path}{endpoint_path}",
+            df_fn=self._convert_to_df,
+            paginate_fn=self._paginate,
+            params=params,
+            paginate=paginate,
+            raw=raw,
+        )
+    
+    def get_rate_limit(self, raw: bool = False) -> dict:
+        """
+        Fetch and return API rate limit information from response headers for a typical endpoint.
+
+        By default, queries the 'current/symbol' endpoint with a harmless filter, so you do not need to specify a path.
+
+        Parameters
+        ----------
+        raw : bool, optional
+            If True, returns the raw requests.Response object. If False (default), returns a dictionary of rate limit headers.
+
+        Returns
+        -------
+        dict or requests.Response
+            Dictionary with all rate limit headers, or the raw response if raw=True.
+
+        Examples
+        --------
+        >>> # Gets all rate limit headers as a dictionary
+        >>> ci.MarketData().get_rate_limit()
+        """
+        # always use 'current/symbol' as the endpoint and a default filter, as rate limit is based off class
+        full_path = f"{self._path}current/symbol"
+        params = {"filter": 'symbol: "PCAAS00"'}
+        response = get_data(
+            path=full_path,
+            params=params,
+            raw=True
+        )
+        if raw:
+            return response
+        # collect all rate limit headers
+        rate_limit_headers = {}
+        for k, v in response.headers.items():
+            if "ratelimit" in k.lower():
+                rate_limit_headers[k] = v
+        return rate_limit_headers
