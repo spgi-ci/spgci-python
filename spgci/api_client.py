@@ -144,7 +144,7 @@ def get_data(
     content_type = response.headers.get("content-type", "").lower()
     if "application/json" not in content_type and not content_type.startswith("text/"):
         return response
-    
+
     df: DataFrame = df_fn(response)
     pagination = paginate_fn(response)
 
@@ -190,6 +190,10 @@ def get_data(
             )
 
         new_df = df_fn(resp)
-        df: DataFrame = pd.concat(objs=[df, new_df], ignore_index=True)  # type: ignore
+        preview_rows = getattr(df, "_preview_rows", None)
+        df = pd.concat(objs=[df, new_df], ignore_index=True)
+        if preview_rows is not None:
+            df._preview_rows = preview_rows
+        # df: DataFrame = pd.concat(objs=[df, new_df], ignore_index=True)  # type: ignore
 
     return df
