@@ -115,6 +115,7 @@ class MarketData:
             cols = ["symbol", "description"]
             df: pd.DataFrame = df[cols + [x for x in df.columns if x not in cols]]  # type: ignore
 
+        df._preview_rows = 100  # prints a subset when in agent mode
         return df
 
     @staticmethod
@@ -718,7 +719,7 @@ class MarketData:
             raw=raw,
             paginate_fn=_nop_paginate,
         )
-    
+
     def get_corrections_by_symbol(
         self,
         *,
@@ -849,7 +850,7 @@ class MarketData:
             paginate=paginate,
             raw=raw,
         )
-    
+
     def get_corrections_by_symbol_bate(
         self,
         *,
@@ -869,7 +870,7 @@ class MarketData:
         page_size: int = 10000,
         paginate: bool = False,
         raw: bool = False,
-        ) -> Union[pd.DataFrame, Response]:
+    ) -> Union[pd.DataFrame, Response]:
         """
         Fetch Correction data by Symbol-Bate combination from the Market Data API.
 
@@ -995,7 +996,7 @@ class MarketData:
         page_size: int = 10000,
         paginate: bool = False,
         raw: bool = False,
-        ) -> Union[pd.DataFrame, Response]:
+    ) -> Union[pd.DataFrame, Response]:
         """
         Fetch Correction data by MDC from the Market Data API.
 
