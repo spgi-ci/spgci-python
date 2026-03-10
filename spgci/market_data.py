@@ -569,6 +569,7 @@ class MarketData:
         modified_date_lte: Optional[date] = None,
         modified_date_gt: Optional[date] = None,
         modified_date_gte: Optional[date] = None,
+        benchmark: Optional[bool] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 1000,
@@ -610,6 +611,8 @@ class MarketData:
             filter by ``modified_date > x``, by default None
         modified_date_gte : Optional[date], optional
             filter by ``modified_date >= x``, by default None
+        benchmark : Optional[bool], optional,
+            filter by benchmark flag, by default None
         filter_exp : Optional[str], optional
             pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
         page : int, optional
@@ -667,6 +670,9 @@ class MarketData:
             filter_params.append(f'modified_date < "{modified_date_lt}"')
         if modified_date_lte != None:
             filter_params.append(f'modified_date <= "{modified_date_lte}"')
+
+        if benchmark is True:
+            filter_params.append('benchmark: "benchmark"')
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
