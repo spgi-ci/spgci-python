@@ -126,6 +126,7 @@ class ForwardCurves:
         derivative_maturity_frequency: Optional[
             Union["list[str]", "list[MatFrequency]", "Series[str]", str, MatFrequency]
         ] = None,
+        derivative_position: Optional[Union["list[int]", "Series[int]", int]] = None,
         assess_date: Optional[date] = None,
         assess_date_gt: Optional[date] = None,
         assess_date_gte: Optional[date] = None,
@@ -148,6 +149,8 @@ class ForwardCurves:
             fitler by curve code, by default None
         derivative_maturity_frequency : Optional[ Union[list[str], list[MatFrequency], Series[str], str, MatFrequency] ], optional
             fitler by maturity frequency, by default None
+        derivative_position : Optional[Union[list[int], Series[int], int]], optional
+            filter by derivative position, by default None
         assess_date : Optional[date], optional
             filter by ``assessDate = x`` , by default None
         assess_date_lt : Optional[date], optional
@@ -201,6 +204,7 @@ class ForwardCurves:
                 "derivative_maturity_frequency", derivative_maturity_frequency
             )
         )
+        filter_params.append(list_to_filter("derivative_position", derivative_position))
 
         if assess_date:
             filter_params.append(f'assessDate: "{assess_date}"')

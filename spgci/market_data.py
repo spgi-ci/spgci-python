@@ -555,6 +555,7 @@ class MarketData:
         delivery_region_basis: Optional[Union[list[str], "Series[str]", str]] = None,
         curve_code: Optional[Union[list[str], "Series[str]", str]] = None,
         mdc: Optional[Union[list[str], "Series[str]", str]] = None,
+        quotation_style: Optional[Union[list[str], "Series[str]", str]] = None,
         assessment_frequency: Optional[
             Union[
                 list[str],
@@ -599,6 +600,8 @@ class MarketData:
             filter by curve code, by default None
         mdc : Optional[Union[list[str], Series[str], str]], optional
             filter by Market Data Category, by default None
+        quotation_style: Optional[Union[list[str], Series[str], str]], optional
+            filter by Quotation Style, by default None
         assessment_frequency: Optional[Union[list[str], list[AssessmentFrequency], Series[str], str, AssessmentFrequency]], optional
             filter by Assessment Frequency, by default None
         modified_date : Optional[date], optional
@@ -657,6 +660,7 @@ class MarketData:
         filter_params.append(list_to_filter("curve_code", curve_code))
         filter_params.append(list_to_filter("symbol", symbol))
         filter_params.append(list_to_filter("mdc", mdc))
+        filter_params.append(list_to_filter("quotation_style", quotation_style))
         filter_params.append(
             list_to_filter("assessment_frequency", assessment_frequency)
         )
