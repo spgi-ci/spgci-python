@@ -31,7 +31,7 @@ class IntegratedEnergyScenarios:
         "final-energy-consumption",
         "gdp",
         "ghg-emissions",
-        "natural-gas-markets",
+        "natural-gas-market",
         "oil-consumption-by-product",
         "oil-consumption-by-sector",
         "population-by-age",
@@ -99,7 +99,7 @@ class IntegratedEnergyScenarios:
             "final-energy-consumption": "carbon-scenarios/ies/v1/final-energy-consumption",
             "gdp": "carbon-scenarios/ies/v1/gdp",
             "ghg-emissions": "carbon-scenarios/ies/v1/ghg-emission",
-            "natural-gas-markets": "carbon-scenarios/ies/v1/natural-gas-market",
+            "natural-gas-market": "carbon-scenarios/ies/v1/natural-gas-market",
             "oil-consumption-by-product": "carbon-scenarios/ies/v1/oil-consumption-by-product",
             "oil-consumption-by-sector": "carbon-scenarios/ies/v1/oil-consumption-by-sector",
             "population-by-age": "carbon-scenarios/ies/v1/population-by-age",
@@ -128,14 +128,15 @@ class IntegratedEnergyScenarios:
         if filter_exp is not None:
             params.update({"filter": filter_exp})
 
-
         def to_df(resp: Response):
             j = resp.json()
             df = pd.json_normalize(j["aggResultValue"])
             columns_dt = ["modifiedDate"]
             for c in columns_dt:
                 if c in df.columns:
-                    df[c] = pd.to_datetime(df[c], utc=True, format="ISO8601", errors="coerce")
+                    df[c] = pd.to_datetime(
+                        df[c], utc=True, format="ISO8601", errors="coerce"
+                    )
             return df
 
         return get_data(path, params, to_df, paginate=True)
@@ -165,14 +166,14 @@ class IntegratedEnergyScenarios:
         page: int = 1,
         page_size: int = 5000,
         raw: bool = False,
-        paginate: bool = False
+        paginate: bool = False,
     ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
 
         Parameters
         ----------
-        
+
         long_name: Optional[Union[list[str], Series[str], str]]
             Long name for the series., be default None
         scenario: Optional[Union[list[str], Series[str], str]]
@@ -245,7 +246,7 @@ class IntegratedEnergyScenarios:
             filter_params.append(f'modifiedDate < "{modified_date_lt}"')
         if modified_date_lte is not None:
             filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
-        
+
         filter_params = [fp for fp in filter_params if fp != ""]
 
         if filter_exp is None:
@@ -364,7 +365,7 @@ class IntegratedEnergyScenarios:
             filter_params.append(f'modifiedDate < "{modified_date_lt}"')
         if modified_date_lte is not None:
             filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
-        
+
         filter_params = [fp for fp in filter_params if fp != ""]
 
         if filter_exp is None:
@@ -497,7 +498,6 @@ class IntegratedEnergyScenarios:
         )
         return response
 
-
     def get_gdp(
         self,
         long_name: Optional[Union[list[str], Series[str], str]] = None,
@@ -517,18 +517,18 @@ class IntegratedEnergyScenarios:
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
         value: Optional[Union[list[str], Series[str], str]] = None,
-        filter_exp: Optional[str] = None, 
-        page: int = 1, 
-        page_size: int = 5000, 
-        raw: bool = False, 
-        paginate: bool = False
-        ) -> Union[DataFrame, Response]:
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
         """
         Fetch the data based on the filter expression.
 
         Parameters
         ----------
-        
+
         longName: Optional[Union[list[str], Series[str], str]]
             Long name for the series., be default None
         scenario: Optional[Union[list[str], Series[str], str]]
@@ -874,7 +874,7 @@ class IntegratedEnergyScenarios:
         page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
-        ) -> Union[DataFrame, Response]:
+    ) -> Union[DataFrame, Response]:
         """
         The Oil Markets by Product dataset contains the outlooks to 2050 for S&P Global’s for total oil liquids demand by oil products. Data is provided in two units, in thousand barrel per day (kbbld) and in million tonne of oil equivalent (mtoe) for 1990-2050 timeframe in annual granularity for selected geographies.
 
@@ -985,7 +985,7 @@ class IntegratedEnergyScenarios:
         page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
-        ) -> Union[DataFrame, Response]:
+    ) -> Union[DataFrame, Response]:
         """
         The Oil Markets by Sector dataset contains the outlooks to 2050 for S&P Global’s scenarios for total oil liquids demand by sectors. Data is provided in two units, in thousand barrel per day (kbbld) and in million tonne of oil equivalent (mtoe) for 1990-2050 timeframe in annual granularity for selected geographies.
 
@@ -1363,7 +1363,9 @@ class IntegratedEnergyScenarios:
         filter_params: List[str] = []
         filter_params.append(list_to_filter("longName", long_name))
         filter_params.append(list_to_filter("scenario", scenario))
-        filter_params.append(list_to_filter("energyOrTechnologyType", energy_or_technology_type))
+        filter_params.append(
+            list_to_filter("energyOrTechnologyType", energy_or_technology_type)
+        )
         filter_params.append(list_to_filter("theme", theme))
         filter_params.append(list_to_filter("country", country))
         filter_params.append(list_to_filter("unit", unit))
