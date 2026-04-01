@@ -1156,6 +1156,7 @@ class AmericasGas:
         filter_params.append(list_to_filter("queueId", queue_id))
         filter_params.append(list_to_filter("nominationCycle", nomination_cycle))
         filter_params.append(list_to_filter("locationType", location_type))
+        filter_params.append(list_to_filter("reason", reason))
 
         filter_params.append(list_to_filter("flowDate", flow_date))
         if flow_date_gt is not None:
