@@ -66,6 +66,8 @@ class Insights:
         Blog = "Blog"
         Rationale = "Rationale"
         Analysis = "Analysis"
+        Briefing = "Briefing"
+        HeadlineAnalysis = "Headline Analysis"
         TraderNote = "Trader Note"
         MarketCommentary = "Market Commentary"
         Feature = "Feature"
