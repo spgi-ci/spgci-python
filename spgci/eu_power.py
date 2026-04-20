@@ -36,24 +36,58 @@ class EUPower:
         """
         The European Power Assets API provides details of European Power Infrastructure Data.
 
-        Queryable fields (metadata ``isQueryField=true``):
-        ``plantName`` (Plant Name), ``unitId`` (Unit Id), ``operator`` (Operator),
-        ``plantTechnology`` (Plant Technology), ``status`` (Status),
-        ``unitPrimaryFuel`` (Unit Primary Fuel), ``country`` (Country),
-        ``lastModifiedDate`` (Last Modified Date).
-
         Parameters
         ----------
+        plant_name      :   Optional[Union[list[str], Series[str], str]] = None,
+            filter by plantName, by default None
+        unit_id         :   Optional[Union[list[str], Series[str], str]] = None,
+            filter by unitId, by default None
+        operator        :   Optional[Union[list[str], Series[str], str]] = None,
+            filter by operator, by default None
+        plant_technology:   Optional[Union[list[str], Series[str], str]] = None,
+            filter by plantTechnology, by default None
+        status          :   Optional[Union[list[str], Series[str], str]] = None,
+            filter by status, by default None
+        unit_primary_fuel:  Optional[Union[list[str], Series[str], str]] = None,
+            filter by unitPrimaryFuel, by default None
+        country         :   Optional[Union[list[str], Series[str], str]] = None,
+            filter by country, by default None
+        modified_date   :   Optional[datetime] = None,
+            filter by ``lastModifiedDate = x`` , by default None
+        modified_date_gt:   Optional[datetime] = None,
+            filter by ``lastModifiedDate > x`` , by default None
+        modified_date_gte:  Optional[datetime] = None,
+            filter by ``lastModifiedDate >= x`` , by default None
+        modified_date_lt:   Optional[datetime] = None,
+            filter by ``lastModifiedDate < x`` , by default None
+        modified_date_lte:  Optional[datetime] = None,
+            filter by ``lastModifiedDate <= x`` , by default None
+        filter_exp      :   Optional[str], optional
+            pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
+        page            :   int, optional
+            pass-thru ``page`` query param to request a particular page of results, by default 1
+        page_size       :   int, optional
+            pass-thru ``pageSize`` query param to request a particular page size, by default 5000
+        paginate        :   bool, optional
+            whether to auto-paginate the response, by default False
+        raw             :   bool, optional
+            return a ``requests.Response`` instead of a ``DataFrame``, by default False
 
-         filter_exp: Optional[str] = None,
-         page: int = 1,
-         page_size: int = 5000,
-         raw: bool = False,
-         paginate: bool = False
+        Returns
+        -------
+        Union[pd.DataFrame, Response]
+              DataFrame
+                  DataFrame of the ``response.json()``
+              Response
+                  Raw ``requests.Response`` object
 
         Examples
         --------
+        **Simple**
         >>> power.get_power_assets(plant_technology="Solar", paginate=True)
+
+        **Filter by multiple fields**
+        >>> power.get_power_assets(country="Spain", status="Operating")
 
         """
 
