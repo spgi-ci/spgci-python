@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from __future__ import annotations
-from typing import List, Optional, Union
+from typing import List, Literal, Optional, Union
 from requests import Response
 from spgci.api_client import get_data
 from spgci.utilities import list_to_filter
@@ -45,6 +45,106 @@ def _custom_sort_key(val):
 
 
 class EUGasAnalytics:
+
+    _datasets = Literal[
+        "daily-storage-data-selection",
+        "daily-physical-flow-point-selection",
+        "hourly-nomination",
+        "instant-flow",
+        "overview-hub-balance",
+        "daily-history-hub-balance",
+        "daily-flow-point-selection",
+        "monthly-field-production",
+        "outages-event",
+        "outages-time-series",
+        "supply-demand-short-term-forecast",
+        "supply-demand-forecast-switching",
+        "price-forecast",
+        "daily-country-overview",
+    ]
+
+    def get_unique_values(
+        self,
+        dataset: _datasets,
+        columns: Optional[Union[list[str], str]],
+        filter_exp: Optional[str] = None,
+    ) -> DataFrame:
+        """
+        Get unique values for specified columns in a dataset, optionally filtered by an expression.
+
+        This method is crucial for data discovery and validation before making actual data queries.
+        Use this to understand what values are available in the dataset and what combinations
+        actually exist before attempting to filter your main data queries.
+
+        Args:
+            dataset (str): The EU gas dataset name:
+                - "daily-storage-data-selection"
+                - "daily-physical-flow-point-selection"
+                - "hourly-nomination"
+                - "instant-flow"
+                - "overview-hub-balance"
+                - "daily-history-hub-balance"
+                - "daily-flow-point-selection"
+                - "monthly-field-production"
+                - "outages-event"
+                - "outages-time-series"
+                - "supply-demand-short-term-forecast"
+                - "supply-demand-forecast-switching"
+                - "price-forecast"
+                - "daily-country-overview"
+            columns (list[str] or str): Column names to get unique values for.
+                - Use camelCase format: ["country", "gasType", "uom"]
+                - Can be single string: "country"
+                - Can be multiple columns: ["country", "gasType"]
+            filter_exp (str, optional): Filter expression to limit results to specific subsets.
+                Use ci.utilities.build_filter_expression() to construct this properly.
+
+        Returns:
+            pd.DataFrame: DataFrame with unique combinations of the specified columns,
+            optionally filtered by the provided expression.
+
+
+        **Example usage**
+            >>> eu_gas.get_unique_values("daily-storage-data-selection", "country")
+
+        """
+        dataset_to_path = {
+            "daily-storage-data-selection": "/eugas/v1/daily/storage-data-selection",
+            "daily-physical-flow-point-selection": "/eugas/v1/daily/physical-flow-point-selection",
+            "hourly-nomination": "/eugas/v1/hourly/nomination",
+            "instant-flow": "/eugas/v1/instant/flow",
+            "overview-hub-balance": "/eugas/v1/overview/hub-balance",
+            "daily-history-hub-balance": "/eugas/v1/daily/history/hub-balance",
+            "daily-flow-point-selection": "/eugas/v1/daily/flow-point-selection",
+            "monthly-field-production": "/eugas/v1/monthly/field-production",
+            "outages-event": "/eugas/v2/outages/event",
+            "outages-time-series": "/eugas/v2/outages/time-series",
+            "supply-demand-short-term-forecast": "/eugas/v2/analytics/supply-demand/short-term-forecast",
+            "supply-demand-forecast-switching": "/eugas/v2/analytics/supply-demand/forecast/switching",
+            "price-forecast": "/eugas/v2/analytics/price/forecast",
+            "daily-country-overview": "/eugas/v1/daily/country-overview",
+        }
+
+        if dataset not in dataset_to_path:
+            valid = "\n".join(dataset_to_path.keys())
+            print(f"Dataset '{dataset}' not found. Valid Datasets:\n", valid)
+            raise ValueError(
+                f"dataset '{dataset}' not found ",
+            )
+        else:
+            path = dataset_to_path[dataset]
+
+        col_value = ", ".join(columns) if isinstance(columns, list) else columns or ""
+        params = {"groupBy": col_value, "pageSize": 5000}
+
+        if filter_exp is not None:
+            params.update({"filter": filter_exp})
+
+        def to_df(resp: Response):
+            j = resp.json()
+            return DataFrame(j["aggResultValue"])
+
+        return get_data(path, params, to_df, paginate=True)
 
     def get_daily_storage_data_selection(
         self,
