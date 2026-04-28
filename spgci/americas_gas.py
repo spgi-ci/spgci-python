@@ -133,6 +133,84 @@ class AmericasGas:
 
         return get_data(path, params, to_df, paginate=True)
     
+    def get_latin_america_gas_supply_demand_long_term_forecast(
+        self,
+        *,
+        subject_area: Optional[Union[List[str], str, date, datetime, Series]] = None,
+        commodity: Optional[Union[List[str], str, date, datetime, Series]] = None,
+        geography: Optional[Union[List[str], str, date, datetime, Series]] = None,
+        uom: Optional[Union[List[str], str, date, datetime, Series]] = None,
+        frequency: Optional[Union[List[str], str, date, datetime, Series]] = None,
+        category: Optional[Union[List[str], str, date, datetime, Series]] = None,
+        as_of_date: Optional[Union[List[str], str, date, datetime, Series]] = None,
+        year: Optional[Union[List[str], str, date, datetime, Series]] = None,
+        modified_date: Optional[Union[List[str], str, date, datetime, Series]] = None,
+        select: Optional[Union[List[str], str]] = None,
+        sort: Optional[Union[List[str], str]] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 5000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Provides access to historical data and long‑term forecasts of natural gas supply and demand across key markets in Latin America.
+
+        Parameters
+        ----------
+
+         subject_area: Optional[Union[List[str], str, date, datetime, Series]] = None,
+         commodity: Optional[Union[List[str], str, date, datetime, Series]] = None,
+         geography: Optional[Union[List[str], str, date, datetime, Series]] = None,
+         uom: Optional[Union[List[str], str, date, datetime, Series]] = None,
+         frequency: Optional[Union[List[str], str, date, datetime, Series]] = None,
+         category: Optional[Union[List[str], str, date, datetime, Series]] = None,
+         as_of_date: Optional[Union[List[str], str, date, datetime, Series]] = None,
+         year: Optional[Union[List[str], str, date, datetime, Series]] = None,
+         modified_date: Optional[Union[List[str], str, date, datetime, Series]] = None,
+         select: Optional[Union[List[str], str]] = None,
+         sort: Optional[Union[List[str], str]] = None,
+         filter_exp: Optional[str] = None,
+         page: int = 1,
+         page_size: int = 5000,
+         raw: bool = False,
+         paginate: bool = False
+
+        """
+
+        filter_params: List[str] = []
+
+        filter_params.append(list_to_filter("subjectArea", subject_area))
+        filter_params.append(list_to_filter("commodity", commodity))
+        filter_params.append(list_to_filter("geography", geography))
+        filter_params.append(list_to_filter("uom", uom))
+        filter_params.append(list_to_filter("frequency", frequency))
+        filter_params.append(list_to_filter("category", category))
+        filter_params.append(list_to_filter("asOfDate", as_of_date))
+        filter_params.append(list_to_filter("year", year))
+        filter_params.append(list_to_filter("modifiedDate", modified_date))
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+        if select is not None:
+            params["select"] = ",".join(select) if isinstance(select, list) else select
+        if sort is not None:
+            params["sort"] = ",".join(sort) if isinstance(sort, list) else sort
+
+        response = get_data(
+            path="analytics/gas/v1/amer/latin-america",
+            params=params,
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+        return response
 
     def get_reference_data_geography(
         self,
