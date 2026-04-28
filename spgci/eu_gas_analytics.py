@@ -61,6 +61,7 @@ class EUGasAnalytics:
         "supply-demand-forecast-switching",
         "price-forecast",
         "daily-country-overview",
+        "supply-demand-long-term-forecast",
     ]
 
     def get_unique_values(
@@ -123,6 +124,7 @@ class EUGasAnalytics:
             "supply-demand-forecast-switching": "/eugas/v2/analytics/supply-demand/forecast/switching",
             "price-forecast": "/eugas/v2/analytics/price/forecast",
             "daily-country-overview": "/eugas/v1/daily/country-overview",
+            "supply-demand-long-term-forecast": "analytics/gas/v1/emea/europe",
         }
 
         if dataset not in dataset_to_path:
