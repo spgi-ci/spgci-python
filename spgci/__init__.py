@@ -47,6 +47,7 @@ from .integrated_energy_scenarios import IntegratedEnergyScenarios
 from .agriculture_and_food import AgriAndFood
 from .americas_gas import AmericasGas
 from .eu_power import EUPower
+from .apac_gas import APACGas
 
 
 from .config import username, password, set_credentials, version
@@ -81,4 +82,5 @@ __all__ = [
     "AgriAndFood",
     "AmericasGas",
     "EUPower",
+    "APACGas",
 ]
