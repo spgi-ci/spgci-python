@@ -1,5 +1,19 @@
+# Copyright 2026 S&P Global Energy (previously S&P Global Commodity Insights)
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#       http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from __future__ import annotations
-from typing import List, Optional, Union
+from typing import List, Literal, Optional, Union
 from requests import Response
 from spgci.api_client import get_data
 from spgci.utilities import list_to_filter
@@ -10,7 +24,55 @@ import pandas as pd
 
 class EUPower:
     _endpoint = "api/v1/"
-    _api_eu_power_vision_assets_mv_endpoint = "power-assets"
+    _api_eu_power_vision_assets_endpoint = "power-assets"
+    
+    _datasets = Literal["power-assets"]
+
+    def get_unique_values(
+        self,
+        dataset: _datasets,
+        columns: Optional[Union[list[str], str]],
+        filter_exp: Optional[str] = None,
+    ) -> DataFrame:
+        """
+        Get unique values for specified columns in a dataset, optionally filtered by an expression.
+
+        Args:
+            dataset (str): The EU power dataset name:
+                - "power-assets"
+            columns (list[str] or str): Column names to get unique values for.
+            filter_exp (str, optional): Filter expression to limit results.
+
+        Returns:
+            pd.DataFrame: DataFrame with unique combinations of the specified columns.
+
+        Example:
+            >>> power.get_unique_values("power-assets", "country")
+        """
+        dataset_to_path = {
+            "power-assets": "egp/v1/eupower/power-assets",
+        }
+
+        if dataset not in dataset_to_path:
+            valid = "\n".join(dataset_to_path.keys())
+            print(f"Dataset '{dataset}' not found. Valid Datasets:\n", valid)
+            raise ValueError(
+                f"dataset '{dataset}' not found ",
+            )
+        else:
+            path = dataset_to_path[dataset]
+
+        col_value = ", ".join(columns) if isinstance(columns, list) else columns or ""
+        params = {"groupBy": col_value, "pageSize": 5000}
+
+        if filter_exp is not None:
+            params.update({"filter": filter_exp})
+
+        def to_df(resp: Response):
+            j = resp.json()
+            return DataFrame(j["aggResultValue"])
+
+        return get_data(path, params, to_df, paginate=True)
 
     def get_power_assets(
         self,
