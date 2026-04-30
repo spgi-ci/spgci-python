@@ -133,7 +133,6 @@ class AmericasGas:
 
         return get_data(path, params, to_df, paginate=True)
     
-
     def get_reference_data_geography(
         self,
         *,
