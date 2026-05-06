@@ -39,7 +39,7 @@ class MarketData:
     """
 
     _path = "market-data/v3/value/"
-    _ref_path = "market-data/reference-data/v3/search"
+    _ref_path = "market-data/reference-data/v4/search"
     _mdd_fields = "deltaPrice, deltaPercent, pValue, pDate"
 
     class ContractType(Enum):
@@ -679,6 +679,7 @@ class MarketData:
             "filter": filter_exp,
             "page": page,
             "pageSize": page_size,
+            "showAdditionalFields": "false"
         }
         return get_data(
             path=f"{self._ref_path}",
