@@ -20,7 +20,7 @@ from spgci.utilities import list_to_filter
 from pandas import DataFrame, Series
 from datetime import date, datetime
 import pandas as pd
-from dateutil.parser import parse
+from packaging.version import parse
 from typing import Literal
 
 class AmericasGas:
