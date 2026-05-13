@@ -218,9 +218,6 @@ class ForwardCurves:
         if assess_date_lte:
             filter_params.append(f'assessDate <= "{assess_date_lte}"')
 
-        if is_agent:
-            filter_params.append('mdc not in ("PMC", "FMC", "PDC", "FDC")')
-
         filter_params = [fp for fp in filter_params if fp != ""]
 
         if filter_exp is None:
@@ -345,6 +342,9 @@ class ForwardCurves:
         filter_params.append(list_to_filter("curve_code", curve_code))
         filter_params.append(list_to_filter("curve_type", curve_type))
         filter_params.append(list_to_filter("mdc", mdc))
+
+        if is_agent:
+            filter_params.append('mdc not in ("PMC", "FMC", "PDC", "FDC")')
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
