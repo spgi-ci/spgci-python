@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from spgci.api_client import Paginator, get_data
+from spgci.config import is_agent
 from typing import List, Union, Optional
 from datetime import date
 from requests import Response
@@ -216,6 +217,9 @@ class ForwardCurves:
             filter_params.append(f'assessDate < "{assess_date_lt}"')
         if assess_date_lte:
             filter_params.append(f'assessDate <= "{assess_date_lte}"')
+
+        if is_agent:
+            filter_params.append('mdc not in ("PMC", "FMC", "PDC", "FDC")')
 
         filter_params = [fp for fp in filter_params if fp != ""]
 

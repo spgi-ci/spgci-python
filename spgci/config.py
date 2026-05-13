@@ -15,6 +15,7 @@
 """
 Configure SPGCI settings
 """
+
 import os
 from typing import Dict, Union, Optional
 from requests.auth import AuthBase
@@ -63,7 +64,7 @@ proxies: Dict[str, str] = {
 auth: Union[AuthBase, None] = None
 
 #: Version of the SPGCI Pkg
-version = "0.0.85"
+version = "0.0.86"
 
 #: time to sleep between api calls
 sleep_time = 0
