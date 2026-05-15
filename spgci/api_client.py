@@ -47,6 +47,15 @@ def _to_df(resp: requests.Response) -> DataFrame:
     return DataFrame(j["results"])
 
 
+def _convert_to_df(resp: requests.Response) -> DataFrame:
+    j = resp.json()
+    if isinstance(j, dict) and "results" in j:
+        return pd.json_normalize(j["results"])  # type: ignore
+    if isinstance(j, list):
+        return pd.json_normalize(j)
+    return pd.json_normalize([j])
+
+
 def _nop_paginate(resp: requests.Response) -> Paginator:
     return Paginator(False, "page", 1)
 
@@ -94,6 +103,62 @@ def _get(
     response: requests.Response = session.get(
         url=url,
         params=params,
+        headers=headers,
+        verify=spgci.config.verify_ssl,
+        proxies=spgci.config.proxies,
+        auth=spgci.config.auth,
+    )
+
+    # clear token cache and retry once if its a 401/403. shouldn't be hit unless token is expired..
+    if response.status_code in [401, 403]:
+        get_token.cache_clear()
+        raise AuthError("Invalid Username, Password or Appkey")
+
+    # if 429 check if more requests can be made today.
+    if response.status_code == 429:
+        rl = int(response.headers.get("x-ratelimit-remaining-day", 0))
+        if rl > 0:
+            raise PerSecondLimitError("Per Second Rate Limit Reached")
+        else:
+            raise DailyLimitError("Daily Rate Limit Reached")
+
+    if response.status_code != 200:
+        print(response.text)
+        response.raise_for_status()
+
+    return response
+
+
+@_auth_retry
+@_throttle_retry
+def _post(
+    url: str,
+    body: Dict[Any, Any],
+    session: requests.Session,
+) -> requests.Response:
+    headers = {
+        "User-Agent": f"spgci-py/{spgci.config.version}",
+        "Content-Type": "application/json",
+        "accept": "application/json",
+    }
+
+    if spgci.config.get_token() is not None:
+        token = spgci.config.get_token()
+    else:
+        token = spgci.auth.get_token(
+            spgci.config.username,
+            spgci.config.password,
+            spgci.config.base_url,
+        )
+
+    headers["Authorization"] = f"Bearer {token}"
+
+    # should remove at some point..
+    sleep(spgci.config.sleep_time)
+
+    response: requests.Response = session.post(
+        url=url,
+        json=body,
         headers=headers,
         verify=spgci.config.verify_ssl,
         proxies=spgci.config.proxies,
@@ -197,3 +262,25 @@ def get_data(
         # df: DataFrame = pd.concat(objs=[df, new_df], ignore_index=True)  # type: ignore
 
     return df
+
+
+def post_data(
+    path: str,
+    body: Dict[Any, Any],
+    df_fn: Callable[[requests.Response], DataFrame] = _convert_to_df,
+    raw: bool = False,
+) -> Union[DataFrame, requests.Response]:
+    url = f"{spgci.config.base_url}/{path}"
+    response = _post(url, body=body, session=_session)
+
+    if raw:
+        return response
+
+    # If the server returned non-JSON content (for example a PDF attachment),
+    # return the raw response so callers can handle binary payloads instead
+    # of attempting to decode JSON.
+    content_type = response.headers.get("content-type", "").lower()
+    if "application/json" not in content_type and not content_type.startswith("text/"):
+        return response
+
+    return df_fn(response)
