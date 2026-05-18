@@ -19,9 +19,21 @@ from spgci.api_client import get_data, post_data
 from spgci.utilities import list_to_filter
 from pandas import DataFrame, Series
 import pandas as pd
+from dataclasses import dataclass, asdict
 
 
-class Calculator:
+@dataclass
+class FuelConsumption:
+    fuel: str
+    consumption: float
+
+
+@dataclass
+class FuelBlend:
+    fuels: List[FuelConsumption]
+
+
+class ScenarioManager:
     _path_eu_compliance = "fuel-calculator/v1/eu-compliance/calculate-penalty-api"
     _path_on_demand_price = "fuel-calculator/v1/ondemand/calculate-price-api"
     _path_ref_commodities = "api/v1/calculators/on-demand/reference/commodities"
@@ -59,9 +71,10 @@ class Calculator:
         self,
         origin_port: str,
         destination_port: str,
-        fuel_blends: List[Dict[str, Any]],
+        fuel_blends: List[FuelBlend],
         reporting_period: str,
         include_eu_ets_cost: bool = True,
+        *,
         ghg_intensity_lng: Optional[float] = None,
         ghg_intensity_b30: Optional[float] = None,
         ghg_intensity_b24: Optional[float] = None,
@@ -77,23 +90,21 @@ class Calculator:
             Origin port of the voyage, e.g. ``"Rotterdam, Europe"``.
         destination_port : str
             Destination port of the voyage, e.g. ``"New York, Americas"``.
-        fuel_blends : List[Dict[str, Any]]
-            List of fuel blend objects. Each blend is a dict with a ``"fuels"``
-            key containing a list of ``{"fuel": str, "consumption": float}`` dicts.
+        fuel_blends : List[FuelBlend]
+            List of fuel blend objects.
 
             Example::
-
                 [
-                    {
-                        "fuels": [
-                            {"fuel": "VLSFO", "consumption": 50},
-                            {"fuel": "MGO",   "consumption": 50},
+                    FuelBlend(
+                        fuels=[
+                            FuelConsumption(fuel="VLSFO", consumption=50),
+                            FuelConsumption(fuel="MGO", consumption=50),
                         ]
-                    }
+                    )
                 ]
 
         reporting_period : str
-            The FuelEU reporting period, e.g. ``"2025-2029"``.
+            The FuelEU reporting period, e.g. ``"2025-2029"``, allowed values: '2025-2029', '2030-2034', '2035-2039', '2040-2044', '2045-2049', '2050-2054'.
         include_eu_ets_cost : bool, optional
             Whether to include EU ETS cost in the calculation, by default ``True``.
         ghg_intensity_lng : Optional[float], optional
@@ -123,7 +134,12 @@ class Calculator:
         ...     origin_port="Rotterdam, Europe",
         ...     destination_port="New York, Americas",
         ...     fuel_blends=[
-        ...         {"fuels": [{"fuel": "VLSFO", "consumption": 50}, {"fuel": "MGO", "consumption": 50}]}
+        ...         FuelBlend(
+        ...             fuels=[
+        ...                 FuelConsumption(fuel="VLSFO", consumption=50),
+        ...                 FuelConsumption(fuel="MGO", consumption=50)
+        ...             ]
+        ...         )
         ...     ],
         ...     reporting_period="2025-2029",
         ... )
@@ -146,7 +162,7 @@ class Calculator:
         body: Dict[str, Any] = {
             "originPort": origin_port,
             "destinationPort": destination_port,
-            "fuelBlends": fuel_blends,
+            "fuelBlends": [asdict(blend) for blend in fuel_blends],
             "includeEUETSCost": include_eu_ets_cost,
             "reportingPeriod": reporting_period,
         }
@@ -178,6 +194,7 @@ class Calculator:
         end_date: str,
         commodity: str,
         product_grade: str,
+        *,
         origin_state: Optional[str] = None,
         origin_city: Optional[str] = None,
         delivery_state: Optional[str] = None,
@@ -186,10 +203,7 @@ class Calculator:
         octane: Optional[float] = None,
         line_space_code: Optional[str] = None,
         pipeline_tariff: Optional[bool] = None,
-        field: Optional[str] = None,
         filter_exp: Optional[str] = None,
-        sort: Optional[str] = None,
-        group_by: Optional[str] = None,
         page: int = 1,
         page_size: int = 1000,
         raw: bool = False,
@@ -217,9 +231,9 @@ class Calculator:
         delivery_city : Optional[str], optional
             Delivery city, by default ``None``.
         rvp : Optional[float], optional
-            RVP adjustment value, by default ``None``.
+            RVP adjustment value, allowed range: 5.0 - 15.0, by default ``None``.
         octane : Optional[float], optional
-            Octane adjustment value, by default ``None``.
+            Octane adjustment value, allowed range: 83.7 - 91.4, by default ``None``.
         line_space_code : Optional[str], optional
             Line space code, by default ``None``.
         pipeline_tariff : Optional[bool], optional
@@ -306,14 +320,9 @@ class Calculator:
             body["costFactorAdjustments"] = cost_factor_adjustments
 
         query_params: List[str] = [f"page={page}", f"page_size={page_size}"]
-        if field is not None:
-            query_params.append(f"field={field}")
+
         if filter_exp is not None:
             query_params.append(f"filter={filter_exp}")
-        if sort is not None:
-            query_params.append(f"sort={sort}")
-        if group_by is not None:
-            query_params.append(f"groupBy={group_by}")
 
         path = f"{self._path_on_demand_price}?{'&'.join(query_params)}"
 
@@ -615,7 +624,9 @@ class Calculator:
         loading_fuel_mt: Optional[Union[list[float], Series[float], float]] = None,
         discharging_fuel_mt: Optional[Union[list[float], Series[float], float]] = None,
         waiting_load_fuel_mt: Optional[Union[list[float], Series[float], float]] = None,
-        waiting_discharge_fuel_mt: Optional[Union[list[float], Series[float], float]] = None,
+        waiting_discharge_fuel_mt: Optional[
+            Union[list[float], Series[float], float]
+        ] = None,
         total_fuel: Optional[Union[list[float], Series[float], float]] = None,
         total_voyage_days: Optional[Union[list[float], Series[float], float]] = None,
         filter_exp: Optional[str] = None,
