@@ -34,6 +34,11 @@ class FuelBlend:
 
 
 class ScenarioManager:
+    """
+    ScenarioManager API Client. Wraps models that provide "what-if" scenario analysis for energy markets.
+
+    """
+
     _path_eu_compliance = "fuel-calculator/v1/eu-compliance/calculate-penalty-api"
     _path_on_demand_price = "fuel-calculator/v1/ondemand/calculate-price-api"
     _path_ref_commodities = "api/v1/calculators/on-demand/reference/commodities"
