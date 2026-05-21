@@ -64,10 +64,13 @@ proxies: Dict[str, str] = {
 auth: Union[AuthBase, None] = None
 
 #: Version of the SPGCI Pkg
-version = "0.0.89"
+version = "0.0.90"
 
 #: time to sleep between api calls
 sleep_time = 0
+
+#: parallelism
+parallelism = 8
 
 
 def set_credentials(un: str, pw: str, apikey: Optional[str] = "") -> None:

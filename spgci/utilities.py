@@ -12,12 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Union, Any, TypeVar, Collection, Optional, Dict
+from typing import (
+    List,
+    Union,
+    Any,
+    TypeVar,
+    Collection,
+    Optional,
+    Dict,
+    Callable,
+    Tuple,
+)
 from pandas import Series
 from typing_extensions import TypeGuard
 from enum import Enum
 from datetime import date
 from functools import partial
+from concurrent.futures import ThreadPoolExecutor
+import spgci.config
 
 T = TypeVar("T", bound=Enum)
 
@@ -218,3 +230,20 @@ def profile_data(df):
         }
 
     return profile
+
+
+def parallel(
+    *funcs: Callable[[], Any], max_workers: Optional[int] = None
+) -> Tuple[Any, ...]:
+    """
+    Executes multiple SDK calls concurrently and returns their results as a tuple.
+    """
+    if max_workers is None:
+        # Fall back to config, or a hard fallback of 5 if parallelism isn't defined
+        max_workers = getattr(spgci.config, "parallelism", 5)
+
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        # Submit all lambdas
+        futures = [executor.submit(f) for f in funcs]
+        # Return results in the exact same order they were passed
+        return tuple(future.result() for future in futures)
