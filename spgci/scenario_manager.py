@@ -135,7 +135,7 @@ class ScenarioManager:
         --------
         **Simple**
 
-        >>> ci.Calculator().calculate_eu_compliance_penalty(
+        >>> ci.ScenarioManager().calculate_eu_compliance_penalty(
         ...     origin_port="Rotterdam, Europe",
         ...     destination_port="New York, Americas",
         ...     fuel_blends=[
@@ -151,7 +151,7 @@ class ScenarioManager:
 
         **With custom GHG intensity values**
 
-        >>> ci.Calculator().calculate_eu_compliance_penalty(
+        >>> ci.ScenarioManager().calculate_eu_compliance_penalty(
         ...     origin_port="Rotterdam, Europe",
         ...     destination_port="New York, Americas",
         ...     fuel_blends=[
@@ -272,7 +272,7 @@ class ScenarioManager:
         --------
         **Simple**
 
-        >>> ci.Calculator().calculate_ondemand_price(
+        >>> ci.ScenarioManager().calculate_ondemand_price(
         ...     start_date="2026-02-15",
         ...     end_date="2026-02-17",
         ...     commodity="Gasoline",
@@ -281,7 +281,7 @@ class ScenarioManager:
 
         **With Cost Factor Adjustments**
 
-        >>> ci.Calculator().calculate_ondemand_price(
+        >>> ci.ScenarioManager().calculate_ondemand_price(
         ...     start_date="2026-02-15",
         ...     end_date="2026-02-17",
         ...     commodity="Gasoline",
@@ -388,7 +388,7 @@ class ScenarioManager:
 
         Examples
         --------
-        >>> ci.Calculator().get_reference_commodities(pipeline_name="Colonial")
+        >>> ci.ScenarioManager().get_reference_commodities(pipeline_name="Colonial")
         """
         filter_params: List[str] = []
         filter_params.append(list_to_filter("id", id))
@@ -455,7 +455,7 @@ class ScenarioManager:
 
         Examples
         --------
-        >>> ci.Calculator().get_reference_line_spaces(pipeline_name="Colonial")
+        >>> ci.ScenarioManager().get_reference_line_spaces(pipeline_name="Colonial")
         """
         filter_params: List[str] = []
         filter_params.append(list_to_filter("code", code))
@@ -552,7 +552,7 @@ class ScenarioManager:
 
         Examples
         --------
-        >>> ci.Calculator().get_reference_pipeline_tariffs(pipeline_name="Colonial", origin_state="TX")
+        >>> ci.ScenarioManager().get_reference_pipeline_tariffs(pipeline_name="Colonial", origin_state="TX")
         """
         filter_params: List[str] = []
         filter_params.append(list_to_filter("pipelineId", pipeline_id))
@@ -671,7 +671,7 @@ class ScenarioManager:
 
         Examples
         --------
-        >>> ci.Calculator().get_reference_data_shipping(region=["APAC", "Europe"], load_eu=True)
+        >>> ci.ScenarioManager().get_reference_data_shipping(region=["APAC", "Europe"], load_eu=True)
         """
         filter_params: List[str] = []
         filter_params.append(list_to_filter("region", region))

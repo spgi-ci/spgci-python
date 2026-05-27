@@ -24,6 +24,7 @@ from datetime import datetime
 from enum import Enum
 from functools import partial
 import html
+from urllib.parse import unquote
 
 
 class Insights:
@@ -1086,31 +1087,54 @@ class Insights:
             df_fn=self._content_to_df,
         )
 
-        # If a non-JSON response (like a PDF) was returned, allow optional download
+        # if a non-JSON response was returned (e.g. PDF/Excel), allow optional download.
         if isinstance(result, Response):
             content_type = result.headers.get("content-type", "").lower()
-            if "application/pdf" in content_type:
-                if download:
-                    # determine filename from Content-Disposition if present
-                    cd = result.headers.get("content-disposition", "")
-                    filename = None
-                    if "filename=" in cd:
-                        try:
-                            filename = cd.split("filename=")[-1].strip().strip('"').strip("'")
-                        except Exception:
-                            filename = None
+            if download:
+                cd = result.headers.get("content-disposition", "")
+                filename = None
 
-                    if isinstance(download, str) and download.strip() != "":
-                        filepath = download
-                    else:
-                        filepath = filename or f"{id}.pdf"
+                if "filename*=" in cd:
+                    try:
+                        filename_star = cd.split("filename*=", 1)[1].split(";", 1)[0].strip()
+                        # RFC 5987 format: UTF-8''encoded_name.ext
+                        if "''" in filename_star:
+                            filename = unquote(filename_star.split("''", 1)[1].strip('"'))
+                        else:
+                            filename = unquote(filename_star.strip('"'))
+                    except Exception:
+                        filename = None
 
-                    with open(filepath, "wb") as fh:
-                        fh.write(result.content)
+                if filename is None and "filename=" in cd:
+                    try:
+                        filename = cd.split("filename=", 1)[1].split(";", 1)[0].strip().strip('"').strip("'")
+                    except Exception:
+                        filename = None
 
-                    return filepath
+                ext_map = {
+                    "application/pdf": ".pdf",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx",
+                    "application/vnd.ms-excel": ".xls",
+                    "text/csv": ".csv",
+                }
 
-            # return raw response for caller to handle other binary content
+                inferred_ext = ""
+                for mime, ext in ext_map.items():
+                    if mime in content_type:
+                        inferred_ext = ext
+                        break
+
+                if isinstance(download, str) and download.strip() != "":
+                    filepath = download
+                else:
+                    filepath = filename or f"{id}{inferred_ext}"
+
+                with open(filepath, "wb") as fh:
+                    fh.write(result.content)
+
+                return filepath
+
+            # returns raw response for caller to handle binary content manually.
             return result
 
         return result
