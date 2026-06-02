@@ -1,6 +1,6 @@
 # SPGCI Python Library
 
-Python Client for the [S&P Global Commodity Insights API](https://developer.platts.com).
+Python Client for the [S&P Global Energy (previously S&P Global Commodity Insights) API](https://developer.platts.com).
 
 Looking for more examples? Check out our [Notebook Gallery](https://developer.spglobal.com/commodityinsights/tools/notebooks).
 
