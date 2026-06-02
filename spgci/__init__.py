@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-S&P Global Commodity Insights API\n
+S&P Global Energy (previously S&P Global Commodity Insights) API\n
 More details available here: https://developer.platts.com
 
 Getting Started
@@ -50,6 +50,7 @@ from .eu_power import EUPower
 from .gas_long_term_supply_and_demand import GasLongTermSupplyAndDemand
 from .scenario_manager import ScenarioManager
 from .utilities import parallel
+from .clean_energy_technology import CleanEnergyTechnology
 
 
 from .config import username, password, set_credentials, version
@@ -87,4 +88,5 @@ __all__ = [
     "GasLongTermSupplyAndDemand",
     "ScenarioManager",
     "parallel",
+    "CleanEnergyTechnology",
 ]
