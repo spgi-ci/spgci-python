@@ -421,7 +421,6 @@ egp.get_daily_flow_point_selection(
 df = egp.get_overview_hub_balance(
     gas_day_gte="2024-10-01",
     gas_day_lte="2024-10-31",
-    average_type="Daily value",
     hub="PEG",
     uom="MCM",
 )
