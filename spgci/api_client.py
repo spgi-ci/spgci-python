@@ -303,7 +303,7 @@ def get_data(
         return df
 
     tp = pagination.total_pages
-    if tp > 100:
+    if tp > 500:
         if spgci.config.is_agent:
             raise ValueError(
                 f"Agent mode is enabled. Cannot paginate when total pages ({tp}) > 100. "
