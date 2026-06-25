@@ -52,9 +52,9 @@ class StructuredHeards:
 
         if len(df) > 0:
             if "updatedDate" in df.columns:
-                df["updatedDate"] = to_datetime(df["updatedDate"])
+                df["updatedDate"] = to_datetime(df["updatedDate"], format="ISO8601")
             if "rtpTimestamp" in df.columns:
-                df["rtpTimestamp"] = to_datetime(df["rtpTimestamp"])
+                df["rtpTimestamp"] = to_datetime(df["rtpTimestamp"], format="ISO8601")
         return df
 
     @staticmethod
