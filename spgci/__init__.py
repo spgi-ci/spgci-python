@@ -50,6 +50,7 @@ from .eu_power import EUPower
 from .gas_long_term_supply_and_demand import GasLongTermSupplyAndDemand
 from .scenario_manager import ScenarioManager
 from .utilities import parallel
+from .smart_heards import SmartHeards
 
 
 from .config import username, password, set_credentials, version
@@ -86,5 +87,6 @@ __all__ = [
     "EUPower",
     "GasLongTermSupplyAndDemand",
     "ScenarioManager",
+    "SmartHeards",
     "parallel",
 ]
