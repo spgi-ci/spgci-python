@@ -48,7 +48,7 @@ class SmartHeards:
         return Paginator(True, "page", total_pages)
 
     @staticmethod
-    def _convert_to_df(resp: Response, strip_html: bool) -> DataFrame:
+    def _convert_to_df(resp: Response, strip_html: bool = False) -> DataFrame:
         j = resp.json()
         df = DataFrame(j["results"])
 
@@ -208,8 +208,8 @@ class SmartHeards:
         self,
         *,
         market: Optional[Union[list[str], "Series[str]", str]] = None,
-        attributes: Optional[Union[list[str], "Series[str]", str]] = None,
         filter_exp: Optional[str] = None,
+        field: str = "market",
         page: int = 1,
         page_size: int = 1000,
         raw: bool = False,
@@ -222,12 +222,12 @@ class SmartHeards:
         ----------
         market : Optional[Union[list[str], Series[str], str]], optional
             filter by commodity_name, by default None
-        attributes : Optional[Union[list[str], Series[str], str]], optional
-            filter by train_name, by default None
         raw : bool, optional
             return a ``requests.Response`` instead of a ``DataFrame``, by default False
         filter_exp: string
             pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
+        field : Optional[str], optional
+            pass-thru ``field`` query param to select which columns to return, by default "market"
         page : int, optional
             pass-thru ``page`` query param to request a particular page of results, by default 1
         page_size : int, optional
@@ -251,7 +251,6 @@ class SmartHeards:
         endpoint_path = "markets"
         filter_params: List[str] = []
         filter_params.append(list_to_filter("market", market))
-        filter_params.append(list_to_filter("attributes", attributes))
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
@@ -260,7 +259,12 @@ class SmartHeards:
         elif len(filter_params) > 0:
             filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
 
-        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+        params = {
+            "page": page,
+            "pageSize": page_size,
+            "filter": filter_exp,
+            "field": field,
+        }
 
         response = get_data(
             path=f"{self._endpoint}{endpoint_path}",
