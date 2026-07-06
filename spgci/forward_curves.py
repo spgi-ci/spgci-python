@@ -36,7 +36,7 @@ class ForwardCurves:
     """
 
     _path = "market-data/forward-curve/v3/"
-    _ref_path = "market-data/reference-data/v3/forward-curve/search"
+    _ref_path = "market-data/reference-data/v4/forward-curve/search"
 
     class MatFrequency(Enum):
         """Derivative Maturity Frequency"""
@@ -351,6 +351,7 @@ class ForwardCurves:
             "page": page,
             "pageSize": page_size,
             "subscribed_only": subscribed_only,
+            "showAdditionalFields": "false"
         }
         return get_data(
             path=f"{self._ref_path}",
