@@ -898,7 +898,7 @@ class AmericasGas:
         data_active: Optional[Union[list[bool], Series[bool], bool]] = None,
         data_source: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
-        component_id: Optional[Union[list[str], Series[str], str]] = None,
+        component_point_id: Optional[Union[list[str], Series[str], str]] = None,
         utilization: Optional[str] = None,
         utilization_lt: Optional[str] = None,
         utilization_lte: Optional[str] = None,
@@ -938,6 +938,7 @@ class AmericasGas:
         operationally_available_gt: Optional[str] = None,
         operationally_available_gte: Optional[str] = None,
         field: Optional[Union[list[str], Series[str], str]] = None,
+        best_available: Optional[bool] = None,
         filter_exp: Optional[str] = None,
         sort: Optional[str] = None,
         page: int = 1,
@@ -947,7 +948,173 @@ class AmericasGas:
     ) -> Union[DataFrame, Response]:
         """
         Query the Pipeline Flows Essentials Delta endpoint.
+
+        Parameters
+        ----------
+
+        day: Optional[Union[list[str], Series[str], str]]
+            Day portion of the flow date used for partitioning and filtering.
+        year: Optional[Union[list[str], Series[str], str]]
+            Year portion of the flow date used for partitioning and filtering.
+        month: Optional[Union[list[str], Series[str], str]]
+            Month portion of the flow date used for partitioning and filtering.
+        reason: Optional[Union[list[str], Series[str], str]]
+            Reason code describing why the record was modified.
+        queue_id: Optional[Union[list[str], Series[str], str]]
+            Queue identifier associated with the processing of the record.
+
+        valid_to: Optional[datetime], optional
+            Record valid-to timestamp.
+        valid_to_gt: Optional[datetime], optional
+            filter by `valid_to > x`, by default None
+        valid_to_gte: Optional[datetime], optional
+            filter by `valid_to >= x`, by default None
+        valid_to_lt: Optional[datetime], optional
+            filter by `valid_to < x`, by default None
+        valid_to_lte: Optional[datetime], optional
+            filter by `valid_to <= x`, by default None
+
+        flow_date: Optional[date], optional
+            Gas flow date associated with the record, by default None
+        flow_date_gt: Optional[date], optional
+            filter by `flow_date > x`, by default None
+        flow_date_gte: Optional[date], optional
+            filter by `flow_date >= x`, by default None
+        flow_date_lt: Optional[date], optional
+            filter by `flow_date < x`, by default None
+        flow_date_lte: Optional[date], optional
+            filter by `flow_date <= x`, by default None
+
+        valid_from: Optional[datetime], optional
+            Record valid-from timestamp.
+
+        data_active: Optional[Union[list[bool], Series[bool], bool]]
+            Active record indicator.
+        data_source: Optional[Union[list[str], Series[str], str]]
+            Source system of the record.
+        pipeline_id: Optional[Union[list[str], Series[str], str]]
+            Pipeline identifier.
+        component_point_id: Optional[Union[list[str], Series[str], str]]
+            Point identifier for a meter/location in the Americas Gas service.
+
+        utilization: Optional[str], optional
+            Utilization rate in decimal or percentage form.
+        utilization_gt: Optional[str], optional
+            filter by `utilization > x`, by default None
+        utilization_gte: Optional[str], optional
+            filter by `utilization >= x`, by default None
+        utilization_lt: Optional[str], optional
+            filter by `utilization < x`, by default None
+        utilization_lte: Optional[str], optional
+            filter by `utilization <= x`, by default None
+
+        location_type: Optional[Union[list[str], Series[str], str]]
+            Classification describing the physical location type.
+
+        design_capacity: Optional[str], optional
+            Reported design capacity for the meter, segment, or compressor.
+        design_capacity_gt: Optional[str], optional
+            filter by `design_capacity > x`, by default None
+        design_capacity_gte: Optional[str], optional
+            filter by `design_capacity >= x`, by default None
+        design_capacity_lt: Optional[str], optional
+            filter by `design_capacity < x`, by default None
+        design_capacity_lte: Optional[str], optional
+            filter by `design_capacity <= x`, by default None
+
+        nomination_cycle: Optional[Union[list[str], Series[str], str]]
+            Standard NAESB nomination cycle (T, E, I1, I2, I3).
+
+        scheduled_volume: Optional[str], optional
+            Scheduled volume reported by the pipeline.
+        scheduled_volume_gt: Optional[str], optional
+            filter by `scheduled_volume > x`, by default None
+        scheduled_volume_gte: Optional[str], optional
+            filter by `scheduled_volume >= x`, by default None
+        scheduled_volume_lt: Optional[str], optional
+            filter by `scheduled_volume < x`, by default None
+        scheduled_volume_lte: Optional[str], optional
+            filter by `scheduled_volume <= x`, by default None
+
+        last_modified_date: Optional[datetime], optional
+            Date and time the record was last modified.
+        last_modified_date_gt: Optional[datetime], optional
+            filter by `last_modified_date > x`, by default None
+        last_modified_date_gte: Optional[datetime], optional
+            filter by `last_modified_date >= x`, by default None
+        last_modified_date_lt: Optional[datetime], optional
+            filter by `last_modified_date < x`, by default None
+        last_modified_date_lte: Optional[datetime], optional
+            filter by `last_modified_date <= x`, by default None
+
+        interruptible_flow: Optional[Union[list[str], Series[str], str]]
+            Indicates whether the reported flow is interruptible.
+
+        component_create_date: Optional[datetime], optional
+            Date and time the component was created.
+        component_create_date_gt: Optional[datetime], optional
+            filter by `component_create_date > x`, by default None
+        component_create_date_gte: Optional[datetime], optional
+            filter by `component_create_date >= x`, by default None
+        component_create_date_lt: Optional[datetime], optional
+            filter by `component_create_date < x`, by default None
+        component_create_date_lte: Optional[datetime], optional
+            filter by `component_create_date <= x`, by default None
+
+        operational_capacity: Optional[str], optional
+            Daily operational capacity reported by the pipeline.
+        operational_capacity_gt: Optional[str], optional
+            filter by `operational_capacity > x`, by default None
+        operational_capacity_gte: Optional[str], optional
+            filter by `operational_capacity >= x`, by default None
+        operational_capacity_lt: Optional[str], optional
+            filter by `operational_capacity < x`, by default None
+        operational_capacity_lte: Optional[str], optional
+            filter by `operational_capacity <= x`, by default None
+
+        operationally_available: Optional[str], optional
+            Capacity available for scheduling.
+        operationally_available_gt: Optional[str], optional
+            filter by `operationally_available > x`, by default None
+        operationally_available_gte: Optional[str], optional
+            filter by `operationally_available >= x`, by default None
+        operationally_available_lt: Optional[str], optional
+            filter by `operationally_available < x`, by default None
+        operationally_available_lte: Optional[str], optional
+            filter by `operationally_available <= x`, by default None
+
+        field: Optional[Union[list[str], Series[str], str]]
+            Fields to return.
+         best_available: bool, optional
+            Return only the most recent nomination cycle available for each
+            component point and flow date. This operation is performed
+            client-side after data retrieval. For accurate results across the
+            full dataset, `paginate=True` and `data_active=True` is required.
+        filter_exp: Optional[str]
+            Additional filter expression.
+        sort: Optional[str]
+            Sort expression.
+        page: int
+            Page number.
+        page_size: int
+            Number of rows per page.
+        raw: bool
+            Return raw response object instead of DataFrame.
+        paginate: bool
+            Automatically retrieve all pages.
         """
+
+        if best_available:
+            if not paginate:
+                raise ValueError(
+                    "best_available=True requires paginate=True because the "
+                    "best available calculation is performed across the full result set."
+                )
+
+            if data_active is not True:
+                raise ValueError(
+                    "best_available=True requires data_active=True."
+                )
 
         filter_params: List[str] = []
 
@@ -959,7 +1126,7 @@ class AmericasGas:
         filter_params.append(list_to_filter("dataActive", data_active))
         filter_params.append(list_to_filter("dataSource", data_source))
         filter_params.append(list_to_filter("pipelineId", pipeline_id))
-        filter_params.append(list_to_filter("componentId", component_id))
+        filter_params.append(list_to_filter("componentPointId", component_point_id))
         filter_params.append(list_to_filter("locationType", location_type))
         filter_params.append(list_to_filter("nominationCycle", nomination_cycle))
         filter_params.append(list_to_filter("interruptibleFlow", interruptible_flow))
@@ -1085,7 +1252,7 @@ class AmericasGas:
         year: Optional[Union[list[str], Series[str], str]] = None,
         month: Optional[Union[list[str], Series[str], str]] = None,
         pipeline_id: Optional[Union[list[str], Series[str], str]] = None,
-        component_id: Optional[Union[list[str], Series[str], str]] = None,
+        component_point_id: Optional[Union[list[str], Series[str], str]] = None,
         flow_date: Optional[date] = None,
         flow_date_lt: Optional[date] = None,
         flow_date_lte: Optional[date] = None,
@@ -1135,6 +1302,7 @@ class AmericasGas:
         valid_to_gte: Optional[datetime] = None,
         reason: Optional[Union[list[str], Series[str], str]] = None,
         field: Optional[Union[list[str], Series[str], str]] = None,
+        best_available: Optional[bool] = None,
         filter_exp: Optional[str] = None,
         sort: Optional[str] = None,
         page: int = 1,
@@ -1144,14 +1312,184 @@ class AmericasGas:
     ) -> Union[DataFrame, Response]:
         """
         Query the Pipeline Flows Essentials History endpoint.
+
+        Parameters
+        ----------
+
+        day: Optional[Union[list[str], Series[str], str]]
+            Day portion of the flow date used for partitioning and filtering.
+        year: Optional[Union[list[str], Series[str], str]]
+            Year portion of the flow date used for partitioning and filtering.
+        month: Optional[Union[list[str], Series[str], str]]
+            Month portion of the flow date used for partitioning and filtering.
+
+        pipeline_id: Optional[Union[list[str], Series[str], str]]
+            Pipeline identifier.
+        component_point_id: Optional[Union[list[str], Series[str], str]]
+            Point identifier for a meter/location in the Americas Gas service.
+
+        flow_date: Optional[date], optional
+            Gas flow date associated with the record, by default None
+        flow_date_gt: Optional[date], optional
+            filter by `flow_date > x`, by default None
+        flow_date_gte: Optional[date], optional
+            filter by `flow_date >= x`, by default None
+        flow_date_lt: Optional[date], optional
+            filter by `flow_date < x`, by default None
+        flow_date_lte: Optional[date], optional
+            filter by `flow_date <= x`, by default None
+
+        queue_id: Optional[Union[list[str], Series[str], str]]
+            Queue identifier associated with the processing of the record.
+
+        nomination_cycle: Optional[Union[list[str], Series[str], str]]
+            Standard NAESB nomination cycle (T, E, I1, I2, I3).
+
+        location_type: Optional[Union[list[str], Series[str], str]]
+            Classification describing the physical location type.
+
+        scheduled_volume: Optional[str], optional
+            Scheduled volume reported by the pipeline.
+        scheduled_volume_gt: Optional[str], optional
+            filter by `scheduled_volume > x`, by default None
+        scheduled_volume_gte: Optional[str], optional
+            filter by `scheduled_volume >= x`, by default None
+        scheduled_volume_lt: Optional[str], optional
+            filter by `scheduled_volume < x`, by default None
+        scheduled_volume_lte: Optional[str], optional
+            filter by `scheduled_volume <= x`, by default None
+
+        utilization: Optional[str], optional
+            Utilization rate in decimal or percentage form.
+        utilization_gt: Optional[str], optional
+            filter by `utilization > x`, by default None
+        utilization_gte: Optional[str], optional
+            filter by `utilization >= x`, by default None
+        utilization_lt: Optional[str], optional
+            filter by `utilization < x`, by default None
+        utilization_lte: Optional[str], optional
+            filter by `utilization <= x`, by default None
+
+        design_capacity: Optional[str], optional
+            Reported design capacity for the meter, segment, or compressor.
+        design_capacity_gt: Optional[str], optional
+            filter by `design_capacity > x`, by default None
+        design_capacity_gte: Optional[str], optional
+            filter by `design_capacity >= x`, by default None
+        design_capacity_lt: Optional[str], optional
+            filter by `design_capacity < x`, by default None
+        design_capacity_lte: Optional[str], optional
+            filter by `design_capacity <= x`, by default None
+
+        operational_capacity: Optional[str], optional
+            Daily operational capacity reported by the pipeline.
+        operational_capacity_gt: Optional[str], optional
+            filter by `operational_capacity > x`, by default None
+        operational_capacity_gte: Optional[str], optional
+            filter by `operational_capacity >= x`, by default None
+        operational_capacity_lt: Optional[str], optional
+            filter by `operational_capacity < x`, by default None
+        operational_capacity_lte: Optional[str], optional
+            filter by `operational_capacity <= x`, by default None
+
+        operationally_available: Optional[str], optional
+            Capacity available for scheduling.
+        operationally_available_gt: Optional[str], optional
+            filter by `operationally_available > x`, by default None
+        operationally_available_gte: Optional[str], optional
+            filter by `operationally_available >= x`, by default None
+        operationally_available_lt: Optional[str], optional
+            filter by `operationally_available < x`, by default None
+        operationally_available_lte: Optional[str], optional
+            filter by `operationally_available <= x`, by default None
+
+        interruptible_flow: Optional[Union[list[str], Series[str], str]]
+            Indicates whether the reported flow is interruptible.
+
+        data_source: Optional[Union[list[str], Series[str], str]]
+            Source system of the record.
+
+        data_active: Optional[Union[list[bool], Series[bool], bool]]
+            Active record indicator.
+
+        component_create_date: Optional[datetime], optional
+            Date and time the component was created.
+        component_create_date_gt: Optional[datetime], optional
+            filter by `component_create_date > x`, by default None
+        component_create_date_gte: Optional[datetime], optional
+            filter by `component_create_date >= x`, by default None
+        component_create_date_lt: Optional[datetime], optional
+            filter by `component_create_date < x`, by default None
+        component_create_date_lte: Optional[datetime], optional
+            filter by `component_create_date <= x`, by default None
+
+        valid_from: Optional[datetime], optional
+            Record valid-from timestamp.
+
+        valid_to: Optional[datetime], optional
+            Record valid-to timestamp.
+        valid_to_gt: Optional[datetime], optional
+            filter by `valid_to > x`, by default None
+        valid_to_gte: Optional[datetime], optional
+            filter by `valid_to >= x`, by default None
+        valid_to_lt: Optional[datetime], optional
+            filter by `valid_to < x`, by default None
+        valid_to_lte: Optional[datetime], optional
+            filter by `valid_to <= x`, by default None
+
+        reason: Optional[Union[list[str], Series[str], str]]
+            Reason code describing why the historical record was created or modified.
+
+        field: Optional[Union[list[str], Series[str], str]]
+            Fields to return.
+        best_available: bool, optional
+            Return only the most recent nomination cycle available for each
+            component point and flow date. This operation is performed
+            client-side after data retrieval. For accurate results across the
+            full dataset, `paginate=True` and `data_active=True` is required.
+        filter_exp: Optional[str]
+            Additional filter expression.
+
+        sort: Optional[str]
+            Sort expression.
+
+        page: int
+            Page number.
+
+        page_size: int
+            Number of rows per page.
+
+        raw: bool
+            Return raw response object instead of DataFrame.
+
+        paginate: bool
+            Automatically retrieve all pages.
+
+        Returns
+        -------
+        Union[DataFrame, Response]
+            Historical pipeline flow records matching the supplied filters.
         """
+
+        if best_available:
+            if not paginate:
+                raise ValueError(
+                    "best_available=True requires paginate=True because the "
+                    "best available calculation is performed across the full result set."
+                )
+
+            if data_active is not True:
+                raise ValueError(
+                    "best_available=True requires data_active=True."
+                )
+
 
         filter_params: List[str] = []
         filter_params.append(list_to_filter("day", day))
         filter_params.append(list_to_filter("year", year))
         filter_params.append(list_to_filter("month", month))
         filter_params.append(list_to_filter("pipelineId", pipeline_id))
-        filter_params.append(list_to_filter("componentId", component_id))
+        filter_params.append(list_to_filter("componentPointId", component_point_id))
         filter_params.append(list_to_filter("queueId", queue_id))
         filter_params.append(list_to_filter("nominationCycle", nomination_cycle))
         filter_params.append(list_to_filter("locationType", location_type))
@@ -1261,6 +1599,10 @@ class AmericasGas:
             raw=raw,
             paginate=paginate,
         )
+
+        if best_available and isinstance(response, pd.DataFrame):
+            response = self._filter_best_available_pipeline_flows(response)
+
         return response
 
     def get_modeled_demand_actual(
@@ -8416,6 +8758,55 @@ class AmericasGas:
         )
         return response
 
+    @staticmethod
+    def _filter_best_available_pipeline_flows(df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Keep only the latest nomination cycle available per
+        pipelineId + componentPointId + flowDate.
+
+        Cycle order:
+            T < E < I1 < I2 < I3
+        """
+        required_cols = {
+            "pipelineId",
+            "componentPointId",
+            "flowDate",
+            "nominationCycle",
+        }
+
+        if not required_cols.issubset(df.columns):
+            return df
+
+        cycle_rank = {
+            "t": 1,
+            "e": 2,
+            "i1": 3,
+            "i2": 4,
+            "i3": 5,
+        }
+
+        out = df.copy()
+
+        out["_cycle_rank"] = (
+            out["nominationCycle"]
+            .astype(str)
+            .str.lower()
+            .map(cycle_rank)
+        )
+
+        idx = (
+            out.groupby(
+                ["pipelineId", "componentPointId", "flowDate"],
+                dropna=False,
+            )["_cycle_rank"]
+            .idxmax()
+        )
+
+        return (
+            out.loc[idx]
+            .drop(columns="_cycle_rank")
+            .reset_index(drop=True)
+        )
 
     @staticmethod
     def _convert_to_df(resp: Response) -> pd.DataFrame:
