@@ -115,6 +115,7 @@ class MarketData:
             cols = ["symbol", "description"]
             df: pd.DataFrame = df[cols + [x for x in df.columns if x not in cols]]  # type: ignore
 
+        df._preview_rows = 100  # prints a subset when in agent mode
         return df
 
     @staticmethod
@@ -554,6 +555,7 @@ class MarketData:
         delivery_region_basis: Optional[Union[list[str], "Series[str]", str]] = None,
         curve_code: Optional[Union[list[str], "Series[str]", str]] = None,
         mdc: Optional[Union[list[str], "Series[str]", str]] = None,
+        quotation_style: Optional[Union[list[str], "Series[str]", str]] = None,
         assessment_frequency: Optional[
             Union[
                 list[str],
@@ -568,6 +570,7 @@ class MarketData:
         modified_date_lte: Optional[date] = None,
         modified_date_gt: Optional[date] = None,
         modified_date_gte: Optional[date] = None,
+        benchmark: Optional[bool] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 1000,
@@ -597,6 +600,8 @@ class MarketData:
             filter by curve code, by default None
         mdc : Optional[Union[list[str], Series[str], str]], optional
             filter by Market Data Category, by default None
+        quotation_style: Optional[Union[list[str], Series[str], str]], optional
+            filter by Quotation Style, by default None
         assessment_frequency: Optional[Union[list[str], list[AssessmentFrequency], Series[str], str, AssessmentFrequency]], optional
             filter by Assessment Frequency, by default None
         modified_date : Optional[date], optional
@@ -609,6 +614,8 @@ class MarketData:
             filter by ``modified_date > x``, by default None
         modified_date_gte : Optional[date], optional
             filter by ``modified_date >= x``, by default None
+        benchmark : Optional[bool], optional,
+            filter by benchmark flag, by default None
         filter_exp : Optional[str], optional
             pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
         page : int, optional
@@ -653,6 +660,7 @@ class MarketData:
         filter_params.append(list_to_filter("curve_code", curve_code))
         filter_params.append(list_to_filter("symbol", symbol))
         filter_params.append(list_to_filter("mdc", mdc))
+        filter_params.append(list_to_filter("quotation_style", quotation_style))
         filter_params.append(
             list_to_filter("assessment_frequency", assessment_frequency)
         )
@@ -666,6 +674,9 @@ class MarketData:
             filter_params.append(f'modified_date < "{modified_date_lt}"')
         if modified_date_lte != None:
             filter_params.append(f'modified_date <= "{modified_date_lte}"')
+
+        if benchmark is True:
+            filter_params.append('benchmark: "benchmark"')
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
@@ -719,7 +730,7 @@ class MarketData:
             raw=raw,
             paginate_fn=_nop_paginate,
         )
-    
+
     def get_corrections_by_symbol(
         self,
         *,
@@ -850,7 +861,7 @@ class MarketData:
             paginate=paginate,
             raw=raw,
         )
-    
+
     def get_corrections_by_symbol_bate(
         self,
         *,
@@ -870,7 +881,7 @@ class MarketData:
         page_size: int = 10000,
         paginate: bool = False,
         raw: bool = False,
-        ) -> Union[pd.DataFrame, Response]:
+    ) -> Union[pd.DataFrame, Response]:
         """
         Fetch Correction data by Symbol-Bate combination from the Market Data API.
 
@@ -996,7 +1007,7 @@ class MarketData:
         page_size: int = 10000,
         paginate: bool = False,
         raw: bool = False,
-        ) -> Union[pd.DataFrame, Response]:
+    ) -> Union[pd.DataFrame, Response]:
         """
         Fetch Correction data by MDC from the Market Data API.
 

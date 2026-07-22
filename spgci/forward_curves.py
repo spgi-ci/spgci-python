@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from spgci.api_client import Paginator, get_data
+from spgci.config import is_agent
 from typing import List, Union, Optional
 from datetime import date
 from requests import Response
@@ -126,6 +127,7 @@ class ForwardCurves:
         derivative_maturity_frequency: Optional[
             Union["list[str]", "list[MatFrequency]", "Series[str]", str, MatFrequency]
         ] = None,
+        derivative_position: Optional[Union["list[int]", "Series[int]", int]] = None,
         assess_date: Optional[date] = None,
         assess_date_gt: Optional[date] = None,
         assess_date_gte: Optional[date] = None,
@@ -148,6 +150,8 @@ class ForwardCurves:
             fitler by curve code, by default None
         derivative_maturity_frequency : Optional[ Union[list[str], list[MatFrequency], Series[str], str, MatFrequency] ], optional
             fitler by maturity frequency, by default None
+        derivative_position : Optional[Union[list[int], Series[int], int]], optional
+            filter by derivative position, by default None
         assess_date : Optional[date], optional
             filter by ``assessDate = x`` , by default None
         assess_date_lt : Optional[date], optional
@@ -201,6 +205,7 @@ class ForwardCurves:
                 "derivative_maturity_frequency", derivative_maturity_frequency
             )
         )
+        filter_params.append(list_to_filter("derivative_position", derivative_position))
 
         if assess_date:
             filter_params.append(f'assessDate: "{assess_date}"')
@@ -337,6 +342,9 @@ class ForwardCurves:
         filter_params.append(list_to_filter("curve_code", curve_code))
         filter_params.append(list_to_filter("curve_type", curve_type))
         filter_params.append(list_to_filter("mdc", mdc))
+
+        if is_agent:
+            filter_params.append('mdc not in ("PMC", "FMC", "PDC", "FDC")')
 
         filter_params = [fp for fp in filter_params if fp != ""]
 

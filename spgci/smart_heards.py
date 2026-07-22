@@ -19,11 +19,13 @@ from spgci.api_client import get_data, Paginator
 from spgci.utilities import list_to_filter, convert_date_to_filter_exp
 from pandas import Series, DataFrame, to_datetime  # type: ignore
 from datetime import date
+from functools import partial
+import html
 
 
-class StructuredHeards:
+class SmartHeards:
     """
-    StructuredHeards Data
+    Smart Heards
 
     Includes
     --------
@@ -33,7 +35,7 @@ class StructuredHeards:
 
     """
 
-    _endpoint = "structured-heards/v1/"
+    _endpoint = "smart-heards/v1/"
 
     @staticmethod
     def _paginate(resp: Response) -> Paginator:
@@ -46,7 +48,7 @@ class StructuredHeards:
         return Paginator(True, "page", total_pages)
 
     @staticmethod
-    def _convert_to_df(resp: Response) -> DataFrame:
+    def _convert_to_df(resp: Response, strip_html: bool = False) -> DataFrame:
         j = resp.json()
         df = DataFrame(j["results"])
 
@@ -55,6 +57,12 @@ class StructuredHeards:
                 df["updatedDate"] = to_datetime(df["updatedDate"], format="ISO8601")
             if "rtpTimestamp" in df.columns:
                 df["rtpTimestamp"] = to_datetime(df["rtpTimestamp"], format="ISO8601")
+
+        if strip_html:
+            if "body" in df.columns:
+                df["body"] = df["body"].str.replace(r"<.*?>", " ", regex=True)  # type: ignore
+                df["body"] = df["body"].apply(lambda s: html.unescape(str(s)).replace("\n", " "))  # type: ignore
+
         return df
 
     @staticmethod
@@ -88,6 +96,7 @@ class StructuredHeards:
         rtp_timestamp_lte: Optional[date] = None,
         rtp_timestamp_gt: Optional[date] = None,
         rtp_timestamp_gte: Optional[date] = None,
+        strip_html: bool = False,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 1000,
@@ -125,8 +134,8 @@ class StructuredHeards:
             filter by ``rtpTimestamp > x``, by default None
         rtp_timestamp_gte : Optional[date], optional
             filter by ``rtpTimestamp >= x``, by default None
-        raw : bool, optional
-            return a ``requests.Response`` instead of a ``DataFrame``, by default False
+        strip_html : bool, optional
+            remove html tags, encoding and ``\n`` from ``headline``, ``body`` and ``lead`` , by default False
         filter_exp: string
             pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
         page : int, optional
@@ -135,6 +144,8 @@ class StructuredHeards:
             pass-thru ``pageSize`` query param to request a particular page size, by default 1000
         paginate : bool, optional
             whether to auto-paginate the response, by default False
+        raw : bool, optional
+            return a ``requests.Response`` instead of a ``DataFrame``, by default False
 
         Returns
         -------
@@ -147,7 +158,7 @@ class StructuredHeards:
         Examples
         --------
         **Simple**
-        >>> ci.StructuredHeards().get_heards(market="Americas crude oil")
+        >>> ci.SmartHeards().get_heards(market="Americas crude oil")
         """
         endpoint_path = "data"
         filter_params: List[str] = []
@@ -186,7 +197,7 @@ class StructuredHeards:
         response = get_data(
             path=f"{self._endpoint}{endpoint_path}",
             params=params,
-            df_fn=self._convert_to_df,
+            df_fn=partial(self._convert_to_df, strip_html=strip_html),
             paginate_fn=self._paginate,
             raw=raw,
             paginate=paginate,
@@ -197,8 +208,8 @@ class StructuredHeards:
         self,
         *,
         market: Optional[Union[list[str], "Series[str]", str]] = None,
-        attributes: Optional[Union[list[str], "Series[str]", str]] = None,
         filter_exp: Optional[str] = None,
+        field: str = "market",
         page: int = 1,
         page_size: int = 1000,
         raw: bool = False,
@@ -211,12 +222,12 @@ class StructuredHeards:
         ----------
         market : Optional[Union[list[str], Series[str], str]], optional
             filter by commodity_name, by default None
-        attributes : Optional[Union[list[str], Series[str], str]], optional
-            filter by train_name, by default None
         raw : bool, optional
             return a ``requests.Response`` instead of a ``DataFrame``, by default False
         filter_exp: string
             pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
+        field : Optional[str], optional
+            pass-thru ``field`` query param to select which columns to return, by default "market"
         page : int, optional
             pass-thru ``page`` query param to request a particular page of results, by default 1
         page_size : int, optional
@@ -235,12 +246,11 @@ class StructuredHeards:
         Examples
         --------
         **Simple**
-        >>> ci.StructuredHeards().get_markets()
+        >>> ci.SmartHeards().get_markets()
         """
         endpoint_path = "markets"
         filter_params: List[str] = []
         filter_params.append(list_to_filter("market", market))
-        filter_params.append(list_to_filter("attributes", attributes))
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
@@ -249,7 +259,12 @@ class StructuredHeards:
         elif len(filter_params) > 0:
             filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
 
-        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+        params = {
+            "page": page,
+            "pageSize": page_size,
+            "filter": filter_exp,
+            "field": field,
+        }
 
         response = get_data(
             path=f"{self._endpoint}{endpoint_path}",

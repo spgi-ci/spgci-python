@@ -46,6 +46,11 @@ from .oil_ngl_analytics import OilNGLAnalytics
 from .integrated_energy_scenarios import IntegratedEnergyScenarios
 from .agriculture_and_food import AgriAndFood
 from .americas_gas import AmericasGas
+from .eu_power import EUPower
+from .gas_long_term_supply_and_demand import GasLongTermSupplyAndDemand
+from .scenario_manager import ScenarioManager
+from .utilities import parallel
+from .smart_heards import SmartHeards
 
 
 from .config import username, password, set_credentials, version
@@ -79,4 +84,9 @@ __all__ = [
     "IntegratedEnergyScenarios",
     "AgriAndFood",
     "AmericasGas",
+    "EUPower",
+    "GasLongTermSupplyAndDemand",
+    "ScenarioManager",
+    "SmartHeards",
+    "parallel",
 ]
