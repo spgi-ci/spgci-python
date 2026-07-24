@@ -9,9 +9,8 @@ class StructuredHeardsTest(unittest.TestCase):
 
     @pytest.mark.integtest
     def test_heards_data_Markets(self):
-        sh = self.sh.get_data(
-            page_size=10,
-            filter_exp='Market IN ("US DDGS")',
+        sh = self.sh.get_heards(
+            page_size=10,market="Asia crude oil"
         )
         self.assertGreater(len(sh), 1)  # type: ignore
 
@@ -19,23 +18,24 @@ class StructuredHeardsTest(unittest.TestCase):
     def test_heards_markets(self):
         sh = self.sh.get_markets(
             page_size=10,
-            filter_exp='Market IN ("Americas crude oil")',
+            filter_exp='Market IN ("CWRS wheat")',
         )
         self.assertEqual(len(sh), 1)  # type: ignore
 
+
     @pytest.mark.integtest
     def test_heards_markets_data(self):
-        sh = self.sh.get_data(
-            page_size=10,
-            filter_exp='Market IN ("Americas crude oil") and rtpTimestamp: "2024-05-29T14:14:09.985Z"',
+        sh = self.sh.get_heards(
+            page_size=10,market="Americas crude oil",
+            filter_exp='sector In ("Crude Oil Plus")',
         )
-        self.assertEqual(len(sh), 3)  # type: ignore
+        self.assertGreater(len(sh), 3)  # type: ignore
 
     @pytest.mark.integtest
     def test_heards_markets_data_heard_type(self):
-        sh = self.sh.get_data(
-            page_size=10,
-            filter_exp='Market IN ("Americas crude oil") and heard_type: "Trade"',
+        sh = self.sh.get_heards(
+            page_size=10,market="Americas crude oil",
+            filter_exp='heard_type: "Trade"',
         )
         self.assertGreater(len(sh), 1)  # type: ignore
 
