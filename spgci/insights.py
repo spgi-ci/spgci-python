@@ -679,14 +679,14 @@ class Insights:
         Examples
         --------
         **Free text search**
-        >>> ci.Insights().get_top_news(q="Suez")
+        >>> ci.Insights().get_top_news(q="Rice")
 
         **Stripping HTML Tags**
-        >>> ci.Insights().get_top_news(q="Suez", strip_html=True)
+        >>> ci.Insights().get_top_news(q="Rice", strip_html=True)
 
         **Using List**
         >>> from datetime import datetime
-        >>> ci.Insights().get_top_news(geography=["Middle East", "Asia"], updated_date_gte=datetime(2023,3,1))
+        >>> ci.Insights().get_top_news(geography=["Oman", "India"], updated_date_gte=datetime(2026,7,1))
 
         **Using Enum**
         >>> ci.Insights().get_top_news(content_type=[Insights.ContentType.News, Insights.ContentType.MarketCommentary])

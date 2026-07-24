@@ -40,7 +40,7 @@ class InsightsTest(unittest.TestCase):
 
     @pytest.mark.integtest
     def test_simple_top_news(self):
-        df = cast(DataFrame, self.ni.get_top_news(q="Suez"))
+        df = cast(DataFrame, self.ni.get_top_news(q="Rice"))
         self.assertGreater(len(df), 0)
 
     @pytest.mark.integtest
@@ -58,12 +58,12 @@ class InsightsTest(unittest.TestCase):
     def test_dates(self):
         df = cast(
             DataFrame,
-            self.ni.get_stories(q="Suez", updated_date_gt=datetime(2023, 1, 1)),
+            self.ni.get_stories(q="Suez", updated_date_gt=datetime(2026, 7, 21)),
         )
         df2 = cast(
             DataFrame,
             self.ni.get_subscriber_notes(
-                q="Suez", updated_date_gt=datetime(2023, 1, 1)
+                q="Emissions", updated_date_gt=datetime(2026, 7, 16)
             ),
         )
         self.assertGreater(len(df), 0)
@@ -74,15 +74,15 @@ class InsightsTest(unittest.TestCase):
         df = cast(
             DataFrame,
             self.ni.get_stories(
-                q="Suez",
-                content_type=[self.ni.ContentType.Analytics, self.ni.ContentType.News],
-                commodity="Crude",
+                q="Emissions",
+                content_type=[self.ni.ContentType.Briefing, self.ni.ContentType.News],
+                commodity="Polymers",
             ),
         )
         df2 = cast(
             DataFrame,
             self.ni.get_subscriber_notes(
-                q="Suez",
+                q="Emissions",
                 content_type=[
                     self.ni.SubscriberNotesContentType.DataCorrection,
                     self.ni.SubscriberNotesContentType.MethodologyNote,
@@ -97,17 +97,17 @@ class InsightsTest(unittest.TestCase):
         df = cast(
             DataFrame,
             self.ni.get_stories(
-                q="suez canal march",
-                updated_date_gt=datetime(2023, 3, 1),
-                updated_date_lt=datetime(2023, 3, 20),
+                q="Emissions",
+                updated_date_gt=datetime(2026, 7, 11),
+                updated_date_lt=datetime(2026, 7, 16),
             ),
         )
         df_paged = cast(
             DataFrame,
             self.ni.get_stories(
-                q="suez canal march",
-                updated_date_gt=datetime(2023, 3, 1),
-                updated_date_lt=datetime(2023, 3, 20),
+                q="Emissions",
+                updated_date_gt=datetime(2026, 7, 11),
+                updated_date_lt=datetime(2026, 7, 16),
                 paginate=True,
                 page_size=2,
             ),
@@ -115,9 +115,9 @@ class InsightsTest(unittest.TestCase):
         df_len = cast(
             DataFrame,
             self.ni.get_stories(
-                q="suez canal march",
-                updated_date_gt=datetime(2023, 3, 1),
-                updated_date_lt=datetime(2023, 3, 20),
+                q="Emissions",
+                updated_date_gt=datetime(2026, 7, 11),
+                updated_date_lt=datetime(2026, 7, 16),
                 paginate=False,
                 page_size=2,
             ),
@@ -131,18 +131,13 @@ class InsightsTest(unittest.TestCase):
             DataFrame,
             self.ni.get_heards(
                 q="Suez",
-                content_type=[
-                    self.ni.HeardsContentType.Tenders,
-                    self.ni.HeardsContentType.AssessmentSummary,
-                ],
                 commodity="Crude oil",
             ),
         )
         df2 = cast(
             DataFrame,
             self.ni.get_heards(
-                page_number=["0100", "0200", "0300"],
-                geography="Middle East",
+                geography="Bulgaria",
                 strip_html=True,
             ),
         )
