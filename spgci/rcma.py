@@ -6,14 +6,16 @@ from spgci.utilities import list_to_filter
 from pandas import DataFrame, Series
 from datetime import date, datetime
 import pandas as pd
+import re
 
+_VALID_NAME = re.compile(r"^[A-Za-z0-9 ]+$")
 
 class RcmaCase:
     """
     A single editable Scenario Manager case backed by ONE flat dataframe.
 
     The dataframe is the same shape returned by
-    `Rcma.getscenario_manager_default_data`, i.e. columns:
+    `Rcma.get_scenario_manager_default_data`, i.e. columns:
         - category      (e.g. "percentage", "crudePricing", "productPrice", ...)
         - asset         (e.g. "Wti", "Diesel", "aps", ...)
         - defaultValue
@@ -35,7 +37,7 @@ class RcmaCase:
 
     Examples
     --------
-    >>> defaults = rcma.getscenario_manager_default_data(
+    >>> defaults = rcma.get_scenario_manager_default_data(
     ...     refineryid=1015, period=date(2026, 1, 1), paginate=True
     ... )
     >>> case1 = RcmaCase(defaults, name="Case 1")
@@ -48,9 +50,15 @@ class RcmaCase:
     """
 
     def __init__(self, df: DataFrame, name: str = "Case 1", enabled: bool = True):
-        self.df = df.copy()
-        self.name = name
-        self.enabled = enabled
+      if not isinstance(name, str) or not _VALID_NAME.fullmatch(name):
+          bad = sorted(set(re.findall(r"[^A-Za-z0-9 ]", name))) if isinstance(name, str) else []
+          raise ValueError(
+              f"Invalid case name {name!r}: may only contain letters, numbers, "
+              f"and spaces. Offending character(s): {bad}"
+          )
+      self.df = df.copy()
+      self.name = name
+      self.enabled = enabled
 
     def copy(self, name: Optional[str] = None) -> "RcmaCase":
         """Clone this case (handy for building Case 2 off Case 1)."""
@@ -162,43 +170,9 @@ class Rcma:
 
     def get_scenario_manager_output(
         self,
-        *,
         scenario_id: Union[list[str], Series[str], str],
-        execution_id: Optional[Union[list[str], Series[str], str]] = None,
-        case_name: Optional[Union[list[str], Series[str], str]] = None,
-        price_dataset: Optional[Union[list[str], Series[str], str]] = None,
-        country: Optional[Union[list[str], Series[str], str]] = None,
-        city: Optional[Union[list[str], Series[str], str]] = None,
-        company: Optional[Union[list[str], Series[str], str]] = None,
-        refinery_name: Optional[Union[list[str], Series[str], str]] = None,
-        yield_date: Optional[date] = None,
-        yield_date_lt: Optional[date] = None,
-        yield_date_lte: Optional[date] = None,
-        yield_date_gt: Optional[date] = None,
-        yield_date_gte: Optional[date] = None,
-        metric: Optional[Union[list[str], Series[str], str]] = None,
-        metric_value: Optional[float] = None,
-        metric_value_lt: Optional[float] = None,
-        metric_value_lte: Optional[float] = None,
-        metric_value_gt: Optional[float] = None,
-        metric_value_gte: Optional[float] = None,
-        currency: Optional[Union[list[str], Series[str], str]] = None,
-        uom: Optional[Union[list[str], Series[str], str]] = None,
-        region: Optional[Union[list[str], Series[str], str]] = None,
-        category: Optional[Union[list[str], Series[str], str]] = None,
-        subcategory: Optional[Union[list[str], Series[str], str]] = None,
-        is_active: Optional[Union[list[bool], Series[bool], bool]] = None,
-        valid_from: Optional[datetime] = None,
-        valid_from_lt: Optional[datetime] = None,
-        valid_from_lte: Optional[datetime] = None,
-        valid_from_gt: Optional[datetime] = None,
-        valid_from_gte: Optional[datetime] = None,
-        valid_to: Optional[datetime] = None,
-        valid_to_lt: Optional[datetime] = None,
-        valid_to_lte: Optional[datetime] = None,
-        valid_to_gt: Optional[datetime] = None,
-        valid_to_gte: Optional[datetime] = None,
-        created_user: Optional[Union[list[str], Series[str], str]] = None,
+        execution_id: Union[list[str], Series[str], str],
+        *,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 1000,
@@ -215,74 +189,6 @@ class Rcma:
              unique ID for each scenario
          execution_id: Union[list[str], Series[str], str]
              unique ID for each execution
-         case_name: Optional[Union[list[str], Series[str], str]]
-             base case executed by  CI research team and the different case name executed by the clients, by default None
-         price_dataset: Optional[Union[list[str], Series[str], str]]
-             Different Price data for bench mark, by default None
-         country: Optional[Union[list[str], Series[str], str]]
-             Country where the refinery is located, by default None
-         city: Optional[Union[list[str], Series[str], str]]
-             city where the refinery is located, by default None
-         company: Optional[Union[list[str], Series[str], str]]
-             Name of the company owning the Refinery unit, by default None
-         refinery_name: Optional[Union[list[str], Series[str], str]]
-             Name of the Refinery unit, by default None
-         yield_date: Optional[date], optional
-             Quarterly date, by default None
-         yield_date_gt: Optional[date], optional
-             filter by `yield_date > x`, by default None
-         yield_date_gte: Optional[date], optional
-             filter by `yield_date >= x`, by default None
-         yield_date_lt: Optional[date], optional
-             filter by `yield_date < x`, by default None
-         yield_date_lte: Optional[date], optional
-             filter by `yield_date <= x`, by default None
-         metric: Optional[Union[list[str], Series[str], str]]
-             cost segment details, by default None
-         metric_value: Optional[float], optional
-             value for the metric, by default None
-         metric_value_gt: Optional[float], optional
-             filter by `metric_value > x`, by default None
-         metric_value_gte: Optional[float], optional
-             filter by `metric_value >= x`, by default None
-         metric_value_lt: Optional[float], optional
-             filter by `metric_value < x`, by default None
-         metric_value_lte: Optional[float], optional
-             filter by `metric_value <= x`, by default None
-         currency: Optional[Union[list[str], Series[str], str]]
-             currency, by default None
-         uom: Optional[Union[list[str], Series[str], str]]
-             unit of metrics, by default None
-         region: Optional[Union[list[str], Series[str], str]]
-             Name for Region (geography), by default None
-         category: Optional[Union[list[str], Series[str], str]]
-             whether its cost/margin/yield, by default None
-         subcategory: Optional[Union[list[str], Series[str], str]]
-             least granularity of cost/margin/yield, by default None
-         is_active: Optional[Union[list[bool], Series[bool], bool]]
-             Indicates current record or hitorical record, by default None
-         valid_from: Optional[datetime], optional
-             the record is active from this date time, by default None
-         valid_from_gt: Optional[datetime], optional
-             filter by `valid_from > x`, by default None
-         valid_from_gte: Optional[datetime], optional
-             filter by `valid_from >= x`, by default None
-         valid_from_lt: Optional[datetime], optional
-             filter by `valid_from < x`, by default None
-         valid_from_lte: Optional[datetime], optional
-             filter by `valid_from <= x`, by default None
-         valid_to: Optional[datetime], optional
-             the record is active till this date time , by default None
-         valid_to_gt: Optional[datetime], optional
-             filter by `valid_to > x`, by default None
-         valid_to_gte: Optional[datetime], optional
-             filter by `valid_to >= x`, by default None
-         valid_to_lt: Optional[datetime], optional
-             filter by `valid_to < x`, by default None
-         valid_to_lte: Optional[datetime], optional
-             filter by `valid_to <= x`, by default None
-         created_user: Optional[Union[list[str], Series[str], str]]
-             User who has executed the Scenario cases, by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
          page_size: int = 1000,
@@ -292,56 +198,6 @@ class Rcma:
         """
 
         filter_params: List[str] = []
-        filter_params.append(list_to_filter("caseName", case_name))
-        filter_params.append(list_to_filter("priceDataset", price_dataset))
-        filter_params.append(list_to_filter("country", country))
-        filter_params.append(list_to_filter("city", city))
-        filter_params.append(list_to_filter("company", company))
-        filter_params.append(list_to_filter("refineryName", refinery_name))
-        filter_params.append(list_to_filter("yieldDate", yield_date))
-        if yield_date_gt is not None:
-            filter_params.append(f'yieldDate > "{yield_date_gt}"')
-        if yield_date_gte is not None:
-            filter_params.append(f'yieldDate >= "{yield_date_gte}"')
-        if yield_date_lt is not None:
-            filter_params.append(f'yieldDate < "{yield_date_lt}"')
-        if yield_date_lte is not None:
-            filter_params.append(f'yieldDate <= "{yield_date_lte}"')
-        filter_params.append(list_to_filter("metric", metric))
-        filter_params.append(list_to_filter("metricValue", metric_value))
-        if metric_value_gt is not None:
-            filter_params.append(f'metricValue > "{metric_value_gt}"')
-        if metric_value_gte is not None:
-            filter_params.append(f'metricValue >= "{metric_value_gte}"')
-        if metric_value_lt is not None:
-            filter_params.append(f'metricValue < "{metric_value_lt}"')
-        if metric_value_lte is not None:
-            filter_params.append(f'metricValue <= "{metric_value_lte}"')
-        filter_params.append(list_to_filter("currency", currency))
-        filter_params.append(list_to_filter("uom", uom))
-        filter_params.append(list_to_filter("region", region))
-        filter_params.append(list_to_filter("category", category))
-        filter_params.append(list_to_filter("subcategory", subcategory))
-        filter_params.append(list_to_filter("isActive", is_active))
-        filter_params.append(list_to_filter("validFrom", valid_from))
-        if valid_from_gt is not None:
-            filter_params.append(f'validFrom > "{valid_from_gt}"')
-        if valid_from_gte is not None:
-            filter_params.append(f'validFrom >= "{valid_from_gte}"')
-        if valid_from_lt is not None:
-            filter_params.append(f'validFrom < "{valid_from_lt}"')
-        if valid_from_lte is not None:
-            filter_params.append(f'validFrom <= "{valid_from_lte}"')
-        filter_params.append(list_to_filter("validTo", valid_to))
-        if valid_to_gt is not None:
-            filter_params.append(f'validTo > "{valid_to_gt}"')
-        if valid_to_gte is not None:
-            filter_params.append(f'validTo >= "{valid_to_gte}"')
-        if valid_to_lt is not None:
-            filter_params.append(f'validTo < "{valid_to_lt}"')
-        if valid_to_lte is not None:
-            filter_params.append(f'validTo <= "{valid_to_lte}"')
-        filter_params.append(list_to_filter("createdUser", created_user))
         filter_params.append(list_to_filter("scenarioId", scenario_id))
         filter_params.append(list_to_filter("executionId", execution_id))
 
@@ -368,14 +224,6 @@ class Rcma:
         refineryid: int,
         period: date,
         *,
-        period_lt: Optional[date] = None,
-        period_lte: Optional[date] = None,
-        period_gt: Optional[date] = None,
-        period_gte: Optional[date] = None,
-        refineryid_lt: Optional[int] = None,
-        refineryid_lte: Optional[int] = None,
-        refineryid_gt: Optional[int] = None,
-        refineryid_gte: Optional[int] = None,
         category: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
@@ -391,24 +239,6 @@ class Rcma:
 
          period: date
              first day of the quarter
-         period_gt: Optional[date], optional
-             filter by `period > x`, by default None
-         period_gte: Optional[date], optional
-             filter by `period >= x`, by default None
-         period_lt: Optional[date], optional
-             filter by `period < x`, by default None
-         period_lte: Optional[date], optional
-             filter by `period <= x`, by default None
-         refineryid: int
-             Id for each refinery name
-         refineryid_gt: Optional[int], optional
-             filter by `refineryid > x`, by default None
-         refineryid_gte: Optional[int], optional
-             filter by `refineryid >= x`, by default None
-         refineryid_lt: Optional[int], optional
-             filter by `refineryid < x`, by default None
-         refineryid_lte: Optional[int], optional
-             filter by `refineryid <= x`, by default None
          category: Optional[Union[list[str], Series[str], str]]
              representing group of assets, by default None
          filter_exp: Optional[str] = None,
@@ -421,23 +251,8 @@ class Rcma:
 
         filter_params: List[str] = []
         filter_params.append(f"period: {period}")
-        if period_gt is not None:
-            filter_params.append(f'period > "{period_gt}"')
-        if period_gte is not None:
-            filter_params.append(f'period >= "{period_gte}"')
-        if period_lt is not None:
-            filter_params.append(f'period < "{period_lt}"')
-        if period_lte is not None:
-            filter_params.append(f'period <= "{period_lte}"')
+        
         filter_params.append(f"refineryid: {refineryid}")
-        if refineryid_gt is not None:
-            filter_params.append(f'refineryid > "{refineryid_gt}"')
-        if refineryid_gte is not None:
-            filter_params.append(f'refineryid >= "{refineryid_gte}"')
-        if refineryid_lt is not None:
-            filter_params.append(f'refineryid < "{refineryid_lt}"')
-        if refineryid_lte is not None:
-            filter_params.append(f'refineryid <= "{refineryid_lte}"')
         filter_params.append(list_to_filter("category", category))
 
         filter_params = [fp for fp in filter_params if fp != ""]
@@ -611,8 +426,8 @@ class Rcma:
         Parameters
         ----------
         period : Union[date, datetime, str]
-            Scenario period. A `date`/`datetime` is formatted as MM/DD/YYYY to
-            match the UI payload (e.g. "01/01/2026"); a string is passed through.
+            Scenario period. A `date`/`datetime` is formatted as YYYY-MM-DD to
+            match the UI payload (e.g. "2026-01-01"); a string is passed through.
         region : str
             Region display name, e.g. "North America".
         refinery : str
@@ -668,7 +483,7 @@ class Rcma:
             "scenarioDefinitionId": scenario_definition_id,
             "name": name,
             "parameters": {
-                "period": self._format_scenario_period(period),
+                "period": period.strftime("%d/%m/%Y") if isinstance(period, (date, datetime)) else str(period),
                 "region": region,
                 "refinery": refinery,
                 "refineryId": refineryid,
@@ -806,11 +621,6 @@ class Rcma:
             if Rcma._num(value) > 0
         ]
 
-    @staticmethod
-    def _format_scenario_period(period: Union[date, datetime, str]) -> str:
-        if isinstance(period, (date, datetime)):
-            return period.strftime("%m/%d/%Y")
-        return str(period)
 
     @staticmethod
     def _convert_scenario_response_to_df(resp: Response) -> pd.DataFrame:
