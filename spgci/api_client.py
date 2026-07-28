@@ -236,7 +236,7 @@ def _post(
         else:
             raise DailyLimitError("Daily Rate Limit Reached")
 
-    if response.status_code != 200:
+    if response.status_code not in (200, 201):
         print(response.text)
         response.raise_for_status()
 
