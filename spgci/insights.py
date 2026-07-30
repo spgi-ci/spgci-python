@@ -42,7 +42,7 @@ class Insights:
    ``get_heards`` get heards, assessments summaries, market information summaries and tenders.\n
     ``get_subscriber_notes`` get subscriber notes.\n
     ``get_content`` get insights by ID.\n
-    ``get_packages`` get package content from the /v1/search/packages endpoint.\n
+    ``get_packages`` get package content from the /v2/search/packages endpoint.\n
 
     """
 
@@ -160,7 +160,7 @@ class Insights:
         strip_html: bool = False,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 100,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -239,7 +239,7 @@ class Insights:
         **Using Enum**
         >>> ci.Insights().get_heards(content_type=ci.Insights.HeardsContentType.Tenders)
         """
-        path = "/v1/search/heards"
+        path = "/v2/search/heards"
         filter_params: list[str] = []
 
         if updated_date_gt is not None:
@@ -275,6 +275,7 @@ class Insights:
             "pageSize": page_size,
             "q": q,
             "field": field,
+            "showAdditionalFields": "false"
         }
         return get_data(
             path=f"{self._path}{path}",
@@ -310,7 +311,7 @@ class Insights:
         strip_html: bool = False,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 100,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -388,7 +389,7 @@ class Insights:
         **Using Enum**
         >>> ci.Insights().get_latest_news(content_type=[Insights.ContentType.News, Insights.ContentType.MarketCommentary])
         """
-        path = "/v1/search/story/latest-news"
+        path = "/v2/search/story/latest-news"
         filter_params: list[str] = []
 
         if updated_date_gt is not None:
@@ -425,6 +426,7 @@ class Insights:
             "pageSize": page_size,
             "q": q,
             "field": field,
+            "showAdditionalFields": "false"
         }
         return get_data(
             path=f"{self._path}{path}",
@@ -460,7 +462,7 @@ class Insights:
         strip_html: bool = False,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 100,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -538,7 +540,7 @@ class Insights:
         **Using Enum**
         >>> ci.Insights().get_spotlights(content_type=[Insights.ContentType.News, Insights.ContentType.MarketCommentary])
         """
-        path = "/v1/search/story/spotlights"
+        path = "/v2/search/story/spotlights"
         filter_params: list[str] = []
 
         if updated_date_gt is not None:
@@ -575,6 +577,7 @@ class Insights:
             "pageSize": page_size,
             "q": q,
             "field": field,
+            "showAdditionalFields": "false"
         }
         return get_data(
             path=f"{self._path}{path}",
@@ -610,7 +613,7 @@ class Insights:
         strip_html: bool = False,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 100,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -676,19 +679,19 @@ class Insights:
         Examples
         --------
         **Free text search**
-        >>> ci.Insights().get_top_news(q="Suez")
+        >>> ci.Insights().get_top_news(q="Rice")
 
         **Stripping HTML Tags**
-        >>> ci.Insights().get_top_news(q="Suez", strip_html=True)
+        >>> ci.Insights().get_top_news(q="Rice", strip_html=True)
 
         **Using List**
         >>> from datetime import datetime
-        >>> ci.Insights().get_top_news(geography=["Middle East", "Asia"], updated_date_gte=datetime(2023,3,1))
+        >>> ci.Insights().get_top_news(geography=["Oman", "India"], updated_date_gte=datetime(2026,7,1))
 
         **Using Enum**
         >>> ci.Insights().get_top_news(content_type=[Insights.ContentType.News, Insights.ContentType.MarketCommentary])
         """
-        path = "/v1/search/story/top-news"
+        path = "/v2/search/story/top-news"
         filter_params: list[str] = []
 
         if updated_date_gt is not None:
@@ -725,6 +728,7 @@ class Insights:
             "pageSize": page_size,
             "q": q,
             "field": field,
+            "showAdditionalFields": "false"
         }
         return get_data(
             path=f"{self._path}{path}",
@@ -760,7 +764,7 @@ class Insights:
         strip_html: bool = False,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 100,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -838,7 +842,7 @@ class Insights:
         **Using Enum**
         >>> ci.Insights().get_stories(content_type=[Insights.ContentType.News, Insights.ContentType.MarketCommentary])
         """
-        path = "/v1/search/story"
+        path = "/v2/search/story"
         filter_params: list[str] = []
 
         if updated_date_gt is not None:
@@ -875,6 +879,7 @@ class Insights:
             "pageSize": page_size,
             "q": q,
             "field": field,
+            "showAdditionalFields": "false"
         }
         return get_data(
             path=f"{self._path}{path}",
@@ -916,7 +921,7 @@ class Insights:
         strip_html: bool = False,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 100,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -994,7 +999,7 @@ class Insights:
         **Using Enum**
         >>> ci.Insights().get_subscriber_notes(content_type=[ci.Insights.SubscriberNotesContentType.MethodologyNote, ci.Insights.SubscriberNotesContentType.MarketNotification])
         """
-        path = "/v1/search/subscriber-notes"
+        path = "/v2/search/subscriber-notes"
         filter_params: list[str] = []
 
         if updated_date_gt != None:
@@ -1031,6 +1036,7 @@ class Insights:
             "pageSize": page_size,
             "q": q,
             "field": field,
+            "showAdditionalFields": "false"
         }
         return get_data(
             path=f"{self._path}{path}",
@@ -1076,7 +1082,7 @@ class Insights:
         >>> ci.Insights().get_content(id="02ed2748-1262-45e1-ad97-9629e29e0274", download="my_report.pdf")
 
         """
-        path = f"/v1/content/{id}"
+        path = f"/v2/content/{id}"
 
         params = {}
         result = get_data(
@@ -1169,12 +1175,12 @@ class Insights:
         strip_html: bool = False,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 100,
         paginate: bool = False,
         raw: bool = False,
     ) -> Union[DataFrame, Response]:
         """
-        Fetch package content from the /v1/search/packages endpoint, showing the id and title
+        Fetch package content from the /v2/search/packages endpoint, showing the id and title
 
         Parameters
         ----------
@@ -1242,7 +1248,7 @@ class Insights:
         **Stripping HTML Tags**
         >>> ci.Insights().get_packages(q="energy", strip_html=True)
         """
-        path = "/v1/search/packages"
+        path = "/v2/search/packages"
         filter_params: list[str] = []
 
         if updated_date_gt is not None:
@@ -1280,6 +1286,7 @@ class Insights:
             "pageSize": page_size,
             "q": q,
             "field": field,
+            "showAdditionalFields": "false"
         }
         return get_data(
             path=f"{self._path}{path}",
