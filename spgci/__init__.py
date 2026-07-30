@@ -51,7 +51,7 @@ from .gas_long_term_supply_and_demand import GasLongTermSupplyAndDemand
 from .scenario_manager import ScenarioManager
 from .utilities import parallel
 from .smart_heards import SmartHeards
-from .rcma import Rcma
+from .rsm import Rsm
 
 
 from .config import username, password, set_credentials, version
@@ -90,5 +90,5 @@ __all__ = [
     "ScenarioManager",
     "SmartHeards",
     "parallel",
-    "Rcma"
+    "Rsm"
 ]

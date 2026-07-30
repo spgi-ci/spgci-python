@@ -104,8 +104,8 @@ class AgriAndFood:
         """
         dataset_to_path = {
             "cost-of-production": "analytics/agri-food/v1/cost-of-production",
-            "global-long-term-forecast": "analytics/agri-food/v1/global-long-term-forecast",
-            "price-purchase-forecast": "analytics/agri-food/v1/price-purchase-forecast",
+            "global-long-term-forecast": "analytics/agriculture-food/v1/global-long-term-forecast",
+            "price-purchase-forecast": "analytics/agriculture-food/v1/price-purchase-forecast",
         }
 
         if dataset not in dataset_to_path:
