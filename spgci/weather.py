@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from __future__ import annotations
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Literal
 from requests import Response
 from spgci.api_client import get_data
 from spgci.utilities import list_to_filter
@@ -24,6 +24,118 @@ import pandas as pd
 
 
 class Weather:
+    _weather_datasets = Literal["actual", "forecast"]
+
+    def get_unique_values(
+        self,
+        dataset: _weather_datasets,
+        columns: Optional[Union[list[str], str]],
+        filter_exp: Optional[str] = None,
+    ) -> DataFrame:
+        """
+        Get unique values for specified columns from a weather dataset.
+
+        Use this method to discover available values and valid combinations
+        before querying weather actuals or forecasts.
+
+        Parameters
+        ----------
+        dataset : Literal["actual", "forecast"]
+            Weather dataset from which to retrieve unique values.
+        columns : Optional[Union[list[str], str]]
+            Column or columns to group by, using API camelCase names.
+
+            Examples:
+            - ``"market"``
+            - ``["market", "city", "location"]``
+            - ``["market", "city", "recordedDate"]``
+        filter_exp : Optional[str], optional
+            Filter expression used to limit the returned combinations.
+
+        Returns
+        -------
+        DataFrame
+            Unique combinations of the requested columns.
+
+        Examples
+        --------
+        Get all available markets:
+
+        >>> markets = ci.Weather().get_unique_values("actual", "market")
+
+        Get cities and locations available within the United States:
+
+        >>> filter_exp = ci.utilities.build_filter_expression({
+        ...     "market": ["United States"]
+        ... })
+        >>> locations = ci.Weather().get_unique_values(
+        ...     "actual",
+        ...     ["market", "city", "location"],
+        ...     filter_exp=filter_exp,
+        ... )
+
+        Get available forecast combinations:
+
+        >>> combinations = ci.Weather().get_unique_values(
+        ...     "forecast",
+        ...     ["market", "city", "location", "recordedDate"],
+        ... )
+        """
+
+        dataset_to_path = {
+            "actual": "/weather/v1/actual",
+            "forecast": "/weather/v1/forecast",
+        }
+
+        if dataset not in dataset_to_path:
+            valid = "\n".join(dataset_to_path)
+            raise ValueError(
+                f"dataset '{dataset}' not found. Valid datasets:\n{valid}"
+            )
+
+        col_value = ", ".join(columns) if isinstance(columns, list) else columns or ""
+
+        params = {
+            "GroupBy": col_value,
+            "pageSize": 5000,
+        }
+
+        if filter_exp is not None:
+            params["filter"] = filter_exp
+
+        def to_df(resp: Response) -> DataFrame:
+            response_json = resp.json()
+            df = pd.json_normalize(response_json["aggResultValue"])
+
+            date_columns = [
+                "weatherDate",
+                "recordedDate",
+                "modifiedDate",
+            ]
+
+            for column in date_columns:
+                if column in df.columns:
+                    if parse(pd.__version__) >= parse("2"):
+                        df[column] = pd.to_datetime(
+                            df[column],
+                            format="ISO8601",
+                            errors="coerce",
+                        )
+                    else:
+                        df[column] = pd.to_datetime(
+                            df[column],
+                            errors="coerce",
+                        )
+
+            return df
+
+        return get_data(
+            path=dataset_to_path[dataset],
+            params=params,
+            df_fn=to_df,
+            paginate=True,
+        )
+
     def get_actual(
         self,
         market: Optional[Union[list[str], Series[str], str]] = None,
@@ -43,7 +155,7 @@ class Weather:
         modified_date_lt: Optional[datetime] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
@@ -174,7 +286,7 @@ class Weather:
         modified_date_lt: Optional[datetime] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
-        page_size: int = 1000,
+        page_size: int = 5000,
         raw: bool = False,
         paginate: bool = False,
     ) -> Union[DataFrame, Response]:
