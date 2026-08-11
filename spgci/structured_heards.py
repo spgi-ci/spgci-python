@@ -33,7 +33,7 @@ class StructuredHeards:
 
     """
 
-    _endpoint = "structured-heards/v1/"
+    _endpoint = "structured-heards/v2/"
 
     @staticmethod
     def _paginate(resp: Response) -> Paginator:
@@ -181,7 +181,7 @@ class StructuredHeards:
         elif len(filter_params) > 0:
             filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
 
-        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp, "showAdditionalFields": "false"}
 
         response = get_data(
             path=f"{self._endpoint}{endpoint_path}",
@@ -249,7 +249,7 @@ class StructuredHeards:
         elif len(filter_params) > 0:
             filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
 
-        params = {"page": page, "pageSize": page_size, "filter": filter_exp}
+        params = {"page": page, "pageSize": page_size, "filter": filter_exp, "showAdditionalFields": "false"}
 
         response = get_data(
             path=f"{self._endpoint}{endpoint_path}",
