@@ -52,6 +52,9 @@ from .scenario_manager import ScenarioManager
 from .utilities import parallel
 from .smart_heards import SmartHeards
 from .rsm import Rsm
+from .cet_economic_outlooks import CetEconomicOutlooks
+from .cet_market_outlooks import CetMarketOutlooks
+from .global_eac_analytics import GlobalEacAnalytics
 
 
 from .config import username, password, set_credentials, version
@@ -90,5 +93,8 @@ __all__ = [
     "ScenarioManager",
     "SmartHeards",
     "parallel",
-    "Rsm"
+    "Rsm",
+    "CetEconomicOutlooks",
+    "CetMarketOutlooks",
+    "GlobalEacAnalytics"
 ]
