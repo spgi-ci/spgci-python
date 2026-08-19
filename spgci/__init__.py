@@ -55,6 +55,7 @@ from .rsm import Rsm
 from .cet_economic_outlooks import CetEconomicOutlooks
 from .cet_market_outlooks import CetMarketOutlooks
 from .global_eac_analytics import GlobalEacAnalytics
+from .metals import Metals
 
 
 from .config import username, password, set_credentials, version
@@ -96,5 +97,6 @@ __all__ = [
     "Rsm",
     "CetEconomicOutlooks",
     "CetMarketOutlooks",
-    "GlobalEacAnalytics"
+    "GlobalEacAnalytics",
+    "Metals"
 ]
