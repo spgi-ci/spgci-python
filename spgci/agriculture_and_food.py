@@ -269,7 +269,7 @@ class AgriAndFood:
         self,
         *,
         commodity: Optional[Union[list[str], Series[str], str]] = None,
-        data_series_short: Optional[Union[list[str], Series[str], str]] = None,
+        short_label: Optional[Union[list[str], Series[str], str]] = None,
         reporting_region: Optional[Union[list[str], Series[str], str]] = None,
         concept: Optional[Union[list[str], Series[str], str]] = None,
         frequency: Optional[Union[list[str], Series[str], str]] = None,
@@ -281,17 +281,11 @@ class AgriAndFood:
         report_for_date_lte: Optional[date] = None,
         report_for_date_gt: Optional[date] = None,
         report_for_date_gte: Optional[date] = None,
-        historical_edge_date: Optional[date] = None,
-        historical_edge_date_lt: Optional[date] = None,
-        historical_edge_date_lte: Optional[date] = None,
-        historical_edge_date_gt: Optional[date] = None,
-        historical_edge_date_gte: Optional[date] = None,
         modified_date: Optional[datetime] = None,
         modified_date_lt: Optional[datetime] = None,
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
@@ -300,13 +294,12 @@ class AgriAndFood:
     ) -> Union[DataFrame, Response]:
         """
 
-
         Parameters
         ----------
 
          commodity: Optional[Union[list[str], Series[str], str]]
              The name of an economic good, usually a resource, being traded in the derivatives markets., by default None
-         data_series_short: Optional[Union[list[str], Series[str], str]]
+         short_label: Optional[Union[list[str], Series[str], str]]
              The brief description of the information represented in the data series., by default None
          reporting_region: Optional[Union[list[str], Series[str], str]]
              The geographic region for which the report or model output is reported., by default None
@@ -330,16 +323,6 @@ class AgriAndFood:
              filter by `report_for_date < x`, by default None
          report_for_date_lte: Optional[date], optional
              filter by `report_for_date <= x`, by default None
-         historical_edge_date: Optional[date], optional
-             The date on which the historical data ends and the forecast data begins., by default None
-         historical_edge_date_gt: Optional[date], optional
-             filter by `historical_edge_date > x`, by default None
-         historical_edge_date_gte: Optional[date], optional
-             filter by `historical_edge_date >= x`, by default None
-         historical_edge_date_lt: Optional[date], optional
-             filter by `historical_edge_date < x`, by default None
-         historical_edge_date_lte: Optional[date], optional
-             filter by `historical_edge_date <= x`, by default None
          modified_date: Optional[datetime], optional
              The date and time when a particular record was last updated or modified., by default None
          modified_date_gt: Optional[datetime], optional
@@ -350,8 +333,6 @@ class AgriAndFood:
              filter by `modified_date < x`, by default None
          modified_date_lte: Optional[datetime], optional
              filter by `modified_date <= x`, by default None
-         is_active: Optional[Union[list[str], Series[str], str]]
-             For point in time data, indicator if this record is currently an active record., by default None
          filter_exp: Optional[str] = None,
          page: int = 1,
          page_size: int = 5000,
@@ -362,7 +343,7 @@ class AgriAndFood:
 
         filter_params: List[str] = []
         filter_params.append(list_to_filter("commodity", commodity))
-        filter_params.append(list_to_filter("dataSeriesShort", data_series_short))
+        filter_params.append(list_to_filter("shortLabel", short_label))
         filter_params.append(list_to_filter("reportingRegion", reporting_region))
         filter_params.append(list_to_filter("concept", concept))
         filter_params.append(list_to_filter("frequency", frequency))
@@ -378,15 +359,6 @@ class AgriAndFood:
             filter_params.append(f'reportForDate < "{report_for_date_lt}"')
         if report_for_date_lte is not None:
             filter_params.append(f'reportForDate <= "{report_for_date_lte}"')
-        filter_params.append(list_to_filter("historicalEdgeDate", historical_edge_date))
-        if historical_edge_date_gt is not None:
-            filter_params.append(f'historicalEdgeDate > "{historical_edge_date_gt}"')
-        if historical_edge_date_gte is not None:
-            filter_params.append(f'historicalEdgeDate >= "{historical_edge_date_gte}"')
-        if historical_edge_date_lt is not None:
-            filter_params.append(f'historicalEdgeDate < "{historical_edge_date_lt}"')
-        if historical_edge_date_lte is not None:
-            filter_params.append(f'historicalEdgeDate <= "{historical_edge_date_lte}"')
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -396,7 +368,6 @@ class AgriAndFood:
             filter_params.append(f'modifiedDate < "{modified_date_lt}"')
         if modified_date_lte is not None:
             filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
-        filter_params.append(list_to_filter("isActive", is_active))
 
         filter_params = [fp for fp in filter_params if fp != ""]
 
@@ -420,10 +391,8 @@ class AgriAndFood:
         self,
         *,
         commodity: Optional[Union[list[str], Series[str], str]] = None,
-        data_series_short: Optional[Union[list[str], Series[str], str]] = None,
+        description: Optional[Union[list[str], Series[str], str]] = None,
         reporting_region: Optional[Union[list[str], Series[str], str]] = None,
-        concept: Optional[Union[list[str], Series[str], str]] = None,
-        actual_concept: Optional[Union[list[str], Series[str], str]] = None,
         uom: Optional[Union[list[str], Series[str], str]] = None,
         currency: Optional[Union[list[str], Series[str], str]] = None,
         frequency: Optional[Union[list[str], Series[str], str]] = None,
@@ -433,18 +402,12 @@ class AgriAndFood:
         report_for_date_gt: Optional[date] = None,
         report_for_date_gte: Optional[date] = None,
         source: Optional[Union[list[str], Series[str], str]] = None,
-        mnemonic: Optional[Union[list[str], Series[str], str]] = None,
-        historical_edge_date: Optional[date] = None,
-        historical_edge_date_lt: Optional[date] = None,
-        historical_edge_date_lte: Optional[date] = None,
-        historical_edge_date_gt: Optional[date] = None,
-        historical_edge_date_gte: Optional[date] = None,
         modified_date: Optional[datetime] = None,
         modified_date_lt: Optional[datetime] = None,
         modified_date_lte: Optional[datetime] = None,
         modified_date_gt: Optional[datetime] = None,
         modified_date_gte: Optional[datetime] = None,
-        is_active: Optional[Union[list[str], Series[str], str]] = None,
+        series_type: Optional[str] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 5000,
@@ -459,14 +422,10 @@ class AgriAndFood:
 
          commodity: Optional[Union[list[str], Series[str], str]]
              The name of an economic good, usually a resource, being traded in the derivatives markets., by default None
-         data_series_short: Optional[Union[list[str], Series[str], str]]
+         description: Optional[Union[list[str], Series[str], str]]
              The brief description of the information represented in the data series., by default None
          reporting_region: Optional[Union[list[str], Series[str], str]]
              The geographic region for which the report or model output is reported., by default None
-         concept: Optional[Union[list[str], Series[str], str]]
-             The logical grouping or classification of related data elements and entities that are relevant to a particular subject or topic., by default None
-         actual_concept: Optional[Union[list[str], Series[str], str]]
-             The subject area or concept originally reported for the data being reported., by default None
          uom: Optional[Union[list[str], Series[str], str]]
              Numeric value used to convert between units of measure of different fuel types., by default None
          currency: Optional[Union[list[str], Series[str], str]]
@@ -485,18 +444,6 @@ class AgriAndFood:
              filter by `report_for_date <= x`, by default None
          source: Optional[Union[list[str], Series[str], str]]
              The name of the source providing the information in the data series., by default None
-         mnemonic: Optional[Union[list[str], Series[str], str]]
-             , by default None
-         historical_edge_date: Optional[date], optional
-             The date on which the historical data ends and the forecast data begins., by default None
-         historical_edge_date_gt: Optional[date], optional
-             filter by `historical_edge_date > x`, by default None
-         historical_edge_date_gte: Optional[date], optional
-             filter by `historical_edge_date >= x`, by default None
-         historical_edge_date_lt: Optional[date], optional
-             filter by `historical_edge_date < x`, by default None
-         historical_edge_date_lte: Optional[date], optional
-             filter by `historical_edge_date <= x`, by default None
          modified_date: Optional[datetime], optional
              The date and time when a particular record was last updated or modified., by default None
          modified_date_gt: Optional[datetime], optional
@@ -507,8 +454,8 @@ class AgriAndFood:
              filter by `modified_date < x`, by default None
          modified_date_lte: Optional[datetime], optional
              filter by `modified_date <= x`, by default None
-         is_active: Optional[Union[list[str], Series[str], str]]
-             For point in time data, indicator if this record is currently an active record., by default None
+         series_type: Optional[str], optional
+             `Forecast` or `Historical`
          filter_exp: Optional[str] = None,
          page: int = 1,
          page_size: int = 5000,
@@ -519,10 +466,8 @@ class AgriAndFood:
 
         filter_params: List[str] = []
         filter_params.append(list_to_filter("commodity", commodity))
-        filter_params.append(list_to_filter("dataSeriesShort", data_series_short))
+        filter_params.append(list_to_filter("description", description))
         filter_params.append(list_to_filter("reportingRegion", reporting_region))
-        filter_params.append(list_to_filter("concept", concept))
-        filter_params.append(list_to_filter("actualConcept", actual_concept))
         filter_params.append(list_to_filter("uom", uom))
         filter_params.append(list_to_filter("currency", currency))
         filter_params.append(list_to_filter("frequency", frequency))
@@ -536,16 +481,7 @@ class AgriAndFood:
         if report_for_date_lte is not None:
             filter_params.append(f'reportForDate <= "{report_for_date_lte}"')
         filter_params.append(list_to_filter("source", source))
-        filter_params.append(list_to_filter("mnemonic", mnemonic))
-        filter_params.append(list_to_filter("historicalEdgeDate", historical_edge_date))
-        if historical_edge_date_gt is not None:
-            filter_params.append(f'historicalEdgeDate > "{historical_edge_date_gt}"')
-        if historical_edge_date_gte is not None:
-            filter_params.append(f'historicalEdgeDate >= "{historical_edge_date_gte}"')
-        if historical_edge_date_lt is not None:
-            filter_params.append(f'historicalEdgeDate < "{historical_edge_date_lt}"')
-        if historical_edge_date_lte is not None:
-            filter_params.append(f'historicalEdgeDate <= "{historical_edge_date_lte}"')
+        filter_params.append(list_to_filter("seriesType", series_type))
         filter_params.append(list_to_filter("modifiedDate", modified_date))
         if modified_date_gt is not None:
             filter_params.append(f'modifiedDate > "{modified_date_gt}"')
@@ -555,7 +491,6 @@ class AgriAndFood:
             filter_params.append(f'modifiedDate < "{modified_date_lt}"')
         if modified_date_lte is not None:
             filter_params.append(f'modifiedDate <= "{modified_date_lte}"')
-        filter_params.append(list_to_filter("isActive", is_active))
 
         filter_params = [fp for fp in filter_params if fp != ""]
 

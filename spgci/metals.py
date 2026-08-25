@@ -45,14 +45,14 @@ class Metals:
 
         Example Usage:
             # Step 1: Get all available commodities
-            commodities = mt.get_unique_values('ferrous-and-non-ferrous-metals', 'commodity')
+            commodities = mt.get_unique_values('market-outlook', 'commodity')
 
             # Step 2: Get filtered combinations for specific commodities
             filter_exp = ci.utilities.build_filter_expression({
                 "commodity": ["Steel"],
             })
             combos = mt.get_unique_values(
-                'ferrous-and-non-ferrous-metals',
+                'market-outlook',
                 ['commodity', 'metalType', 'frequency'],
                 filter_exp=filter_exp,
             )
