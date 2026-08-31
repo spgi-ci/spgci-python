@@ -37,7 +37,7 @@ class Metals:
 
         Args:
             dataset (str): The dataset name in kebab-case format:
-                - get_market_outlook → "ferrous-and-non-ferrous-metals"
+                - get_market_outlook → "market-outlook"
             columns (list[str] or str): Column names to get unique values for.
                 - Use camelCase format: ["commodity", "metalType", "frequency"]
                 - Can be single string: "commodity"
