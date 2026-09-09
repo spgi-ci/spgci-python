@@ -176,7 +176,9 @@ class RoadFuel:
         - ``requestSummary`` fields are lifted onto the row, with ``fuelsUsed``
           exploded to ``fuelsUsed.<fuel>`` columns.
         - Each entry in ``result[]`` is pivoted so the metric name becomes a
-          column holding its ``value`` (e.g. ``ObligationPct``, ``TicketsRequired``).
+          column holding its ``value`` (e.g. ``ObligationPct``, ``TicketsRequired``),
+          plus ``<metric>_currency`` / ``<metric>_uom`` columns wherever the API
+          supplies them. Costs are typically EUR — never assume USD.
         - Combination-level ``status``, ``error``, and ``errorType`` are kept so
           partial-failure responses (``failedCombinations > 0``) stay inspectable.
         """
@@ -200,8 +202,13 @@ class RoadFuel:
 
             for metric in combo.get("result") or []:
                 name = metric.get("metric")
-                if name is not None:
-                    row[name] = metric.get("value")
+                if name is None:
+                    continue
+                row[name] = metric.get("value")
+                if metric.get("currency"):
+                    row[f"{name}_currency"] = metric["currency"]
+                if metric.get("uom"):
+                    row[f"{name}_uom"] = metric["uom"]
 
             row["error"] = combo.get("error")
             row["errorType"] = combo.get("errorType")
