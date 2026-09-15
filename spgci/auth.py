@@ -31,31 +31,12 @@ def get_token(
     username: str = config.username,
     password: str = config.password,
     url: str = config.base_url,
+    auth_path: str = "/auth/api",
 ) -> str:
     """
-    Get an Access Token for API calls.\n
+    Get an access token for API calls.
 
-    *Does not need to be invoked in user code. Instead see ``config.set_credentials()``*
-
-    Can be called without arguments if environment variables are set.
-
-    Automatically caches token based on the arguments supplied.\n
-
-    Parameters
-    ----------
-    username : str, optional
-        username for calling APIs, by default config.username or `SPGCI_USERNAME`
-    password : str, optional
-        password for calling APIs, by default config.password or ``SPGCI_PASSWORD``
-    appkey : str, optional
-        appkey for calling APIs, by default config.appkey or ``SPGCI_APPKEY``
-    url : str, optional
-        base url, by default config.base_url
-
-    Returns
-    -------
-    str
-        Access Token
+    Automatically caches the token based on the supplied arguments.
     """
 
     body = {
@@ -66,11 +47,11 @@ def get_token(
         "User-Agent": f"spgci-py/{config.version}",
     }
 
-    url = f"{url}/auth/api"
+    token_url = f"{url.rstrip('/')}/{auth_path.lstrip('/')}"
 
     try:
         r = requests.post(
-            url,
+            token_url,
             data=body,
             headers=headers,
             verify=config.verify_ssl,
@@ -79,26 +60,26 @@ def get_token(
         )
         r.raise_for_status()
         return r.json()["access_token"]
-    except SSLError as err:
-        resp = err.response
+    except SSLError:
         warnings.warn(
-            "You can likely avoid this issue by setting `ci.config.verify_ssl = False`"
+            "You can likely avoid this issue by setting "
+            "`spgci.config.verify_ssl = False`"
         )
-
         raise
     except HTTPError as err:
         resp = err.response
-        # if 400, 401, 401 throw an auth error
+
         if resp.status_code in [400, 401, 403]:
             raise AuthError(
-                f"Invalid Username, Password or Appkey. Try calling `set_credentials(username, password, appkey)`\n{resp.json()}"
+                "Invalid username or password. Try calling "
+                "`set_credentials(username, password)`.\n"
+                f"{resp.json()}"
             ) from None
 
-        # if 429 check if more requests can be made today.
         if resp.status_code == 429:
             rl = int(resp.headers.get("x-ratelimit-remaining-day", 0))
             if rl > 0:
                 raise PerSecondLimitError("Per Second Rate Limit Reached")
-            else:
-                raise DailyLimitError("Daily Rate Limit Reached")
+            raise DailyLimitError("Daily Rate Limit Reached")
+
         raise
