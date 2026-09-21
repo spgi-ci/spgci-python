@@ -152,10 +152,6 @@ class RsmCase:
 
         return float(self.df.loc[mask, "defaultValue"].iloc[0])
 
-    # ------------------------------------------------------------------
-    # Crudes
-    # ------------------------------------------------------------------
-
     def set_crude(
         self,
         name: str,
@@ -173,13 +169,10 @@ class RsmCase:
         """
         if pct is not None:
             self.set("percentage", name, pct)
-
         if price is not None:
             self.set("crudePricing", name, price)
-
         if transport is not None:
             self.set("transportationCosts", name, transport)
-
         return self
 
     add_crude = set_crude
@@ -215,10 +208,6 @@ class RsmCase:
 
         return self
 
-    # ------------------------------------------------------------------
-    # Products
-    # ------------------------------------------------------------------
-
     def set_product(
         self,
         name: str,
@@ -232,18 +221,11 @@ class RsmCase:
         """
         if price is not None:
             self.set("productPrice", name, price)
-
         if premium is not None:
             self.set("premiumsDiscounts", name, premium)
-
         if transport is not None:
             self.set("transportationCosts", name, transport)
-
         return self
-
-    # ------------------------------------------------------------------
-    # Capacity
-    # ------------------------------------------------------------------
 
     def set_capacity(
         self,
@@ -300,28 +282,16 @@ class Rsm:
             list_to_filter("scenarioId", scenario_id),
             list_to_filter("executionId", execution_id),
         ]
-
         filter_params = [value for value in filter_params if value != ""]
-
-        if filter_exp is None:
-            filter_exp = " AND ".join(filter_params)
-        elif filter_params:
-            filter_exp = (
-                " AND ".join(filter_params)
-                + " AND ("
-                + filter_exp
-                + ")"
-            )
-
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "filter": filter_exp,
-        }
+        filter_exp = self._join_filters(filter_params, filter_exp)
 
         return get_data(
             path="/analytics/v1/rcma/scenario-manager-output",
-            params=params,
+            params={
+                "page": page,
+                "pageSize": page_size,
+                "filter": filter_exp,
+            },
             df_fn=self._convert_to_df,
             raw=raw,
             paginate=paginate,
@@ -332,9 +302,7 @@ class Rsm:
         refineryid: int,
         period: date,
         *,
-        category: Optional[
-            Union[list[str], Series[str], str]
-        ] = None,
+        category: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 1000,
@@ -375,28 +343,16 @@ class Rsm:
             f"refineryid: {refineryid}",
             list_to_filter("category", category),
         ]
-
         filter_params = [value for value in filter_params if value != ""]
-
-        if filter_exp is None:
-            filter_exp = " AND ".join(filter_params)
-        elif filter_params:
-            filter_exp = (
-                " AND ".join(filter_params)
-                + " AND ("
-                + filter_exp
-                + ")"
-            )
-
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "filter": filter_exp,
-        }
+        filter_exp = self._join_filters(filter_params, filter_exp)
 
         return get_data(
             path="/analytics/v1/rcma/scenario-manager-default-data",
-            params=params,
+            params={
+                "page": page,
+                "pageSize": page_size,
+                "filter": filter_exp,
+            },
             df_fn=self._convert_to_df,
             raw=raw,
             paginate=paginate,
@@ -405,9 +361,7 @@ class Rsm:
     def get_scenario_manager_ref_data(
         self,
         *,
-        region: Optional[
-            Union[list[str], Series[str], str]
-        ] = None,
+        region: Optional[Union[list[str], Series[str], str]] = None,
         filter_exp: Optional[str] = None,
         page: int = 1,
         page_size: int = 1000,
@@ -437,31 +391,65 @@ class Rsm:
         DataFrame | Response
             Reference data as a DataFrame, or the raw response when `raw=True`.
         """
-        filter_params: List[str] = [
-            list_to_filter("region", region),
-        ]
-
+        filter_params = [list_to_filter("region", region)]
         filter_params = [value for value in filter_params if value != ""]
-
-        if filter_exp is None:
-            filter_exp = " AND ".join(filter_params)
-        elif filter_params:
-            filter_exp = (
-                " AND ".join(filter_params)
-                + " AND ("
-                + filter_exp
-                + ")"
-            )
-
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "filter": filter_exp,
-        }
+        filter_exp = self._join_filters(filter_params, filter_exp)
 
         return get_data(
             path="/analytics/v1/rcma/scenario-manager-ref-data",
-            params=params,
+            params={
+                "page": page,
+                "pageSize": page_size,
+                "filter": filter_exp,
+            },
+            df_fn=self._convert_to_df,
+            raw=raw,
+            paginate=paginate,
+        )
+
+    def get_scenario_manager_status(
+        self,
+        execution_id: str,
+        *,
+        page: int = 1,
+        page_size: int = 1000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Retrieve the status of a Scenario Manager execution.
+
+        ``execution_id`` is the endpoint's only filter and is required.
+
+        Parameters
+        ----------
+        execution_id : str
+            Execution identifier returned by ``execute_scenario``.
+        page : int, optional
+            Page number, by default 1.
+        page_size : int, optional
+            Number of rows per page, by default 1000.
+        raw : bool, optional
+            Return the raw ``requests.Response``, by default false.
+        paginate : bool, optional
+            Retrieve all available pages, by default false.
+
+        Returns
+        -------
+        DataFrame | Response
+            Execution status as a DataFrame, or the raw response when
+            ``raw=True``.
+        """
+        if not isinstance(execution_id, str) or not execution_id.strip():
+            raise ValueError("execution_id is required.")
+
+        return get_data(
+            path="/analytics/v1/rcma/rsm-status",
+            params={
+                "page": page,
+                "pageSize": page_size,
+                "filter": list_to_filter("executionId", execution_id),
+            },
             df_fn=self._convert_to_df,
             raw=raw,
             paginate=paginate,
@@ -646,7 +634,6 @@ class Rsm:
         - Asset names should match the default data or reference data.
         """
         case_list = cases if isinstance(cases, list) else [cases]
-
         if not case_list:
             raise ValueError("At least one scenario case is required.")
 
@@ -654,7 +641,6 @@ class Rsm:
             self._coerce_case(case, index)
             for index, case in enumerate(case_list, start=1)
         ]
-
         formatted_period = (
             period.strftime("%d/%m/%Y")
             if isinstance(period, (date, datetime))
@@ -717,7 +703,7 @@ class Rsm:
         The response includes the `executionId` used to identify the run. The
         execution may initially be in a waiting or running state.
 
-        This class does not currently expose a status-polling method. Once the
+        Use `get_scenario_manager_status` to monitor the execution. Once the
         execution has completed, pass both the `scenarioId` and `executionId`
         to `get_scenario_manager_output`.
 
@@ -750,6 +736,7 @@ class Rsm:
         >>> scenario_id = saved["scenarioId"].iloc[0]
         >>> status = rsm.execute_scenario(scenario_id)
         >>> execution_id = status["executionId"].iloc[0]
+        >>> current = rsm.get_scenario_manager_status(execution_id)
         """
         body: Dict[str, Any] = {
             "scenarioId": scenario_id,
@@ -760,7 +747,6 @@ class Rsm:
 
         if product is not None:
             body["product"] = product
-
         if correlation is not None:
             body["correlation"] = correlation
 
@@ -772,6 +758,19 @@ class Rsm:
         )
 
     @staticmethod
+    def _join_filters(
+        required_filters: List[str],
+        filter_exp: Optional[str],
+    ) -> str:
+        """Combine generated filters with an optional caller filter."""
+        generated = " AND ".join(required_filters)
+        if filter_exp is None:
+            return generated
+        if generated:
+            return f"{generated} AND ({filter_exp})"
+        return filter_exp
+
+    @staticmethod
     def _coerce_case(
         case: Union[RsmCase, DataFrame],
         index: int,
@@ -781,10 +780,8 @@ class Rsm:
         """
         if isinstance(case, RsmCase):
             return case
-
         if isinstance(case, DataFrame):
             return RsmCase(case, name=f"Case {index}")
-
         raise TypeError(
             "Each case must be an RsmCase or a flat pandas DataFrame; "
             f"got {type(case).__name__}."
@@ -818,23 +815,15 @@ class Rsm:
         """
         if value is None or pd.isna(value):
             return 0.0
-
         number = float(value)
-
-        if not math.isfinite(number):
-            return 0.0
-
-        return number
+        return number if math.isfinite(number) else 0.0
 
     @staticmethod
     def _build_capacity(df: DataFrame) -> Dict[str, float]:
         """
         Build the capacity and utilization section of the payload.
         """
-        capacity = df[
-            df["category"] == "capacityAndUtilization"
-        ]
-
+        capacity = df[df["category"] == "capacityAndUtilization"]
         return {
             str(asset): Rsm._num(value)
             for asset, value in zip(
@@ -878,9 +867,7 @@ class Rsm:
             if column not in wide.columns:
                 wide[column] = float("nan")
 
-        wide = wide[wide["percentage"].notna()]
-        active = wide[wide["percentage"] > 0]
-
+        active = wide[wide["percentage"].notna() & (wide["percentage"] > 0)]
         return [
             {
                 "crudeType": str(asset),
@@ -929,8 +916,7 @@ class Rsm:
             if column not in wide.columns:
                 wide[column] = float("nan")
 
-        wide = wide[wide["productPrice"].notna()]
-
+        products = wide[wide["productPrice"].notna()]
         return [
             {
                 "productType": str(asset),
@@ -942,7 +928,7 @@ class Rsm:
                     row["transportationCosts"]
                 ),
             }
-            for asset, row in wide.iterrows()
+            for asset, row in products.iterrows()
         ]
 
     @staticmethod
@@ -953,7 +939,6 @@ class Rsm:
         Build `baseCaseCrudes` from active percentage rows.
         """
         percentages = df[df["category"] == "percentage"]
-
         return [
             {
                 "crudeType": str(asset),
@@ -983,13 +968,11 @@ class Rsm:
         returns the `executionId` required to retrieve scenario output.
         """
         response_json = resp.json()
-
         metadata = {
             key: value
             for key, value in response_json.items()
             if key != "parameters"
         }
-
         df = pd.json_normalize(metadata)  # type: ignore
 
         for column in ("lastUpdatedOn", "createdOn"):
@@ -1041,6 +1024,8 @@ class Rsm:
             "validFrom",
             "validTo",
             "period",
+            "submittedOn",
+            "completedOn",
         ):
             if column in df.columns:
                 df[column] = pd.to_datetime(
