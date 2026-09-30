@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from __future__ import annotations
-from typing import Any, ClassVar, Dict, List, Optional, Union, Literal
+from typing import Any, ClassVar, Dict, List, Optional, Union, Literal, Iterator, Tuple
 from requests import Response
 from spgci.api_client import get_data, post_data
 from spgci.utilities import list_to_filter
@@ -169,24 +169,19 @@ class RoadFuel:
         return df
 
     @staticmethod
-    def _convert_price_to_df(resp: Response) -> pd.DataFrame:
+    def _iter_price_combinations(
+        resp: Response,
+    ) -> Iterator[Tuple[Dict[str, Any], List[Dict[str, Any]]]]:
         """
-        Flatten the ``calculate-price-api`` response into one row per (combination, metric).
+        Yield ``(base, metrics)`` for each combination in a ``calculate-price-api``
+        response.
 
-        - ``requestSummary`` fields are repeated on each row, with ``fuelsUsed``
-        exploded to ``fuelsUsed.<fuel>`` columns.
-        - The ``TicketType`` metric (e.g. ``LRE-A``) describes the combination, not a
-        quantity, so it is lifted onto every row as ``ticketType``.
-        - Each remaining ``result[]`` entry becomes a row with ``metric``, ``label``,
-        ``value`` (numeric), ``uom``, and ``currency``. Costs are typically EUR —
-        never assume USD.
-        - Failed combinations produce a single row with ``status``, ``error``, and
-        ``errorType`` populated and metric fields null, so partial failures
-        (``failedCombinations > 0``) stay inspectable.
+        ``base`` holds combination-level fields: ``combinationId``, ``status``,
+        ``requestSummary`` fields (``fuelsUsed`` exploded to ``fuelsUsed.<fuel>``),
+        ``ticketType`` (lifted from the ``TicketType`` metric), ``error``, and
+        ``errorType``. ``metrics`` is the remaining ``result[]`` entries.
         """
         j = resp.json()
-        rows: List[Dict[str, Any]] = []
-
         for combo in j.get("combinations") or []:
             base: Dict[str, Any] = {
                 "combinationId": combo.get("combinationId"),
@@ -198,19 +193,37 @@ class RoadFuel:
                         base[f"fuelsUsed.{fuel_name}"] = fuel_val
                 else:
                     base[key] = val
-            base["error"] = combo.get("error")
-            base["errorType"] = combo.get("errorType")
 
             metrics = combo.get("result") or []
             for m in metrics:
                 if m.get("metric") == "TicketType":
                     base["ticketType"] = m.get("value")
-            metrics = [m for m in metrics if m.get("metric") not in (None, "TicketType")]
+            metrics = [
+                m for m in metrics if m.get("metric") not in (None, "TicketType")
+            ]
 
+            base["error"] = combo.get("error")
+            base["errorType"] = combo.get("errorType")
+            yield base, metrics
+
+    @staticmethod
+    def _convert_price_to_df(resp: Response) -> pd.DataFrame:
+        """
+        Long format: one row per (combination, metric).
+
+        - Combination-level fields (see ``_iter_price_combinations``) are
+          repeated on each row.
+        - Each ``result[]`` entry becomes a row with ``metric``, ``label``,
+          ``value`` (numeric), ``uom``, and ``currency``. Costs are typically
+          EUR — never assume USD.
+        - Failed combinations produce a single row with ``status``, ``error``,
+          and ``errorType`` populated and metric fields null.
+        """
+        rows: List[Dict[str, Any]] = []
+        for base, metrics in RoadFuel._iter_price_combinations(resp):
             if not metrics:
                 rows.append(base)
                 continue
-
             for m in metrics:
                 rows.append({
                     **base,
@@ -226,6 +239,50 @@ class RoadFuel:
             df["value"] = pd.to_numeric(df["value"], errors="coerce")
         return df
 
+    @staticmethod
+    def _convert_price_to_wide_df(resp: Response) -> pd.DataFrame:
+        """
+        Wide format: one row per combination.
+
+        - Combination-level fields (see ``_iter_price_combinations``) are columns.
+        - Each metric becomes a numeric column named by its exact ``label``
+          (e.g. ``"Cost of buying tickets instead"``), in API order. If two
+          metrics share a label, the column is ``"<label> (<metric>)"``.
+        - ``currency`` is a single combination-level column taken from the
+          cost metrics (multiple distinct currencies are joined with ``", "``).
+          Never assume USD.
+        - Failed combinations are kept as rows with metric columns null.
+        """
+        rows: List[Dict[str, Any]] = []
+        metric_cols: List[str] = []
+        col_for_metric: Dict[str, str] = {}
+
+        for base, metrics in RoadFuel._iter_price_combinations(resp):
+            row: Dict[str, Any] = dict(base)
+            currencies: List[str] = []
+            for m in metrics:
+                code = m["metric"]
+                if code not in col_for_metric:
+                    col = m.get("label") or code
+                    if col in col_for_metric.values() or col in base:
+                        col = f"{col} ({code})"
+                    col_for_metric[code] = col
+                    metric_cols.append(col)
+                row[col_for_metric[code]] = m.get("value")
+                cur = m.get("currency")
+                if cur and cur not in currencies:
+                    currencies.append(cur)
+            row["currency"] = ", ".join(currencies) if currencies else None
+            rows.append(row)
+
+        df = pd.DataFrame(rows)
+        for col in metric_cols:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+
+        # Combination fields first, then currency, then metrics in API order.
+        front = [c for c in df.columns if c not in metric_cols and c != "currency"]
+        ordered = front + (["currency"] if "currency" in df.columns else []) + metric_cols
+        return df[ordered]
 
     def calculate_price(
         self,
@@ -235,6 +292,7 @@ class RoadFuel:
         reference_biofuel_blending: Union[BlendInput, List[BlendInput]],
         fuels_used: Dict[str, float],
         obligation_year: Optional[Union[str, int, List[Union[str, int]]]] = None,
+        wide: bool = True,
         raw: bool = False,
     ) -> Union[DataFrame, Response]:
         """
@@ -246,8 +304,6 @@ class RoadFuel:
         ``obligation_year x reference_biofuel_blending`` combination and returns
         one entry per combination. Results are ordered by year, then biofuel
         name alphabetically — not by request order.
-
-
 
         Parameters
         ----------
@@ -271,18 +327,33 @@ class RoadFuel:
             A single obligation year or a list of years. If omitted entirely
             (or ``None``), the API defaults to the current year. An explicitly
             empty value (``""`` / ``[]``) is rejected as invalid input.
+        wide : bool, optional
+            Return one row per combination (default, True), with one numeric
+            column per metric named by its exact label. Set ``False`` for
+            one row per (combination, metric) with ``label``, ``uom``, and
+            ``currency`` per metric.
         raw : bool, optional
             Return a ``requests.Response`` instead of a ``DataFrame``, by default False.
 
         Returns
         -------
         Union[pd.DataFrame, Response]
-            DataFrame
-                One row per combination, with ``result[]`` metrics pivoted to
-                columns (``ObligationPct``, ``TicketsRequired``, ``TicketType``,
-                ``CostGeneratingTickets``, ...).
+            DataFrame, ``wide=True`` (default)
+                One row per combination. Combination fields (``combinationId``,
+                ``status``, ``region``, ``transportSector``, ``obligationYear``,
+                ``referenceBioFuel``, ``litersBiofuelBlended``,
+                ``emissionFactors``, ``fuelsUsed.<fuel>``, ``ticketType``,
+                ``error``, ``errorType``), a ``currency`` column, and one
+                numeric column per metric, named by its exact ``label``.
+            DataFrame, ``wide=False``
+                One row per (combination, metric). Same combination fields
+                repeated on each row, plus ``metric``, ``label``, ``value``,
+                ``uom``, ``currency``.
             Response
                 Raw ``requests.Response`` object.
+
+            Failed combinations are kept in both DataFrame formats with
+            ``status``, ``error``, and ``errorType`` populated and metrics null.
 
         Examples
         --------
@@ -309,13 +380,14 @@ class RoadFuel:
         ...     fuels_used={"mgo": 10, "vlsfo": 20, "hsfo": 30},
         ... )
 
-        **Every biofuel on record, current year (obligation_year omitted)**
+        **Every biofuel on record, current year, long format with labels**
 
         >>> ci.RoadFuel().calculate_price(
         ...     region="Netherlands",
         ...     transport_sector="Maritime",
         ...     reference_biofuel_blending=BiofuelBlend(BiofuelBlend.ALL, 1000),
         ...     fuels_used={"mgo": 10, "vlsfo": 20, "hsfo": 30},
+        ...     wide=False,
         ... )
         """
 
@@ -331,14 +403,14 @@ class RoadFuel:
         if obligation_year is not None:
             body["obligationYear"] = obligation_year
 
-        response = post_data(
+        df_fn = self._convert_price_to_wide_df if wide else self._convert_price_to_df
+
+        return post_data(
             path=self._path_calculate_price,
             body=body,
-            df_fn=self._convert_price_to_df,
+            df_fn=df_fn,
             raw=raw,
         )
-
-        return response
 
 
     def get_biofuel_data(
