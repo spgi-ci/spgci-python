@@ -171,50 +171,61 @@ class RoadFuel:
     @staticmethod
     def _convert_price_to_df(resp: Response) -> pd.DataFrame:
         """
-        Flatten the ``calculate-price-api`` response into one row per combination.
+        Flatten the ``calculate-price-api`` response into one row per (combination, metric).
 
-        - ``requestSummary`` fields are lifted onto the row, with ``fuelsUsed``
-          exploded to ``fuelsUsed.<fuel>`` columns.
-        - Each entry in ``result[]`` is pivoted so the metric name becomes a
-          column holding its ``value`` (e.g. ``ObligationPct``, ``TicketsRequired``),
-          plus ``<metric>_currency`` / ``<metric>_uom`` columns wherever the API
-          supplies them. Costs are typically EUR — never assume USD.
-        - Combination-level ``status``, ``error``, and ``errorType`` are kept so
-          partial-failure responses (``failedCombinations > 0``) stay inspectable.
+        - ``requestSummary`` fields are repeated on each row, with ``fuelsUsed``
+        exploded to ``fuelsUsed.<fuel>`` columns.
+        - The ``TicketType`` metric (e.g. ``LRE-A``) describes the combination, not a
+        quantity, so it is lifted onto every row as ``ticketType``.
+        - Each remaining ``result[]`` entry becomes a row with ``metric``, ``label``,
+        ``value`` (numeric), ``uom``, and ``currency``. Costs are typically EUR —
+        never assume USD.
+        - Failed combinations produce a single row with ``status``, ``error``, and
+        ``errorType`` populated and metric fields null, so partial failures
+        (``failedCombinations > 0``) stay inspectable.
         """
         j = resp.json()
-        combinations = j.get("combinations", []) or []
-
         rows: List[Dict[str, Any]] = []
-        for combo in combinations:
-            row: Dict[str, Any] = {
+
+        for combo in j.get("combinations") or []:
+            base: Dict[str, Any] = {
                 "combinationId": combo.get("combinationId"),
                 "status": combo.get("status"),
             }
-
-            summary = combo.get("requestSummary", {}) or {}
-            for key, val in summary.items():
+            for key, val in (combo.get("requestSummary") or {}).items():
                 if key == "fuelsUsed" and isinstance(val, dict):
                     for fuel_name, fuel_val in val.items():
-                        row[f"fuelsUsed.{fuel_name}"] = fuel_val
+                        base[f"fuelsUsed.{fuel_name}"] = fuel_val
                 else:
-                    row[key] = val
+                    base[key] = val
+            base["error"] = combo.get("error")
+            base["errorType"] = combo.get("errorType")
 
-            for metric in combo.get("result") or []:
-                name = metric.get("metric")
-                if name is None:
-                    continue
-                row[name] = metric.get("value")
-                if metric.get("currency"):
-                    row[f"{name}_currency"] = metric["currency"]
-                if metric.get("uom"):
-                    row[f"{name}_uom"] = metric["uom"]
+            metrics = combo.get("result") or []
+            for m in metrics:
+                if m.get("metric") == "TicketType":
+                    base["ticketType"] = m.get("value")
+            metrics = [m for m in metrics if m.get("metric") not in (None, "TicketType")]
 
-            row["error"] = combo.get("error")
-            row["errorType"] = combo.get("errorType")
-            rows.append(row)
+            if not metrics:
+                rows.append(base)
+                continue
 
-        return pd.json_normalize(rows)
+            for m in metrics:
+                rows.append({
+                    **base,
+                    "metric": m.get("metric"),
+                    "label": m.get("label"),
+                    "value": m.get("value"),
+                    "uom": m.get("uom") or None,
+                    "currency": m.get("currency") or None,
+                })
+
+        df = pd.DataFrame(rows)
+        if "value" in df.columns:
+            df["value"] = pd.to_numeric(df["value"], errors="coerce")
+        return df
+
 
     def calculate_price(
         self,
