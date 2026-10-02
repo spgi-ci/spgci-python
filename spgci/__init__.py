@@ -54,6 +54,7 @@ from .smart_heards import SmartHeards
 from .rsm import Rsm
 from .cet_economic_outlooks import CetEconomicOutlooks
 from .cet_market_outlooks import CetMarketOutlooks
+from .cet_policies import CetPolicies
 from .global_eac_analytics import GlobalEacAnalytics
 from .metals import Metals
 from .roadfuel import RoadFuel
@@ -99,6 +100,7 @@ __all__ = [
     "Rsm",
     "CetEconomicOutlooks",
     "CetMarketOutlooks",
+    "CetPolicies",
     "GlobalEacAnalytics",
     "Metals",
     "RoadFuel",
