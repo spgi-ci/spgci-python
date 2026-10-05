@@ -14,7 +14,9 @@
 
 """Module to handle API requests."""
 
+import json
 import threading
+import time
 import warnings
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from time import sleep
@@ -111,6 +113,54 @@ def _paginate(resp: requests.Response) -> Paginator:
 _session = requests.Session()
 _token_lock = threading.Lock()
 
+# Plain in-memory call log, no OpenTelemetry dependency here. Callers that
+# embed this SDK in a sandboxed interpreter (no direct network path to a
+# collector) can set `spgci.config.record_calls = True` (or SPGCI_RECORD_CALLS=1),
+# then print `_call_log` at the end of a script and reconstruct timed spans from
+# the outside. Off by default; nothing is recorded unless enabled.
+# Entry keys are a contract with the external consumer; don't rename them.
+_call_log: list[Dict[str, Any]] = []
+_call_log_lock = threading.Lock()
+_MAX_CALL_LOG_ENTRIES = 500
+_MAX_PARAMS_CHARS = 2000
+
+
+def _record_call(
+    url: str,
+    status_code: int,
+    start_unix: float,
+    start_perf: float,
+    payload: Any = None,
+    error: str = "",
+) -> None:
+    """Append one request attempt to `_call_log`.
+
+    The endpoint is the URL path only (query params go in `params`) and errors
+    are reduced to the exception type, since requests exception messages embed
+    the full URL.
+    `payload` is the query params (GET) or JSON body (POST), logged as a JSON
+    string truncated to `_MAX_PARAMS_CHARS`. No-op unless
+    `spgci.config.record_calls` is set.
+    """
+    if not spgci.config.record_calls:
+        return
+    try:
+        params = json.dumps(payload, default=str)[:_MAX_PARAMS_CHARS]
+    except Exception:
+        params = ""
+    entry = {
+        "endpoint": urlparse(url).path or url,
+        "status_code": status_code,
+        "start_unix": start_unix,
+        "duration_ms": (time.perf_counter() - start_perf) * 1000,
+        "error": error,
+        "params": params,
+    }
+    with _call_log_lock:
+        _call_log.append(entry)
+        if len(_call_log) > _MAX_CALL_LOG_ENTRIES:
+            del _call_log[: len(_call_log) - _MAX_CALL_LOG_ENTRIES]
+
 
 def _clear_config_token_best_effort() -> None:
     """
@@ -201,15 +251,23 @@ def _get(
     # Retained for compatibility with the existing request throttling behavior.
     sleep(spgci.config.sleep_time)
 
-    response: requests.Response = session.get(
-        url=url,
-        params=params,
-        headers=headers,
-        verify=spgci.config.verify_ssl,
-        proxies=spgci.config.proxies,
-        auth=spgci.config.auth,
-        timeout=_request_timeout_seconds(),
-    )
+    start_unix, start_perf = time.time(), time.perf_counter()
+    try:
+        response: requests.Response = session.get(
+            url=url,
+            params=params,
+            headers=headers,
+            verify=spgci.config.verify_ssl,
+            proxies=spgci.config.proxies,
+            auth=spgci.config.auth,
+            timeout=_request_timeout_seconds(),
+        )
+    except Exception as exc:
+        _record_call(
+            url, 0, start_unix, start_perf, params, error=type(exc).__name__
+        )
+        raise
+    _record_call(url, response.status_code, start_unix, start_perf, params)
 
     if response.status_code in (401, 403):
         _get_token_threadsafe(force_refresh=True)
@@ -255,15 +313,23 @@ def _post(
     # Retained for compatibility with the existing request throttling behavior.
     sleep(spgci.config.sleep_time)
 
-    response: requests.Response = session.post(
-        url=url,
-        json=body,
-        headers=headers,
-        verify=spgci.config.verify_ssl,
-        proxies=spgci.config.proxies,
-        auth=spgci.config.auth,
-        timeout=_request_timeout_seconds(),
-    )
+    start_unix, start_perf = time.time(), time.perf_counter()
+    try:
+        response: requests.Response = session.post(
+            url=url,
+            json=body,
+            headers=headers,
+            verify=spgci.config.verify_ssl,
+            proxies=spgci.config.proxies,
+            auth=spgci.config.auth,
+            timeout=_request_timeout_seconds(),
+        )
+    except Exception as exc:
+        _record_call(
+            url, 0, start_unix, start_perf, body, error=type(exc).__name__
+        )
+        raise
+    _record_call(url, response.status_code, start_unix, start_perf, body)
 
     if response.status_code in (401, 403):
         _get_token_threadsafe(force_refresh=True)
