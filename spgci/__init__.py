@@ -56,10 +56,12 @@ from .cet_economic_outlooks import CetEconomicOutlooks
 from .cet_market_outlooks import CetMarketOutlooks
 from .cet_policies import CetPolicies
 from .cet_ppa import CetPpa
+from .cet_supply_chain import CetSupplyChain
 from .global_eac_analytics import GlobalEacAnalytics
 from .metals import Metals
 from .roadfuel import RoadFuel
 from .freight_rate_forecast import FreightRateForecast
+from .power_evaluator import PowerEvaluator
 
 
 from .config import username, password, set_credentials, version
@@ -103,8 +105,10 @@ __all__ = [
     "CetMarketOutlooks",
     "CetPolicies",
     "CetPpa",
+    "CetSupplyChain",
     "GlobalEacAnalytics",
     "Metals",
     "RoadFuel",
-    "FreightRateForecast"
+    "FreightRateForecast",
+    "PowerEvaluator",
 ]
