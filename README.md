@@ -195,28 +195,9 @@ ni.get_content(id="02ed2748-1262-45e1-ad97-9629e29e0274", download="my_report.pd
 
 ```
 
-### Global Oil Demand
+### Global Integrated Energy Model (Deprecated)
 
-```python
-import spgci as ci
-
-od = ci.GlobalOilDemand()
-
-od.get_demand(country="Cambodia", product=["Naphtha", "Ethane"])
-# DataFrame of forecast monthly demand for ("Naphtha", "Ethane") for Cambodia.
-
-products = od.get_reference_data(type=od.RefTypes.Products)
-# DataFrame of all "products" covered by Global Oil Demand dataset.
-
-od.get_demand(product=products["productName"][:3], year_gte=2023)
-# DataFrame of forecast monthly demand for the first 3 products in the previous DataFrame and the year >= 2023.
-
-od.get_demand_archive(scenario_id=150, country="Norway")
-# DataFrame of an archived (March 2023) forecast of monthly oil demand for Norway.
-
-```
-
-### Global Integrated Energy Model
+> **Deprecated:** `GlobalIntegratedEnergyModel` is deprecated and will be removed in a future version.
 
 ```python
 import spgci as ci
@@ -230,7 +211,7 @@ giem.get_demand_archive(scenario_id=559, country="Cambodia", product=["Naphtha",
 # DataFrame of an archived demand data of giem for Cambodia.
 
 giem.get_reference_data(type=giem.RefTypes.Products)
-# DataFrame of all "products" covered by Global Oil Demand dataset.
+# DataFrame of all "products" covered by Global Integrated Energy Model dataset.
 
 ```
 
@@ -530,4 +511,175 @@ ag.get_reference_data_geography(state="Alberta")
 
 ag.get_market_balances_data(flow_date_gte="2025-10-14")
 # DataFrame for market balances data on flow date
+```
+
+### Gas Long Term Supply and Demand
+
+```python
+import spgci as ci
+
+gas = ci.GasLongTermSupplyAndDemand()
+
+gas.get_europe(subject_area="Demand", geography="Germany", year=2030)
+# DataFrame of the long term gas demand outlook for Germany in 2030.
+
+gas.get_unique_values(dataset="europe", columns="subjectArea")
+# DataFrame of unique values for `subject_area` in the Europe dataset.
+```
+
+### EU Power
+
+```python
+import spgci as ci
+
+eup = ci.EUPower()
+
+eup.get_power_assets(country="Germany", plant_technology="Solar")
+# DataFrame of power assets in Germany with the technology "Solar".
+
+eup.get_unique_values("power-assets", "country")
+# DataFrame of unique values for `country` in the power assets dataset.
+```
+
+### Smart Heards
+
+```python
+import spgci as ci
+
+sm = ci.SmartHeards()
+
+sm.get_markets()
+# DataFrame of the markets that have smart heards.
+
+sm.get_heards(market="Americas crude oil", strip_html=True)
+# DataFrame of smart heards in the Americas crude oil market with HTML tags removed.
+```
+
+### Scenario Manager
+
+```python
+import spgci as ci
+from spgci.scenario_manager import FuelBlend, FuelConsumption
+
+sm = ci.ScenarioManager()
+
+sm.calculate_eu_compliance_penalty(
+    origin_port="Rotterdam, Europe",
+    destination_port="New York, Americas",
+    fuel_blends=[
+        FuelBlend(
+            fuels=[
+                FuelConsumption(fuel="VLSFO", consumption=50),
+                FuelConsumption(fuel="MGO", consumption=50),
+            ]
+        )
+    ],
+    reporting_period="2025-2029",
+)
+# DataFrame of the FuelEU Maritime compliance penalty for a voyage from Rotterdam to New York.
+
+sm.calculate_ondemand_price(
+    start_date="2026-02-15",
+    end_date="2026-02-17",
+    commodity="Gasoline",
+    product_grade="Gasoline Unl 87 USGC Prompt Pipeline",
+)
+# DataFrame of on-demand delivered gasoline prices between the two dates.
+
+sm.get_reference_data_pipelines(pipeline_name="Colonial", origin_state="TX")
+# DataFrame of pipelines named "Colonial" originating in Texas.
+```
+
+### Road Fuel
+
+```python
+import spgci as ci
+from spgci.roadfuel import BiofuelBlend
+
+rf = ci.RoadFuel()
+
+rf.calculate_price(
+    region="Netherlands",
+    transport_sector="Maritime",
+    obligation_year=["2026", "2028"],
+    reference_biofuel_blending=BiofuelBlend("RD-A", 1000, emission_factors=14),
+    fuels_used={"mgo": 10, "vlsfo": 20, "hsfo": 30},
+)
+# DataFrame of RED III blending economics for 2026 and 2028 using the biofuel "RD-A".
+
+rf.get_obligation_data(region="Netherlands", transport_sector="Maritime", year_gte=2026)
+# DataFrame of blending obligations for the Netherlands maritime sector from 2026.
+```
+
+### Freight Rate Forecast
+
+```python
+import spgci as ci
+
+frf = ci.FreightRateForecast()
+
+frf.get_freight_rate_forecast_latest(symbol="AALPP00")
+# DataFrame of the latest freight rate forecasts for AALPP00 (USAC Clean Caribbean)
+
+frf.get_freight_rate_forecast_drivers_latest(commodity="Clean Freight", report_for_date="2027-11-01")
+# DataFrame of the latest drivers behind the 2027-11-01 clean freight rate forecasts (per symbol).
+```
+
+### Metals
+
+```python
+import spgci as ci
+
+m = ci.Metals()
+
+m.get_market_outlook(commodity="Steel", frequency="Quarterly")
+# DataFrame of quarterly market outlook data for steel.
+
+m.get_unique_values(dataset="market-outlook", columns="commodity")
+# DataFrame of unique values for `commodity` in the market outlook dataset.
+```
+
+### Global EAC Analytics
+
+```python
+import spgci as ci
+
+eac = ci.GlobalEacAnalytics()
+
+eac.get_outlooks(country="United States", certificate_name="RECs")
+# DataFrame of environmental attribute certificate (EAC) outlooks for the United States.
+```
+
+### Clean Energy Technology (CET)
+
+```python
+import spgci as ci
+
+# Economic Outlooks
+eco = ci.CetEconomicOutlooks()
+eco.get_levelized_cost(geography="United States")
+# DataFrame of levelized cost of electricity for the United States.
+
+eco.get_solarpv_capex(vintage_rank=1)
+# DataFrame of solar PV capex from the latest vintage.
+
+# Market Outlooks
+mkt = ci.CetMarketOutlooks()
+mkt.get_wind_installs(vintage_rank=1)
+# DataFrame of wind installations from the latest vintage.
+
+# Policies
+pol = ci.CetPolicies()
+pol.get_targets(geography="Germany")
+# DataFrame of clean energy targets in Germany.
+
+# PPAs
+ppa = ci.CetPpa()
+ppa.get_low_carbon_electricity(technology="Onshore wind power technology")
+# DataFrame of low carbon electricity PPAs for onshore wind.
+
+# Supply Chain
+sc = ci.CetSupplyChain()
+sc.get_battery_orders(year_announced=2024)
+# DataFrame of battery orders announced in 2024.
 ```

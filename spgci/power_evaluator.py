@@ -160,7 +160,7 @@ class PowerEvaluator:
         return obj
 
     @staticmethod
-    def build_payload(
+    def _build_payload(
         *,
         scope: Optional[Union[Dict[str, Any], List[Dict[str, Any]]]] = None,
         grain: Optional[Union[str, List[str]]] = None,
@@ -324,7 +324,7 @@ class PowerEvaluator:
         """
         body = payload
         if body is None:
-            body = self.build_payload(
+            body = self._build_payload(
                 scope=scope,
                 grain=grain,
                 measure=measure,
