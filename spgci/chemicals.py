@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from __future__ import annotations
-from typing import List, Optional, Union, Literal
+from typing import Dict, List, Optional, Union, Literal
 from requests import Response
 from spgci.api_client import get_data
 from spgci.utilities import list_to_filter
@@ -21,9 +21,132 @@ from pandas import DataFrame, Series
 from datetime import date, datetime
 from packaging.version import parse
 import pandas as pd
+from spgci import reference_data
+
+_DATE_COLUMNS = [
+    "vintageDate",
+    "reportForDate",
+    "historicalEdgeDate",
+    "modifiedDate",
+    "eventBeginDate",
+    "validFrom",
+    "validTo",
+    "startDate",
+    "endDate",
+    "publishDate",
+    "date",
+    "lastModifiedDate",
+]
+
+# Published snapshots of ``get_unique_values`` (see ``spgci.reference_data``), the
+# ``grouped`` layout: dataset -> {snapshot name -> columns grouped in one GroupBy}.
+# A request for any subset of one group's columns is served from it. Only
+# slow-changing dimensions belong here: no dates, vintages, ids or unit/plant names.
+_GEO = ["topRegion", "midRegion", "subRegion", "region", "country"]
+_SCENARIO = ["scenarioDescription", "forecastPeriod"]
+
+
+def _market(*extra: str) -> Dict[str, List[str]]:
+    """Scenario-based market datasets (capacity, trade, total-supply, ...)."""
+    return {
+        "commodity_geography": ["commodity", *_GEO],
+        "series": ["commodity", "concept", "dataType", "uom", "uomName", *extra],
+        "scenario": _SCENARIO,
+    }
+
+
+def _balance(geo: List[str]) -> Dict[str, List[str]]:
+    series = [
+        "commodity",
+        "concept",
+        "supplyDemandComponent",
+        "componentDriver",
+        "dataType",
+        "uom",
+        "uomName",
+    ]
+    out = {"series": series, "scenario": _SCENARIO}
+    if geo:
+        out["commodity_geography"] = ["commodity", *geo]
+    return out
+
+
+def _prices() -> Dict[str, List[str]]:
+    return {
+        "series": [
+            "scenarioDescription",
+            "seriesDescription",
+            "commodity",
+            "commodityGrade",
+            "associatedPlattsSymbol",
+            "deliveryRegion",
+            "shippingTerms",
+            "currency",
+            "currencyName",
+            "contractType",
+            "concept",
+            "dataType",
+            "uom",
+            "uomName",
+        ],
+        "commodity_geography": [
+            "commodity",
+            "topRegion",
+            "midRegion",
+            "subRegion",
+            "region",
+        ],
+    }
+
+
+def _assets(attributes: List[str], *, state: bool = True) -> Dict[str, List[str]]:
+    geo = [*_GEO, "state"] if state else _GEO
+    return {
+        "commodity_geography": ["commodity", *geo],
+        "attributes": ["commodity", *attributes, "uom", "uomName"],
+        "owner": ["owner"],
+    }
+
+
+_REFERENCE_NAMESPACE = "chemicals"
+_REFERENCE_SNAPSHOTS: Dict[str, Dict[str, List[str]]] = {
+    "capacity": _market("productionRoute"),
+    "production": _market("productionRoute"),
+    "capacity-utilization": _market("productionRoute"),
+    "demand-by-derivative": _market("application", "derivativeProduct"),
+    "demand-by-end-use": _market("endUse"),
+    "trade": _market(),
+    "inventory-change": _market(),
+    "total-supply": _market(),
+    "total-demand": _market(),
+    "assumptions": {
+        "geography": _GEO,
+        "series": ["concept", "currency", "currencyName", "uom", "uomName"],
+        "scenario": _SCENARIO,
+    },
+    "country-supply-demand-balance": _balance(_GEO),
+    "region-supply-demand-balance": _balance(
+        ["topRegion", "midRegion", "subRegion", "region"]
+    ),
+    "world-supply-demand-balance": _balance([]),
+    "long-term-prices": _prices(),
+    "short-term-prices": _prices(),
+    "capacity-events": _assets(["productionRoute", "eventType", "reason"]),
+    "average-annual-capacities": _assets(["productionRoute", "reason"]),
+    "capacity-to-consume": _assets(
+        ["productionRoute", "concept", "derivative", "reason"]
+    ),
+    "outages": _assets(["outageType", "alertStatus"], state=False),
+    "time-series-outages": _assets(["outageType", "alertStatus"], state=False),
+}
 
 
 class Chemicals:
+    _REFERENCE_NAMESPACE = _REFERENCE_NAMESPACE
+    _REFERENCE_SNAPSHOTS = _REFERENCE_SNAPSHOTS
+    # ``full`` layout: every dimension column, minus event ids (unbounded and daily).
+    _REFERENCE_FULL_EXCLUDE = {"outageId"}
+
     _datasets = Literal[
         "capacity",
         "production",
@@ -52,6 +175,7 @@ class Chemicals:
         dataset: _datasets,
         columns: Optional[Union[list[str], str]],
         filter_exp: Optional[str] = None,
+        use_snapshot: bool = True,
     ) -> DataFrame:
         """
         Get unique values for specified columns in a dataset, optionally filtered by an expression.
@@ -71,6 +195,15 @@ class Chemicals:
                 - Can be multiple columns: ["commodity", "region", "outlookHorizon"]
             filter_exp (str, optional): Filter expression to limit results to specific subsets.
                 Use ci.utilities.build_filter_expression() to construct this properly.
+            use_snapshot (bool, optional): Agent mode only. Lookups of dimension columns
+                (commodity, region, country, uom, ...) are answered from a published
+                snapshot, at most 14 days old, instead of the API, which is much faster.
+                A ``filter_exp`` is honored when it was built with
+                ``build_filter_expression`` from string dimensions and every value in it
+                exists in the snapshot exactly. Date, vintage and value columns, and
+                anything a snapshot can't answer exactly, always use the API. Set False
+                to always query the API. ``df.attrs["source"]`` is "cache", "github" or
+                "api".
 
         Returns:
             pd.DataFrame: DataFrame with unique combinations of the specified columns,
@@ -128,6 +261,13 @@ class Chemicals:
         else:
             path = dataset_to_path[dataset]
 
+        if use_snapshot:
+            snapshot = reference_data.lookup_unique_values(
+                _REFERENCE_NAMESPACE, dataset, columns, filter_exp, _DATE_COLUMNS
+            )
+            if snapshot is not None:
+                return snapshot
+
         col_value = ", ".join(columns) if isinstance(columns, list) else columns or ""
         params = {"GroupBy": col_value, "pageSize": 5000}
 
@@ -137,28 +277,12 @@ class Chemicals:
         def to_df(resp: Response):
             j = resp.json()
             df = pd.json_normalize(j["aggResultValue"])
-            columns_dt = [
-                "vintageDate",
-                "reportForDate",
-                "historicalEdgeDate",
-                "modifiedDate",
-                "eventBeginDate",
-                "validFrom",
-                "validTo",
-                "startDate",
-                "endDate",
-                "publishDate",
-                "date",
-                "lastModifiedDate",
-            ]
-            for c in columns_dt:
-                if c in df.columns:
-                    df[c] = pd.to_datetime(
-                        df[c], utc=True, format="ISO8601", errors="coerce"
-                    )
-            return df
+            return reference_data.parse_datetime_columns(df, _DATE_COLUMNS)
 
-        return get_data(path, params, to_df, paginate=True)
+        result = get_data(path, params, to_df, paginate=True)
+        if isinstance(result, DataFrame):
+            result.attrs["source"] = "api"
+        return result
 
     def get_outages(
         self,

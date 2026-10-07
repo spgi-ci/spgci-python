@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from __future__ import annotations
-from typing import List, Optional, Union, Literal
+from typing import Dict, List, Optional, Union, Literal
 from requests import Response
 from packaging.version import parse
 from spgci.api_client import get_data
@@ -21,9 +21,83 @@ from spgci.utilities import list_to_filter
 from pandas import DataFrame, Series
 from datetime import date, datetime
 import pandas as pd
+from spgci import reference_data
+
+_DATE_COLUMNS = [
+    "vintageDate",
+    "reportForDate",
+    "historicalEdgeDate",
+    "modifiedDate",
+]
+
+# Published snapshots of ``get_unique_values`` (see ``spgci.reference_data``), the
+# ``grouped`` layout: dataset -> {snapshot name -> columns grouped in one GroupBy}.
+# A request for any subset of one group's columns is served from it. Only
+# slow-changing dimensions belong here: no dates, vintages or ids.
+_REFINERY_GEO = ["fromRegion", "region", "country", "zone", "state"]
+
+
+def _snapshots(
+    extra: List[str], geo: List[str], commodity: bool = True
+) -> Dict[str, List[str]]:
+    c = ["commodity"] if commodity else []
+    return {
+        "series": [*c, *extra, "concept", "frequency", "uom", "outlookHorizon"],
+        "geography": [*c, *geo],
+    }
+
+
+_PRICE_SERIES = [
+    "priceGroupName",
+    "dataSeriesShort",
+    "methodology",
+    "priceName",
+    "priceSymbol",
+    "currency",
+]
+_PRICE_GEO = ["fromRegion", "region", "subRegion", "country"]
+_DEMAND_SERIES = ["productType", "seriesName"]
+_DEMAND_GEO = ["fromRegion", "region", "country"]
+
+_REFERENCE_NAMESPACE = "oil_ngl_analytics"
+_REFERENCE_SNAPSHOTS: Dict[str, Dict[str, List[str]]] = {
+    "arbflow-arbitrage": {
+        "series": [
+            "commodity",
+            "concept",
+            "fromRegion",
+            "toRegion",
+            "currency",
+            "uom",
+            "frequency",
+        ]
+    },
+    "oil-inventory": _snapshots(["dataSeriesShort"], ["geography"]),
+    "oil-inventory-latest": _snapshots(["dataSeriesShort"], ["geography"]),
+    "oil-price-forecast": _snapshots(_PRICE_SERIES, _PRICE_GEO),
+    "oil-price-forecast-latest": _snapshots(_PRICE_SERIES, _PRICE_GEO),
+    "refinery-production": _snapshots(["dataSeriesShort"], _REFINERY_GEO),
+    "refinery-production-latest": _snapshots(["dataSeriesShort"], _REFINERY_GEO),
+    "refinery-runs": _snapshots(["dataSeriesShort"], _REFINERY_GEO),
+    "refinery-runs-latest": _snapshots(["dataSeriesShort"], _REFINERY_GEO),
+    "refinery-utilization-rate": _snapshots(
+        ["dataSeriesShort"], _REFINERY_GEO, commodity=False
+    ),
+    "refinery-utilization-rate-latest": _snapshots(
+        ["dataSeriesShort"], _REFINERY_GEO, commodity=False
+    ),
+    "demand": _snapshots(_DEMAND_SERIES, _DEMAND_GEO),
+    "demand-latest": _snapshots(_DEMAND_SERIES, _DEMAND_GEO),
+}
 
 
 class OilNGLAnalytics:
+    _REFERENCE_NAMESPACE = _REFERENCE_NAMESPACE
+    _REFERENCE_SNAPSHOTS = _REFERENCE_SNAPSHOTS
+    # datasets whose method isn't ``get_<dataset>``
+    _REFERENCE_METHODS = {"oil-price-forecast": "get_oil_price_forecast_archive"}
+    # ``sector`` comes back as a list, which a csv can't hold: lookups using it go to the API
+    _REFERENCE_FULL_EXCLUDE = {"sector"}
 
     _datasets = Literal[
         "arbflow-arbitrage",
@@ -46,6 +120,7 @@ class OilNGLAnalytics:
         dataset: _datasets,
         columns: Optional[list[str], str],
         filter_exp: Optional[str] = None,
+        use_snapshot: bool = True,
     ) -> DataFrame:
         """
         Get unique values for specified columns in a dataset, optionally filtered by an expression.
@@ -65,6 +140,15 @@ class OilNGLAnalytics:
                 - Can be multiple columns: ["commodity", "region", "outlookHorizon"]
             filter_exp (str, optional): Filter expression to limit results to specific subsets.
                 Use ci.utilities.build_filter_expression() to construct this properly.
+            use_snapshot (bool, optional): Agent mode only. Lookups of dimension columns
+                (commodity, region, country, uom, ...) are answered from a published
+                snapshot, at most 14 days old, instead of the API, which is much faster.
+                A ``filter_exp`` is honored when it was built with
+                ``build_filter_expression`` from string dimensions and every value in it
+                exists in the snapshot exactly. Date, vintage and value columns, and
+                anything a snapshot can't answer exactly, always use the API. Set False
+                to always query the API. ``df.attrs["source"]`` is "cache", "github" or
+                "api".
 
         Returns:
             pd.DataFrame: DataFrame with unique combinations of the specified columns,
@@ -115,6 +199,13 @@ class OilNGLAnalytics:
         else:
             path = dataset_to_path[dataset]
 
+        if use_snapshot:
+            snapshot = reference_data.lookup_unique_values(
+                _REFERENCE_NAMESPACE, dataset, columns, filter_exp, _DATE_COLUMNS
+            )
+            if snapshot is not None:
+                return snapshot
+
         col_value = ", ".join(columns) if isinstance(columns, list) else columns or ""
         params = {"GroupBy": col_value, "pageSize": 5000}
 
@@ -124,20 +215,12 @@ class OilNGLAnalytics:
         def to_df(resp: Response):
             j = resp.json()
             df = pd.json_normalize(j["aggResultValue"])
-            columns_dt = [
-                "vintageDate",
-                "reportForDate",
-                "historicalEdgeDate",
-                "modifiedDate",
-            ]
-            for c in columns_dt:
-                if c in df.columns:
-                    df[c] = pd.to_datetime(
-                        df[c], utc=True, format="ISO8601", errors="coerce"
-                    )
-            return df
+            return reference_data.parse_datetime_columns(df, _DATE_COLUMNS)
 
-        return get_data(path, params, to_df, paginate=True)
+        result = get_data(path, params, to_df, paginate=True)
+        if isinstance(result, DataFrame):
+            result.attrs["source"] = "api"
+        return result
 
     def get_arbflow_arbitrage(
         self,

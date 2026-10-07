@@ -13,16 +13,115 @@
 # limitations under the License.
 
 from __future__ import annotations
-from typing import List, Optional, Union, Literal
+from typing import Dict, List, Optional, Union, Literal
 from requests import Response
 from spgci.api_client import get_data
 from spgci.utilities import list_to_filter
 from pandas import DataFrame, Series
 from datetime import date, datetime
 import pandas as pd
+from spgci import reference_data
+
+# Columns that must never be in a snapshot (they change with every refresh).
+_DATE_COLUMNS = [
+    "modifiedDate",
+    "startDate",
+    "endDate",
+    "observationDate",
+    "reportForDate",
+    "lastUpdated",
+    "year",
+]
+
+# Published snapshots of ``get_unique_values`` (see ``spgci.reference_data``), the
+# ``grouped`` layout: dataset -> {snapshot name -> columns grouped in one GroupBy}.
+# A request for any subset of one group's columns is served from it. Only
+# slow-changing dimensions belong here: no dates or ids. (The ``full`` layout is
+# derived from each dataset's ``get_*`` signature.)
+_STS_SERIES = [
+    "commodity",
+    "cropMonth",
+    "concept",
+    "frequency",
+    "unit",
+    "uom",
+    "currency",
+    "shortLabel",
+    "seriesType",
+]
+
+_REFERENCE_NAMESPACE = "agriculture_and_food"
+_REFERENCE_SNAPSHOTS: Dict[str, Dict[str, List[str]]] = {
+    "cost-of-production": {
+        "commodity_geography": ["commodity", "subCommodity", "geography", "region"],
+        "items": [
+            "commodity",
+            "category",
+            "parentItem",
+            "item",
+            "uom",
+            "unitType",
+            "currency",
+            "fullUnitName",
+        ],
+    },
+    "global-long-term-forecast": {
+        "commodity_region": ["commodity", "reportingRegion"],
+        "series": [
+            "commodity",
+            "shortLabel",
+            "concept",
+            "frequency",
+            "uom",
+            "currency",
+            "mnemonic",
+        ],
+    },
+    "price-purchase-forecast": {
+        "commodity_region": ["commodity", "reportingRegion"],
+        "series": [
+            "commodity",
+            "description",
+            "uom",
+            "currency",
+            "frequency",
+            "source",
+        ],
+    },
+    "proteins-short-term-forecast": {
+        "commodity_geography": ["commodity", "geography"],
+        "series": _STS_SERIES,
+    },
+    "softs-short-term-forecast": {
+        "commodity_geography": ["commodity", "geography"],
+        "series": _STS_SERIES,
+    },
+    "crops-short-term-forecast": {
+        "commodity_geography": ["commodity", "geography"],
+        "series": _STS_SERIES,
+    },
+    "baseline-forecast": {
+        "commodity_region": ["commodity", "reportingRegion"],
+        "series": [
+            "commodity",
+            "currency",
+            "dataset",
+            "forecastType",
+            "frequency",
+            "sourceDataset",
+            "uom",
+            "seriesType",
+            "shortLabel",
+            "priceSymbol",
+        ],
+    },
+}
 
 
 class AgriAndFood:
+    _REFERENCE_NAMESPACE = _REFERENCE_NAMESPACE
+    _REFERENCE_SNAPSHOTS = _REFERENCE_SNAPSHOTS
+
     _endpoint = "api/v1/"
     _reference_endpoint = "reference/v1/"
     _cop_forecast_data_mv_endpoint = "/cost-of-production"
@@ -64,6 +163,7 @@ class AgriAndFood:
         dataset: _datasets,
         columns: Optional[Union[list[str], str]],
         filter_exp: Optional[str] = None,
+        use_snapshot: bool = True,
     ) -> DataFrame:
         """
         Get unique values for specified columns in a dataset, optionally filtered by an expression.
@@ -83,6 +183,14 @@ class AgriAndFood:
                 - Can be multiple columns: ["commodity", "region", "outlookHorizon"]
             filter_exp (str, optional): Filter expression to limit results to specific subsets.
                 Use ci.utilities.build_filter_expression() to construct this properly.
+            use_snapshot (bool, optional): Agent mode only. Lookups of dimension columns
+                (commodity, region, geography, uom, ...) are answered from a published
+                snapshot, at most 14 days old, instead of the API, which is much faster.
+                A ``filter_exp`` is honored when it was built with
+                ``build_filter_expression`` from string dimensions and every value in it
+                exists in the snapshot exactly. Date and value columns, and anything a
+                snapshot can't answer exactly, always use the API. Set False to always
+                query the API. ``df.attrs["source"]`` is "cache", "github" or "api".
 
         Returns:
             pd.DataFrame: DataFrame with unique combinations of the specified columns,
@@ -127,6 +235,14 @@ class AgriAndFood:
         else:
             path = dataset_to_path[dataset]
 
+        if use_snapshot:
+            # no date columns are parsed on the API path here, so none are on this one
+            snapshot = reference_data.lookup_unique_values(
+                _REFERENCE_NAMESPACE, dataset, columns, filter_exp
+            )
+            if snapshot is not None:
+                return snapshot
+
         col_value = ", ".join(columns) if isinstance(columns, list) else columns or ""
         params = {"groupBy": col_value, "pageSize": 5000}
 
@@ -137,7 +253,10 @@ class AgriAndFood:
             j = resp.json()
             return DataFrame(j["aggResultValue"])
 
-        return get_data(path, params, to_df, paginate=True)
+        result = get_data(path, params, to_df, paginate=True)
+        if isinstance(result, DataFrame):
+            result.attrs["source"] = "api"
+        return result
 
     def get_cost_of_production(
         self,
