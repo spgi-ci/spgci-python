@@ -1,0 +1,45 @@
+fuel,prime_mover
+biomass,combined cycle
+biomass,fuel cell
+biomass,gas turbine
+biomass,internal combustion
+biomass,other
+biomass,steam turbine
+coal,integrated gasification
+coal,other
+coal,steam turbine
+energy storage,battery
+energy storage,mechanical storage
+energy storage,other energy storage
+gas,combined cycle
+gas,fuel cell
+gas,gas turbine
+gas,integrated gasification
+gas,internal combustion
+gas,mechanical storage
+gas,other
+gas,steam turbine
+geothermal,geothermal
+geothermal,other
+nuclear,nuclear
+oil,combined cycle
+oil,gas turbine
+oil,internal combustion
+oil,other
+oil,steam turbine
+other,combined cycle
+other,fuel cell
+other,gas turbine
+other,integrated gasification
+other,internal combustion
+other,mechanical storage
+other,nuclear
+other,other
+other,other energy storage
+other,steam turbine
+solar,other
+solar,solar
+water,hydraulic turbine
+water,other
+water,pumped storage
+wind,wind turbine

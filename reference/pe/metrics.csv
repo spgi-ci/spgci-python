@@ -1,0 +1,1140 @@
+metric,metric_description,expose_as_parameter
++00,Coordinated Universal Time offset applied in modeling (default is +00).,true
+acquisition_price,"Market price paid to acquire an existing asset at close, reflecting the agreed-upon transfer of ownership. Represents valuation rather than replacement cost and may implicitly include interconnection and other embedded attributes.",true
+adjusted_zonal_fallback,,false
+air_density,"Calculated air density based on surface pressure, air temperature, and humidity factors.",true
+air_density_polynomial,Polynomial coefficients used for precise air density calculations.,true
+air_mass,"Kasten-Young relative optical air mass (dimensionless), a function of solar zenith angle. Used to bound clear-sky direct-normal irradiance at low sun.",
+air_pressure_x_volume,"Represents the product of air pressure and volume, derived from temperature and humidity.",true
+air_temperature_2_meter,"Air temperature at 2 meters above ground, converted to Fahrenheit.",true
+air_temperature_2_meter_k,Air temperature at 2 meters above ground in Kelvin.,true
+air_temperature_2_meter_k_fixed,Fixed value of air temperature at 2 meters in Kelvin for baseline calculations.,true
+air_temperature_2_meter_k_forecast,Forecasted air temperature at 2 meters above ground in kelvin.,true
+air_temperature_2_meter_k_historical,Historical air temperature at 2 meters above ground in kelvin.,true
+air_temperature_2_meter_k_rolling,Rolling average of air temperature at 2 meters in Kelvin.,true
+albedo,"Surface reflectivity calculated from vegetation cover, leaf area index, and soil type.",true
+all_parameters,"Lists every single non-hidden parameter involved in the metric's entire calculation lineage, capturing both direct and recursively resolved inputs. This provides a complete inventory of all possible parameter overrides that can influence the metric's final output.",false
+america/chicago,Specifies the time zone used for central operations (default is America/Chicago).,true
+america/denver,Specifies the time zone used for mountain operations (default is America/Denver).,true
+america/los_angeles,Specifies the time zone used for Pacific operations (default is America/Los_Angeles).,true
+america/new_york,Specifies the time zone used for eastern operations (default is America/New_York).,true
+anisotropy_index,"Hay-Davies anisotropy index Ai = DNI / I0n, in [0,1]. Weights how much diffuse sky radiation is treated as circumsolar (beam-like) versus isotropic.",
+annual,Truncates date-time to the year level for annual aggregation.,true
+annual_elcc,Effective Load Carrying Capability calculated annually for system reliability analysis.,true
+as_capture_factor,Represents the assumed capture factor for ancillary services (default is 1).,true
+as_of,Pins the engine to a specific point in time for reproducibility and auditability. All historical thresholds and default vintages are resolved as of this value. Defaults to now().,true
+as_price,Price assumption for ancillary services (default is 0).,true
+as_price_esc,Annual escalation rate for ancillary service prices (default is 0.02).,true
+assessed_value,Value used as the basis for property tax assessments.,true
+asset_construction_cost,"Total capital to construct the energy-producing asset (equipment, EPC, onsite BOS), excluding interconnection. Computed as nominal_capacity_mw_dc * 1000 * capex_scaled, so capex is interpreted as $/kW-DC: for solar this multiplies the DC array size (AC * ILR); for all other technologies DC = AC, so it is simply $/kW. Matches industry convention (solar benchmarked $/W-DC).",true
+asset_cost_initial,"Initial asset cost used in modeling, defined as a context-dependent selection between build and buy pathways. Equals asset_construction_cost for greenfield projects and acquisition_price for acquisitions.",true
+asset_type,Indicates whether the asset is a generic or specific asset as modelled in the production cost model,true
+balancing_authority,Identifies the balancing authority responsible for grid operations in the region.,true
+balancing_authority_geometry,Geometry of scoped balancing authorities expressed in Well-known text (WKT) format crs=4326.,true
+bark_spread_market,"Difference between energy price and biomass fuel cost, used for profitability analysis.",true
+baseline_demand,"The raw, unadjusted demand before any demand-side management or adjustments.",true
+basic_parameters,"Identifies the foundational, non-hidden parameters required for a metric that exist at the shallowest level of the dependency tree (depth 0) and do not involve complex boolean logic. These represent the primary, user-facing inputs needed to compute the basic version of the metric.",false
+battery_arbitrage_spread_day_ahead,"For each asset-day, the day-ahead battery arbitrage spread ranks hourly day-ahead energy price and credits the highest battery_duration hours as discharge revenue and debits the lowest battery_duration hours as charging cost, leaving all other hours at zero. The resulting per-day net spread is converted from $/MWh to $/kWh (÷1000) and scaled by year_hours to express the value in $/kW-yr",true
+battery_arbitrage_spread_real_time,"For each asset-day, the real-time battery arbitrage spread ranks hourly real-time energy price and credits the highest battery_duration hours as discharge revenue and debits the lowest battery_duration hours as charging cost, leaving all other hours at zero. The resulting per-day net spread is converted from $/MWh to $/kWh (÷1000) and scaled by year_hours to express the value in $/kW-yr",true
+battery_capability,Represents the battery's natural capacity factor multiplied by system size in MW.,true
+battery_capacity_factor,Calculated based on battery charge/discharge cycles and degradation over time.,true
+battery_capex_kwh,Capital cost of a battery in $/kWh terms.,true
+battery_charge,"Amount of energy charged into the battery, considering duration and depth of discharge.",true
+battery_charge_capacity_factor,"Gross hourly charge capacity factor for a battery (the charge leg of battery_capacity_factor). Represents energy drawn from the grid to charge, price-ordered so the lowest-value hours within a cycle charge first. Used to compute the LCOS charging cost.",true
+battery_cumulative_degradation,Cumulative degradation of battery capacity over its lifecycle.,true
+battery_cycle,Current battery cycle number based on operational hours and cycling period.,true
+battery_cycle_continuous,Continuous count of battery cycles since commissioning.,true
+battery_cycling_period,"Defines the period for battery cycling, typically in days.",true
+battery_degradation_rate,Rate at which battery capacity degrades per cycle.,true
+battery_depth_of_discharge,Specifies the maximum percentage of battery capacity that can be discharged during operation (default is 95%).,true
+battery_discharge,"Amount of energy discharged from the battery, calculated based on duration, cycling period, depth of discharge, and roundtrip efficiency.",true
+battery_discharge_capacity_factor,"Gross hourly discharge capacity factor for a battery (the positive/discharge leg of battery_capacity_factor). Represents energy sent to the grid before netting charging, price-ordered so the highest-value hours within a cycle discharge first. Used as the LCOS energy denominator.",true
+battery_duration,Represents the number of hours the battery can discharge at full capacity (default is 5 hours).,true
+battery_natural_capacity_factor,Indicates the battery's effective capacity factor considering charge/discharge cycles and degradation.,true
+battery_output,Battery energy output (net of charging) generalized to the given granular context.,true
+battery_revenue_day_ahead,"Revenue earned from battery output in the day-ahead market, calculated as output multiplied by energy price.",true
+battery_roundtrip_efficiency,Efficiency of the battery system for a full charge-discharge cycle (default is 85%).,true
+bilateral_debt_share,"Proportion of project financed through debt, assuming a bilateral contract is in place.",false
+bilateral_equity_share,Proportion of equity share in bilateral agreements after accounting for debt share and financial adjustments.,true
+biomass_price,"Price of biomass fuel, calculated as system cost divided by system usage.",true
+biomass_system_usage,"Amount of biomass fuel consumed, expressed in thousands of units.",true
+bool_asset_type_generic,Switch indicating whether or not the given asset is a generic asset.,false
+bool_asset_type_specific,Switch indicating whether or not the given asset is a specific asset.,false
+bool_day_ahead_forecast,Switch to determine if current record is after the latest historical day-ahead price,true
+bool_day_ahead_forecast_context,Switch that determines if the payload context overlaps with forecasted day-ahead pricing data.,true
+bool_day_ahead_hist,Switch to determine if current record is before the latest historical day-ahead price,true
+bool_day_ahead_hist_context,Switch that determines if the payload context overlaps with historical day-ahead pricing data.,true
+bool_day_ahead_overlap,Switch to determine if current record is in the temporal overlap between the forecast start date and the latest historical day-ahead price.,false
+bool_fuel_battery_storage,Switch that determines if the current record's fuel is a battery storage fuel.,false
+bool_fuel_biomass,Switch that determines if the current record's fuel is biomass.,true
+bool_fuel_coal,Switch that determines if the current record's fuel is coal.,true
+bool_fuel_elig_ptc,Indicates whether the selected fuel is eligible for the federal production tax credit.,true
+bool_fuel_energy_storage,Switch that determines if the current record's fuel is energy storage.,false
+bool_fuel_gas,Switch that determines if the current record's fuel is gas.,true
+bool_fuel_geothermal,Switch that determines if the current record's fuel is geothermal.,false
+bool_fuel_nongas,"Switch that determines if the current record's fuel is coal, uranium, or biomass.",true
+bool_fuel_oil,Switch that determines if the current record's fuel is oil.,false
+bool_fuel_other,Switch that determines if the current record's fuel is other.,false
+bool_fuel_solar,Switch that determines if the current record's fuel is solar.,false
+bool_fuel_uranium,Switch that determines if the current record's fuel is uranium.,true
+bool_fuel_water,Switch that determines if the current record's fuel is water.,false
+bool_fuel_wind,Switch that determines if the current record's fuel is wind.,true
+bool_gas_forecast,Switch to determine if current record is after the latest historical gas price,true
+bool_gas_forecast_context,Switch that determines if the payload context overlaps with forecasted gas pricing data.,true
+bool_gas_hist,Switch to determine if current record is before the latest historical gas price,true
+bool_gas_hist_context,Switch that determines if the payload context overlaps with historical gas pricing data.,true
+bool_gas_overlap,Switch to determine if current record is in the temporal overlap between the forecast start date and the latest historical gas price.,false
+bool_is_ver,"Indicates whether the selected generation technology is a Variable Energy Resource (VER)—i.e., a resource whose electricity output is primarily driven by variable environmental conditions and is not fully dispatchable. VERs typically include wind and solar generation and are characterized by intermittency and limited operator control over real‑time output.",true
+bool_model_type_hypothetical,Switch indicating whether or not the given model type used is the hypothetical asset engine.,true
+bool_model_type_pcm,Switch indicating whether or not the given model type used is the production cost model (pcm).,true
+bool_pm_battery,Switch that determines if the current prime mover is a battery,true
+bool_pm_combined_cycle,Switch that determines if the current prime mover is combined cycle.,false
+bool_pm_fuel_cell,Switch that determines if the current prime mover is fuel cell.,false
+bool_pm_gas_turbine,Switch that determines if the current prime mover is gas turbine.,false
+bool_pm_geothermal,Switch that determines if the current prime mover is geothermal.,false
+bool_pm_hydraulic_turbine,Switch that determines if the current prime mover is hydraulic turbine.,false
+bool_pm_integrated_gasification,Switch that determines if the current prime mover is integrated gasification.,false
+bool_pm_internal_combustion,Switch that determines if the current prime mover is internal combustion.,false
+bool_pm_mechanical_storage,Switch that determines if the current prime mover is mechanical storage.,false
+bool_pm_nuclear,Switch that determines if the current prime mover is nuclear.,false
+bool_pm_other,Switch that determines if the current prime mover is other.,false
+bool_pm_other_energy_storage,Switch that determines if the current prime mover is other energy storage.,false
+bool_pm_pumped_storage,Switch that determines if the current prime mover is pumped storage.,false
+bool_pm_solar,Switch that determines if the current prime mover is solar.,false
+bool_pm_steam_turbine,Switch that determines if the current prime mover is steam turbine.,false
+bool_pm_wind,Switch that determines if the current prime mover is a wind turbine.,true
+bool_price_method_nodal,Switch to determine if record is nodal method or not.,true
+bool_price_method_zonal,Switch to determine if record is zonal method or not.,true
+bool_real_time_hist,Switch to determine if current record is before the latest historical real-time price,true
+bool_real_time_hist_context,Switch that determines if the payload context overlaps with historical real-time pricing data.,true
+bool_weather_forecast,Switch to determine if the current record is after the latest weather record.,false
+bool_weather_forecast_context,Switch that determines if the payload context overlaps with forecast weather data.,false
+bool_weather_hist,Switch to determine if the current record is before the latest weather record.,false
+bool_weather_hist_context,Switch that determines if the payload context overlaps with historical weather data.,false
+busname_clean,"A cleaned-up version of the node's name. It converts any non-alphanumeric characters into underscores, then removes any consecutive underscores, and finally sets the case to lower-case.",true
+calendar_year_num,"Number of years elapsed between transaction date and current timestamp, used for financial calculations.",true
+capability,"Represents system capability based on prime mover type (solar, wind, or system size).",true
+capability_mw_resourcehour,Resource capability in MW adjusted by kernel percent.,true
+capability_resourcehour,Resource capability in MWh adjusted by kernel percent.,true
+capacity_credit,"Represents capacity credit for an asset or system, based on ELCC or asset-specific values.",true
+capacity_credit_asset,"Capacity credit assigned to an asset, typically equal to its ELCC value.",true
+capacity_credit_prosmod,Capacity credit derived directly from the prosmod sampling process.,true
+capacity_credit_resourceyear,Capacity credit derived directly from the production cost model output dataset.,true
+capacity_factor,"Ratio of actual output to maximum possible output, adjusted for resource type and system size.",true
+capacity_factor_asset,Capacity factor calculated for a specific resource hour based on generation and capacity.,true
+capacity_price,Capacity price adjusted for escalation and year.,true
+capacity_price_esc,Annual escalation rate applied to capacity prices (default is 2%).,true
+capex,"Capital expenditure for the project, determined by asset or prosmod values.",true
+capex_asset,Capital expenditure specific to the asset.,true
+capex_non_battery_prosmod,"Default $/kW-DC capital expenditure for hypothetical non-battery assets (DC = AC for non-solar, so $/kW-DC equals $/kW there).",true
+capex_prosmod,Capital expenditure derived from prosmod financial model.,true
+capex_scaled,Scaled capital expenditure calculated by applying a scaling factor to base capex.,true
+capture_factor,"General capture factor metric, typically equal to day-ahead capture factor.",true
+capture_factor_day_ahead,Represents the capture factor for day-ahead market based on prime mover type.,true
+captured_energy_price,The generation-weighted average market price realized after economically optimal dispatch and curtailment decisions are applied.,true
+captured_energy_price_capability,The generation-weighted average market energy price assuming all physically available generation is delivered to the grid without discretionary economic curtailment.,true
+carbon_cost_mwh,"Cost of carbon emissions per MWh, calculated using emission rate, heat rate, and carbon price.",true
+carbon_er,"Carbon emission rate for the system or asset, sourced from asset or prosmod data.",true
+carbon_er_asset,"Carbon emission rate specific to the asset, typically in tons per MWh.",true
+carbon_er_prosmod,Carbon emission rate derived from prosmod model data.,true
+carbon_price,"Price of carbon emissions, sourced from asset or prosmod data.",true
+carbon_price_asset,"Carbon price specific to the asset, typically in $/ton.",true
+carbon_price_esc,Annual escalation rate applied to carbon prices (default is 2%).,true
+carbon_price_prosmod,Carbon price derived from prosmod model data.,true
+cell_temperature,"Estimated temperature of solar cells based on air temperature, irradiance, and wind speed.",true
+central,Specifies the time zone used for central operations (default is America/Chicago).,true
+cf_asset_construction_cost,One-time asset construction cost applied at project start. Equals asset_construction_cost at project_start_date and 0 otherwise.,true
+cf_book_depreciation_rate,Rate of book depreciation calculated based on calendar year and economic life.,true
+cf_cash_flow_from_operations,"Cash flow generated from operations, including net income and depreciation adjustments.",true
+cf_debt_interest_cost,"Interest expense on project debt, calculated based on interest rate and total debt.",true
+cf_debt_interest_rate,Effective interest rate on project debt after accounting for repayment rate.,true
+cf_debt_principal_cost,"Principal repayment amount for project debt, calculated based on repayment rate and total debt.",true
+cf_debt_principal_rate,"Rate at which project debt is repaid, considering tenor and interest rate.",true
+cf_debt_service_cost,"Total debt service cost, including interest and principal payments.",true
+cf_debt_service_rate,Rate used to calculate annual debt service obligations.,true
+cf_depr_deduction,Tax deduction amount for depreciation expenses.,true
+cf_ebitda,"Earnings before interest, taxes, depreciation, and amortization for the project.",true
+cf_ebt,"Earnings before taxes, calculated as operating income minus interest expense.",true
+cf_fcfe,Free Cash Flow to Equity,true
+cf_fcff,Free Cash Flow to the Firm,true
+cf_gross_profit,Gross profit calculated as total revenue minus cost of goods sold.,true
+cf_gross_tax,Total tax liability based on EBITDA and effective tax rate.,true
+cf_gross_tax_fed,Federal tax liability calculated from EBITDA and federal tax rate.,true
+cf_gross_tax_state,State tax liability calculated from EBITDA and state tax rate.,true
+cf_ins_rate,Insurance rate adjusted for escalation and calendar year.,true
+cf_interconnection_cost_initial,One-time interconnection cost applied at project start. Equals interconnection_cost_initial at project_start_date and 0 otherwise.,true
+cf_interest_deduction,Tax deduction amount for interest expenses.,true
+cf_itc,Investment tax credit applied at project start date.,true
+cf_itc_agg,Aggregated investment tax credit amount for financial modeling.,true
+cf_itc_basis_reduction,Reduction in tax basis due to investment tax credit application.,true
+cf_leverage_value,Value derived from leveraging debt service obligations for financial optimization.,true
+cf_macrs,Depreciation amount calculated using MACRS schedule for tax purposes.,true
+cf_macrs_5,Depreciation amount calculated using 5-year MACRS schedule.,true
+cf_market_exposure_carbon_price,Exposure to carbon price risk based on operating capacity.,true
+cf_market_exposure_denom,"Denominator for market exposure calculations, typically operating capacity.",true
+cf_market_exposure_fuel_price,Exposure to fuel price risk based on operating capacity.,true
+cf_market_exposure_merchant_as_price,Exposure to ancillary service price risk based on operating capacity.,true
+cf_market_exposure_merchant_capacity_price,Exposure to capacity price risk based on operating capacity.,true
+cf_market_exposure_merchant_energy_price,Exposure to energy price risk based on operating capacity.,true
+cf_market_exposure_merchant_rec_price,Exposure to renewable energy credit price risk based on operating capacity.,true
+cf_net_income,Net income calculated as earnings before taxes minus tax expense.,true
+cf_net_investment_cashflow,Net capital outflow after accounting for non-cash depreciation adjustments (used for accounting reconciliation rather than pure cash flow analysis).,true
+cf_nopat,Net Operating Profit After Tax,true
+cf_op_cost_book_depreciation,Book depreciation expense included in operating costs.,true
+cf_op_cost_carbon,Operating cost associated with carbon emissions.,true
+cf_op_cost_carbon_capab,Operating cost for carbon emissions based on capability.,true
+cf_op_cost_cogs,"Cost of goods sold, including carbon, fuel, and variable O&M costs.",true
+cf_op_cost_cycling,The total non-fuel cycling costs incurred for startup operations.,true
+cf_op_cost_fom,Fixed O&M cost calculated based on nominal capacity.,true
+cf_op_cost_fuel,Operating cost for fuel consumption based on burn rate and fuel price.,true
+cf_op_cost_fuel_capab,Fuel cost calculated based on capability.,true
+cf_op_cost_fuel_startup,The total cost of fuel burned for start up operations.,true
+cf_op_cost_grid_purchases,"Cost of energy purchased to charge the battery, calculated as gross charging MWh multiplied by the settlement-aware energy price. Treated as a deductible operating expense in the LCOS numerator.",true
+cf_op_cost_ins,Insurance cost calculated based on fair market value and annual hours.,true
+cf_op_cost_nonpti,"Operating costs including carbon, fuel, and O&M expenses (excluding property tax & insurance).",true
+cf_op_cost_nonpti_capab,Operating costs based on capability (excluding property tax & insurance).,true
+cf_op_cost_opex,"Total operating expenses including depreciation, fixed O&M, and insurance.",true
+cf_op_cost_proptax,Property tax expense calculated based on fair market value and annual hours.,true
+cf_op_cost_total,"Total operating cost including all components such as carbon, fuel, and O&M.",true
+cf_op_cost_vom,Variable O&M cost calculated based on generation output.,true
+cf_op_cost_vom_capab,Variable O&M cost calculated based on capability.,true
+cf_operating_income,Operating income calculated as EBITDA minus book depreciation.,true
+cf_operations_capability_mwh,Capability in MWh based on natural capacity factor and operating capacity.,true
+cf_operations_carbon_emissions_tons,Carbon emissions in tons based on fuel burn and emission rate.,true
+cf_operations_carbon_emissions_tons_capab,Carbon emissions in tons based on capability.,true
+cf_operations_consumption_mwh,"Gross energy purchased from the grid in MWh, based on negative capacity factor hours and operating capacity.",true
+cf_operations_firm_capacity_mw,Firm capacity in MW based on nominal capacity and capacity credit.,true
+cf_operations_fuel_burn_mmbtu,Fuel burn in MMBtu based on generation and heat rate.,true
+cf_operations_fuel_burn_mmbtu_capab,Fuel burn in MMBtu based on capability.,true
+cf_operations_fuel_burn_mmbtu_startup,The total fuel burned for start up operations (in mmbtus).,true
+cf_operations_generation_mwh,Total generation in MWh based on capacity factor and operating capacity.,true
+cf_operations_hours,Total number of operating hours during the period.,true
+cf_operations_nominal_capacity_kw,Nominal capacity expressed in kilowatts.,true
+cf_operations_nominal_capacity_mw,"Nominal capacity in MW for operations, active between online and retirement dates.",true
+cf_operations_operating_capacity_mw,Operating capacity in MW adjusted for degradation over time using a power function.,true
+cf_operations_production_mwh,"Gross energy discharged to the grid in MWh, based on the battery discharge capacity factor and operating capacity (online/retirement gated and degraded). This is the deliverable throughput used as the LCOS denominator.",true
+cf_operations_starts,"Indicates whether a start event occurred, based on generation changes between time intervals.",true
+cf_proptax_rate,Property tax adjusted for escalation and remaining economic life.,true
+cf_ptc_credit_amount,Production tax credit calculated from generation and applicable credit rate.,true
+cf_ptc_credit_amount_capab,Production tax credit calculated based on capability in MWh.,true
+cf_revenue_merchant_as,Revenue from ancillary services in merchant markets based on generation and capture factors.,true
+cf_revenue_merchant_as_capability,Revenue from ancillary services based on capability in MWh.,true
+cf_revenue_merchant_capacity,Revenue from capacity payments in merchant markets based on operating capacity and credit.,true
+cf_revenue_merchant_energy,Revenue from energy sales in merchant markets based on generation and energy price.,true
+cf_revenue_merchant_energy_capability,Revenue from energy sales based on capability in MWh.,true
+cf_revenue_merchant_rec,Revenue from renewable energy credits based on generation and REC price.,true
+cf_revenue_merchant_rec_capability,Revenue from renewable energy credits based on capability in MWh.,true
+cf_revenue_merchant_total,"Total merchant revenue from energy, ancillary services, RECs, and capacity payments.",true
+cf_revenue_merchant_total_capability,"Total merchant revenue based on capability, including energy, ancillary services, RECs, and capacity.",true
+cf_state_deduction,"Total state tax deduction. Because this is aggregate across state and federal, it's calculated simply as the product of the gross state tax amount and the federal tax rate (e.g. the state deductions and credits are already accounted for in their respective aggregates).",true
+cf_tax_depreciation,Tax depreciation amount calculated using federal and state depreciation schedules and effective tax rate.,true
+cf_tax_expense,Total tax expense calculated from taxable income and effective tax rate.,true
+cf_tax_expense_unlevered,'Cash Taxes' or Tax epense before financing considerations.,true
+cf_tax_fed_depr_deduction,Federal tax deduction amount for depreciation expenses.,true
+cf_tax_fed_depreciation,Federal depreciation amount calculated using MACRS schedule and fair market value.,true
+cf_tax_fed_expense,"Federal tax expense after deductions for depreciation, interest, and credits.",true
+cf_tax_fed_interest_deduction,Federal tax deduction for interest expenses.,true
+cf_tax_fed_state_deduction,Federal tax deduction for state tax expenses.,true
+cf_tax_state_depr_deduction,State tax deduction amount for depreciation expenses.,true
+cf_tax_state_depreciation,State depreciation amount calculated using MACRS schedule and fair market value.,true
+cf_tax_state_expense,State tax expense after deductions for depreciation and interest.,true
+cf_tax_state_interest_deduction,State tax deduction for interest expenses.,true
+cf_taxable_income,Taxable income calculated as EBITDA minus interest and depreciation deductions.,true
+cf_terminal_value,Terminal value applied at project end date for financial modeling.,true
+cf_terminal_value_agg,Aggregated terminal value calculated from discounted cash flows near project end.,true
+cf_total_initial_investment,"Represents the one-time capital outflow at project inception, applied on the time axis at the project start date. Equals total initial investment at project start and 0 for all other periods, distinguishing the initial investment as a discrete cash flow event.",true
+cfads_capability,Capability in MWh considered for CFADS calculations when debt tenor applies.,true
+cfads_capability_agg,Aggregated CFADS capability across all periods for financial modeling.,true
+cfads_generation,Generation in MWh considered for CFADS calculations when debt tenor applies.,true
+cfads_ins_rate,"Insurance rate applied to CFADS calculations, adjusted for escalation.",true
+cfads_ins_rate_agg,Aggregated insurance rate for CFADS calculations over debt tenor.,true
+cfads_merchant_revenue,Merchant revenue considered for CFADS calculations when debt tenor applies.,true
+cfads_merchant_revenue_agg,Aggregated merchant revenue for CFADS calculations across all periods.,true
+cfads_op_cost_nonpti,Non-PTI operating costs considered for CFADS calculations when debt tenor applies.,true
+cfads_op_cost_nonpti_agg,Aggregated non-PTI operating costs for CFADS calculations across all periods.,true
+cfads_op_cost_nonpti_capab,Non-PTI operating costs based on capability for CFADS calculations.,true
+cfads_op_cost_nonpti_capab_agg,Aggregated non-PTI operating costs based on capability for CFADS calculations.,true
+cfads_op_cost_total,Total operating costs for CFADS calculations including property tax and insurance.,true
+cfads_op_cost_total_agg,Aggregated total operating costs for CFADS calculations across all periods.,true
+cfads_operating_income_nonpti,Operating income during debt tenor calculated as total revenue minus total operating costs before property tax & insurance.,true
+cfads_operating_income_nonpti_agg,Aggregated operating income during debt tenor calculated as total revenue minus total operating costs before property tax & insurance.,true
+cfads_proptax_rate,Property tax rate applied to CFADS calculations when debt tenor applies.,true
+cfads_proptax_rate_agg,Aggregated property tax rate for CFADS calculations over debt tenor.,true
+clean_dark_spread_market,Clean dark spread calculated as dark spread minus carbon cost adjustment.,true
+clean_spark_spread_market,Clean spark spread calculated as spark spread minus carbon cost adjustment.,true
+clear_sky_dni_max,Meinel clear-sky maximum direct-normal irradiance (W/m2) = extraterrestrial normal irradiance attenuated by a broadband clear-sky transmittance raised to the air mass. Physical upper bound on reconstructed DNI.,
+clearness_index,"Hourly clearness index kt = GHI / extraterrestrial horizontal irradiance, clamped to [0,1]. Drives the Erbs diffuse-fraction split.",
+climate_pathway,Specifies the climate scenario applied for modeling purposes.,true
+climate_spread_market,"Difference between clean dark spread and clean spark spread, indicating climate impact.",true
+climatology_baseline_years,Number of years used as baseline for climatology analysis (default is 10).,true
+climatology_rolling_years,Number of years used for rolling climatology analysis (default is 5).,true
+coal_price,Price of coal fuel calculated as system cost divided by system usage.,true
+coal_system_usage,"Amount of coal fuel consumed, expressed in thousands of units.",true
+coe,Cost of equity used for discounting cash flows (default is 12%).,true
+coe_discount_factor,Discounting factor applied to cost of equity calculations.,true
+coe_ppa_discount_factor,Discounting factor applied to discount rate calculations.,true
+coe_ppa_discount_rate,Discount rate calculated from cost of equity and PPA escalation.,true
+cogenerator,"Specifies whether the plant operates as a cogeneration facility, producing both electricity and useful heat.",true
+combined_cycle_natural_capacity_factor,Combined cycle natural capacity factor before accounting for any dispatching or forced/unforced outages. Conceptually 100% due to it's ability to run for perpetuity.,true
+confidence_score,Confidence score metric indicating reliability of forecast or model output.,true
+core_pk_count_by_zone,Count of unique core primary keys grouped by zone for aggregation purposes.,true
+core_pk_zone,Hash representing the original core_pk of the underlying core table (before joins) with the zone name appended. Used as the basis for deduplicating zonal data.,false
+cos_incidence_system,"Cosine of the beam angle of incidence on the generalized solar collection plane, computed from solar_system_tilt_angle and solar_system_azimuth_angle. Collapses correctly for all solar_type configs (flat -> cos zenith; dual-axis -> 1).",
+county,County name associated with the asset or operational data.,true
+county_geometry,Geometry of scoped counties expressed in Well-known text (WKT) format crs=4326.,true
+curtailment_rate,Rate of curtailment calculated as curtailed energy divided by total capability.,true
+curtailments,Amount of curtailed energy based on capability minus generation for solar or wind assets.,true
+daily,Truncates timestamp to day level for daily aggregation.,true
+dark_spread_market,"Difference between energy price and coal fuel cost, used for profitability analysis.",true
+datacenter,The name of the datacenter asset.,true
+datacenter_decommissioned_date,Decommissioning date of the given datacenter,true
+datacenter_feed_count_for_power,The number of power feeds to the data center. PowerFeed is the primary electrical supply line that brings external utility power into a data center facility.,true
+datacenter_geometry,"The coordinates of each datacenter, returned as WKT (EPSG:4326).",true
+datacenter_gross_building_space_sqft,"Gross area of the data center building, including offices, common areas, mechanical and electrical rooms denoted in square feet (sq. ft).",true
+datacenter_net_it_power_kw,"Net UPS power in a facility in kW (kilowatts). Excludes UPS power leased by a colocation provider in a facility. For example, if data center X has a facility with 1,000 kW and leases half to a colocation provider that offers 500 kW to clients, the first provider would have 500 net kW, as would the second.",true
+datacenter_net_it_space_sq_ft,"Area of the facility in square feet (sq. ft.), without double counting. This excludes square footage leased by a colocation provider in a facility. For example, if data center X has a facility with 100,000 sq. ft and leases 60% to a colocation provider that offers 60,000 sq. ft to clients, the first provider would have 40,000 net sq. ft.",true
+datacenter_net_number_of_racks,"Actual number of racks in a facility, without double counting. (Excludes racks leased by a colocation provider in a facility. For example, if data center X has a facility with 1,000 racks and leases half to a colocation provider that offers 500 racks to clients, the first provider would have 500 net racks, as would the second.).",true
+datacenter_operational_date,Online date of the given datacenter,true
+datacenter_operator,The operator associated with the datacenter asset.,true
+datacenter_owner,Owner of the datacenter.,true
+datacenter_pue,"Power Usage Effectiveness (PUE) is a dimensionless ratio measuring the energy efficiency of a data center, expressed as total facility energy consumption divided by the energy consumed by IT equipment alone. It quantifies the 'overhead' energy required to support computing infrastructure — cooling, power distribution/conversion losses, lighting, and other non-compute loads.",true
+datacenter_service_types,"Service types of a data center. (Cloud, Enterprise, Hosting, Powered Shell, Retail, System Integrator, Telco, Wholesale, Small Reseller, Investor, etc.).",true
+datacenter_status,"Operational status of the data center. For example, Operational, Under Construction, Land Held, Planned, Not Operational.",true
+datacenter_tenant_type,"Tenancy of the data center, for example, single or multi-tenant.",true
+datacenter_total_it_power_kw,"Installed power available for client IT equipment, in kW (kilowatts).",true
+datacenter_total_it_space_sq_ft,"Currently built-out data center space that can support customer equipment ('white space' or 'raised floor'), in square feet (sq. ft). This does not include offices, common areas, mechanical or electrical rooms.",true
+datacenter_total_number_of_racks,Actual number of racks that could be or are installed in the built-out space in the data center.,true
+datacenter_total_utility_power_kw,"Power supplied to the building by the electrical utility, in kW (kilowatts). For example, if the IT equipment requires 500kW of power and the PUE is 1.5, another 250kW of power is required for cooling and utility power must be at least 750kW.",true
+datacenter_type,The type of datacenter asset.,true
+date_hour_end,The ending date/hour for the current record in the context of the user's aggregation configuration.,false
+date_hour_start,The starting date/hour for the current records in the context of the user's aggregation configuration.,false
+day,Day of the month extracted from timestamp.,true
+day_ahead,Market settlement type designation for the day-ahead power market.,true
+day_ahead_latest,,false
+dayname,Name of the day extracted from timestamp.,true
+dayofweek,Numeric representation of day of the week extracted from timestamp.,true
+dayofyear,Day of the year extracted from timestamp.,true
+dcf_debt_interest_cost,Discounted debt interest expense for financial modeling.,true
+dcf_debt_interest_factor,Aggregated discounted debt interest rate for financial modeling over tenor.,true
+dcf_debt_interest_rate,Discounted debt interest rate applied for financial modeling.,true
+dcf_debt_principal_cost,Discounted debt principal repayment amount for financial modeling.,true
+dcf_debt_principal_factor,Aggregated discounted debt repayment rate for financial modeling over tenor.,true
+dcf_debt_principal_rate,Discounted debt repayment rate applied for financial modeling.,true
+dcf_debt_service_cost,Discounted total debt service cost including interest and principal payments.,true
+dcf_debt_service_factor,Aggregated discounted debt service rate for financial modeling.,true
+dcf_debt_service_rate,Discounted debt service rate applied for financial modeling.,true
+dcf_depr_deduction,Discounted tax deduction amount for depreciation expenses.,true
+dcf_ebitda,Discounted EBITDA for financial modeling.,true
+dcf_ebt,Discounted earnings before taxes for financial modeling.,true
+dcf_gross_profit,Discounted gross profit for financial modeling.,true
+dcf_gross_tax,Discounted total tax liability for financial modeling.,true
+dcf_gross_tax_fed,Discounted federal tax liability for financial modeling.,true
+dcf_gross_tax_state,Discounted state tax liability for financial modeling.,true
+dcf_ins_rate,Discounted insurance rate applied for financial modeling.,true
+dcf_ins_rate_agg,Aggregated discounted insurance rate for financial modeling over asset life.,true
+dcf_interest_deduction,Discounted tax deduction amount for interest expenses.,true
+dcf_itc,Discounted investment tax credit applied for financial modeling.,true
+dcf_itc_agg,Aggregated discounted investment tax credit for financial modeling.,true
+dcf_itc_basis_reduction,Discounted reduction in tax basis due to investment tax credit.,true
+dcf_itc_basis_reduction_agg,Aggregated discounted tax basis reduction for financial modeling.,true
+dcf_leverage_value,Discounted leverage value derived from debt service obligations.,true
+dcf_macrs,Discounted MACRS depreciation amount for financial modeling.,true
+dcf_macrs_5,Discounted MACRS 5-year depreciation amount for financial modeling.,true
+dcf_macrs_5_agg,Aggregated discounted MACRS 5 depreciation schedule for financial modeling.,true
+dcf_macrs_agg,Aggregated discounted MACRS depreciation schedule for financial modeling.,true
+dcf_market_exposure_carbon_price,Discounted exposure to carbon price risk for financial modeling.,true
+dcf_market_exposure_denom,Discounted denominator for market exposure calculations.,true
+dcf_market_exposure_fuel_price,Discounted exposure to fuel price risk for financial modeling.,true
+dcf_market_exposure_merchant_as_price,Discounted exposure to ancillary service price risk for financial modeling.,true
+dcf_market_exposure_merchant_capacity_price,Discounted exposure to merchant capacity price risk for financial modeling.,true
+dcf_market_exposure_merchant_energy_price,Discounted exposure to merchant energy price risk for financial modeling.,true
+dcf_market_exposure_merchant_rec_price,Discounted exposure to renewable energy credit price risk for financial modeling.,true
+dcf_net_income,"Discounted net income for financial modeling, derived from CF net income.",true
+dcf_op_cost_book_depreciation,Discounted book depreciation expense included in operating costs.,true
+dcf_op_cost_carbon,Discounted operating cost associated with carbon emissions.,true
+dcf_op_cost_carbon_capab,Discounted carbon-related operating cost based on capability.,true
+dcf_op_cost_carbon_capab_agg,Aggregated discounted carbon-related operating cost based on capability.,true
+dcf_op_cost_cogs,"Discounted cost of goods sold including carbon, fuel, and variable O&M costs.",true
+dcf_op_cost_cycling,Discounted operating cost for non-fuel cycling operations based on number of starts.,true
+dcf_op_cost_fom,Discounted fixed O&M cost calculated based on nominal capacity.,true
+dcf_op_cost_fom_agg,Aggregated discounted fixed O&M cost calculated based on nominal capacity.,true
+dcf_op_cost_fuel,Discounted operating cost for fuel consumption based on burn rate and fuel price.,true
+dcf_op_cost_fuel_capab,Discounted fuel cost calculated based on capability.,true
+dcf_op_cost_fuel_capab_agg,Aggregated discounted fuel cost calculated based on capability.,true
+dcf_op_cost_grid_purchases,"Discounted cost of energy purchased to charge the battery, discounted at the cost of equity consistent with the other dcf operating cost lines.",true
+dcf_op_cost_grid_purchases_agg,"Aggregated discounted charging cost across all periods, added to the LCOS numerator as a deductible operating expense.",true
+dcf_op_cost_ins,Discounted insurance cost calculated based on fair market value and annual hours.,true
+dcf_op_cost_nonpti,"Discounted non-PTI operating costs including carbon, fuel, and O&M expenses.",true
+dcf_op_cost_nonpti_agg,Aggregated discounted non-PTI operating costs for financial modeling.,true
+dcf_op_cost_nonpti_capab,Discounted non-PTI operating costs based on capability.,true
+dcf_op_cost_nonpti_capab_agg,Aggregated discounted non-PTI operating costs based on capability.,true
+dcf_op_cost_opex,"Discounted total operating expenses including depreciation, fixed O&M, and insurance.",true
+dcf_op_cost_proptax,Discounted property tax expense calculated based on fair market value and annual hours.,true
+dcf_op_cost_total,"Discounted total operating cost including all components such as carbon, fuel, and O&M.",true
+dcf_op_cost_vom,Discounted variable O&M cost calculated based on generation output.,true
+dcf_op_cost_vom_capab,Discounted variable O&M cost calculated based on capability.,true
+dcf_op_cost_vom_capab_agg,Aggregated discounted variable O&M cost calculated based on capability.,true
+dcf_operating_income,Discounted operating income calculated as EBITDA minus book depreciation.,true
+dcf_operations_capability_deliverable_mwh_agg,Aggregated discounted deliverable capability (i.e. no charging or on-site load) in MWh across all periods.,false
+dcf_operations_capability_mwh,Discounted capability in MWh for financial modeling.,true
+dcf_operations_capability_mwh_agg,Aggregated discounted capability in MWh across all periods.,true
+dcf_operations_carbon_emissions_tons,Discounted carbon emissions in tons based on fuel burn and emission rate.,true
+dcf_operations_carbon_emissions_tons_capab,Discounted carbon emissions in tons based on capability.,true
+dcf_operations_consumption_mwh,"Discounted gross energy purchased from the grid in MWh, based on negative capacity factor hours and operating capacity.",true
+dcf_operations_consumption_mwh_agg,"Aggregated discounted gross energy purchased from the grid in MWh, based on negative capacity factor hours and operating capacity.",true
+dcf_operations_firm_capacity_mw,Discounted firm capacity in MW based on nominal capacity and capacity credit.,true
+dcf_operations_fuel_burn_mmbtu,Discounted fuel burn in MMBtu based on generation and heat rate.,true
+dcf_operations_fuel_burn_mmbtu_capab,Discounted fuel burn in MMBtu based on capability.,true
+dcf_operations_generation_mwh,Discounted total generation in MWh based on capacity factor and operating capacity.,true
+dcf_operations_generation_mwh_agg,Aggregated discounted generation in MWh across all periods.,true
+dcf_operations_nominal_capacity_kw,Discounted nominal capacity expressed in kilowatts.,true
+dcf_operations_nominal_capacity_mw,Discounted nominal capacity expressed in megawatts.,true
+dcf_operations_operating_capacity_mw,Discounted operating capacity in MW adjusted for degradation.,true
+dcf_operations_production_mwh,"Discounted gross energy discharged in MWh for financial modeling, discounted on the PPA basis consistent with dcf_operations_capability_mwh.",true
+dcf_operations_production_mwh_agg,"Aggregated discounted gross discharge in MWh across all periods, used as the LCOS denominator.",true
+dcf_proptax_rate,Discounted property tax rate applied to the asset for cost calculations.,true
+dcf_proptax_rate_agg,Aggregated discounted property tax rate for financial modeling over asset life.,true
+dcf_ptc_credit_amount,Discounted production tax credit calculated from generation and applicable credit rate.,true
+dcf_ptc_credit_amount_agg,Aggregated discounted production tax credit across all periods.,true
+dcf_ptc_credit_amount_capab,Discounted production tax credit calculated based on capability in MWh.,true
+dcf_ptc_credit_amount_capab_agg,Aggregated discounted production tax credit based on capability across all periods.,true
+dcf_revenue_merchant_as,Discounted revenue from ancillary services in merchant markets based on generation and capture factors.,true
+dcf_revenue_merchant_as_capability,Discounted revenue from ancillary services based on capability in MWh.,true
+dcf_revenue_merchant_capacity,Discounted revenue from capacity payments in merchant markets based on operating capacity and credit.,true
+dcf_revenue_merchant_energy,Discounted revenue from energy sales in merchant markets based on generation and energy price.,true
+dcf_revenue_merchant_energy_capability,Discounted revenue from energy sales based on capability in MWh.,true
+dcf_revenue_merchant_rec,Discounted revenue from renewable energy credits based on generation and REC price.,true
+dcf_revenue_merchant_rec_capability,Discounted revenue from renewable energy credits based on capability in MWh.,true
+dcf_revenue_merchant_total,"Discounted total merchant revenue from energy, ancillary services, RECs, and capacity payments.",true
+dcf_revenue_merchant_total_agg,Aggregated discounted total merchant revenue across all periods.,true
+dcf_revenue_merchant_total_capability,"Discounted total merchant revenue based on capability, including energy, ancillary services, RECs, and capacity.",true
+dcf_revenue_merchant_total_capability_agg,Aggregated discounted total merchant revenue based on capability across all periods.,true
+dcf_state_deduction,"Total discounted state tax deduction. Because this is aggregate across state and federal, it's calculated simply as the product of the gross state tax amount and the federal tax rate (e.g. the state deductions and credits are already accounted for in their respective aggregates).",true
+dcf_tax_depreciation,Discounted tax depreciation amount calculated using federal and state depreciation schedules and effective tax rate.,true
+dcf_tax_expense,Discounted total tax expense calculated from taxable income and effective tax rate.,true
+dcf_tax_fed_depreciation,Discounted federal depreciation amount calculated using MACRS schedule and fair market value.,true
+dcf_tax_state_depreciation,Discounted state depreciation amount calculated using MACRS schedule and fair market value.,true
+dcf_taxable_income,Discounted taxable income calculated as EBITDA minus interest and depreciation deductions.,true
+dcf_terminal_value,Discounted terminal value applied at project end date for financial modeling.,true
+dcf_terminal_value_agg,Aggregated discounted terminal value calculated from discounted cash flows near project end.,true
+de_optimizer,Flag indicating whether debt optimization is applied based on input debt share.,true
+debt_interest_discount_factor,Discounting factor applied to debt interest calculations.,true
+debt_interest_rate,Interest rate applied to project debt (default is 8%).,true
+debt_life,"The number of years over which debt principal is amortized, calculated as the lesser of the contractual debt tenor and the asset's economic life. This cap ensures the repayment schedule never extends beyond the period during which the asset generates cash flow, since financing cannot outlive the underlying economic life.",true
+debt_opt_factor,Optimization factor for debt structure based on repayment and interest rates.,true
+debt_service_factor,Aggregated debt service rate for financial modeling purposes.,true
+debt_share,Proportion of project financed through debt. Uses optimized_debt_share if value not provided by user.,true
+debt_tenor,Debt tenor or repayment period in years (determined by prime mover).,true
+debt_tenor_asset,Default debt tenor for the 'asset' grain.,true
+debt_tenor_prosmod,Default debt tenor for the hypothetical grains.,true
+debt_term_active,Indicates whether current timestamp falls within debt tenor period.,true
+debt_total,Total debt amount calculated as fair market value multiplied by debt share.,true
+decadal,A derived timestamp representing the normalized start of the decade associated with the record's timestamp. This field enables consistent temporal aggregation at a ten‑year granularity by converting every timestamp into the canonical beginning of its corresponding decade.,true
+decade,This derived attribute represents the decade associated with a record’s timestamp. It normalizes all dates into the first year of their respective 10‑year period to support standardized longitudinal analysis.,true
+degr,Degradation rate applied to operating capacity calculations.,true
+demand,The absolute gross native energy demand required by the footprint.,true
+dew_point_2_meter_k,Dew point temperature at 2 meters above ground in Kelvin.,true
+dew_point_2_meter_k_fixed,Fixed dew point temperature at 2 meters in Kelvin for baseline calculations.,true
+dew_point_2_meter_k_forecast,Forecasted dew point temperature at 2 meters above ground in kelvin.,true
+dew_point_2_meter_k_historical,Historical dew point temperature at 2 meters above ground in kelvin.,true
+dew_point_2_meter_k_rolling,Rolling average of dew point temperature at 2 meters in Kelvin.,true
+dewpoint_2_meter,Dew point temperature at 2 meters converted to Fahrenheit.,true
+diffuse_fraction,Erbs (1982) diffuse fraction of GHI as a piecewise function of the clearness index kt. Fraction of global horizontal that is diffuse.,
+diffuse_horizontal_irradiance,Diffuse horizontal irradiance DHI (W/m2) = GHI * Erbs diffuse fraction.,
+direct_dependents,Array of metrics whose equations reference this metric directly (one hop downstream).,false
+direct_normal_irradiance,"Direct-normal irradiance DNI (W/m2) = (GHI - DHI) / cos(zenith), with cos(zenith) floored at 0.065 (~86.3deg) and DNI clamped to [0, I0n]. Beam-on-normal component recovered from ERA5 GHI.",
+direct_precedents,Array of metrics referenced directly in this metric's equation (one hop upstream). These are the immediate inputs required to compute it.,false
+direct_tables,"The set of source tables referenced directly by the metric’s equation through its table aliases, without including dependencies introduced through upstream metrics. Use this field to identify the immediate table-level inputs required to compute the metric.",false
+dispatch_cluster_id,Unique identifier for a dispatch cluster based on merit flag changes.,true
+dispatch_cluster_margin,Total margin for a dispatch cluster calculated from capability and energy price.,true
+dispatch_merit_flag,Flag indicating whether dispatch is economically viable based on energy price and cost.,true
+dispatch_startup_cost,"Total startup cost including O&M, fuel, and carbon costs.",true
+dispatch_startup_cycling_cost,"The estimated non‑fuel cost (in dollars) incurred per startup event, capturing mechanical wear, maintenance, labor, and other cycling‑related expenses independent of thermal energy input.",true
+dispatch_startup_fuel_burn_mmbtu,"The estimated total thermal energy input (in MMBtu) required to bring a generating unit from an offline state to synchronized, dispatchable operation, reflecting the heating of plant systems, auxiliary loads, and startup inefficiencies.",true
+dispatch_startup_fuel_cost,The estimated fuel cost (in dollars) incurred per startup event.,true
+dispatched_capacity_factor,Output dispatched based on merit flag and margin calculations.,true
+diurnal_shape,Timestamp representing diurnal shape for hourly analysis.,true
+drought_score,Score indicating drought severity based on climatology data.,true
+dual_axis_tracking,Solar type designation for a dual-axis tracking panel configuration.,true
+eastern,Specifies the time zone used for eastern operations (default is America/New_York).,true
+econ_life,Economic life of the asset calculated from online and retirement dates.,true
+eia_plant_code,Unique identifier assigned to the plant by the U.S. Energy Information Administration.,true
+elcc,Effective Load Carrying Capability calculated for reliability analysis.,true
+emission_cost_resourcehour,Total emission cost for the resource adjusted by kernel percent.,true
+end_date,End date for the analysis period or project timeline.,true
+energy_price,"Returns the applicable wholesale energy price for each record by selecting the real-time price (energy_price_real_time) when market_settlement_type is real_time, and otherwise defaulting to the day-ahead price (energy_price_day_ahead). This provides a single, settlement-aware energy price series that automatically resolves to the correct market based on the record's market_settlement_type.",true
+energy_price_day_ahead,Day-ahead energy price determined by zonal or locational marginal pricing method.,true
+energy_price_esc,Annual escalation rate applied to energy prices (default is 2%).,true
+energy_price_real_time,Real-time energy price determined by zonal or locational marginal pricing method.,true
+energy_price_zonehour,Day-ahead zonal energy price recorded for the zone hour.,true
+enterprise_value_breakdown,"Structured breakdown of enterprise value including revenues, operating costs, taxes, deductions, credits, leverage, and terminal value.",true
+equation_of_time,Astronomical calculation representing the difference between solar time and clock time based on Earth's orbit and axial tilt.,true
+equity_irr,Internal rate of return on equity cash flows calculated using IRR function.,true
+equity_share,"Proportion of project financed through equity, calculated as one minus debt share.",true
+equity_total,Total equity investment calculated as fair market value multiplied by equity share.,true
+exports,Total energy exports recorded for the zone.,true
+expose_as_parameter,Indicates whether the metric is exposed to the end user as a customizable parameter.,false
+ext_year,Year number extension for when the desired horizon extends beyond the forecast horizon.,false
+extraterrestrial_horizontal_irradiance,"Top-of-atmosphere irradiance on a horizontal plane (W/m2) = I0n * cos(zenith), floored at 0 when the sun is below the horizon. Denominator for the clearness index.",
+extraterrestrial_normal_irradiance,Top-of-atmosphere direct-normal irradiance (W/m2): solar constant 1361 scaled by the inverse square of the Earth-Sun radius vector (eccentricity correction).,
+extreme_cold_score,Score indicating severity of extreme cold conditions based on climatology data.,true
+extreme_heat_score,Score indicating severity of extreme heat conditions based on climatology data.,true
+fair_market_value,Aggregated fair market value based on optimization flag.,true
+fair_market_value_optimized_agg,Aggregated fair market value with optimized debt sizing.,true
+fair_market_value_timephased,"Fair market value calculated from discounted cash flows including EBITDA, taxes, deductions, and credits.",true
+fcfe_annual_vector,Array of annual after-tax equity cash flows for financial modeling.,true
+fcff_annual_vector,Array of annual free cash flows for project valuation.,true
+fiber_geometry,"The full, unclipped route geometry of each fiber asset as stored in the source, returned as WKT (EPSG:4326). Represents the complete physical path of the fiber, that intersects with or is nearest to the search query's geometry.",true
+fiber_geometry_clipped,"The portion of the fiber route geometry that falls inside the area of the query geometry returned as WKT (EPSG:4326), i.e. the fiber route intersected with the search area and reduced to its line segments. If the search geometry is a point (i.e. 0 area), then no fiber route is returned. Represents 'fiber within the area of interest.'",true
+fiber_geometry_terminus,The endpoint(s) of the clipped fiber route(s) — the terminal nodes where the fiber route begins/ends within the search area. Useful for identifying connection or landing points rather than the full path.,true
+fiber_golive_date,The date the given fiber infrastructure was installed.,true
+fiber_miles,"The length of fiber_geometry_clipped in statute miles. Represents how much fiber, by length, lies within the search area.",true
+fiber_operator,The distinct set of operators associated with the fiber assets matched by the query.,true
+fiber_status,Status of given fiber infrastructure.,true
+fiber_type,IT Infrastructure type.,true
+fine_tuning_parameters,A list of fine-tuning parameters that the users can modify to influence a given measure or set of measures. These parameters will modify methods at a far more detailed and granular level than the basic parameters.,false
+fixed_tilt,Solar type designation for a fixed-tilt panel configuration.,true
+flat,Solar type designation for a flat panel configuration.,true
+fom,Fixed O&M cost determined by asset or prosmod data.,true
+fom_asset,Fixed O&M cost specific to the asset calculated from cost and capacity.,true
+fom_kwh,Fixed O&M cost converted to $/kWh.,true
+fom_prosmod,Fixed O&M cost derived from prosmod model data.,true
+fom_prosmod_battery_kwh,Fixed O&M Cost of a battery in $/kWh-year terms.,true
+fom_prosmod_non_battery,Fixed O&M cost for non-battery assets,true
+forecast_first,Uses forecast (modeled) outputs in periods where historical and forecast data overlap.,true
+forecast_option_vintage_id,Identifier for forecast option vintage used in modeling.,true
+forecast_start_date,,true
+forecast_year_num,Forecast year number calculated from start date and current timestamp.,true
+fuel,Type of fuel used for generation.,true
+fuel_cost_mwh,Fuel cost per MWh calculated using heat rate and fuel price.,true
+fuel_cost_resourcehour,Total fuel cost for the resource adjusted by kernel percent.,true
+fuel_price,Fuel price used based on the fuel type and whether or not the asset is a real or hypothetical asset,true
+fuel_price_esc,Annual escalation rate applied to fuel prices (default is 2%).,true
+fuel_price_prosmod,Price of fuel determined by fuel type and forecast data.,true
+fuel_price_prosmod_non_gas,Non-gas fuel price derived from the prosmod financial parameters table with the escalated extension built-in.,true
+fuel_price_resourcehour,Fuel price for the resource calculated from total fuel cost and usage.,true
+fuel_usage_biomass,Amount of biomass fuel consumed for generation.,true
+fuel_usage_coal,Amount of coal fuel consumed for generation.,true
+fuel_usage_resourcehour,Fuel usage for the resource adjusted by kernel percent.,true
+fuel_usage_uranium,Amount of uranium fuel consumed for generation.,true
+full_year_hourly_shape,8760h shape,true
+gas_basis,Difference between gas price and Henry Hub price for basis calculations.,true
+gas_price,Gas price determined by historical or forecast data based on timestamp.,true
+gas_price_forecast,Forecasted gas price published by pricing authorities.,true
+gas_price_historical,Historical gas price recorded for the market.,true
+gas_price_latest,,true
+gas_turbine_natural_capacity_factor,Gas turbine natural capacity factor before accounting for any dispatching or forced/unforced outages. Conceptually 100% due to it's ability to run for perpetuity.,true
+generation_resourcehour,Generation output in MWh for a specific resource hour adjusted by kernel percent.,true
+generation_shape_method,"Controls how weather-driven generation profiles (e.g., solar and wind output for hypothetical/forecasted resources) are shaped from historical weather years. Only the leading integer in the string is parsed, and it is interpreted in one of two modes based on its magnitude: (1) Rolling-window mode — small integers (values below 1990) are treated as a trailing look-back window, shaping generation from every weather year between current_year - N and the most recent year (e.g., '2' uses the last 2 years, '10' the last 10). (2) Specific-year mode — a four-digit year between 1990 and last year is treated as a single vintage, shaping generation using only that calendar year's observed weather (e.g., '2019'). Applies only where forecast weather is engaged (weather-forecast context on weather-driven resources).",true
+geometric_height,Height calculated using air temperature and pressure for atmospheric modeling.,true
+geometric_mean_anomaly_of_the_sun,Astronomical calculation representing the mean anomaly of the sun based on Julian century.,true
+geometric_mean_longitude_of_the_sun,Astronomical calculation representing the mean longitude of the sun based on Julian century.,true
+geometry,Geometric data placeholder for spatial modeling.,true
+geopotential_height,Height adjusted for Earth's gravitational potential for atmospheric modeling.,true
+geothermal_capability,Geothermal capability calculated as natural capacity factor multiplied by system size.,true
+geothermal_capacity_factor,Estimated capacity factor of a typical geothermal generation resource.,true
+geothermal_natural_capacity_factor,Geothermal natural capacity factor assuming 10% parasitic load.,true
+geothermal_output,Geothermal energy output generalized to the given granular context.,true
+global_horizontal_irradiance,"Global Horizontal Irradiance (GHI) is the total solar irradiance received per unit area (W/m2) by a surface horizontal to the ground, integrating contributions from all directions of the sky hemisphere.",true
+grain,"Defines the analytical entity type that each record represents and against which scope, measures, and timing are resolved (e.g., asset, grid, node). Each individual member of the selected grain is referred to as a granule, and the grain determines both the level of aggregation and which underlying data sources are joined into the calculation.",true
+granule,A constituent member of the chosen grain.,false
+granule_latitude,,true
+granule_longitude,,true
+granule_wkt,,true
+greenfield,Flag indicating whether the project is greenfield (new build) or asset-based.,true
+grid,WKT representing the given member of the 'grid' grain.,true
+grid_box_wkt,0.25 x 0.25 degree grid box cell.,true
+gridbox_area_m,Gridbox area of the given weather grid.,true
+gridbox_area_m_forecast,Forecasted gridbox area of the given weather grid.,true
+gridbox_area_m_historical,Historical gridbox area of the given weather grid.,true
+having,Placeholder for SQL HAVING clause in query logic.,true
+heat_rate,Heat rate determined by asset or prosmod data for efficiency calculations.,true
+heat_rate_asset,Heat rate specific to the asset calculated from fuel usage and output.,true
+heat_rate_prosmod,Heat rate derived from prosmod model data.,true
+heat_rate_resourcehour,Heat rate for the resource calculated from fuel usage and output.,true
+henry_hub_price,Henry Hub gas price determined by historical or forecast data based on timestamp.,true
+henry_hub_price_forecast,Forecasted Henry Hub gas price published by pricing authorities.,true
+henry_hub_price_historical,Historical Henry Hub gas price recorded for the market.,true
+high_cloud_cover,Percentage of high-level cloud cover observed at the site.,true
+high_cloud_cover_fixed,Fixed value of high-level cloud cover for baseline calculations.,true
+high_cloud_cover_forecast,Forecasted percentage of high-level cloud cover observed at the site.,true
+high_cloud_cover_historical,Historical percentage of high-level cloud cover observed at the site.,true
+high_cloud_cover_rolling,Rolling average of high-level cloud cover for trend analysis.,true
+high_vegetation_cover,Percentage of high vegetation cover observed at the site.,true
+high_vegetation_cover_fixed,Fixed value of high vegetation cover for baseline calculations.,true
+high_vegetation_cover_forecast,Forecasted percentage of high vegetation cover observed at the site.,true
+high_vegetation_cover_historical,Historical percentage of high vegetation cover observed at the site.,true
+high_vegetation_cover_rolling,Rolling average of high vegetation cover for trend analysis.,true
+high_vegetation_type,Type of high vegetation determined by classification codes.,true
+historical_first,Uses historical (observed) data in periods where historical and forecast data overlap.,true
+hour,Hour extracted from timestamp for time-based analysis.,true
+hour_angle,Angle of the sun relative to the observer's meridian calculated from solar time.,true
+hour_angle_of_sunrise,Angle of sunrise calculated based on latitude and solar declination.,true
+hourly,Timestamp truncated to hourly level for aggregation.,true
+hourofmonth,Hour of the month calculated from timestamp.,true
+hourofweek,Hour of the week calculated from timestamp.,true
+hourofyear,Hour of the year calculated from timestamp.,true
+hydro_capability,Capability of a hydro plant derived from natural capacity factor.,true
+hydro_capacity_factor,Hydro capacity factor calculated from total hydro output and system size.,true
+hydro_head_m,"Effective vertical height difference in meters between the water source and the turbine, representing the gravitational potential energy available to convert flow into power with a default value of 10m",true
+hydro_natural_capacity_factor,Natural capacity factor of a hydro plant using raw hydro output (derived from runoff flow) and constrained by system size (MW).,true
+hydro_output,Hydro energy output generalized to the given granular context.,true
+hydro_output_raw,"Theoretical instantaneous power generation calculated from runoff-derived flow using the hydropower equation (ρ·g·Q·H·η) without applying plant constraints such as turbine limits, storage, or nameplate capacity.",true
+hydro_turbine_efficiency,Assumed conversion efficiency representing the fraction of hydraulic energy in flowing water that is successfully converted into electrical power by the turbine-generator system with a default value of 90%.,true
+hypothetical_battery_output,"Total energy output from the battery, calculated as capacity factor multiplied by system size in MW.",true
+hypothetical_geothermal_output,Geothermal energy output based on capability and market conditions.,true
+hypothetical_hydro_output,Hydroelectric energy output based on capability and market conditions.,true
+hypothetical_solar_output,Solar energy output based on capability and market conditions.,true
+hypothetical_wind_output,Wind energy output based on capability and market conditions.,true
+implied_heat_rate,"The ratio of the power price to the natural gas price at a given location and time, expressed in Btu/kWh. It represents the efficiency level a generator would need to achieve for its fuel costs to just equal the power price, and is used as a market-implied proxy for the marginal heat rate of the price-setting unit at that node or hub.",true
+implied_heat_rate_day_ahead_historical,Implied heat rate calculated from historical gas price and day-ahead LMP.,true
+implied_heat_rate_real_time_historical,Implied heat rate calculated from historical gas price and real-time LMP.,true
+implied_wacc,"The internal rate of return (IRR) that equates the present value of future unlevered free cash flows to the total enterprise value (APV), representing the single, time-weighted discount rate that accounts for both underlying asset risk and financing side effects.",true
+imports,Total energy imports recorded for the zone.,true
+income_statement,"Structured income statement including revenues, COGS, operating expenses, and net income.",true
+initial_capacity_mw,System nameplate capacity applied during the first year of operation.,true
+ins,Insurance rate applied to project assets for cost calculations.,true
+insurance_basis,The underlying asset value or financial metric to which the insurance rate is applied in order to calculate the premium. It defines the exposure being insured and ensures the rate is interpreted unambiguously in cost calculations.,true
+insurance_basis_esc,Annual escalation rate applied to fixed O&M costs (default is 2%).,true
+int_miles,Number of miles for interconnection infrastructure.,true
+interconnect,Interconnection identifier for the project or asset.,true
+interconnect_geometry,Geometry of scoped interconnects expressed in Well-known text (WKT) format crs=4326.,true
+interconnection_cost,"Capital required to connect the asset to the grid, calculated as cost per mile multiplied by total interconnection distance.",true
+interconnection_cost_initial,"Interconnection cost applied at inception based on project type, reflecting whether grid connection costs are incurred in the modeled scenario. Equals interconnection_cost for greenfield projects and 0 for acquisitions, preserving the distinction between underlying cost and applied investment.",true
+interconnection_cost_per_mile,Interconnection cost per mile for transmission infrastructure.,true
+internal_combustion_natural_capacity_factor,Internal combustion natural capacity factor before accounting for any dispatching or forced/unforced outages. Conceptually 100% due to it's ability to run for perpetuity.,true
+irr,Internal rate of return calculated from free cash flow array.,true
+is_forecast_sensitive,"Indicates if the metric relies on forecast-related dimensions (such as model source, vintage ID, vintage date, or zonal vintage ID) either directly or through table joins. When true, the system ensures that the generated query dynamically resolves and filters by the correct forecast vintages.",false
+is_grain_sensitive,"Identifies whether the metric's calculation depends directly on the core fact data grain by verifying if the core table is involved in its lineage. This determines if the final query can aggregate the grain safely or if it must group/restrict data by specific grains (e.g., asset vs. grid).",false
+is_technology_sensitive,"Indicates if the metric is sensitive to Prime Mover or Fuel configurations by checking for the presence of prime mover, fuel, or related metrics in the calculation path. This tells the execution engine to apply default technology filters or inject technology groupings into the final output.",false
+is_time_scaffold_sensitive,"Specifies if the metric requires join or alignment logic with the time scaffold (using hourly date columns like UTC, local, or timezone-adjusted hours). When flagged, it triggers the inclusion of time-scaffold join logic to prevent DST double-counting or alignment mismatches over study periods.",false
+iso,Identifies the ISO or RTO responsible for grid operations in the region.,true
+isweekend,1 if a saturday or sunday otherwise 0,true
+itc,Investment tax credit applied to the project (default is 0).,true
+itc_basis_red,Reduction factor applied to tax basis due to investment tax credit.,true
+itc_elig,Eligibility percentage for investment tax credit (default is 95%).,true
+julian_century,Julian century calculated from Julian day for astronomical modeling.,true
+julian_day,Julian day calculated from UTC timestamp for astronomical modeling.,true
+kernel_percent,,false
+lace_mwh,Levelized avoided cost of energy calculated based on capability in MWh.,true
+latitude,Latitude of the underlying granule or a custom point.,true
+lcoe_breakdown,"Structured breakdown of the levelized cost of energy including revenues, operating costs, taxes, deductions, credits, leverage, and terminal value.",false
+lcoe_mwh,Levelized cost of energy calculated based on generation in MWh.,true
+lcoe_revenue_requirement,"Numerator for LCOE calculation including capital cost, tax effects, and operating costs.",true
+lcos_breakdown,"Structured $/MWh-discharged breakdown of merchant LCOS: capital (plant, interconnection, leveraging), operating (grid charging, fuel, carbon, variable and fixed O&M, property tax, insurance), gross taxes, tax deductions (state, depreciation, interest), and tax credits (PTC, ITC). Denominator is gross discharged energy; leverage and interest lines are sized on optimized_debt_share so the components foot exactly to the lcos total. Charging is excluded from the taxable base identically to other operating costs. Fuel/carbon lines are retained for parallelism with lcoe_breakdown and return zero for pure storage.",false
+lcos_mwh,"Levelized cost of storage in $/MWh discharged for a merchant/grid-charged battery. Equals the levelized total cost of owning and operating the asset (capital, fixed/variable O&M, property tax, insurance, taxes net of ITC/PTC, plus grid charging cost) divided by discounted gross energy discharged to the grid. Debt is sized on optimized_debt_share (merchant). Distinct from lcoe_mwh: (1) grid charging is an explicit cost in the numerator, and (2) the denominator is gross discharge rather than net capability.",true
+lcos_revenue_requirement,"Numerator for merchant LCOS. Identical in structure to lcoe_numerator_agg (levelized capex, fixed/variable O&M, property tax, insurance, MACRS, ITC/PTC, tax effects, terminal value) but sized on optimized_debt_share (merchant, revenue-based DSCR) instead of bilateral_debt_share, and with the discounted grid-charging cost (dcf_op_cost_charging_agg) added as a deductible operating expense. Charging enters at full pre-tax value here because this is a required-revenue (cost) construction with no merchant revenue term; it does NOT double-count the charge leg that optimized_debt_share nets on the revenue side, since that lives in a separate cash-flow sub-calc.",true
+leaf_area_index_high_vegetation,Leaf area index for high vegetation observed at the site.,true
+leaf_area_index_high_vegetation_fixed,Fixed leaf area index for high vegetation for baseline calculations.,true
+leaf_area_index_high_vegetation_forecast,Forecasted leaf area index for high vegetation observed at the site.,true
+leaf_area_index_high_vegetation_historical,Historical leaf area index for high vegetation observed at the site.,true
+leaf_area_index_high_vegetation_rolling,Rolling average of leaf area index for high vegetation.,true
+leaf_area_index_low_vegetation,Leaf area index for low vegetation observed at the site.,true
+leaf_area_index_low_vegetation_fixed,Fixed leaf area index for low vegetation for baseline calculations.,true
+leaf_area_index_low_vegetation_forecast,Forecasted leaf area index for low vegetation observed at the site.,true
+leaf_area_index_low_vegetation_historical,Historical leaf area index for low vegetation observed at the site.,true
+leaf_area_index_low_vegetation_rolling,Rolling average of leaf area index for low vegetation.,true
+local,Local time zone identifier for the project or asset.,true
+local_date_hour,,false
+local_start_date,"Start date for the analysis period or project timeline, in the local time of the given granule.",false
+local_tz,,false
+locational_marginal_price_day_ahead,Day-ahead locational marginal price determined by forecast or historical data.,true
+locational_marginal_price_day_ahead_forecast,Forecasted day-ahead locational marginal price based on pricing method.,true
+locational_marginal_price_day_ahead_historical,Historical day-ahead locational marginal price recorded for the market.,true
+locational_marginal_price_real_time,Real-time locational marginal price determined by historical data.,true
+locational_marginal_price_real_time_historical,Historical real-time locational marginal price recorded for the market.,true
+longitude,Longitude of the underlying granule or a custom point.,true
+low_cloud_cover,Percentage of low-level cloud cover observed at the site.,true
+low_cloud_cover_fixed,Fixed value of low-level cloud cover for baseline calculations.,true
+low_cloud_cover_forecast,Forecasted percentage of low-level cloud cover observed at the site.,true
+low_cloud_cover_historical,Historical percentage of low-level cloud cover observed at the site.,true
+low_cloud_cover_rolling,Rolling average of low-level cloud cover for trend analysis.,true
+low_vegetation_cover,Percentage of low vegetation cover observed at the site.,true
+low_vegetation_cover_fixed,Fixed value of low vegetation cover for baseline calculations.,true
+low_vegetation_cover_forecast,Forecasted percentage of low vegetation cover observed at the site.,true
+low_vegetation_cover_historical,Historical percentage of low vegetation cover observed at the site.,true
+low_vegetation_cover_rolling,Rolling average of low vegetation cover observed at the site for trend analysis.,true
+low_vegetation_type,"Type of low vegetation determined by classification codes (e.g., crops, grass, shrubs).",true
+macrs_5_sched,MACRS depreciation schedule for 5-year term assets.,true
+macrs_sched,MACRS depreciation schedule based on asset term.,true
+macrs_sched_full,Full MACRS depreciation schedule mapping for multiple asset terms.,false
+macrs_term,MACRS term for depreciation determined by asset or prosmod data.,true
+macrs_term_asset,"MACRS term specific to the asset based on fuel type (e.g., 5 or 20 years).",true
+macrs_term_prosmod,MACRS term derived from prosmod model data.,true
+market_settlement_type,"A categorical dimension that identifies which wholesale electricity market a price or quantity is settled against, distinguishing forward-cleared day-ahead values (based on scheduled/forecast dispatch) from real-time values (based on actual dispatch and balancing). Valid values are day_ahead and real_time, enabling metrics such as LMPs, volumes, and arbitrage spreads to be filtered or grouped by settlement market.",true
+mean_obliquity_of_the_ecliptic,Astronomical calculation representing Earth's axial tilt for solar modeling.,true
+measure,"This parameter sets the measure that will be calculated given the scope, subject, timing and series in the api call. Elements must be valid measures (use the payload {""SERIES"":[""Measure""]} for a list of valid measures). Users can also formulate and their own custom equations using sql operators and aggregation functions. Measures used in a custom equation must be encased in ticks ``. e.g. The payload {""SUBJECT"":[""Node""],""SCOPE"":[{""County"":[""Kern County, CA""],""PRIME_MOVER"":[""Wind Turbine""]}],""MEASURE"":[""Generation"",""Locational Marginal Price (Day-Ahead)"",""SUM(`Locational Marginal Price (Day-Ahead)`*`Availability Factor`) as Revenue""]} would return the total generation, locational marginal price (day-ahead), and custom revenue calculation for hypothetical wind asset at every nodal price point in Kern County, California.",true
+measure_agg,A list all measures supplied by the user at runtime.,false
+measure_aggregation,Default spark SQL aggregation method of measure used for reporting and analysis in PE MaaS.,false
+measure_description,Description of measure used for reporting and analysis in PE MaaS.,true
+measure_equation,Spark SQL equation of measure used for reporting and analysis in PE MaaS.,true
+medium_cloud_cover,Percentage of medium-level cloud cover observed at the site.,true
+medium_cloud_cover_fixed,Fixed value of medium-level cloud cover for baseline calculations.,true
+medium_cloud_cover_forecast,Forecasted percentage of medium-level cloud cover observed at the site.,true
+medium_cloud_cover_historical,Historical percentage of medium-level cloud cover observed at the site.,true
+medium_cloud_cover_rolling,Rolling average of medium-level cloud cover for trend analysis.,true
+merchant_parity_price,"PPA price that equalizes NPV between merchant and bilateral structures, computed as NPV of merchant revenue divided by NPV of capability-based MWh.",true
+method,Method identifier used in modeling or calculations.,true
+metric,"This parameter sets the metric that will be calculated given the scope, subject, timing and series in the api call. Elements must be valid metrics (use the payload {""SERIES"":[""Measure""]} for a list of valid metrics). Users can also formulate and their own custom equations using sql operators and aggregation functions. Measures used in a custom equation must be encased in ticks ``. e.g. The payload {""SUBJECT"":[""Node""],""SCOPE"":[{""County"":[""Kern County, CA""],""PRIME_MOVER"":[""Wind Turbine""]}],""MEASURE"":[""Generation"",""Locational Marginal Price (Day-Ahead)"",""SUM(`Locational Marginal Price (Day-Ahead)`*`Availability Factor`) as Revenue""]} would return the total generation, locational marginal price (day-ahead), and custom revenue calculation for hypothetical wind asset at every nodal price point in Kern County, California.",true
+metric_aggregation,Default spark SQL aggregation method of metric used for reporting and analysis in PE MaaS.,false
+metric_aliases,Usable aliases of the given metric,false
+metric_catalog,"Catalog of metrics available for use in the MaaS analytical engine as measures, series, parameters, scope keys, and having keys.",false
+metric_data_type,Data type of the given metric,false
+metric_description,Description of metric used for reporting and analysis in PE MaaS.,true
+metric_downstream_depth,"The metric’s reverse dependency depth measured through its recursive dependents, where larger values indicate the metric feeds into more downstream layers of derived metrics. Use this field to understand how far the metric propagates through the calculation graph.",false
+metric_equation,Spark SQL equation of metric used for reporting and analysis in PE MaaS.,true
+metric_equation_explode,Recursively exploded spark SQL equations that span the graphical lineage of the given metric.,false
+metric_upstream_depth,"The metric’s dependency depth measured from its full recursive precedent chain, where higher values indicate the metric is built from more layers of upstream calculations. This field reflects the deepest end-to-end calculation path used to derive the metric.",false
+mi_fuel_id,,true
+mi_plant_id,"A unique identifier assigned to each power plant in the Market Intelligence (MI) data model, used as the primary key to link plant-level attributes and relationships across tables.",false
+mi_pm_id,,false
+mi_unit_id,"A unique identifier assigned to each power plant unit in the Market Intelligence (MI) data model, used as the primary key to link unit-level attributes and relationships across tables.",false
+minimum_load,"Represents the minimum operational load of the plant, calculated as a percentage of system size in MW.",true
+minimum_load_percent,The minimum load of an asset as a percentage of the nameplate capacity.,true
+model_type,"The type of model used to derive operational and financial data for a given asset. If 'pcm', then the default results were modelled in a production cost model. If 'hypothetical', the results are calculated by MaaS on the fly.",true
+model_used,Name of the nodal model applied in forecasting or simulation.,true
+model_year_num,"Model year number calculated from forecast start date and forecast end date. Essentially the `forecast_year_num`, capped at the final year modelled in the PCM run.",true
+month,Month extracted from timestamp for time-based analysis.,true
+month_hours,Total number of hours in the current month accounting for leap years and daylight savings time.,true
+monthly,Timestamp truncated to monthly level for aggregation.,true
+mountain,Specifies the time zone used for mountain operations (default is America/Denver).,true
+n_peak_hours,The number of highest-net-load hours per year (ranked in descending order) used to define the system's 'peak period' for capacity-value calculations such as ELCC — serving as the sample size over which a resource's average contribution to meeting peak demand is measured.,true
+nameplate_capacity_mw,"The plant's nameplate capacity as reported in CapitalIQ, in MW.",true
+nameplate_capacity_resourcehour,"Nameplate capacity available during a specific resource hour, adjusted by kernel percent.",true
+nameplate_capacity_resourceyear,Nameplate capacity derived directly from the resourceyear table.,true
+natural_capacity_factor,Capacity factor based on natural resource availability and system capability.,true
+natural_capacity_factor_asset,Capacity factor calculated for a specific resource hour based on resource capability and capacity.,true
+negative_pricing_occurrences,"Indicator for negative energy price events (1 if price < 0, else 0).",true
+nerc_region,NERC region identifier for the asset or operational data.,true
+nerc_region_geometry,Geometry of scoped NERC regions expressed in Well-known text (WKT) format crs=4326.,true
+nerc_subregion,NERC subregion identifier for the asset or operational data.,true
+nerc_subregion_geometry,Geometry of scoped NERC subregions expressed in Well-known text (WKT) format crs=4326.,true
+net_dispatch_cost,Dispatch cost with PTC and REC price considerations,true
+net_lace_mwh,Net levelized avoided cost of energy calculated based on capability in MWh.,true
+net_lace_numerator_agg,Numerator for net LACE calculation including revenue and LCOE adjustments.,true
+net_peak_coincident,"The maximum hourly coincident net load observed across the aggregation period, where coincident net load is calculated as the sum of system net load across all zones for a given hour.",false
+net_peak_noncoincident,"The sum of the peak net load observed for each location during the aggregation period, regardless of whether those peaks occur at the same time. Unlike a coincident peak, noncoincident peak load does not require individual location peaks to occur simultaneously.",false
+noct,Nominal operating cell temperature for solar panels (default is 48°C).,true
+nodal_basis_day_ahead,Difference between locational marginal price and nodal hub price for day-ahead market.,true
+nodal_basis_real_time,Difference between locational marginal price and nodal hub price for the real-time market.,true
+nodal_hub,"Identifies the market pricing location associated with an asset, transaction, or analysis, distinguishing between a specific transmission node and a broader trading hub or reference price point. This dimension is used to classify the granularity and source of locational market pricing for reporting, valuation, congestion analysis, and power market modeling.",true
+nodal_hub_clean,"A cleaned-up version of the hubs name. It converts any non-alphanumeric characters into underscores, then removes any consecutive underscores, and finally sets the case to lower-case.",false
+nodal_hub_price_day_ahead,Day-ahead nodal hub price determined by forecast or historical data.,true
+nodal_hub_price_day_ahead_forecast,Forecasted day-ahead nodal hub price based on pricing method.,true
+nodal_hub_price_day_ahead_historical,Historical day-ahead nodal hub price recorded for the market.,true
+nodal_hub_price_real_time,Real-time nodal hub price.,true
+nodal_hub_price_real_time_historical,Historical real-time nodal hub price recorded for the market.,true
+nodal_zone_name,,true
+node,Node identifier for locational pricing or grid modeling.,true
+nominal_capacity_mw,The reference capacity of a resource used for analytical and reporting purposes. Represents the resource's standardized physical size independent of operating conditions or dispatch outcomes.,true
+nominal_capacity_mw_dc,"DC-side (capex-basis) nameplate in MW. Equals the AC nameplate (nominal_capacity_mw) scaled by the inverter load ratio for solar (DC/AC oversizing), and equals the AC nameplate for all other technologies (ILR does not apply). Used in the DC->AC power path and as the basis for DC-denominated capex. Must NOT be used for capacity payments or $/kW valuation, which remain on the AC nameplate.",
+none_aggregate,Placeholder timestamp for aggregate calculations (default is 1900-01-01).,true
+nuclear_availability_factor,"Index indicating if the nuclear plant is undergoing a refuelling outage. 1 = outage, 0 = up-time",true
+nuclear_capability,Nuclear capability calculated using the plant capacity and refuelling cycle.,true
+nuclear_capacity_factor,Nuclear capacity factor calculated from total nuclear capability and system size.,true
+nuclear_first_refuel_date,The first refuel date for a nuclear power plant based on the online date plus the number of months defined by the refuelling cycle.,true
+nuclear_natural_capacity_factor,Nuclear capacity factor before accounting for any dispatching or forced/unforced outages.,true
+nuclear_refuel_cycle,"Controls the assumed duration, in months, between nuclear refueling outages, which determines the operating cycle length used in generation and availability calculations.",true
+nuclear_refuel_cycle_days_elapsed,Count of days elapsed within a discrete nuclear refuelling cycle.,true
+nuclear_refuel_cycle_index,"Zero‑based integer indicating which refueling cycle the nuclear unit is currently in, calculated from the number of months elapsed since the first refuel date divided by the configured refuel cycle length.",true
+nuclear_refuel_cycle_start_date,The first date of the given refuelling cycle for a nuclear power plant.,true
+nuclear_refuel_length,"Controls the assumed duration, in days, of a nuclear refueling outage, which determines how long the unit is unavailable during each refueling event in the model.",true
+object_class,Object classification used in modeling or data structures.,true
+object_name,Custom name given to a scope object by the user.,true
+obliquity_correction,Correction applied to Earth's axial tilt for solar position calculations.,true
+online_date,Online date of the asset adjusted for time zone and start date.,true
+online_year,Year extracted from the online date for operational analysis.,true
+operating_capacity_mw,Capacity that is operational and available for service. Reflects the portion of the nominal resource size that is capable of contributing to the power system.,true
+operating_capacity_ratio,"The ratio of operating capacity to nameplate capacity, representing the proportion of installed capacity that is currently available for operation after accounting for deratings, degradation, or operational limitations. A value of 1.0 indicates the full nameplate capacity is operable, while values below 1.0 indicate a reduction in available capacity.",true
+operating_capacity_resourcehour,Operating capacity derived directly from the resourcehour table.,true
+operating_capacity_resourceyear,Operating capacity derived directly from the production cost model output dataset.,true
+operation_year_num,Number of years elapsed between the asset's online date and current timestamp.,true
+operator,Operator name associated with the asset or plant.,true
+optimized_debt_share,"Proportion of project financed through debt, calculated from merchant revenue and debt service obligations.",false
+overlap_resolution,Controls which data source (historical actuals or forecast outputs) is used when both are available for the same time period.,true
+owner,Owner name associated with the asset or plant.,true
+pacific,Specifies the time zone used for Pacific operations (default is America/Los_Angeles).,true
+payload,"Returns the effective payload submitted by the user, formatted for readability.",false
+payload_timestamped,"Returns the effective payload with its time reference pinned to 'as_of' (the current time if the user did not set one explicitly). Because the time context is frozen, the payload reproduces identical results whenever it is rerun in the future.",false
+peak_coincident,"The maximum hourly coincident load observed across the aggregation period, where coincident load is calculated as the sum of system load across all zones for a given hour.",false
+peak_noncoincident,"The sum of the peak load observed for each location during the aggregation period, regardless of whether those peaks occur at the same time. Unlike a coincident peak, noncoincident peak load does not require individual location peaks to occur simultaneously.",false
+planning_lead,Lead time in years between project start and online date.,true
+plant,,true
+plant_regulatory_status,Indicates the regulatory classification or compliance status of the plant.,true
+pluvial_score,Score indicating pluvial (rain-related) conditions based on climatology data.,true
+power_plant_unit_catalog,Catalog of power plant units tracked by S&P Global,false
+ppa_esc,Annual escalation rate applied to PPA prices (default is 0).,true
+ppa_escalation_factor,Escalator applied to PPA prices based on project year.,true
+primary_parameter,Primary parameter identifier used in modeling or calculations.,true
+prime_mover,Prime mover type associated with the generating unit.,true
+pro_forma,"Structured pro forma statement including revenues, costs, taxes, and cash flows.",true
+project_name,Custom name given to a project by the user.,true
+project_start_date,,true
+project_year_hours,Number of hours in the project year calculated from online date and year number.,true
+project_year_num,Project year number calculated from online date and current timestamp.,true
+prop_tax,Property tax rate applied to the asset for cost calculations.,true
+ptc,Production tax credit applied to the project (default is 27.50 for wind and solar and 0 for others).,true
+ptc_asset,Production tax credit applied to modelled assets.,true
+ptc_base_rate,The base PTC rate used in $/MWh.,true
+ptc_esc,Annual escalation rate applied to production tax credit (default is 2%).,true
+ptc_scheduled_rate,"The production tax credit rate in $/MWh payable in the current operating year, equal to the base rate escalated annually across the eligibility window. Reflects the scheduled payout rate over the PTC tenor before any fuel- or asset-level eligibility is applied; returns 0 for years outside the eligibility window.",true
+ptc_years,Number of years production tax credit is applicable (default is 10).,true
+quark_spread_market,Difference between energy price and uranium fuel cost for profitability analysis.,true
+quarter,Quarter extracted from timestamp for time-based analysis.,true
+quarterly,Timestamp truncated to quarterly level for aggregation.,true
+radial_vector_of_the_sun,Astronomical calculation representing the radial vector of the sun based on Earth's orbit.,true
+real_time,Market settlement type designation for the real-time power market.,true
+real_time_latest,,false
+rec_multiplier,Multiplier applied to renewable energy credit calculations (default is 1).,true
+rec_price,Price of renewable energy credits published by pricing authorities.,true
+rec_price_asset,REC price assigned to an asset.,true
+rec_price_esc,Annual escalation rate applied to REC prices (default is 2%).,true
+rec_price_prosmod,REC price forecast used for hypothetical projects.,true
+rec_price_prosmod_house_view,REC price forecast under the house view prioritizing the state Tier-1 forecast and falling back to the fundamental forecast when state is not available.,true
+rec_price_prosmod_house_view_fundamental,REC price forecast under the house view using their fundamentals methodology.,true
+rec_price_prosmod_house_view_state,Tier-1 REC price forecast under the house view using their state-level methodology (only for select regions).,true
+rec_price_prosmod_market_indicative,REC price forecast used for hypothetical projects under the market indicative case.,true
+recursive_dependents_sorted,"Array of all downstream metrics that depend on this metric transitively through equations or aggregations, ordered by graph distance (nearest dependents first).",false
+recursive_precedents_sorted,"Array of all upstream metrics this metric depends on transitively through equations or aggregations, ordered by graph distance (furthest precedents first).",false
+registered_parameters,An array of all parameters registered in the query payload.,false
+related_zonal_forecast_option_vintage_id,Identifier for related zonal forecast option vintage.,true
+relative_humidity,Relative humidity calculated from dew point and air temperature.,true
+relax_autogroup,"Setting that when set to true, relaxes any native autogrouping that is applied to the data. This is particularly useful for hybrid projects, investment/divestment scenarios and other use cases.",true
+retirement_date,Retirement date of the asset adjusted for time zone and end date.,true
+retirement_year,Year extracted from the retirement date for operational analysis.,true
+runoff,Runoff observed at the site based on climatology data.,true
+runoff_fixed,Fixed runoff value for baseline calculations.,true
+runoff_flow,Estimated volumetric water flow derived from depth-based surface + subsurface runoff (meters) and a gridded defined basin area (m²) into m³/s.,true
+runoff_forecast,Forecasted runoff observed at the site based on climatology data.,true
+runoff_historical,Historical runoff observed at the site based on climatology data.,true
+runoff_rolling,Rolling average of runoff for trend analysis.,true
+scaling_factor,Scaling factor applied to adjust capacity based on service factor and natural capacity factor.,true
+scenario,Scenario identifier used in modeling or calculations.,true
+scope,"This parameter sets the scope of the api call in conjunction with the chosen subject. ""%"" can be used as a wildcard. Elements in a bracket [] are considered logical ""ORs"" while elements in a brace {} are considered logical ""ANDs"". Brace keys must be valid object classes (use the payload {""SERIES"":[""Object Class""]} for a list of valid object classes). e.g. the payload {""SUBJECT"":[""Node""], ""SCOPE"":[{""STATE"":[""California""],""County"":[""V%"",""S%""]},{""Node"":[""TWILIGHT%""]}]} will scope the calculation down to nodes found in California counties that begin with the letters ""V"" or ""S"" or any nodes beginnging with the string ""TWILIGHT"".",true
+scope_block,The numeric identifier corresponding to the scope input created by the user.,false
+seasonal_diurnal_shape,Timestamp representing seasonal diurnal shape for hourly analysis.,true
+seasonal_shape,Timestamp representing seasonal shape for monthly analysis.,true
+series,Series identifier associated with object class for modeling.,true
+service_factor,Service factor applied to scaling calculations.,true
+single_axis_tracking,Solar type designation for a single-axis tracking panel configuration.,true
+snow_depth,Snow depth observed at the site based on climatology data.,true
+snow_depth_fixed,Fixed snow depth value for baseline calculations.,true
+snow_depth_forecast,Forecasted snow depth observed at the site based on climatology data.,true
+snow_depth_historical,Historical snow depth observed at the site based on climatology data.,true
+snow_depth_rolling,Rolling average of snow depth for trend analysis.,true
+soil_albedo_map,Mapping of soil types to albedo values for solar modeling.,true
+soil_type,"Soil type classification based on numeric codes (e.g., coarse, fine, organic).",true
+soil_type_numeric,Numeric code representing soil type observed at the site.,true
+soil_type_numeric_fixed,Fixed numeric soil type value for baseline calculations.,true
+soil_type_numeric_forecast,Forecasted numeric code representing soil type observed at the site.,true
+soil_type_numeric_historical,Historical numeric code representing soil type observed at the site.,true
+soil_type_numeric_rolling,Rolling average of numeric soil type for trend analysis.,true
+solar_apparent_longitude,Apparent longitude of the sun calculated for solar position modeling.,true
+solar_azimuth_angle,Azimuth angle of the sun calculated based on latitude and solar declination.,true
+solar_capability,Solar capability calculated as natural capacity factor multiplied by system size.,true
+solar_capacity_factor,Solar capacity factor calculated from total solar output and system size.,true
+solar_capture_factor_day_ahead,Ratio of solar revenue to solar output normalized by average day-ahead energy price.,true
+solar_captured_energy_price_capability,Weighted average price for solar generation in the day-ahead market.,true
+solar_collector_azimuth,"Azimuth angle of the solar collector, typically set to 180 degrees (south-facing).",true
+solar_collector_tilt,"Tilt angle of the solar collector, usually equal to the site's latitude.",true
+solar_declination,"Angular position of the sun relative to the Earth's equator, calculated for solar modeling.",true
+solar_direct_use_acres_per_mw_dc,"Total direct land requirement (in acres) per MWAC, accounting for panel surface area and packing constraints. This metric converts technical layout assumptions into land-use intensity for siting and development analysis.",true
+solar_eccentricity_of_earth_orbit,Eccentricity of Earth's orbit used in solar position calculations.,true
+solar_efficiency,Assumed conversion efficiency from incident solar energy to usable electrical output. This parameter translates irradiance into effective generation density and drives required surface area per unit of capacity.,true
+solar_elevation_angle,"Elevation angle of the sun above the horizon, calculated as 90° minus solar zenith angle.",true
+solar_energy_yield,"Solar energy yield: total AC electrical energy delivered per unit of installed AC capacity (MWh/MWac) over the period. Post-inverter (uses the AC-clipped solar_natural_capacity_factor), so it reconciles with total_output and capacity_factor rather than the pre-clip DC signal.",true
+solar_equation_of_center,Correction applied to the sun's position based on orbital eccentricity and anomaly.,true
+solar_inverter_load_ratio,"Ratio of installed DC capacity to inverter AC capacity, representing the degree of inverter oversizing (DC/AC ratio). Higher values increase clipping potential but improve utilization of inverter capacity during lower irradiance periods.",true
+solar_land_overhead_factor,"Ratio that scales direct panel land requirements to total site land requirements, capturing additional space needed for setbacks, access roads, and balance-of-plant infrastructure. This factor converts technically required panel area into a realistic full-site footprint for siting and development analysis.",true
+solar_natural_capacity_factor,"AC-deliverable solar natural capacity factor: DC power (solar_natural_capacity_factor_dc * nominal_capacity_mw_dc) clipped at the AC nameplate (the inverter limit) and normalized by the AC nameplate. Realizes ILR economics -- oversizing lifts low-irradiance shoulders while the clip shaves clear-sky peaks to AC nameplate. Equals least(1, solar_natural_capacity_factor_dc * ILR). Distinct from solar_natural_capacity_factor_dc, which is the pre-inverter DC signal and may exceed 1.0.",
+solar_natural_capacity_factor_dc,"Pre-inverter DC capacity factor: temperature-derated ratio of plane-of-array irradiance to STC (1000 W/m2), against the DC array rating. May exceed 1.0 at clear-sky peaks (POA > 1000 W/m2). Raw DC signal before inverter clipping; the AC-deliverable value is solar_natural_capacity_factor.",true
+solar_noon,Time of day when the sun is at its highest point in the sky.,true
+solar_output,Solar energy output generalized to the given granular context.,true
+solar_packing_factor,"Scaling factor representing how efficiently panels can be packed within a given land area, dependent on tracking configuration. Lower values reflect greater spacing requirements (e.g., tracking systems), while higher values indicate denser fixed-tilt layouts.",true
+solar_plane_irradiance,"Plane-of-array irradiance on the generalized collector (W/m2) via Erbs decomposition + Hay-Davies transposition, parameterized by solar_type through solar_system_tilt_angle / solar_system_azimuth_angle. POA = DNI*cos(AOI) + DHI*[Ai*Rb + (1-Ai)*(1+cos tilt)/2] + GHI*albedo*(1-cos tilt)/2. Mirrors the plane_irradiance_* engine; flat config returns GHI exactly.",true
+solar_revenue_merchant_energy_capability,Revenue from solar generation in the day-ahead market.,true
+solar_right_ascension,Angular position of the sun along the celestial equator for solar modeling.,true
+solar_standard_report,Standard report for solar power generation profiles.,false
+solar_surface_area_per_mw_dc,"Required panel surface area (in square meters) to achieve one MWAC of capacity, adjusted for efficiency and inverter loading. It reflects both physical conversion efficiency and DC oversizing assumptions.",true
+solar_system_azimuth_angle,"The effective azimuth of the solar collection plane at a given timestamp, by configuration. Flat and fixed-tilt hold the configured collector azimuth (180, south). Single-axis tracking flips between axis_azimuth+90 and axis_azimuth-90 (east-facing before solar noon, west-facing after) based on the sign of the horizontal-axis rotation angle -- it does NOT continuously track solar azimuth like a vertical-axis tracker would. Dual-axis tracks solar azimuth dynamically.",true
+solar_system_tilt_angle,"The effective tilt of the solar collection plane from horizontal at a given timestamp, by configuration. Flat is 0; fixed-tilt holds a static tilt equal to latitude. Single-axis tracking derives tilt from the horizontal N-S-axis rotation angle (Braun & Mitchell 1983 formula, matches pvlib.tracking.singleaxis with axis_azimuth = solar_collector_azimuth, max_angle = 90) -- tilt sweeps from near-90 deg at sunrise/sunset down to 0 at solar noon. Dual-axis varies continuously with solar zenith.",true
+solar_temperature_coefficient,Coefficient representing the effect of temperature on solar panel efficiency.,true
+solar_thermal_loss,Loss in solar thermal efficiency calculated from irradiance and capacity factor.,true
+solar_total_use_acres_per_mw_dc,"Total land requirement (in acres) per MWAC including both direct panel area and additional site overhead such as access roads, setbacks, and balance-of-plant. This metric applies a solar land overhead factor to direct-use acreage to reflect full project footprint for siting and development planning.",true
+solar_true_anomaly,True anomaly of the sun calculated for orbital position modeling.,true
+solar_true_longitude,True longitude of the sun calculated for solar position modeling.,true
+solar_type,"Type of solar tracking system used (e.g., single-axis tracking).",true
+solar_var_y,Variable used in solar position calculations based on Earth's axial tilt.,true
+solar_zenith_angle,Angle between the sun and the vertical direction at the observation point.,true
+spark_spread_day_ahead_historical,Historical spark spread calculated from day-ahead LMP and gas price.,true
+spark_spread_market,Spark spread calculated from day-ahead energy price and gas price.,true
+spark_spread_real_time_historical,Historical spark spread calculated from real-time LMP and gas price.,true
+spatial_zone_name,,true
+ssp1-2.6,"Aggressive mitigation scenario in which total greenhouse gas emissions reduce to net zero by 2050. Warming outcome: Global average temperatures rise 1.3–2.4°C by 2100, consistent with the goals of the Paris Agreement. Underlying SSP narrative: SSP1 ('Sustainability / Taking the Green Road') — global society shifts toward sustainable development, reduced inequality, and lower resource/energy intensity.",true
+ssp2-4.5,"Strong mitigation scenario in which total greenhouse gas emissions stabilize at current levels until 2050 and then decline through 2100. Warming outcome: Global average temperatures rise 2.1–3.5°C by 2100. Underlying SSP narrative: SSP2 ('Middle of the Road') — social, economic, and technological trends continue without marked departure from historical patterns; uneven development progress across countries.",true
+ssp3-7.0,"Limited mitigation scenario in which total greenhouse gas emissions double by 2100. Warming outcome: Global average temperatures rise 2.8–4.6°C by 2100. Underlying SSP narrative: SSP3 ('Regional Rivalry / A Rocky Road') — resurgent nationalism, regional conflicts, weak international cooperation, declining investment in education/technology.",true
+ssp5-8.5,"Low mitigation scenario in which total greenhouse gas emissions triple by 2075. Warming outcome: Global average temperatures rise 3.3–5.7°C by 2100. Underlying SSP narrative: SSP5 ('Fossil-Fueled Development / Taking the Highway') — rapid, fossil-fuel-intensive economic growth with high energy demand and faith in technological solutions over environmental constraints.",true
+standard_assumptions,Standardized Power Evaluator assumptions,false
+start_date,Start date for the analysis period or project timeline.,true
+startup_heat_rate,"The estimated total thermal energy input (in MMBtu) per kWh required to bring a generating unit from an offline state to synchronized, dispatchable operation, reflecting the heating of plant systems, auxiliary loads, and startup inefficiencies.",true
+state,State identifier for the asset or operational data.,true
+state_geometry,Geometry of scoped states expressed in Well-known text (WKT) format crs=4326.,true
+study_hours,Total hours in study horizon.,false
+study_period,Horizon (in years) of the current study from start date to end date or retirement date of the asset (whichever comes first).,true
+study_year_num,Number of years elapsed between transaction date and current timestamp for study purposes.,true
+substation,The name of the substation asset.,true
+substation_geometry,"The coordinates of each substation, returned as WKT (EPSG:4326).",true
+substation_max_voltage,Maximum voltage of the given substation,true
+substation_min_voltage,Minimum voltage of the given substation,true
+substation_type,The type of substation asset,true
+summer_capacity_mw,"The plant's maximum generation capacity during summer conditions, in MW.",true
+sunlight_duration,Duration of sunlight calculated from hour angle of sunrise.,true
+sunrise_time,Time of sunrise calculated from solar noon and hour angle of sunrise.,true
+sunset_time,Time of sunset calculated from solar noon and hour angle of sunrise.,true
+surface_pressure,Surface atmospheric pressure observed at the site.,true
+surface_pressure_fixed,Fixed surface pressure value for baseline calculations.,true
+surface_pressure_forecast,Forecasted surface atmospheric pressure observed at the site.,true
+surface_pressure_historical,Historical surface atmospheric pressure observed at the site.,true
+surface_pressure_rolling,Rolling average of surface pressure for trend analysis.,true
+surface_runoff,Surface runoff observed at the site based on climatology data.,true
+surface_runoff_fixed,Fixed surface runoff value for baseline calculations.,true
+surface_runoff_flow,Estimated volumetric water flow derived from depth-based surface runoff (meters) and a gridded defined basin area (m²) into m³/s.,true
+surface_runoff_forecast,Forecasted surface runoff observed at the site based on climatology data.,true
+surface_runoff_historical,Historical surface runoff observed at the site based on climatology data.,true
+surface_runoff_rolling,Rolling average of surface runoff for trend analysis.,true
+surface_solar_radiation_downward,Solar radiation reaching the Earth's surface measured in W/m².,true
+surface_solar_radiation_downward_clear_sky,Clear-sky solar radiation reaching the Earth's surface.,true
+surface_solar_radiation_downward_clear_sky_fixed,Fixed clear-sky solar radiation value for baseline calculations.,true
+surface_solar_radiation_downward_clear_sky_forecast,Forecasted clear-sky solar radiation reaching the earth's surface.,true
+surface_solar_radiation_downward_clear_sky_historical,Historical clear-sky solar radiation reaching the earth's surface.,true
+surface_solar_radiation_downward_clear_sky_rolling,Rolling average of clear-sky solar radiation for trend analysis.,true
+surface_solar_radiation_downward_fixed,Fixed value of surface solar radiation for baseline calculations.,true
+surface_solar_radiation_downward_forecast,Forecasted solar radiation reaching the earth's surface measured in w/m².,true
+surface_solar_radiation_downward_historical,Historical solar radiation reaching the earth's surface measured in w/m².,true
+surface_solar_radiation_downward_rolling,Rolling average of surface solar radiation for trend analysis.,true
+system_hydro_output,,true
+system_load,Total system load observed during the period.,true
+system_net_load,Net system load calculated as total load minus VER generation.,true
+system_storage_output,,true
+system_thermal_output,,true
+target_dscr,Target debt service coverage ratio for financial modeling (default is 1.40).,true
+tax_effective,Effective tax rate combining federal and state tax rates.,true
+tax_fed,Federal tax rate applied to financial calculations (default is 21%).,true
+tax_gross,Gross combined state and federal tax rates before state tax deduction shield is applied.,true
+tax_state,Tax rate applied at the state level for financial calculations.,true
+tb4_day_ahead,Top 4 price-based metric for day-ahead market calculations.,true
+tb4_real_time,Top 4 price-based metric for real-time market calculations.,true
+tb4_zonal_day_ahead,Top 4 price-based metric for zonal day-ahead market calculations.,true
+tb6_day_ahead,Top 6 price-based metric for day-ahead market calculations.,true
+tb6_real_time,Top 6 price-based metric for real-time market calculations.,true
+tb6_zonal_day_ahead,Top 6 price-based metric for zonal day-ahead market calculations.,true
+tb8_day_ahead,Top 8 price-based metric for day-ahead market calculations.,true
+tb8_real_time,Top 8 price-based metric for real-time market calculations.,true
+tb8_zonal_day_ahead,Top 8 price-based metric for zonal day-ahead market calculations.,true
+temporal_resolution,Temporal resolution applied in modeling or data aggregation.,true
+timezone,Time zone identifier for the project or asset.,true
+tmp_date_hour,Date/Hour timestamp rolled up to the designated temporal resolution in the chosen timezone.,true
+total_cloud_cover,Percentage of total cloud cover observed at the site.,true
+total_cloud_cover_fixed,Fixed value of total cloud cover for baseline calculations.,true
+total_cloud_cover_forecast,Forecasted percentage of total cloud cover observed at the site.,true
+total_cloud_cover_historical,Historical percentage of total cloud cover observed at the site.,true
+total_cloud_cover_rolling,Rolling average of total cloud cover for trend analysis.,true
+total_construction_cost,"Total capital required to construct and fully connect the asset, including both asset construction and interconnection costs. Calculated as asset_construction_cost + interconnection_cost and represents the replacement cost of a grid-connected asset built from scratch.",true
+total_fuel_cost_biomass,Total fuel cost for biomass used in generation.,true
+total_fuel_cost_coal,Total fuel cost for coal used in generation.,true
+total_fuel_cost_uranium,Total fuel cost for uranium used in generation.,true
+total_initial_investment,"Total capital required to own a grid-connected, revenue-generating asset at inception, determined by build vs buy logic. Equals total_construction_cost for greenfield projects and acquisition_price for acquisitions.",true
+total_precipitation,Total precipitation observed at the site based on climatology data.,true
+total_precipitation_fixed,Fixed precipitation value for baseline calculations.,true
+total_precipitation_forecast,Forecasted total precipitation observed at the site based on climatology data.,true
+total_precipitation_historical,Historical total precipitation observed at the site based on climatology data.,true
+total_precipitation_rolling,Rolling average of precipitation for trend analysis.,true
+transaction_date,Transaction date adjusted for project start date.,true
+transaction_year,Year extracted from forecast start date for financial modeling.,true
+transmission_geometry,"The full, unclipped route geometry of each transmission asset, returned as WKT (EPSG:4326). Represents the complete physical path of the transmission that intersects with or is nearest to the search query's geometry.",true
+transmission_losses,Total transmission losses recorded for the zone.,true
+transmission_owner,The owners associated with the given transmission assets.,true
+transmission_status,Status of given transmission infrastructure.,true
+transmission_type,The type of transmission asset,true
+transmission_voltage,The voltage of the given transmission line.,true
+trucost_methodology,Methodology applied for Trucost environmental impact calculations.,true
+true_solar_time,Solar time calculated from UTC timestamp and equation of time.,true
+type_of_high_vegetation,"This parameter indicates the 6 types of high vegetation recognised by the ECMWF Integrated Forecasting System:
+3 = Evergreen needleleaf trees
+4 = Deciduous needleleaf trees
+5 = Deciduous broadleaf trees
+6 = Evergreen broadleaf trees
+18 = Mixed forest/woodland
+19 = Interrupted forest
+
+They are used to calculate the surface energy balance and the snow albedo.
+The other types (1, 2, 7, 9, 10, 11, 13, 16, 17 and 20) are low vegetation, or indicate no land surface vegetation (8 = Desert, 12=Ice caps and Glaciers, 14 = Inland water, 15 =Ocean).",true
+type_of_high_vegetation_forecast,"Forecasted this parameter indicates the 6 types of high vegetation recognised by the ecmwf integrated forecasting system:
+3 = evergreen needleleaf trees
+4 = deciduous needleleaf trees
+5 = deciduous broadleaf trees
+6 = evergreen broadleaf trees
+18 = mixed forest/woodland
+19 = interrupted forest
+
+they are used to calculate the surface energy balance and the snow albedo.
+the other types (1, 2, 7, 9, 10, 11, 13, 16, 17 and 20) are low vegetation, or indicate no land surface vegetation (8 = desert, 12=ice caps and glaciers, 14 = inland water, 15 =ocean).",true
+type_of_high_vegetation_historical,"Historical this parameter indicates the 6 types of high vegetation recognised by the ecmwf integrated forecasting system:
+3 = evergreen needleleaf trees
+4 = deciduous needleleaf trees
+5 = deciduous broadleaf trees
+6 = evergreen broadleaf trees
+18 = mixed forest/woodland
+19 = interrupted forest
+
+they are used to calculate the surface energy balance and the snow albedo.
+the other types (1, 2, 7, 9, 10, 11, 13, 16, 17 and 20) are low vegetation, or indicate no land surface vegetation (8 = desert, 12=ice caps and glaciers, 14 = inland water, 15 =ocean).",true
+type_of_low_vegetation,"This parameter indicates the 10 types of low vegetation recognised by the ECMWF Integrated Forecasting System:
+1 = Crops, Mixed farming
+2 = Grass
+7 = Tall grass
+9 = Tundra
+10 = Irrigated crops
+11 = Semidesert
+13 = Bogs and marshes
+16 = Evergreen shrubs
+17 = Deciduous shrubs
+20 = Water and land mixtures
+
+They are used to calculate the surface energy balance and the snow albedo.
+The other types (3, 4, 5, 6, 18, 19 and 19) are high vegetation, or indicate no land surface vegetation (8 = Desert, 12=Ice caps and Glaciers, 14 = Inland water, 15 =Ocean).",true
+type_of_low_vegetation_forecast,"Forecasted this parameter indicates the 10 types of low vegetation recognised by the ecmwf integrated forecasting system:
+1 = crops, mixed farming
+2 = grass
+7 = tall grass
+9 = tundra
+10 = irrigated crops
+11 = semidesert
+13 = bogs and marshes
+16 = evergreen shrubs
+17 = deciduous shrubs
+20 = water and land mixtures
+
+they are used to calculate the surface energy balance and the snow albedo.
+the other types (3, 4, 5, 6, 18, 19 and 19) are high vegetation, or indicate no land surface vegetation (8 = desert, 12=ice caps and glaciers, 14 = inland water, 15 =ocean).",true
+type_of_low_vegetation_historical,"Historical this parameter indicates the 10 types of low vegetation recognised by the ecmwf integrated forecasting system:
+1 = crops, mixed farming
+2 = grass
+7 = tall grass
+9 = tundra
+10 = irrigated crops
+11 = semidesert
+13 = bogs and marshes
+16 = evergreen shrubs
+17 = deciduous shrubs
+20 = water and land mixtures
+
+they are used to calculate the surface energy balance and the snow albedo.
+the other types (3, 4, 5, 6, 18, 19 and 19) are high vegetation, or indicate no land surface vegetation (8 = desert, 12=ice caps and glaciers, 14 = inland water, 15 =ocean).",true
+tz_date_hour,Date/Hour timestamp in the given timezone.,false
+ultimate_parent_company,Name of the ultimate parent company owning the asset.,true
+unit,,true
+unit_code,Unique identifier for the generating unit within the plant.,true
+unit_status,Current operational status of the unit,true
+unit_status_id,Numeric code representing the unit's operational status.,true
+unlevered_fair_market_value,Aggregated unlevered fair market value across all periods.,true
+unlevered_fair_market_value_denominator,Denominator for unlevered fair market value calculation including tax and cost adjustments.,true
+unlevered_fair_market_value_numerator,Numerator for unlevered fair market value calculation including revenue and credits.,true
+unlevered_fair_market_value_numerator_agg,Aggregated numerator for unlevered fair market value across all periods.,true
+unlevered_fair_market_value_timephased,Unlevered fair market value calculated from numerator and denominator components.,true
+upstream_tables,"A comprehensive list of all source tables involved in the calculation of a metric, including those from any dependent metrics in its entire lineage. It essentially traces the full data ancestry to identify every table required for the final computation.",false
+uranium_price,Price of uranium fuel calculated from system cost and usage.,true
+uranium_system_usage,Amount of uranium fuel consumed for generation.,true
+utc,Coordinated Universal Time offset applied in modeling (default is +00).,true
+utc_date_hour,Date/Hour timestamp in UTC.,false
+vegetation_albedo_map,Mapping of vegetation types to albedo values for solar modeling.,false
+ver_generation,Total variable energy resource generation recorded for the zone.,true
+ver_penetration,Penetration rate of variable energy resources calculated from generation and system load.,true
+vintage,Vintage identifier for forecast or asset data.,true
+vom,Variable O&M cost determined by asset or prosmod data.,true
+vom_asset,Variable O&M cost specific to the asset calculated from cost and output.,true
+vom_esc,Annual escalation rate applied to variable O&M costs (default is 2%).,true
+vom_prosmod,Variable O&M cost derived from prosmod model data.,true
+water_stress_score,Score indicating water stress risk based on climatology data.,true
+weather_latest,Date/time of the latest available historical weather record.,true
+weekly_diurnal_shape,24h x 7dow shape,true
+weekofyear,Week of the year extracted from timestamp.,true
+wildfire_score,Score indicating wildfire risk based on climatology data.,true
+wind_a_factor,Coefficient 'a' used in wind turbine power curve calculations.,true
+wind_capability,Wind capability calculated as natural capacity factor multiplied by system size.,true
+wind_capacity_factor,Wind capacity factor calculated from total wind output and system size.,true
+wind_capture_factor_day_ahead,Ratio of wind revenue to wind output normalized by average day-ahead energy price.,true
+wind_captured_energy_price_capability,Weighted average price for wind generation in the day-ahead market.,true
+wind_cut_in_speed,Minimum wind speed required for turbine operation.,true
+wind_cut_out_speed,Maximum wind speed before turbine shuts down for safety.,true
+wind_direction_100_meters,Wind direction observed at 100 meters above ground.,true
+wind_direction_100_meters_fixed,Fixed wind direction value at 100 meters for baseline calculations.,true
+wind_direction_100_meters_forecast,Forecasted wind direction observed at 100 meters above ground.,true
+wind_direction_100_meters_historical,Historical wind direction observed at 100 meters above ground.,true
+wind_direction_100_meters_rolling,Rolling average of wind direction at 100 meters for trend analysis.,true
+wind_direction_10_meters,Wind direction observed at 10 meters above ground.,true
+wind_direction_10_meters_fixed,Fixed wind direction value at 10 meters for baseline calculations.,true
+wind_direction_10_meters_forecast,Forecasted wind direction observed at 10 meters above ground.,true
+wind_direction_10_meters_historical,Historical wind direction observed at 10 meters above ground.,true
+wind_direction_10_meters_rolling,Rolling average of wind direction at 10 meters for trend analysis.,true
+wind_gust_10_meters,Wind gust observed at 10 meters above ground.,true
+wind_gust_10_meters_fixed,Fixed wind gust value at 10 meters for baseline calculations.,true
+wind_gust_10_meters_forecast,Forecasted wind gust observed at 10 meters above ground.,true
+wind_gust_10_meters_historical,Historical wind gust observed at 10 meters above ground.,true
+wind_gust_10_meters_rolling,Rolling average of wind gust at 10 meters for trend analysis.,true
+wind_hub_height,"Height above ground of the wind turbine rotor hub, in meters; the reference elevation at which hub-height wind speed and power output are evaluated.",true
+wind_k_factor,Coefficient 'k' used in wind turbine power curve calculations.,true
+wind_natural_capacity_factor,Wind capacity factor based on wind speed and turbine characteristics.,true
+wind_output,Wind energy output generalized to the given granular context.,true
+wind_power_curve,"Represents the normalized power output of a wind turbine across a range of wind speeds, defined by a parametric curve constrained by cut-in, rated, and cut-out speeds.",false
+wind_rated_speed,Rated wind speed for turbine operation.,true
+wind_revenue_merchant_energy_capability,Revenue from wind generation in the day-ahead market.,true
+wind_rose_100m,"A wind rose is a multi-dimensional distribution that represents the frequency of wind occurrences by direction and discretized wind speed bins over a defined sampling period. It organizes observations into angular sectors and speed intervals, producing a structured profile of directional wind behavior and intensity in absolute counts or normalized frequencies.",false
+wind_shear,Power-law wind shear exponent (alpha) between 10 m and 100 m; dimensionless. Higher values indicate a stronger vertical wind-speed gradient.,true
+wind_shear_fixed,Fixed power-law wind shear exponent (alpha) at 10-100 m for baseline calculations.,true
+wind_shear_forecast,Forecasted power-law wind shear exponent (alpha) at 10-100 m.,true
+wind_shear_historical,Historical power-law wind shear exponent (alpha) at 10-100 m.,true
+wind_shear_rolling,Rolling average power-law wind shear exponent (alpha) at 10-100 m for trend analysis.,true
+wind_speed_horizontal_100_meters,Horizontal wind speed observed at 100 meters above ground.,true
+wind_speed_horizontal_100_meters_fixed,Fixed horizontal wind speed at 100 meters for baseline calculations.,true
+wind_speed_horizontal_100_meters_forecast,Forecasted horizontal wind speed observed at 100 meters above ground.,true
+wind_speed_horizontal_100_meters_historical,Historical horizontal wind speed observed at 100 meters above ground.,true
+wind_speed_horizontal_100_meters_rolling,Rolling average of horizontal wind speed at 100 meters for trend analysis.,true
+wind_speed_horizontal_10_meters,Horizontal wind speed observed at 10 meters above ground.,true
+wind_speed_horizontal_10_meters_fixed,Fixed horizontal wind speed at 10 meters for baseline calculations.,true
+wind_speed_horizontal_10_meters_forecast,Forecasted horizontal wind speed observed at 10 meters above ground.,true
+wind_speed_horizontal_10_meters_historical,Historical horizontal wind speed observed at 10 meters above ground.,true
+wind_speed_horizontal_10_meters_rolling,Rolling average of horizontal wind speed at 10 meters for trend analysis.,true
+wind_speed_vector_100_meters,Vector wind speed observed at 100 meters above ground.,true
+wind_speed_vector_100_meters_fixed,Fixed vector wind speed at 100 meters for baseline calculations.,true
+wind_speed_vector_100_meters_forecast,Forecasted vector wind speed observed at 100 meters above ground.,true
+wind_speed_vector_100_meters_historical,Historical vector wind speed observed at 100 meters above ground.,true
+wind_speed_vector_100_meters_rolling,Rolling average of vector wind speed at 100 meters for trend analysis.,true
+wind_speed_vector_10_meters,Vector wind speed observed at 10 meters above ground.,true
+wind_speed_vector_10_meters_fixed,Fixed vector wind speed at 10 meters for baseline calculations.,true
+wind_speed_vector_10_meters_forecast,Forecasted vector wind speed observed at 10 meters above ground.,true
+wind_speed_vector_10_meters_historical,Historical vector wind speed observed at 10 meters above ground.,true
+wind_speed_vector_10_meters_rolling,Rolling average of vector wind speed at 10 meters for trend analysis.,true
+wind_speed_vector_at_hub_height,Vector wind speed extrapolated to the turbine hub height from the 100 m vector wind speed using the power-law shear exponent (wind_shear); returns the 100 m value when shear is undefined.,true
+wind_speed_vertical_100_meters,Vertical wind speed observed at 100 meters above ground.,true
+wind_speed_vertical_100_meters_fixed,Fixed vertical wind speed at 100 meters for baseline calculations.,true
+wind_speed_vertical_100_meters_forecast,Forecasted vertical wind speed observed at 100 meters above ground.,true
+wind_speed_vertical_100_meters_historical,Historical vertical wind speed observed at 100 meters above ground.,true
+wind_speed_vertical_100_meters_rolling,Rolling average of vertical wind speed at 100 meters for trend analysis.,true
+wind_speed_vertical_10_meters,Vertical wind speed observed at 10 meters above ground.,true
+wind_speed_vertical_10_meters_fixed,Fixed vertical wind speed at 10 meters for baseline calculations.,true
+wind_speed_vertical_10_meters_forecast,Forecasted vertical wind speed observed at 10 meters above ground.,true
+wind_speed_vertical_10_meters_historical,Historical vertical wind speed observed at 10 meters above ground.,true
+wind_speed_vertical_10_meters_rolling,Rolling average of vertical wind speed at 10 meters for trend analysis.,true
+wind_standard_report,Standard report for wind power generation profiles.,false
+wind_turbine_model,Model identifier for wind turbine used in calculations.,true
+wind_turbine_size,Size of wind turbine in kW or MW based on model specifications.,true
+winter_capacity_mw,"The plant's maximum generation capacity during winter conditions, in MW.",true
+year,Year extracted from timestamp for time-based analysis.,true
+year_hours,Total number of hours in the year accounting for leap years.,true
+zonal_basis_day_ahead,Difference between locational marginal price and zonal price for day-ahead market.,true
+zonal_dedup_denom,Dividing aggregate zonal data by this value renders it at the proper grouped resolution.,false
+zonal_dup_count,Used to deduplicate zonal data in the aggregates.,true
+zonal_energy_price_day_ahead,Day-ahead zonal energy price for the market.,true
+zone,The modelling zone associated the chosen granule.,true
+zone_name,Name of the zone associated with the asset or operational data.,true

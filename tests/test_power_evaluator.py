@@ -120,3 +120,139 @@ def test_run_async_maps_to_api_type():
     assert "API_TYPE" not in pe.submit(measure="irr", dry_run=True)
     assert pe.submit(measure="irr", run_async=True, dry_run=True)["API_TYPE"] == "async"
     assert pe.submit(measure="irr", run_async=False, dry_run=True)["API_TYPE"] == "sync"
+
+
+# --- get_reference_data (mocked network, temp cache) ------------------------
+import json
+import tempfile
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+
+class _Http:
+    def __init__(self, payload=None, text=""):
+        self._payload, self.content = payload, text.encode()
+
+    def json(self):
+        return self._payload
+
+    def raise_for_status(self):
+        pass
+
+
+def _manifest(age_days=1, datasets=("cases",)):
+    ts = (datetime.now(timezone.utc) - timedelta(days=age_days)).isoformat()
+    return {"generated_at": ts, "datasets": {d: {} for d in datasets}}
+
+
+def _fake_get(manifest, csv="scenario,vintage,method\nA,V1,Nodal\n"):
+    def get(url, **kwargs):
+        if url.endswith("manifest.json"):
+            return _Http(manifest)
+        return _Http(text=csv)
+
+    return get
+
+
+def _ref(fn):
+    """Run a test body with an isolated cache dir."""
+
+    def wrapper():
+        with tempfile.TemporaryDirectory() as d:
+            with mock.patch(
+                "spgci.power_evaluator._reference_cache_dir", return_value=Path(d)
+            ):
+                fn(Path(d))
+
+    return wrapper
+
+
+@_ref
+def test_reference_unknown_dataset(cache):
+    with pytest.raises(ValueError):
+        pe.get_reference_data("node")
+
+
+@_ref
+def test_reference_github_then_cache(cache):
+    get = mock.Mock(side_effect=_fake_get(_manifest()))
+    with mock.patch("spgci.power_evaluator.requests.get", get):
+        df = pe.get_reference_data("cases")
+        assert df.attrs["source"] == "github" and df.loc[0, "vintage"] == "V1"
+        df2 = pe.get_reference_data("cases")
+    assert df2.attrs["source"] == "cache"
+    assert get.call_count == 2  # manifest + csv once; second call served from disk
+
+
+@_ref
+def test_reference_stale_manifest_falls_back_to_api(cache):
+    api = pd.DataFrame({"scenario": ["B"], "vintage": ["V2"], "method": ["Zonal"]})
+    with mock.patch(
+        "spgci.power_evaluator.requests.get", _fake_get(_manifest(age_days=30))
+    ), mock.patch.object(PowerEvaluator, "submit", return_value=api) as sub:
+        df = pe.get_reference_data("cases")
+    assert df.attrs["source"] == "api" and df.loc[0, "vintage"] == "V2"
+    assert sub.call_args.kwargs["run_async"] is False
+
+
+@_ref
+def test_reference_github_failure_falls_back_to_api(cache):
+    import requests as rq
+
+    api = pd.DataFrame({"state": ["Texas"]})
+    with mock.patch(
+        "spgci.power_evaluator.requests.get", side_effect=rq.exceptions.ConnectTimeout()
+    ), mock.patch.object(PowerEvaluator, "submit", return_value=api):
+        df = pe.get_reference_data("state")
+    assert df.attrs["source"] == "api"
+
+
+@_ref
+def test_reference_use_github_false_and_refresh(cache):
+    api = pd.DataFrame({"state": ["Texas"]})
+    get = mock.Mock()
+    with mock.patch("spgci.power_evaluator.requests.get", get), mock.patch.object(
+        PowerEvaluator, "submit", return_value=api
+    ) as sub:
+        pe.get_reference_data("state", use_github=False)
+        assert pe.get_reference_data("state").attrs["source"] == "cache"
+        pe.get_reference_data("state", refresh=True, use_github=False)
+    assert get.call_count == 0 and sub.call_count == 2
+
+
+@_ref
+def test_reference_expired_cache_is_refetched(cache):
+    with mock.patch("spgci.power_evaluator.requests.get", _fake_get(_manifest())):
+        pe.get_reference_data("cases")
+        meta_path = cache / "cases.json"
+        meta = json.loads(meta_path.read_text())
+        meta["fetched_at"] = (
+            datetime.now(timezone.utc) - timedelta(days=2)
+        ).isoformat()
+        meta_path.write_text(json.dumps(meta))
+        assert pe.get_reference_data("cases").attrs["source"] == "github"
+
+
+@_ref
+def test_reference_cached_snapshot_ages_out(cache):
+    api = pd.DataFrame({"scenario": ["B"], "vintage": ["V2"], "method": ["Zonal"]})
+    with mock.patch("spgci.power_evaluator._REFERENCE_MAX_AGE", timedelta(days=14)):
+        with mock.patch("spgci.power_evaluator.requests.get", _fake_get(_manifest())):
+            pe.get_reference_data("cases")
+        meta_path = cache / "cases.json"
+        meta = json.loads(meta_path.read_text())
+        meta["generated_at"] = (
+            datetime.now(timezone.utc) - timedelta(days=20)
+        ).isoformat()
+        meta_path.write_text(json.dumps(meta))
+        with mock.patch(
+            "spgci.power_evaluator.requests.get", _fake_get(_manifest(age_days=20))
+        ), mock.patch.object(PowerEvaluator, "submit", return_value=api):
+            assert pe.get_reference_data("cases").attrs["source"] == "api"
+
+
+@_ref
+def test_reference_api_non_dataframe_raises(cache):
+    with mock.patch.object(PowerEvaluator, "submit", return_value="123"):
+        with pytest.raises(RuntimeError):
+            pe.get_reference_data("state", use_github=False)

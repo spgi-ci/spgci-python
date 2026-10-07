@@ -15,9 +15,12 @@
 from __future__ import annotations
 
 import io
+import json
+import os
 from dataclasses import dataclass
-from datetime import date, datetime
-from typing import Any, Dict, List, Mapping, Optional, Union
+from datetime import date, datetime, timedelta, timezone
+from pathlib import Path
+from typing import Any, Dict, List, Literal, Mapping, Optional, Union
 
 import pandas as pd
 import requests
@@ -25,6 +28,64 @@ import spgci.config
 from pandas import DataFrame
 from requests import Response
 from spgci.api_client import get_data, post_data
+
+PeReferenceDataset = Literal[
+    "metrics",
+    "cases",
+    "prime_mover_fuel",
+    "fuel",
+    "balancing_authority",
+    "interconnect",
+    "nerc_region",
+    "state",
+    "market_settlement_type",
+    "solar_type",
+    "zone",
+    "county",
+    "owner",
+    "ultimate_parent_company",
+    "plant",
+]
+
+# dataset -> ``PowerEvaluator.submit`` arguments that produce it. Shared with
+# ``reference/pe/refresh_reference_data.py`` so the live fallback and the
+# published snapshots cannot drift apart.
+_REFERENCE_LOOKUPS: Dict[str, Dict[str, Any]] = {
+    "metrics": dict(series=["metric", "metric_description", "expose_as_parameter"]),
+    "cases": dict(series=["Scenario", "Vintage", "Method"]),
+    "prime_mover_fuel": dict(measure=["Fuel"], series=["Prime_Mover"]),
+    "fuel": dict(series=["Fuel"]),
+    "balancing_authority": dict(series=["Balancing_Authority"]),
+    "interconnect": dict(series=["Interconnect"]),
+    "nerc_region": dict(series=["NERC_Region"]),
+    "state": dict(series=["State"]),
+    "market_settlement_type": dict(series=["Market_Settlement_Type"]),
+    "solar_type": dict(series=["Solar_Type"]),
+    "zone": dict(series=["Zone"]),
+    "county": dict(series=["County"]),
+    "owner": dict(series=["Owner"]),
+    "ultimate_parent_company": dict(series=["Ultimate_Parent_Company"]),
+    "plant": dict(series=["Plant"]),
+}
+
+_REFERENCE_BASE_URL = (
+    "https://raw.githubusercontent.com/spgi-ci/spgci-python/master/reference/pe"
+)
+#: Published snapshots older than this are ignored in favor of a live lookup.
+_REFERENCE_MAX_AGE = timedelta(days=14)
+#: How long a local copy is reused before it is fetched again.
+_REFERENCE_CACHE_TTL = timedelta(hours=24)
+_REFERENCE_FETCH_TIMEOUT = 5
+
+
+def _reference_cache_dir() -> Path:
+    base = os.getenv("SPGCI_CACHE_DIR") or str(Path.home() / ".cache" / "spgci")
+    return Path(base) / "pe"
+
+
+def _parse_utc(ts: str) -> datetime:
+    dt = datetime.fromisoformat(ts)
+    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
 
 
 def _timestamp(ts: Any) -> str:
@@ -115,6 +176,9 @@ class PowerEvaluator:
     >>> while pe.get_status(run_id)["Message"] == "InProgress":
     ...     time.sleep(5)
     >>> df = pe.get_result(run_id)
+
+    Valid names for scenarios, vintages, metrics, zones and so on are available
+    from ``get_reference_data`` without running a job.
     """
 
     _path_submit = "powerevaluator/v1/pemaas/RetrieveData"
@@ -418,3 +482,149 @@ class PowerEvaluator:
         resp.raise_for_status()
         # Spark writes embedded quotes as \" inside quoted fields.
         return pd.read_csv(io.BytesIO(resp.content), escapechar="\\")
+
+    def get_reference_data(
+        self,
+        dataset: PeReferenceDataset,
+        refresh: bool = False,
+        use_github: bool = True,
+    ) -> DataFrame:
+        """
+        Get the valid names for a Power Evaluator dimension, for example the
+        metric catalog or the scenario / vintage / method combinations.
+
+        Lookups are served from a local copy when possible, then from a snapshot
+        published in the SDK's GitHub repo, then from a live synchronous
+        lookup through ``submit`` (about 15 to 30 seconds). A published snapshot
+        is ignored if its manifest is older than 14 days, so stale data falls
+        back to the live lookup. ``df.attrs["source"]`` is ``"cache"``,
+        ``"github"`` or ``"api"``.
+
+        Parameters
+        ----------
+        dataset : PeReferenceDataset
+            One of ``"metrics"``, ``"cases"``, ``"prime_mover_fuel"``,
+            ``"fuel"``, ``"balancing_authority"``, ``"interconnect"``,
+            ``"nerc_region"``, ``"state"``, ``"market_settlement_type"``,
+            ``"solar_type"``, ``"zone"``, ``"county"``, ``"owner"``,
+            ``"ultimate_parent_company"``, ``"plant"``. For anything else (node,
+            asset, ...) use ``submit(series=[...], scope=...)``.
+        refresh : bool, optional
+            Skip the local copy and the published snapshot, by default False.
+        use_github : bool, optional
+            Allow fetching the published snapshot, by default True. Set False
+            on networks that block GitHub.
+
+        Returns
+        -------
+        DataFrame
+            Values are stored lowercase for most dimensions. Some contain a
+            blank value (read as ``NaN``); drop it before using the column as a
+            filter. ``prime_mover_fuel`` stores each fuel list as a JSON string.
+            In ``metrics``, ``expose_as_parameter`` is ``True``, ``False`` or
+            blank (unknown).
+
+        Examples
+        --------
+        >>> pe = ci.PowerEvaluator()
+        >>> pe.get_reference_data("cases").query("scenario == 'Power Crunch'")
+        """
+        if dataset not in _REFERENCE_LOOKUPS:
+            raise ValueError(
+                f"Unknown reference dataset {dataset!r}. Valid datasets: "
+                f"{', '.join(_REFERENCE_LOOKUPS)}. For other dimensions use "
+                "submit(series=[...], scope=...)."
+            )
+
+        cache_dir = _reference_cache_dir()
+        csv_path = cache_dir / f"{dataset}.csv"
+        meta_path = cache_dir / f"{dataset}.json"
+        now = datetime.now(timezone.utc)
+
+        if not refresh:
+            cached = self._read_reference_cache(csv_path, meta_path, now)
+            if cached is not None:
+                return cached
+
+        source = "api"
+        generated_at: Optional[datetime] = None
+        text = ""
+
+        if use_github:
+            fetched = self._fetch_reference_snapshot(dataset, now)
+            if fetched is not None:
+                text, generated_at = fetched
+                source = "github"
+
+        if source == "api":
+            df = self.submit(run_async=False, **_REFERENCE_LOOKUPS[dataset])
+            if not isinstance(df, DataFrame):
+                raise RuntimeError(
+                    f"Live lookup for {dataset!r} did not return rows: {df!r}"
+                )
+            text = df.to_csv(index=False)
+
+        try:
+            cache_dir.mkdir(parents=True, exist_ok=True)
+            csv_path.write_text(text, encoding="utf-8")
+            meta_path.write_text(
+                json.dumps(
+                    {
+                        "source": source,
+                        "fetched_at": now.isoformat(),
+                        "generated_at": generated_at.isoformat()
+                        if generated_at
+                        else None,
+                    }
+                ),
+                encoding="utf-8",
+            )
+        except OSError:
+            pass  # read-only or ephemeral file system: just skip caching
+
+        out = pd.read_csv(io.StringIO(text))
+        out.attrs["source"] = source
+        return out
+
+    @staticmethod
+    def _read_reference_cache(
+        csv_path: Path, meta_path: Path, now: datetime
+    ) -> Optional[DataFrame]:
+        try:
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+            if now - _parse_utc(meta["fetched_at"]) > _REFERENCE_CACHE_TTL:
+                return None
+            if meta.get("source") == "github":
+                if now - _parse_utc(meta["generated_at"]) > _REFERENCE_MAX_AGE:
+                    return None
+            out = pd.read_csv(csv_path)
+        except (OSError, ValueError, KeyError, TypeError):
+            return None
+        out.attrs["source"] = "cache"
+        return out
+
+    @staticmethod
+    def _fetch_reference_snapshot(
+        dataset: str, now: datetime
+    ) -> Optional[tuple[str, datetime]]:
+        """Return ``(csv_text, generated_at)`` from GitHub, or ``None`` when the
+        snapshot is unreachable, missing, or older than the maximum age."""
+        kwargs: Dict[str, Any] = dict(
+            verify=spgci.config.verify_ssl,
+            proxies=spgci.config.proxies,
+            timeout=_REFERENCE_FETCH_TIMEOUT,
+        )
+        try:
+            m = requests.get(f"{_REFERENCE_BASE_URL}/manifest.json", **kwargs)
+            m.raise_for_status()
+            manifest = m.json()
+            generated_at = _parse_utc(manifest["generated_at"])
+            if now - generated_at > _REFERENCE_MAX_AGE:
+                return None
+            if dataset not in manifest["datasets"]:
+                return None
+            r = requests.get(f"{_REFERENCE_BASE_URL}/{dataset}.csv", **kwargs)
+            r.raise_for_status()
+            return r.content.decode("utf-8"), generated_at
+        except (requests.exceptions.RequestException, ValueError, KeyError, TypeError):
+            return None

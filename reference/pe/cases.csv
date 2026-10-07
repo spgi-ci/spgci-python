@@ -1,0 +1,74 @@
+scenario,vintage,method
+Fast Transition,FT 2024,Nodal
+Fast Transition,FT 2024,Nodal + Stochastics
+Fast Transition,FT 2024,Zonal
+Historical,HIST,Actual
+Integrated House View,H1 2023,Nodal
+Integrated House View,H1 2023,Nodal + Stochastics
+Integrated House View,H1 2023,Zonal
+Integrated House View,H1 2024,Nodal
+Integrated House View,H1 2024,Nodal + Stochastics
+Integrated House View,H1 2024,Zonal
+Integrated House View,H1 2025,Nodal
+Integrated House View,H1 2025,Nodal + Stochastics
+Integrated House View,H1 2025,Zonal
+Integrated House View,H1 2026,Nodal
+Integrated House View,H1 2026,Nodal + Stochastics
+Integrated House View,H1 2026,Zonal
+Integrated House View,H2 2023,Nodal
+Integrated House View,H2 2023,Nodal + Stochastics
+Integrated House View,H2 2023,Zonal
+Integrated House View,H2 2024,Nodal
+Integrated House View,H2 2024,Nodal + Stochastics
+Integrated House View,H2 2024,Zonal
+Integrated House View,H2 2025,Nodal
+Integrated House View,H2 2025,Nodal + Stochastics
+Integrated House View,H2 2025,Zonal
+Market Indicative Case,Q1 2023,Nodal
+Market Indicative Case,Q1 2023,Nodal + Stochastics
+Market Indicative Case,Q1 2023,Zonal
+Market Indicative Case,Q1 2024,Nodal
+Market Indicative Case,Q1 2024,Nodal + Stochastics
+Market Indicative Case,Q1 2024,Zonal
+Market Indicative Case,Q1 2025,Nodal
+Market Indicative Case,Q1 2025,Nodal + Stochastics
+Market Indicative Case,Q1 2025,Zonal
+Market Indicative Case,Q1 2026,Nodal
+Market Indicative Case,Q1 2026,Nodal + Stochastics
+Market Indicative Case,Q1 2026,Zonal
+Market Indicative Case,Q2 2023,Nodal
+Market Indicative Case,Q2 2023,Nodal + Stochastics
+Market Indicative Case,Q2 2023,Zonal
+Market Indicative Case,Q2 2024,Nodal
+Market Indicative Case,Q2 2024,Nodal + Stochastics
+Market Indicative Case,Q2 2024,Zonal
+Market Indicative Case,Q2 2025,Nodal
+Market Indicative Case,Q2 2025,Nodal + Stochastics
+Market Indicative Case,Q2 2025,Zonal
+Market Indicative Case,Q2 2026,Nodal
+Market Indicative Case,Q2 2026,Nodal + Stochastics
+Market Indicative Case,Q2 2026,Zonal
+Market Indicative Case,Q3 2023,Nodal
+Market Indicative Case,Q3 2023,Nodal + Stochastics
+Market Indicative Case,Q3 2023,Zonal
+Market Indicative Case,Q3 2024,Nodal
+Market Indicative Case,Q3 2024,Nodal + Stochastics
+Market Indicative Case,Q3 2024,Zonal
+Market Indicative Case,Q3 2025,Nodal
+Market Indicative Case,Q3 2025,Nodal + Stochastics
+Market Indicative Case,Q3 2025,Zonal
+Market Indicative Case,Q4 2023,Nodal
+Market Indicative Case,Q4 2023,Nodal + Stochastics
+Market Indicative Case,Q4 2023,Zonal
+Market Indicative Case,Q4 2024,Nodal
+Market Indicative Case,Q4 2024,Nodal + Stochastics
+Market Indicative Case,Q4 2024,Zonal
+Market Indicative Case,Q4 2025,Nodal
+Market Indicative Case,Q4 2025,Nodal + Stochastics
+Market Indicative Case,Q4 2025,Zonal
+Power Crunch,PC 2024,Nodal
+Power Crunch,PC 2024,Nodal + Stochastics
+Power Crunch,PC 2024,Zonal
+Power Crunch,PC 2025,Nodal
+Power Crunch,PC 2025,Nodal + Stochastics
+Power Crunch,PC 2025,Zonal

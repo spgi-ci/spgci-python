@@ -1,0 +1,116 @@
+{
+  "generated_at": "2026-10-07T00:14:49.863061+00:00",
+  "datasets": {
+    "metrics": {
+      "rows": 1073,
+      "columns": [
+        "metric",
+        "metric_description",
+        "expose_as_parameter"
+      ],
+      "sha256": "4907431dc3188f42a98e46c921ef09f25859dd523e2c5d67940e8b3ffa45e273"
+    },
+    "cases": {
+      "rows": 73,
+      "columns": [
+        "scenario",
+        "vintage",
+        "method"
+      ],
+      "sha256": "6437602c5ee77b4a987b4e1c9d4c66b532de0047f108c1bcc6e4f470e6c1883e"
+    },
+    "prime_mover_fuel": {
+      "rows": 16,
+      "columns": [
+        "prime_mover",
+        "fuel"
+      ],
+      "sha256": "f7db720880e93586fb0ff209f45925559420254c2a930589375b5df7d8ef6257"
+    },
+    "fuel": {
+      "rows": 44,
+      "columns": [
+        "fuel",
+        "prime_mover"
+      ],
+      "sha256": "cb9b6ab75674c23c3b8b15cb0c94828470a7f69b01b351ab8a3a8722f066a36a"
+    },
+    "balancing_authority": {
+      "rows": 57,
+      "columns": [
+        "balancing_authority"
+      ],
+      "sha256": "59bef62c14a03bbfaabdeb6ed5d32e7c4d264afb14aeb7b981659926427038b0"
+    },
+    "interconnect": {
+      "rows": 4,
+      "columns": [
+        "interconnect"
+      ],
+      "sha256": "e7c2c9e58a677c50f2711fe5beeabc991c409199a66db40c50bffc829fe7b94e"
+    },
+    "nerc_region": {
+      "rows": 8,
+      "columns": [
+        "nerc_region"
+      ],
+      "sha256": "3680c85a5f7d3293f4a4f0c7b2e10433991cee0ebd4aa75a6531da9345e48742"
+    },
+    "state": {
+      "rows": 50,
+      "columns": [
+        "state"
+      ],
+      "sha256": "808a1ce9f3162a58f8c5468fd689a926bdd1167cc682b5fdcd46001d63e5d8c5"
+    },
+    "market_settlement_type": {
+      "rows": 2,
+      "columns": [
+        "market_settlement_type"
+      ],
+      "sha256": "02d3755a2b54e3f19426c697796d2be55e8132e011010d7a848341780992a0a1"
+    },
+    "solar_type": {
+      "rows": 4,
+      "columns": [
+        "solar_type"
+      ],
+      "sha256": "a1b8b2dbbc84dd526fec7784abef357c8fc30fb404a457dafe58fc993a3537f3"
+    },
+    "zone": {
+      "rows": 134,
+      "columns": [
+        "zone"
+      ],
+      "sha256": "1bd6dc51e492e76daa943beaaf9399c0c161a473ef85e851d9e68ec0db88e9d4"
+    },
+    "county": {
+      "rows": 2681,
+      "columns": [
+        "county"
+      ],
+      "sha256": "6700e535817af6f37c78959f488b8136f6ef06d76155af92675ebf6c8875f3a1"
+    },
+    "owner": {
+      "rows": 2963,
+      "columns": [
+        "owner"
+      ],
+      "sha256": "14c261112a90d10b0795d568ca8612ca26bf07e8d7de5498958f889a6caedcbe"
+    },
+    "ultimate_parent_company": {
+      "rows": 2381,
+      "columns": [
+        "ultimate_parent_company"
+      ],
+      "sha256": "e2e47600d618c7127989d405c837549e873ca77d294945f166b0d2c8bc4112aa"
+    },
+    "plant": {
+      "rows": 37172,
+      "columns": [
+        "plant"
+      ],
+      "sha256": "1d9d622cbea070801bab620aa922dba82d9ead0976fd604fa8b4cf161eaeadff"
+    }
+  }
+}
