@@ -1,0 +1,500 @@
+{
+  "generated_at": "2026-10-07T18:40:46.952408+00:00",
+  "snapshots": {
+    "baseline-forecast__all": {
+      "dataset": "baseline-forecast",
+      "layout": "full",
+      "file": "baseline-forecast__all.csv.gz",
+      "columns": [
+        "commodity",
+        "currency",
+        "dataset",
+        "forecastType",
+        "frequency",
+        "reportingRegion",
+        "sourceDataset",
+        "uom",
+        "seriesType",
+        "shortLabel",
+        "priceSymbol"
+      ],
+      "rows": 11236,
+      "bytes": 159062,
+      "dtypes": {
+        "commodity": "object",
+        "currency": "object",
+        "dataset": "object",
+        "forecastType": "object",
+        "frequency": "object",
+        "reportingRegion": "object",
+        "sourceDataset": "object",
+        "uom": "object",
+        "seriesType": "object",
+        "shortLabel": "object",
+        "priceSymbol": "object"
+      },
+      "sha256": "23c5868c467beabc10f961829b646b0c819cbddeae74aa01d15802ca80d4cda2",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "baseline-forecast__commodity_region": {
+      "dataset": "baseline-forecast",
+      "layout": "grouped",
+      "file": "baseline-forecast__commodity_region.csv.gz",
+      "columns": [
+        "commodity",
+        "reportingRegion"
+      ],
+      "rows": 2397,
+      "bytes": 10541,
+      "dtypes": {
+        "commodity": "object",
+        "reportingRegion": "object"
+      },
+      "sha256": "4cdc11875b773a7a175d9e671716c83c6116ee91fc433a7f452ba6370fb5ac0e",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "baseline-forecast__series": {
+      "dataset": "baseline-forecast",
+      "layout": "grouped",
+      "file": "baseline-forecast__series.csv.gz",
+      "columns": [
+        "commodity",
+        "currency",
+        "dataset",
+        "forecastType",
+        "frequency",
+        "sourceDataset",
+        "uom",
+        "seriesType",
+        "shortLabel",
+        "priceSymbol"
+      ],
+      "rows": 11236,
+      "bytes": 144670,
+      "dtypes": {
+        "commodity": "object",
+        "currency": "object",
+        "dataset": "object",
+        "forecastType": "object",
+        "frequency": "object",
+        "sourceDataset": "object",
+        "uom": "object",
+        "seriesType": "object",
+        "shortLabel": "object",
+        "priceSymbol": "object"
+      },
+      "sha256": "dc0b931e4caa5b10304289d60e448392d266da67b122bd6db477b3b3b638118a",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "cost-of-production__all": {
+      "dataset": "cost-of-production",
+      "layout": "full",
+      "file": "cost-of-production__all.csv.gz",
+      "columns": [
+        "commodity",
+        "subCommodity",
+        "geography",
+        "region",
+        "category",
+        "parentItem",
+        "item",
+        "uom",
+        "unitType",
+        "currency",
+        "fullUnitName"
+      ],
+      "rows": 26964,
+      "bytes": 112157,
+      "dtypes": {
+        "commodity": "object",
+        "subCommodity": "object",
+        "geography": "object",
+        "region": "object",
+        "category": "object",
+        "parentItem": "object",
+        "item": "object",
+        "uom": "object",
+        "unitType": "object",
+        "currency": "object",
+        "fullUnitName": "object"
+      },
+      "sha256": "b2151e11f6f8d2977de7d351cccff73b32be3f40d429c8d9621fe229ecc7dfe7",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "cost-of-production__commodity_geography": {
+      "dataset": "cost-of-production",
+      "layout": "grouped",
+      "file": "cost-of-production__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "subCommodity",
+        "geography",
+        "region"
+      ],
+      "rows": 414,
+      "bytes": 2379,
+      "dtypes": {
+        "commodity": "object",
+        "subCommodity": "object",
+        "geography": "object",
+        "region": "object"
+      },
+      "sha256": "24342b652d7772624a3b83c95f373d1aa11393b27fa5f2b0a5759874ce6c9237",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "cost-of-production__items": {
+      "dataset": "cost-of-production",
+      "layout": "grouped",
+      "file": "cost-of-production__items.csv.gz",
+      "columns": [
+        "commodity",
+        "category",
+        "parentItem",
+        "item",
+        "uom",
+        "unitType",
+        "currency",
+        "fullUnitName"
+      ],
+      "rows": 1588,
+      "bytes": 7494,
+      "dtypes": {
+        "commodity": "object",
+        "category": "object",
+        "parentItem": "object",
+        "item": "object",
+        "uom": "object",
+        "unitType": "object",
+        "currency": "object",
+        "fullUnitName": "object"
+      },
+      "sha256": "bc2c6b897f9d8944e27a1836c61fe2243ba8557530a3eaf83f4f6eee187372bc",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "crops-short-term-forecast__commodity_geography": {
+      "dataset": "crops-short-term-forecast",
+      "layout": "grouped",
+      "file": "crops-short-term-forecast__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "geography"
+      ],
+      "rows": 1706,
+      "bytes": 8889,
+      "dtypes": {
+        "commodity": "object",
+        "geography": "object"
+      },
+      "sha256": "25f027df319b0f3b8c1710a3a9d87e4ccd66a7c6f7bdf20455eb8e67517bf3a9",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "global-long-term-forecast__all": {
+      "dataset": "global-long-term-forecast",
+      "layout": "full",
+      "file": "global-long-term-forecast__all.csv.gz",
+      "columns": [
+        "commodity",
+        "shortLabel",
+        "reportingRegion",
+        "concept",
+        "frequency",
+        "uom",
+        "currency",
+        "mnemonic"
+      ],
+      "rows": 18539,
+      "bytes": 174846,
+      "dtypes": {
+        "commodity": "object",
+        "shortLabel": "object",
+        "reportingRegion": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "currency": "object",
+        "mnemonic": "object"
+      },
+      "sha256": "8ef82c68912534e99e2ddeae4a27dfe2a8b64b0dacc2cb02d4a7e2db00fc78d7",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "global-long-term-forecast__commodity_region": {
+      "dataset": "global-long-term-forecast",
+      "layout": "grouped",
+      "file": "global-long-term-forecast__commodity_region.csv.gz",
+      "columns": [
+        "commodity",
+        "reportingRegion"
+      ],
+      "rows": 3100,
+      "bytes": 11609,
+      "dtypes": {
+        "commodity": "object",
+        "reportingRegion": "object"
+      },
+      "sha256": "c6b2775f5ec32897be8f2ed865197e4c74500d5144981ca5a3f5cd7cb68ce4fc",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "global-long-term-forecast__series": {
+      "dataset": "global-long-term-forecast",
+      "layout": "grouped",
+      "file": "global-long-term-forecast__series.csv.gz",
+      "columns": [
+        "commodity",
+        "shortLabel",
+        "concept",
+        "frequency",
+        "uom",
+        "currency",
+        "mnemonic"
+      ],
+      "rows": 18539,
+      "bytes": 156417,
+      "dtypes": {
+        "commodity": "object",
+        "shortLabel": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "currency": "object",
+        "mnemonic": "object"
+      },
+      "sha256": "699ea30d8700d64dee5d6685993b667719493245b33c1b5c5f9f5330d2e54781",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "price-purchase-forecast__all": {
+      "dataset": "price-purchase-forecast",
+      "layout": "full",
+      "file": "price-purchase-forecast__all.csv.gz",
+      "columns": [
+        "commodity",
+        "description",
+        "reportingRegion",
+        "uom",
+        "currency",
+        "frequency",
+        "source"
+      ],
+      "rows": 992,
+      "bytes": 16059,
+      "dtypes": {
+        "commodity": "object",
+        "description": "object",
+        "reportingRegion": "object",
+        "uom": "object",
+        "currency": "object",
+        "frequency": "object",
+        "source": "object"
+      },
+      "sha256": "162843b32a8cde148fc9b73163abab1a622e52d80b4a8cbcb02bd2f42f4efeba",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "price-purchase-forecast__commodity_region": {
+      "dataset": "price-purchase-forecast",
+      "layout": "grouped",
+      "file": "price-purchase-forecast__commodity_region.csv.gz",
+      "columns": [
+        "commodity",
+        "reportingRegion"
+      ],
+      "rows": 347,
+      "bytes": 1779,
+      "dtypes": {
+        "commodity": "object",
+        "reportingRegion": "object"
+      },
+      "sha256": "b3b78c4fec83f3cbf527b60f5a4d8e9d7f7f21534038bb1da248529f81d75130",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "price-purchase-forecast__series": {
+      "dataset": "price-purchase-forecast",
+      "layout": "grouped",
+      "file": "price-purchase-forecast__series.csv.gz",
+      "columns": [
+        "commodity",
+        "description",
+        "uom",
+        "currency",
+        "frequency",
+        "source"
+      ],
+      "rows": 992,
+      "bytes": 15239,
+      "dtypes": {
+        "commodity": "object",
+        "description": "object",
+        "uom": "object",
+        "currency": "object",
+        "frequency": "object",
+        "source": "object"
+      },
+      "sha256": "07d9d4294caba407efc68c6b45ceec8d56b7b87de90fa561b26fa5b5fb3a67dd",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "proteins-short-term-forecast__all": {
+      "dataset": "proteins-short-term-forecast",
+      "layout": "full",
+      "file": "proteins-short-term-forecast__all.csv.gz",
+      "columns": [
+        "commodity",
+        "cropMonth",
+        "geography",
+        "concept",
+        "frequency",
+        "unit",
+        "uom",
+        "currency",
+        "shortLabel",
+        "seriesType",
+        "sourceAttributeId"
+      ],
+      "rows": 3455,
+      "bytes": 37948,
+      "dtypes": {
+        "commodity": "object",
+        "cropMonth": "object",
+        "geography": "object",
+        "concept": "object",
+        "frequency": "object",
+        "unit": "object",
+        "uom": "object",
+        "currency": "object",
+        "shortLabel": "object",
+        "seriesType": "object",
+        "sourceAttributeId": "object"
+      },
+      "sha256": "2cd71d861fdcb09fb86e4e387f669febb2fced3a4ac629d17e5fb846d8cc6160",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "proteins-short-term-forecast__commodity_geography": {
+      "dataset": "proteins-short-term-forecast",
+      "layout": "grouped",
+      "file": "proteins-short-term-forecast__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "geography"
+      ],
+      "rows": 65,
+      "bytes": 442,
+      "dtypes": {
+        "commodity": "object",
+        "geography": "object"
+      },
+      "sha256": "bad97083774a587b72e6ef78318613da4424e31afb64aa277e2c7d9f037a6277",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "proteins-short-term-forecast__series": {
+      "dataset": "proteins-short-term-forecast",
+      "layout": "grouped",
+      "file": "proteins-short-term-forecast__series.csv.gz",
+      "columns": [
+        "commodity",
+        "cropMonth",
+        "concept",
+        "frequency",
+        "unit",
+        "uom",
+        "currency",
+        "shortLabel",
+        "seriesType"
+      ],
+      "rows": 3443,
+      "bytes": 26676,
+      "dtypes": {
+        "commodity": "object",
+        "cropMonth": "object",
+        "concept": "object",
+        "frequency": "object",
+        "unit": "object",
+        "uom": "object",
+        "currency": "object",
+        "shortLabel": "object",
+        "seriesType": "object"
+      },
+      "sha256": "0ca94a86ee9648936ddba53b6c8d7fee6aaf1c75e6486e2bf53686ba8fd83c42",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "softs-short-term-forecast__all": {
+      "dataset": "softs-short-term-forecast",
+      "layout": "full",
+      "file": "softs-short-term-forecast__all.csv.gz",
+      "columns": [
+        "commodity",
+        "cropMonth",
+        "geography",
+        "concept",
+        "frequency",
+        "unit",
+        "uom",
+        "currency",
+        "shortLabel",
+        "seriesType",
+        "sourceAttributeId"
+      ],
+      "rows": 20326,
+      "bytes": 188636,
+      "dtypes": {
+        "commodity": "object",
+        "cropMonth": "object",
+        "geography": "object",
+        "concept": "object",
+        "frequency": "object",
+        "unit": "object",
+        "uom": "object",
+        "currency": "object",
+        "shortLabel": "object",
+        "seriesType": "object",
+        "sourceAttributeId": "object"
+      },
+      "sha256": "f18a51ca85b211649c6205fb205c1695630783ca33d77dfa487d4bc8058552e5",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "softs-short-term-forecast__commodity_geography": {
+      "dataset": "softs-short-term-forecast",
+      "layout": "grouped",
+      "file": "softs-short-term-forecast__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "geography"
+      ],
+      "rows": 1861,
+      "bytes": 7991,
+      "dtypes": {
+        "commodity": "object",
+        "geography": "object"
+      },
+      "sha256": "a8dc0bce9e65c96e7622f3523c19aea969ba2eb4e70e135c2d92847acf9fb817",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    },
+    "softs-short-term-forecast__series": {
+      "dataset": "softs-short-term-forecast",
+      "layout": "grouped",
+      "file": "softs-short-term-forecast__series.csv.gz",
+      "columns": [
+        "commodity",
+        "cropMonth",
+        "concept",
+        "frequency",
+        "unit",
+        "uom",
+        "currency",
+        "shortLabel",
+        "seriesType"
+      ],
+      "rows": 20232,
+      "bytes": 95864,
+      "dtypes": {
+        "commodity": "object",
+        "cropMonth": "object",
+        "concept": "object",
+        "frequency": "object",
+        "unit": "object",
+        "uom": "object",
+        "currency": "object",
+        "shortLabel": "object",
+        "seriesType": "object"
+      },
+      "sha256": "51d09a4b0f76dbe6a2888e731f19fcbdd1ed53c792df531c37b9330281daa6b8",
+      "generated_at": "2026-10-07T18:40:46.952408+00:00"
+    }
+  }
+}

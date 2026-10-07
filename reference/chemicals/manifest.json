@@ -1,0 +1,1383 @@
+{
+  "generated_at": "2026-10-07T16:07:28.294723+00:00",
+  "snapshots": {
+    "assumptions__all": {
+      "dataset": "assumptions",
+      "layout": "full",
+      "file": "assumptions__all.csv.gz",
+      "columns": [
+        "forecastPeriod",
+        "scenarioDescription",
+        "concept",
+        "country",
+        "region",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "uom",
+        "uomName",
+        "currency",
+        "currencyName"
+      ],
+      "rows": 626,
+      "bytes": 3921,
+      "dtypes": {
+        "forecastPeriod": "object",
+        "scenarioDescription": "object",
+        "concept": "object",
+        "country": "object",
+        "region": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "uom": "object",
+        "uomName": "object",
+        "currency": "object",
+        "currencyName": "object"
+      },
+      "sha256": "904a2b556af33a964ca7bec837e5d1a6c0ba4cf2dc24c8396da0b9839dd32e32",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "assumptions__geography": {
+      "dataset": "assumptions",
+      "layout": "grouped",
+      "file": "assumptions__geography.csv.gz",
+      "columns": [
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country"
+      ],
+      "rows": 105,
+      "bytes": 1006,
+      "dtypes": {
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object"
+      },
+      "sha256": "f5c9123f4ac689e28e99e665bb820a05a5e57865c8210f6a36b83ae91fb09dcd",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "assumptions__scenario": {
+      "dataset": "assumptions",
+      "layout": "grouped",
+      "file": "assumptions__scenario.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "forecastPeriod"
+      ],
+      "rows": 3,
+      "bytes": 92,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "forecastPeriod": "object"
+      },
+      "sha256": "b4c17724fc04a6de320cfe8c10c36d83ceb2e03fa8076d544e538fe77a7945c0",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "assumptions__series": {
+      "dataset": "assumptions",
+      "layout": "grouped",
+      "file": "assumptions__series.csv.gz",
+      "columns": [
+        "concept",
+        "currency",
+        "currencyName",
+        "uom",
+        "uomName"
+      ],
+      "rows": 2,
+      "bytes": 139,
+      "dtypes": {
+        "concept": "object",
+        "currency": "object",
+        "currencyName": "object",
+        "uom": "object",
+        "uomName": "object"
+      },
+      "sha256": "b38e99cfc03147b7bc1eb04af0b4806d422d3ec9b4cace25bb6d6714818c7a91",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "average-annual-capacities__attributes": {
+      "dataset": "average-annual-capacities",
+      "layout": "grouped",
+      "file": "average-annual-capacities__attributes.csv.gz",
+      "columns": [
+        "commodity",
+        "productionRoute",
+        "reason",
+        "uom",
+        "uomName"
+      ],
+      "rows": 846,
+      "bytes": 5203,
+      "dtypes": {
+        "commodity": "object",
+        "productionRoute": "object",
+        "reason": "object",
+        "uom": "object",
+        "uomName": "object"
+      },
+      "sha256": "ca413e8271083828a160e07b6faee7f23e9df395c5b380f603556ccd808d2413",
+      "generated_at": "2026-10-07T16:07:28.294723+00:00"
+    },
+    "average-annual-capacities__commodity_geography": {
+      "dataset": "average-annual-capacities",
+      "layout": "grouped",
+      "file": "average-annual-capacities__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country",
+        "state"
+      ],
+      "rows": 6645,
+      "bytes": 42140,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object",
+        "state": "object"
+      },
+      "sha256": "43bb7a6ce6611b5b738de1ef0a9aad9b6f329d8008151173c2700a86d410a45f",
+      "generated_at": "2026-10-07T16:07:28.294723+00:00"
+    },
+    "average-annual-capacities__owner": {
+      "dataset": "average-annual-capacities",
+      "layout": "grouped",
+      "file": "average-annual-capacities__owner.csv.gz",
+      "columns": [
+        "owner"
+      ],
+      "rows": 5787,
+      "bytes": 53593,
+      "dtypes": {
+        "owner": "object"
+      },
+      "sha256": "7266ae550b6a23f51c1ad29c46abef721827dfab04ca0276333faa92edb343c8",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "capacity-events__all": {
+      "dataset": "capacity-events",
+      "layout": "full",
+      "file": "capacity-events__all.csv.gz",
+      "columns": [
+        "productionUnitCode",
+        "commodity",
+        "productionRoute",
+        "plantCode",
+        "plantName",
+        "unitName",
+        "city",
+        "state",
+        "country",
+        "region",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "eventType",
+        "uom",
+        "uomName",
+        "owner",
+        "ownershipPeriod",
+        "reason"
+      ],
+      "rows": 55995,
+      "bytes": 1102100,
+      "dtypes": {
+        "productionUnitCode": "object",
+        "commodity": "object",
+        "productionRoute": "object",
+        "plantCode": "object",
+        "plantName": "object",
+        "unitName": "object",
+        "city": "object",
+        "state": "object",
+        "country": "object",
+        "region": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "eventType": "object",
+        "uom": "object",
+        "uomName": "object",
+        "owner": "object",
+        "ownershipPeriod": "object",
+        "reason": "object"
+      },
+      "sha256": "b1c1af52072ddebca9af4c60eeb0f3438d7b2afbdfe8a833af31544dd57c1d1e",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "capacity-events__attributes": {
+      "dataset": "capacity-events",
+      "layout": "grouped",
+      "file": "capacity-events__attributes.csv.gz",
+      "columns": [
+        "commodity",
+        "productionRoute",
+        "eventType",
+        "reason",
+        "uom",
+        "uomName"
+      ],
+      "rows": 3282,
+      "bytes": 14158,
+      "dtypes": {
+        "commodity": "object",
+        "productionRoute": "object",
+        "eventType": "object",
+        "reason": "object",
+        "uom": "object",
+        "uomName": "object"
+      },
+      "sha256": "45fc81a0d4577ec84ee2b1bbef6832ec5283ca6856b2a160c8f5cddbbf0505e2",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "capacity-events__commodity_geography": {
+      "dataset": "capacity-events",
+      "layout": "grouped",
+      "file": "capacity-events__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country",
+        "state"
+      ],
+      "rows": 5420,
+      "bytes": 34790,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object",
+        "state": "object"
+      },
+      "sha256": "c8dc2299f498bd8b16af7edbd0663d3e8cf2b4b2c2b75a65d4cf1106767959ef",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "capacity-events__owner": {
+      "dataset": "capacity-events",
+      "layout": "grouped",
+      "file": "capacity-events__owner.csv.gz",
+      "columns": [
+        "owner"
+      ],
+      "rows": 4584,
+      "bytes": 42860,
+      "dtypes": {
+        "owner": "object"
+      },
+      "sha256": "7167fa47c58c285a909fa0e9f8a0d1a09e7c52113f86a9172cce17b23555f1d1",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "capacity-to-consume__attributes": {
+      "dataset": "capacity-to-consume",
+      "layout": "grouped",
+      "file": "capacity-to-consume__attributes.csv.gz",
+      "columns": [
+        "commodity",
+        "productionRoute",
+        "concept",
+        "derivative",
+        "reason",
+        "uom",
+        "uomName"
+      ],
+      "rows": 243,
+      "bytes": 1804,
+      "dtypes": {
+        "commodity": "object",
+        "productionRoute": "object",
+        "concept": "object",
+        "derivative": "object",
+        "reason": "object",
+        "uom": "object",
+        "uomName": "object"
+      },
+      "sha256": "41f66219dd92a98279a75f8d5fadec58b50952573c3eca14229ff4c9ef4ccc52",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "capacity-to-consume__commodity_geography": {
+      "dataset": "capacity-to-consume",
+      "layout": "grouped",
+      "file": "capacity-to-consume__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country",
+        "state"
+      ],
+      "rows": 1940,
+      "bytes": 12135,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object",
+        "state": "object"
+      },
+      "sha256": "caa2baf35e6f6f236d32517797de6c80c5a086d7c2b751d26ca951b9913d7af5",
+      "generated_at": "2026-10-07T16:07:28.294723+00:00"
+    },
+    "capacity-to-consume__owner": {
+      "dataset": "capacity-to-consume",
+      "layout": "grouped",
+      "file": "capacity-to-consume__owner.csv.gz",
+      "columns": [
+        "owner"
+      ],
+      "rows": 1827,
+      "bytes": 17201,
+      "dtypes": {
+        "owner": "object"
+      },
+      "sha256": "6aa8fc18fcfb10c764ab7351c9b2f8ce738188ec1c8e777c45dda0c20a0bbfe2",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "capacity-utilization__commodity_geography": {
+      "dataset": "capacity-utilization",
+      "layout": "grouped",
+      "file": "capacity-utilization__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country"
+      ],
+      "rows": 9627,
+      "bytes": 40019,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object"
+      },
+      "sha256": "f8f682521b8930c59d0744246904f31ff1f840e52166153806899b3f9d4abc77",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "capacity-utilization__scenario": {
+      "dataset": "capacity-utilization",
+      "layout": "grouped",
+      "file": "capacity-utilization__scenario.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "forecastPeriod"
+      ],
+      "rows": 5,
+      "bytes": 107,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "forecastPeriod": "object"
+      },
+      "sha256": "6e5c29d16064297e59558f02e34362509995431e08eec4ff96bdee757b5a00c1",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "capacity-utilization__series": {
+      "dataset": "capacity-utilization",
+      "layout": "grouped",
+      "file": "capacity-utilization__series.csv.gz",
+      "columns": [
+        "commodity",
+        "concept",
+        "dataType",
+        "uom",
+        "uomName",
+        "productionRoute"
+      ],
+      "rows": 1114,
+      "bytes": 6677,
+      "dtypes": {
+        "commodity": "object",
+        "concept": "object",
+        "dataType": "object",
+        "uom": "object",
+        "uomName": "object",
+        "productionRoute": "object"
+      },
+      "sha256": "257bccb8820e29438021bc2993d2b30127077ea5b103ecb76da1ab7fe5584305",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "capacity__commodity_geography": {
+      "dataset": "capacity",
+      "layout": "grouped",
+      "file": "capacity__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country"
+      ],
+      "rows": 8761,
+      "bytes": 37370,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object"
+      },
+      "sha256": "703d13cd8dda66746bdb42de76a224f3a742333b53bdb6b3f8c3ddda6e71bd6a",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "capacity__scenario": {
+      "dataset": "capacity",
+      "layout": "grouped",
+      "file": "capacity__scenario.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "forecastPeriod"
+      ],
+      "rows": 5,
+      "bytes": 107,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "forecastPeriod": "object"
+      },
+      "sha256": "6e5c29d16064297e59558f02e34362509995431e08eec4ff96bdee757b5a00c1",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "capacity__series": {
+      "dataset": "capacity",
+      "layout": "grouped",
+      "file": "capacity__series.csv.gz",
+      "columns": [
+        "commodity",
+        "concept",
+        "dataType",
+        "uom",
+        "uomName",
+        "productionRoute"
+      ],
+      "rows": 1314,
+      "bytes": 7498,
+      "dtypes": {
+        "commodity": "object",
+        "concept": "object",
+        "dataType": "object",
+        "uom": "object",
+        "uomName": "object",
+        "productionRoute": "object"
+      },
+      "sha256": "24566dcdabc884072209bbac7d2882015810380ea82f2be82b929dacde1a5a45",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "country-supply-demand-balance__scenario": {
+      "dataset": "country-supply-demand-balance",
+      "layout": "grouped",
+      "file": "country-supply-demand-balance__scenario.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "forecastPeriod"
+      ],
+      "rows": 2,
+      "bytes": 81,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "forecastPeriod": "object"
+      },
+      "sha256": "3b6e1a138a44f9dca44d2b2aed9b65b7db7fb950a05f46660dcfb82b19585c28",
+      "generated_at": "2026-10-07T16:07:28.294723+00:00"
+    },
+    "demand-by-derivative__commodity_geography": {
+      "dataset": "demand-by-derivative",
+      "layout": "grouped",
+      "file": "demand-by-derivative__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country"
+      ],
+      "rows": 8085,
+      "bytes": 34337,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object"
+      },
+      "sha256": "0cf33ef0550d1c3f1299af2186f2ee6e3cfe7e451d4609a548aa6b2109ab60c6",
+      "generated_at": "2026-10-07T16:07:28.294723+00:00"
+    },
+    "demand-by-derivative__scenario": {
+      "dataset": "demand-by-derivative",
+      "layout": "grouped",
+      "file": "demand-by-derivative__scenario.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "forecastPeriod"
+      ],
+      "rows": 5,
+      "bytes": 107,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "forecastPeriod": "object"
+      },
+      "sha256": "6e5c29d16064297e59558f02e34362509995431e08eec4ff96bdee757b5a00c1",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "demand-by-derivative__series": {
+      "dataset": "demand-by-derivative",
+      "layout": "grouped",
+      "file": "demand-by-derivative__series.csv.gz",
+      "columns": [
+        "commodity",
+        "concept",
+        "dataType",
+        "uom",
+        "uomName",
+        "application",
+        "derivativeProduct"
+      ],
+      "rows": 790,
+      "bytes": 4777,
+      "dtypes": {
+        "commodity": "object",
+        "concept": "object",
+        "dataType": "object",
+        "uom": "object",
+        "uomName": "object",
+        "application": "object",
+        "derivativeProduct": "object"
+      },
+      "sha256": "85dc819eaea1bdab063c3801567d552f53d990819e2e8982071e2b33a04cfaf6",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "demand-by-end-use__commodity_geography": {
+      "dataset": "demand-by-end-use",
+      "layout": "grouped",
+      "file": "demand-by-end-use__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country"
+      ],
+      "rows": 630,
+      "bytes": 3382,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object"
+      },
+      "sha256": "92660b544c4e56f8bfa7172b233bbff2c66ae218c1e5d59058915d0b26b04a01",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "demand-by-end-use__scenario": {
+      "dataset": "demand-by-end-use",
+      "layout": "grouped",
+      "file": "demand-by-end-use__scenario.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "forecastPeriod"
+      ],
+      "rows": 5,
+      "bytes": 107,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "forecastPeriod": "object"
+      },
+      "sha256": "6e5c29d16064297e59558f02e34362509995431e08eec4ff96bdee757b5a00c1",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "demand-by-end-use__series": {
+      "dataset": "demand-by-end-use",
+      "layout": "grouped",
+      "file": "demand-by-end-use__series.csv.gz",
+      "columns": [
+        "commodity",
+        "concept",
+        "dataType",
+        "uom",
+        "uomName",
+        "endUse"
+      ],
+      "rows": 64,
+      "bytes": 528,
+      "dtypes": {
+        "commodity": "object",
+        "concept": "object",
+        "dataType": "object",
+        "uom": "object",
+        "uomName": "object",
+        "endUse": "object"
+      },
+      "sha256": "9c9bb256a0842eb4ff6ae537f00893a94a70fdc80e1ffe25b4053b29a8749c1e",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "inventory-change__commodity_geography": {
+      "dataset": "inventory-change",
+      "layout": "grouped",
+      "file": "inventory-change__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country"
+      ],
+      "rows": 8610,
+      "bytes": 36561,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object"
+      },
+      "sha256": "c006b4d62614bca7fef4e916c21d4736c7d8a894298c84f081d5b214791a15ee",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "inventory-change__scenario": {
+      "dataset": "inventory-change",
+      "layout": "grouped",
+      "file": "inventory-change__scenario.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "forecastPeriod"
+      ],
+      "rows": 5,
+      "bytes": 107,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "forecastPeriod": "object"
+      },
+      "sha256": "6e5c29d16064297e59558f02e34362509995431e08eec4ff96bdee757b5a00c1",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "inventory-change__series": {
+      "dataset": "inventory-change",
+      "layout": "grouped",
+      "file": "inventory-change__series.csv.gz",
+      "columns": [
+        "commodity",
+        "concept",
+        "dataType",
+        "uom",
+        "uomName"
+      ],
+      "rows": 166,
+      "bytes": 995,
+      "dtypes": {
+        "commodity": "object",
+        "concept": "object",
+        "dataType": "object",
+        "uom": "object",
+        "uomName": "object"
+      },
+      "sha256": "db5b876b8e5fac878e8b85b92ec98dad9e1c20c2eea521b8785193d961333dd3",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "long-term-prices__commodity_geography": {
+      "dataset": "long-term-prices",
+      "layout": "grouped",
+      "file": "long-term-prices__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region"
+      ],
+      "rows": 169,
+      "bytes": 916,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object"
+      },
+      "sha256": "16dfa8a77dbe8fe2f7636e545183ff63bc30e6c86d29d63a8569989786d2ffca",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "long-term-prices__series": {
+      "dataset": "long-term-prices",
+      "layout": "grouped",
+      "file": "long-term-prices__series.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "seriesDescription",
+        "commodity",
+        "commodityGrade",
+        "associatedPlattsSymbol",
+        "deliveryRegion",
+        "shippingTerms",
+        "currency",
+        "currencyName",
+        "contractType",
+        "concept",
+        "dataType",
+        "uom",
+        "uomName"
+      ],
+      "rows": 13800,
+      "bytes": 129347,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "seriesDescription": "object",
+        "commodity": "object",
+        "commodityGrade": "object",
+        "associatedPlattsSymbol": "object",
+        "deliveryRegion": "object",
+        "shippingTerms": "object",
+        "currency": "object",
+        "currencyName": "object",
+        "contractType": "object",
+        "concept": "object",
+        "dataType": "object",
+        "uom": "object",
+        "uomName": "object"
+      },
+      "sha256": "c2941f123b36baebbb1287a0e7674c95101ee014da79e29581ca9444d0be6fde",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "outages__all": {
+      "dataset": "outages",
+      "layout": "full",
+      "file": "outages__all.csv.gz",
+      "columns": [
+        "unitName",
+        "productionUnitCode",
+        "alertStatus",
+        "plantCode",
+        "commodity",
+        "country",
+        "region",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "owner",
+        "outageType",
+        "uom",
+        "uomName"
+      ],
+      "rows": 797,
+      "bytes": 12670,
+      "dtypes": {
+        "unitName": "object",
+        "productionUnitCode": "object",
+        "alertStatus": "object",
+        "plantCode": "object",
+        "commodity": "object",
+        "country": "object",
+        "region": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "owner": "object",
+        "outageType": "object",
+        "uom": "object",
+        "uomName": "object"
+      },
+      "sha256": "b9dad35c7c5e38d0235dc57da2bc553957b9ca8bea2e0b3901ce101d8c6b860c",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "outages__attributes": {
+      "dataset": "outages",
+      "layout": "grouped",
+      "file": "outages__attributes.csv.gz",
+      "columns": [
+        "commodity",
+        "outageType",
+        "alertStatus",
+        "uom",
+        "uomName"
+      ],
+      "rows": 10,
+      "bytes": 162,
+      "dtypes": {
+        "commodity": "object",
+        "outageType": "object",
+        "alertStatus": "object",
+        "uom": "object",
+        "uomName": "object"
+      },
+      "sha256": "7cef7eb569cd0b826e567d4823003cd55cd76b34503ddfefb2858b3f01427f55",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "outages__commodity_geography": {
+      "dataset": "outages",
+      "layout": "grouped",
+      "file": "outages__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country"
+      ],
+      "rows": 52,
+      "bytes": 537,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object"
+      },
+      "sha256": "6db8eeb46dc37519196a6d3c665ace97709a91ae51c269eb2f40ede6ac0195ae",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "outages__owner": {
+      "dataset": "outages",
+      "layout": "grouped",
+      "file": "outages__owner.csv.gz",
+      "columns": [
+        "owner"
+      ],
+      "rows": 210,
+      "bytes": 2382,
+      "dtypes": {
+        "owner": "object"
+      },
+      "sha256": "391878e0998d85bb4eb3b24f318eb592c3d0b7ccf10d562ee7a913b059e368a3",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "production__commodity_geography": {
+      "dataset": "production",
+      "layout": "grouped",
+      "file": "production__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country"
+      ],
+      "rows": 8715,
+      "bytes": 36979,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object"
+      },
+      "sha256": "75a18abc6c6e75f2e8c14eb3b725201492384bf731235af68249745e91160a49",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "production__scenario": {
+      "dataset": "production",
+      "layout": "grouped",
+      "file": "production__scenario.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "forecastPeriod"
+      ],
+      "rows": 5,
+      "bytes": 107,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "forecastPeriod": "object"
+      },
+      "sha256": "6e5c29d16064297e59558f02e34362509995431e08eec4ff96bdee757b5a00c1",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "production__series": {
+      "dataset": "production",
+      "layout": "grouped",
+      "file": "production__series.csv.gz",
+      "columns": [
+        "commodity",
+        "concept",
+        "dataType",
+        "uom",
+        "uomName",
+        "productionRoute"
+      ],
+      "rows": 638,
+      "bytes": 4509,
+      "dtypes": {
+        "commodity": "object",
+        "concept": "object",
+        "dataType": "object",
+        "uom": "object",
+        "uomName": "object",
+        "productionRoute": "object"
+      },
+      "sha256": "88b448c65f1d154e708cf920dc48af62eb0802909ca36d320744920b9339a50a",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "region-supply-demand-balance__commodity_geography": {
+      "dataset": "region-supply-demand-balance",
+      "layout": "grouped",
+      "file": "region-supply-demand-balance__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region"
+      ],
+      "rows": 835,
+      "bytes": 3584,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object"
+      },
+      "sha256": "da832a0ebf106f1bf46c75a784e7a87c2ed99074ca490448662886eade77ccc3",
+      "generated_at": "2026-10-07T16:07:28.294723+00:00"
+    },
+    "region-supply-demand-balance__scenario": {
+      "dataset": "region-supply-demand-balance",
+      "layout": "grouped",
+      "file": "region-supply-demand-balance__scenario.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "forecastPeriod"
+      ],
+      "rows": 2,
+      "bytes": 81,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "forecastPeriod": "object"
+      },
+      "sha256": "3b6e1a138a44f9dca44d2b2aed9b65b7db7fb950a05f46660dcfb82b19585c28",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "short-term-prices__commodity_geography": {
+      "dataset": "short-term-prices",
+      "layout": "grouped",
+      "file": "short-term-prices__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region"
+      ],
+      "rows": 169,
+      "bytes": 916,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object"
+      },
+      "sha256": "16dfa8a77dbe8fe2f7636e545183ff63bc30e6c86d29d63a8569989786d2ffca",
+      "generated_at": "2026-10-07T16:07:28.294723+00:00"
+    },
+    "time-series-outages__all": {
+      "dataset": "time-series-outages",
+      "layout": "full",
+      "file": "time-series-outages__all.csv.gz",
+      "columns": [
+        "unitName",
+        "productionUnitCode",
+        "alertStatus",
+        "plantCode",
+        "commodity",
+        "country",
+        "region",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "owner",
+        "outageType",
+        "uom",
+        "uomName",
+        "duration"
+      ],
+      "rows": 2864,
+      "bytes": 22510,
+      "dtypes": {
+        "unitName": "object",
+        "productionUnitCode": "object",
+        "alertStatus": "object",
+        "plantCode": "object",
+        "commodity": "object",
+        "country": "object",
+        "region": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "owner": "object",
+        "outageType": "object",
+        "uom": "object",
+        "uomName": "object",
+        "duration": "int64"
+      },
+      "sha256": "f3941e80cdc4acaafd99f168c25dbe9de0308369b48339e95a506075733720b9",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "time-series-outages__attributes": {
+      "dataset": "time-series-outages",
+      "layout": "grouped",
+      "file": "time-series-outages__attributes.csv.gz",
+      "columns": [
+        "commodity",
+        "outageType",
+        "alertStatus",
+        "uom",
+        "uomName"
+      ],
+      "rows": 10,
+      "bytes": 162,
+      "dtypes": {
+        "commodity": "object",
+        "outageType": "object",
+        "alertStatus": "object",
+        "uom": "object",
+        "uomName": "object"
+      },
+      "sha256": "7cef7eb569cd0b826e567d4823003cd55cd76b34503ddfefb2858b3f01427f55",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "time-series-outages__commodity_geography": {
+      "dataset": "time-series-outages",
+      "layout": "grouped",
+      "file": "time-series-outages__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country"
+      ],
+      "rows": 52,
+      "bytes": 537,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object"
+      },
+      "sha256": "6db8eeb46dc37519196a6d3c665ace97709a91ae51c269eb2f40ede6ac0195ae",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "time-series-outages__owner": {
+      "dataset": "time-series-outages",
+      "layout": "grouped",
+      "file": "time-series-outages__owner.csv.gz",
+      "columns": [
+        "owner"
+      ],
+      "rows": 208,
+      "bytes": 2357,
+      "dtypes": {
+        "owner": "object"
+      },
+      "sha256": "3628d505459728a51a2f8748b98d1db1ffbe4ff2a250470c72911280ba2e85af",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "total-demand__commodity_geography": {
+      "dataset": "total-demand",
+      "layout": "grouped",
+      "file": "total-demand__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country"
+      ],
+      "rows": 8714,
+      "bytes": 36975,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object"
+      },
+      "sha256": "fc0a0246ae6e94e1fff523405ef1034bcee4fe5bb0d2e0dcbc0d180109ed47df",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "total-demand__scenario": {
+      "dataset": "total-demand",
+      "layout": "grouped",
+      "file": "total-demand__scenario.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "forecastPeriod"
+      ],
+      "rows": 5,
+      "bytes": 107,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "forecastPeriod": "object"
+      },
+      "sha256": "6e5c29d16064297e59558f02e34362509995431e08eec4ff96bdee757b5a00c1",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "total-demand__series": {
+      "dataset": "total-demand",
+      "layout": "grouped",
+      "file": "total-demand__series.csv.gz",
+      "columns": [
+        "commodity",
+        "concept",
+        "dataType",
+        "uom",
+        "uomName"
+      ],
+      "rows": 166,
+      "bytes": 997,
+      "dtypes": {
+        "commodity": "object",
+        "concept": "object",
+        "dataType": "object",
+        "uom": "object",
+        "uomName": "object"
+      },
+      "sha256": "38da07b612ad3d575ea35a9c1942ee7528ac0f34a7076fbfae33e979e0cd42eb",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "total-supply__commodity_geography": {
+      "dataset": "total-supply",
+      "layout": "grouped",
+      "file": "total-supply__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country"
+      ],
+      "rows": 8714,
+      "bytes": 36975,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object"
+      },
+      "sha256": "fc0a0246ae6e94e1fff523405ef1034bcee4fe5bb0d2e0dcbc0d180109ed47df",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "total-supply__scenario": {
+      "dataset": "total-supply",
+      "layout": "grouped",
+      "file": "total-supply__scenario.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "forecastPeriod"
+      ],
+      "rows": 5,
+      "bytes": 107,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "forecastPeriod": "object"
+      },
+      "sha256": "6e5c29d16064297e59558f02e34362509995431e08eec4ff96bdee757b5a00c1",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "total-supply__series": {
+      "dataset": "total-supply",
+      "layout": "grouped",
+      "file": "total-supply__series.csv.gz",
+      "columns": [
+        "commodity",
+        "concept",
+        "dataType",
+        "uom",
+        "uomName"
+      ],
+      "rows": 166,
+      "bytes": 997,
+      "dtypes": {
+        "commodity": "object",
+        "concept": "object",
+        "dataType": "object",
+        "uom": "object",
+        "uomName": "object"
+      },
+      "sha256": "94ca885c57b49883a1713fdbdb3f16e1e070ce2e18b2237e43e72ae600ea9cd6",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "trade__commodity_geography": {
+      "dataset": "trade",
+      "layout": "grouped",
+      "file": "trade__commodity_geography.csv.gz",
+      "columns": [
+        "commodity",
+        "topRegion",
+        "midRegion",
+        "subRegion",
+        "region",
+        "country"
+      ],
+      "rows": 8714,
+      "bytes": 36975,
+      "dtypes": {
+        "commodity": "object",
+        "topRegion": "object",
+        "midRegion": "object",
+        "subRegion": "object",
+        "region": "object",
+        "country": "object"
+      },
+      "sha256": "fc0a0246ae6e94e1fff523405ef1034bcee4fe5bb0d2e0dcbc0d180109ed47df",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "trade__scenario": {
+      "dataset": "trade",
+      "layout": "grouped",
+      "file": "trade__scenario.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "forecastPeriod"
+      ],
+      "rows": 5,
+      "bytes": 107,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "forecastPeriod": "object"
+      },
+      "sha256": "6e5c29d16064297e59558f02e34362509995431e08eec4ff96bdee757b5a00c1",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "trade__series": {
+      "dataset": "trade",
+      "layout": "grouped",
+      "file": "trade__series.csv.gz",
+      "columns": [
+        "commodity",
+        "concept",
+        "dataType",
+        "uom",
+        "uomName"
+      ],
+      "rows": 498,
+      "bytes": 2013,
+      "dtypes": {
+        "commodity": "object",
+        "concept": "object",
+        "dataType": "object",
+        "uom": "object",
+        "uomName": "object"
+      },
+      "sha256": "9fd2d1c8d514d1ffd18fe87eb565090ab57c87a6ed9cc9089c31d9b3ef0c184c",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "world-supply-demand-balance__all": {
+      "dataset": "world-supply-demand-balance",
+      "layout": "full",
+      "file": "world-supply-demand-balance__all.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "forecastPeriod",
+        "commodity",
+        "concept",
+        "supplyDemandComponent",
+        "componentDriver",
+        "dataType",
+        "uom",
+        "uomName"
+      ],
+      "rows": 11550,
+      "bytes": 52777,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "forecastPeriod": "object",
+        "commodity": "object",
+        "concept": "object",
+        "supplyDemandComponent": "object",
+        "componentDriver": "object",
+        "dataType": "object",
+        "uom": "object",
+        "uomName": "object"
+      },
+      "sha256": "56ae6587bcffc2b49ec021e344cbd2f704d0e2e3f2a5cebdcd46cc3544683264",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "world-supply-demand-balance__scenario": {
+      "dataset": "world-supply-demand-balance",
+      "layout": "grouped",
+      "file": "world-supply-demand-balance__scenario.csv.gz",
+      "columns": [
+        "scenarioDescription",
+        "forecastPeriod"
+      ],
+      "rows": 2,
+      "bytes": 81,
+      "dtypes": {
+        "scenarioDescription": "object",
+        "forecastPeriod": "object"
+      },
+      "sha256": "3b6e1a138a44f9dca44d2b2aed9b65b7db7fb950a05f46660dcfb82b19585c28",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    },
+    "world-supply-demand-balance__series": {
+      "dataset": "world-supply-demand-balance",
+      "layout": "grouped",
+      "file": "world-supply-demand-balance__series.csv.gz",
+      "columns": [
+        "commodity",
+        "concept",
+        "supplyDemandComponent",
+        "componentDriver",
+        "dataType",
+        "uom",
+        "uomName"
+      ],
+      "rows": 6210,
+      "bytes": 27996,
+      "dtypes": {
+        "commodity": "object",
+        "concept": "object",
+        "supplyDemandComponent": "object",
+        "componentDriver": "object",
+        "dataType": "object",
+        "uom": "object",
+        "uomName": "object"
+      },
+      "sha256": "9c652b566242723108c9e12ac1a21bfdfb381ab15ef8c54220c18b4336772315",
+      "generated_at": "2026-10-07T15:20:33.070732+00:00"
+    }
+  }
+}

@@ -1,0 +1,976 @@
+{
+  "generated_at": "2026-10-07T17:05:49.411995+00:00",
+  "snapshots": {
+    "arbflow-arbitrage__all": {
+      "dataset": "arbflow-arbitrage",
+      "layout": "full",
+      "file": "arbflow-arbitrage__all.csv.gz",
+      "columns": [
+        "commodity",
+        "concept",
+        "fromRegion",
+        "toRegion",
+        "currency",
+        "uom",
+        "frequency"
+      ],
+      "rows": 90,
+      "bytes": 509,
+      "dtypes": {
+        "commodity": "object",
+        "concept": "object",
+        "fromRegion": "object",
+        "toRegion": "object",
+        "currency": "object",
+        "uom": "object",
+        "frequency": "object"
+      },
+      "sha256": "3976b20c85af01033ded14b461bc4a2c4256c9b2196f3e17af84bc2242747817",
+      "generated_at": "2026-10-07T17:05:49.411995+00:00"
+    },
+    "arbflow-arbitrage__series": {
+      "dataset": "arbflow-arbitrage",
+      "layout": "grouped",
+      "file": "arbflow-arbitrage__series.csv.gz",
+      "columns": [
+        "commodity",
+        "concept",
+        "fromRegion",
+        "toRegion",
+        "currency",
+        "uom",
+        "frequency"
+      ],
+      "rows": 90,
+      "bytes": 509,
+      "dtypes": {
+        "commodity": "object",
+        "concept": "object",
+        "fromRegion": "object",
+        "toRegion": "object",
+        "currency": "object",
+        "uom": "object",
+        "frequency": "object"
+      },
+      "sha256": "3976b20c85af01033ded14b461bc4a2c4256c9b2196f3e17af84bc2242747817",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "demand-latest__all": {
+      "dataset": "demand-latest",
+      "layout": "full",
+      "file": "demand-latest__all.csv.gz",
+      "columns": [
+        "commodity",
+        "outlookHorizon",
+        "fromRegion",
+        "region",
+        "country",
+        "uom",
+        "productType",
+        "seriesName",
+        "concept",
+        "frequency",
+        "isActive"
+      ],
+      "rows": 16681,
+      "bytes": 107313,
+      "dtypes": {
+        "commodity": "object",
+        "outlookHorizon": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object",
+        "uom": "object",
+        "productType": "object",
+        "seriesName": "object",
+        "concept": "object",
+        "frequency": "object",
+        "isActive": "bool"
+      },
+      "sha256": "dd7785a73ccb4e90a1979ab28bbd47c5b217d8f71981ab6437e153cdebfe3d7c",
+      "generated_at": "2026-10-07T17:05:49.411995+00:00"
+    },
+    "demand-latest__geography": {
+      "dataset": "demand-latest",
+      "layout": "grouped",
+      "file": "demand-latest__geography.csv.gz",
+      "columns": [
+        "commodity",
+        "fromRegion",
+        "region",
+        "country"
+      ],
+      "rows": 3164,
+      "bytes": 14572,
+      "dtypes": {
+        "commodity": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object"
+      },
+      "sha256": "ee7c7ff6441ec10b8670394dca38753b62e953c4c8cc5f9f449d0850e5c8cdb7",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "demand-latest__series": {
+      "dataset": "demand-latest",
+      "layout": "grouped",
+      "file": "demand-latest__series.csv.gz",
+      "columns": [
+        "commodity",
+        "productType",
+        "seriesName",
+        "concept",
+        "frequency",
+        "uom",
+        "outlookHorizon"
+      ],
+      "rows": 16681,
+      "bytes": 73652,
+      "dtypes": {
+        "commodity": "object",
+        "productType": "object",
+        "seriesName": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "outlookHorizon": "object"
+      },
+      "sha256": "689d8a61e2a44f985808ff1b433e38a5fbdf5322ec721e922f3b404db264bb9a",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "demand__geography": {
+      "dataset": "demand",
+      "layout": "grouped",
+      "file": "demand__geography.csv.gz",
+      "columns": [
+        "commodity",
+        "fromRegion",
+        "region",
+        "country"
+      ],
+      "rows": 3176,
+      "bytes": 14593,
+      "dtypes": {
+        "commodity": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object"
+      },
+      "sha256": "eab4171de918e51acfbf6b2a978bc76335d7e14654f625fe1f222157b9dfc7ed",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "oil-inventory-latest__all": {
+      "dataset": "oil-inventory-latest",
+      "layout": "full",
+      "file": "oil-inventory-latest__all.csv.gz",
+      "columns": [
+        "commodity",
+        "dataSeriesShort",
+        "outlookHorizon",
+        "geography",
+        "concept",
+        "frequency",
+        "uom",
+        "isActive"
+      ],
+      "rows": 623,
+      "bytes": 4779,
+      "dtypes": {
+        "commodity": "object",
+        "dataSeriesShort": "object",
+        "outlookHorizon": "object",
+        "geography": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "isActive": "bool"
+      },
+      "sha256": "54196981ccf84ba72a13dd45390bd67d02650af50123e0c2beb172392f4bdda2",
+      "generated_at": "2026-10-07T17:05:49.411995+00:00"
+    },
+    "oil-inventory-latest__geography": {
+      "dataset": "oil-inventory-latest",
+      "layout": "grouped",
+      "file": "oil-inventory-latest__geography.csv.gz",
+      "columns": [
+        "commodity",
+        "geography"
+      ],
+      "rows": 219,
+      "bytes": 1020,
+      "dtypes": {
+        "commodity": "object",
+        "geography": "object"
+      },
+      "sha256": "8e1a331fce0c1402a350cbf57119ab1868c60e14339f5b484307cd32a98db938",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "oil-inventory-latest__series": {
+      "dataset": "oil-inventory-latest",
+      "layout": "grouped",
+      "file": "oil-inventory-latest__series.csv.gz",
+      "columns": [
+        "commodity",
+        "dataSeriesShort",
+        "concept",
+        "frequency",
+        "uom",
+        "outlookHorizon"
+      ],
+      "rows": 620,
+      "bytes": 3980,
+      "dtypes": {
+        "commodity": "object",
+        "dataSeriesShort": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "outlookHorizon": "object"
+      },
+      "sha256": "1db3e89010408f0d113fd165b98aa32c829a9f4f4c688f7799cd8004b2a19185",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "oil-inventory__all": {
+      "dataset": "oil-inventory",
+      "layout": "full",
+      "file": "oil-inventory__all.csv.gz",
+      "columns": [
+        "commodity",
+        "dataSeriesShort",
+        "outlookHorizon",
+        "geography",
+        "concept",
+        "frequency",
+        "uom",
+        "isActive"
+      ],
+      "rows": 618,
+      "bytes": 4713,
+      "dtypes": {
+        "commodity": "object",
+        "dataSeriesShort": "object",
+        "outlookHorizon": "object",
+        "geography": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "isActive": "bool"
+      },
+      "sha256": "5ddbb1b297e5d18cd8669bcb2fd56741c27025599bb9e3277f836a2de64631f7",
+      "generated_at": "2026-10-07T17:05:49.411995+00:00"
+    },
+    "oil-inventory__geography": {
+      "dataset": "oil-inventory",
+      "layout": "grouped",
+      "file": "oil-inventory__geography.csv.gz",
+      "columns": [
+        "commodity",
+        "geography"
+      ],
+      "rows": 218,
+      "bytes": 1014,
+      "dtypes": {
+        "commodity": "object",
+        "geography": "object"
+      },
+      "sha256": "362e6ae57e4fa971ec4c92de0a2422135fe6c0246c6b0c88cf89fa604f291aee",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "oil-inventory__series": {
+      "dataset": "oil-inventory",
+      "layout": "grouped",
+      "file": "oil-inventory__series.csv.gz",
+      "columns": [
+        "commodity",
+        "dataSeriesShort",
+        "concept",
+        "frequency",
+        "uom",
+        "outlookHorizon"
+      ],
+      "rows": 615,
+      "bytes": 3906,
+      "dtypes": {
+        "commodity": "object",
+        "dataSeriesShort": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "outlookHorizon": "object"
+      },
+      "sha256": "7cc9f3ecf4b7bfb136931dc6b99bf7e1f2df1e3d2839e05a89d7a8337873c223",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "oil-price-forecast-latest__all": {
+      "dataset": "oil-price-forecast-latest",
+      "layout": "full",
+      "file": "oil-price-forecast-latest__all.csv.gz",
+      "columns": [
+        "priceGroupName",
+        "commodity",
+        "outlookHorizon",
+        "dataSeriesShort",
+        "fromRegion",
+        "region",
+        "subRegion",
+        "country",
+        "methodology",
+        "priceName",
+        "priceSymbol",
+        "concept",
+        "frequency",
+        "uom",
+        "currency",
+        "isActive"
+      ],
+      "rows": 2122,
+      "bytes": 24663,
+      "dtypes": {
+        "priceGroupName": "object",
+        "commodity": "object",
+        "outlookHorizon": "object",
+        "dataSeriesShort": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "subRegion": "object",
+        "country": "object",
+        "methodology": "object",
+        "priceName": "object",
+        "priceSymbol": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "currency": "object",
+        "isActive": "bool"
+      },
+      "sha256": "1b4d6205c8058e4e4e4efb2c1aa17c2245ce45dbd31df0e5bce68aab2376a870",
+      "generated_at": "2026-10-07T17:05:49.411995+00:00"
+    },
+    "oil-price-forecast-latest__geography": {
+      "dataset": "oil-price-forecast-latest",
+      "layout": "grouped",
+      "file": "oil-price-forecast-latest__geography.csv.gz",
+      "columns": [
+        "commodity",
+        "fromRegion",
+        "region",
+        "subRegion",
+        "country"
+      ],
+      "rows": 405,
+      "bytes": 2715,
+      "dtypes": {
+        "commodity": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "subRegion": "object",
+        "country": "object"
+      },
+      "sha256": "67da4b0ddfddffea816a5118e856dd50686cbf24ce12cedbecf8223e35aa2072",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "oil-price-forecast-latest__series": {
+      "dataset": "oil-price-forecast-latest",
+      "layout": "grouped",
+      "file": "oil-price-forecast-latest__series.csv.gz",
+      "columns": [
+        "commodity",
+        "priceGroupName",
+        "dataSeriesShort",
+        "methodology",
+        "priceName",
+        "priceSymbol",
+        "currency",
+        "concept",
+        "frequency",
+        "uom",
+        "outlookHorizon"
+      ],
+      "rows": 2122,
+      "bytes": 21499,
+      "dtypes": {
+        "commodity": "object",
+        "priceGroupName": "object",
+        "dataSeriesShort": "object",
+        "methodology": "object",
+        "priceName": "object",
+        "priceSymbol": "object",
+        "currency": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "outlookHorizon": "object"
+      },
+      "sha256": "6a65f3b638f0800b71830c588d7f07ccf2f5d9d318ec98e26019ad488cc32b24",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "oil-price-forecast__geography": {
+      "dataset": "oil-price-forecast",
+      "layout": "grouped",
+      "file": "oil-price-forecast__geography.csv.gz",
+      "columns": [
+        "commodity",
+        "fromRegion",
+        "region",
+        "subRegion",
+        "country"
+      ],
+      "rows": 404,
+      "bytes": 2710,
+      "dtypes": {
+        "commodity": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "subRegion": "object",
+        "country": "object"
+      },
+      "sha256": "bf4d213ed6429f5ed31427ecc31fa6d4bc64d17e65d7bd5161f758f6cd2fc03e",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "oil-price-forecast__series": {
+      "dataset": "oil-price-forecast",
+      "layout": "grouped",
+      "file": "oil-price-forecast__series.csv.gz",
+      "columns": [
+        "commodity",
+        "priceGroupName",
+        "dataSeriesShort",
+        "methodology",
+        "priceName",
+        "priceSymbol",
+        "currency",
+        "concept",
+        "frequency",
+        "uom",
+        "outlookHorizon"
+      ],
+      "rows": 1859,
+      "bytes": 19834,
+      "dtypes": {
+        "commodity": "object",
+        "priceGroupName": "object",
+        "dataSeriesShort": "object",
+        "methodology": "object",
+        "priceName": "object",
+        "priceSymbol": "object",
+        "currency": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "outlookHorizon": "object"
+      },
+      "sha256": "8d5a8507676b73cb1ee49436358b63578c24e68c41b65ab2567151fd69b67fab",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "refinery-production-latest__all": {
+      "dataset": "refinery-production-latest",
+      "layout": "full",
+      "file": "refinery-production-latest__all.csv.gz",
+      "columns": [
+        "commodity",
+        "outlookHorizon",
+        "zone",
+        "state",
+        "dataSeriesShort",
+        "fromRegion",
+        "region",
+        "country",
+        "concept",
+        "frequency",
+        "uom",
+        "isActive"
+      ],
+      "rows": 1381,
+      "bytes": 13937,
+      "dtypes": {
+        "commodity": "object",
+        "outlookHorizon": "object",
+        "zone": "object",
+        "state": "object",
+        "dataSeriesShort": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "isActive": "bool"
+      },
+      "sha256": "486f0fe95602bca83c6f1c02128f8c4d66692e415f159f306a6a9718dd5baea0",
+      "generated_at": "2026-10-07T17:05:49.411995+00:00"
+    },
+    "refinery-production-latest__geography": {
+      "dataset": "refinery-production-latest",
+      "layout": "grouped",
+      "file": "refinery-production-latest__geography.csv.gz",
+      "columns": [
+        "commodity",
+        "fromRegion",
+        "region",
+        "country",
+        "zone",
+        "state"
+      ],
+      "rows": 1147,
+      "bytes": 5451,
+      "dtypes": {
+        "commodity": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object",
+        "zone": "object",
+        "state": "object"
+      },
+      "sha256": "ff48993c13825e80026e5b319355e536273804e5f8b087f7ed8471c06effdfe0",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "refinery-production-latest__series": {
+      "dataset": "refinery-production-latest",
+      "layout": "grouped",
+      "file": "refinery-production-latest__series.csv.gz",
+      "columns": [
+        "commodity",
+        "dataSeriesShort",
+        "concept",
+        "frequency",
+        "uom",
+        "outlookHorizon"
+      ],
+      "rows": 1381,
+      "bytes": 7458,
+      "dtypes": {
+        "commodity": "object",
+        "dataSeriesShort": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "outlookHorizon": "object"
+      },
+      "sha256": "0c21ed3e0d676709c2e9c493f19a97497206539b995053578f2dd0897ab497f6",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "refinery-production__all": {
+      "dataset": "refinery-production",
+      "layout": "full",
+      "file": "refinery-production__all.csv.gz",
+      "columns": [
+        "commodity",
+        "outlookHorizon",
+        "zone",
+        "state",
+        "dataSeriesShort",
+        "fromRegion",
+        "region",
+        "country",
+        "concept",
+        "frequency",
+        "uom",
+        "isActive"
+      ],
+      "rows": 1434,
+      "bytes": 14672,
+      "dtypes": {
+        "commodity": "object",
+        "outlookHorizon": "object",
+        "zone": "object",
+        "state": "object",
+        "dataSeriesShort": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "isActive": "bool"
+      },
+      "sha256": "9aac8348a02b4eae8776c1a1375beeeb31835fae9cf099653040d7de10b70c70",
+      "generated_at": "2026-10-07T17:05:49.411995+00:00"
+    },
+    "refinery-production__geography": {
+      "dataset": "refinery-production",
+      "layout": "grouped",
+      "file": "refinery-production__geography.csv.gz",
+      "columns": [
+        "commodity",
+        "fromRegion",
+        "region",
+        "country",
+        "zone",
+        "state"
+      ],
+      "rows": 1191,
+      "bytes": 5562,
+      "dtypes": {
+        "commodity": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object",
+        "zone": "object",
+        "state": "object"
+      },
+      "sha256": "375657354dae6b0a98ef7305dc5d61d6af3c7135e25dacd8f5e6a8a129067d45",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "refinery-production__series": {
+      "dataset": "refinery-production",
+      "layout": "grouped",
+      "file": "refinery-production__series.csv.gz",
+      "columns": [
+        "commodity",
+        "dataSeriesShort",
+        "concept",
+        "frequency",
+        "uom",
+        "outlookHorizon"
+      ],
+      "rows": 1381,
+      "bytes": 7458,
+      "dtypes": {
+        "commodity": "object",
+        "dataSeriesShort": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "outlookHorizon": "object"
+      },
+      "sha256": "0c21ed3e0d676709c2e9c493f19a97497206539b995053578f2dd0897ab497f6",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "refinery-runs-latest__all": {
+      "dataset": "refinery-runs-latest",
+      "layout": "full",
+      "file": "refinery-runs-latest__all.csv.gz",
+      "columns": [
+        "commodity",
+        "dataSeriesShort",
+        "outlookHorizon",
+        "zone",
+        "state",
+        "fromRegion",
+        "region",
+        "country",
+        "concept",
+        "frequency",
+        "uom",
+        "isActive"
+      ],
+      "rows": 1259,
+      "bytes": 11882,
+      "dtypes": {
+        "commodity": "object",
+        "dataSeriesShort": "object",
+        "outlookHorizon": "object",
+        "zone": "object",
+        "state": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "isActive": "bool"
+      },
+      "sha256": "b9411d4be2745cfd0a7f627a498b726612da568614f5e5c0fe961c6d9822ad89",
+      "generated_at": "2026-10-07T17:05:49.411995+00:00"
+    },
+    "refinery-runs-latest__geography": {
+      "dataset": "refinery-runs-latest",
+      "layout": "grouped",
+      "file": "refinery-runs-latest__geography.csv.gz",
+      "columns": [
+        "commodity",
+        "fromRegion",
+        "region",
+        "country",
+        "zone",
+        "state"
+      ],
+      "rows": 478,
+      "bytes": 2953,
+      "dtypes": {
+        "commodity": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object",
+        "zone": "object",
+        "state": "object"
+      },
+      "sha256": "0ece88688da121295f5a37a69fc651f7916a4267ed433c2e8c4a3ba1699a0577",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "refinery-runs-latest__series": {
+      "dataset": "refinery-runs-latest",
+      "layout": "grouped",
+      "file": "refinery-runs-latest__series.csv.gz",
+      "columns": [
+        "commodity",
+        "dataSeriesShort",
+        "concept",
+        "frequency",
+        "uom",
+        "outlookHorizon"
+      ],
+      "rows": 1255,
+      "bytes": 7378,
+      "dtypes": {
+        "commodity": "object",
+        "dataSeriesShort": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "outlookHorizon": "object"
+      },
+      "sha256": "9549a5bfe71fe5b357b260043ad169df7cdaad92c951e5990b216d5a148e1785",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "refinery-runs__all": {
+      "dataset": "refinery-runs",
+      "layout": "full",
+      "file": "refinery-runs__all.csv.gz",
+      "columns": [
+        "commodity",
+        "dataSeriesShort",
+        "outlookHorizon",
+        "zone",
+        "state",
+        "fromRegion",
+        "region",
+        "country",
+        "concept",
+        "frequency",
+        "uom",
+        "isActive"
+      ],
+      "rows": 1259,
+      "bytes": 11882,
+      "dtypes": {
+        "commodity": "object",
+        "dataSeriesShort": "object",
+        "outlookHorizon": "object",
+        "zone": "object",
+        "state": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "isActive": "bool"
+      },
+      "sha256": "b9411d4be2745cfd0a7f627a498b726612da568614f5e5c0fe961c6d9822ad89",
+      "generated_at": "2026-10-07T17:05:49.411995+00:00"
+    },
+    "refinery-runs__geography": {
+      "dataset": "refinery-runs",
+      "layout": "grouped",
+      "file": "refinery-runs__geography.csv.gz",
+      "columns": [
+        "commodity",
+        "fromRegion",
+        "region",
+        "country",
+        "zone",
+        "state"
+      ],
+      "rows": 478,
+      "bytes": 2953,
+      "dtypes": {
+        "commodity": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object",
+        "zone": "object",
+        "state": "object"
+      },
+      "sha256": "0ece88688da121295f5a37a69fc651f7916a4267ed433c2e8c4a3ba1699a0577",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "refinery-runs__series": {
+      "dataset": "refinery-runs",
+      "layout": "grouped",
+      "file": "refinery-runs__series.csv.gz",
+      "columns": [
+        "commodity",
+        "dataSeriesShort",
+        "concept",
+        "frequency",
+        "uom",
+        "outlookHorizon"
+      ],
+      "rows": 1255,
+      "bytes": 7378,
+      "dtypes": {
+        "commodity": "object",
+        "dataSeriesShort": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "outlookHorizon": "object"
+      },
+      "sha256": "9549a5bfe71fe5b357b260043ad169df7cdaad92c951e5990b216d5a148e1785",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "refinery-utilization-rate-latest__all": {
+      "dataset": "refinery-utilization-rate-latest",
+      "layout": "full",
+      "file": "refinery-utilization-rate-latest__all.csv.gz",
+      "columns": [
+        "dataSeriesShort",
+        "outlookHorizon",
+        "zone",
+        "state",
+        "fromRegion",
+        "region",
+        "country",
+        "concept",
+        "frequency",
+        "uom",
+        "isActive"
+      ],
+      "rows": 286,
+      "bytes": 3476,
+      "dtypes": {
+        "dataSeriesShort": "object",
+        "outlookHorizon": "object",
+        "zone": "object",
+        "state": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "isActive": "bool"
+      },
+      "sha256": "0b5f9b44051212f9c0a4612057dec5f0da7128aef4b97c35d763d043c5017c6c",
+      "generated_at": "2026-10-07T17:05:49.411995+00:00"
+    },
+    "refinery-utilization-rate-latest__geography": {
+      "dataset": "refinery-utilization-rate-latest",
+      "layout": "grouped",
+      "file": "refinery-utilization-rate-latest__geography.csv.gz",
+      "columns": [
+        "fromRegion",
+        "region",
+        "country",
+        "zone",
+        "state"
+      ],
+      "rows": 142,
+      "bytes": 1413,
+      "dtypes": {
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object",
+        "zone": "object",
+        "state": "object"
+      },
+      "sha256": "3740f43512eb46e8b2f62ae0c8be5599c228986af4c4648ad0fa4cafaf23003a",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "refinery-utilization-rate-latest__series": {
+      "dataset": "refinery-utilization-rate-latest",
+      "layout": "grouped",
+      "file": "refinery-utilization-rate-latest__series.csv.gz",
+      "columns": [
+        "dataSeriesShort",
+        "concept",
+        "frequency",
+        "uom",
+        "outlookHorizon"
+      ],
+      "rows": 286,
+      "bytes": 1953,
+      "dtypes": {
+        "dataSeriesShort": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "outlookHorizon": "object"
+      },
+      "sha256": "0147d79f6d03aeccc0b7452fbfd46081e719f029cd4ab45d04f511719bc18374",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "refinery-utilization-rate__all": {
+      "dataset": "refinery-utilization-rate",
+      "layout": "full",
+      "file": "refinery-utilization-rate__all.csv.gz",
+      "columns": [
+        "dataSeriesShort",
+        "outlookHorizon",
+        "zone",
+        "state",
+        "fromRegion",
+        "region",
+        "country",
+        "concept",
+        "frequency",
+        "uom",
+        "isActive"
+      ],
+      "rows": 305,
+      "bytes": 3589,
+      "dtypes": {
+        "dataSeriesShort": "object",
+        "outlookHorizon": "object",
+        "zone": "object",
+        "state": "object",
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "isActive": "bool"
+      },
+      "sha256": "48f8b916904f46388d9d342375b8f9894ea776f3821d0483d2b2118c53ac130a",
+      "generated_at": "2026-10-07T17:05:49.411995+00:00"
+    },
+    "refinery-utilization-rate__geography": {
+      "dataset": "refinery-utilization-rate",
+      "layout": "grouped",
+      "file": "refinery-utilization-rate__geography.csv.gz",
+      "columns": [
+        "fromRegion",
+        "region",
+        "country",
+        "zone",
+        "state"
+      ],
+      "rows": 151,
+      "bytes": 1447,
+      "dtypes": {
+        "fromRegion": "object",
+        "region": "object",
+        "country": "object",
+        "zone": "object",
+        "state": "object"
+      },
+      "sha256": "8d4fdb06f40b84e3f396b9f6732a9ea06cc97844c7741a7f0f9118e4a4983d44",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    },
+    "refinery-utilization-rate__series": {
+      "dataset": "refinery-utilization-rate",
+      "layout": "grouped",
+      "file": "refinery-utilization-rate__series.csv.gz",
+      "columns": [
+        "dataSeriesShort",
+        "concept",
+        "frequency",
+        "uom",
+        "outlookHorizon"
+      ],
+      "rows": 296,
+      "bytes": 1991,
+      "dtypes": {
+        "dataSeriesShort": "object",
+        "concept": "object",
+        "frequency": "object",
+        "uom": "object",
+        "outlookHorizon": "object"
+      },
+      "sha256": "9344785f620c571514d0dbf9cc45feb2bfabe36fb6add6f7d76d51435ab5d11d",
+      "generated_at": "2026-10-07T16:51:44.765290+00:00"
+    }
+  }
+}
