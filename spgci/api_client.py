@@ -14,13 +14,15 @@
 
 """Module to handle API requests."""
 
+import contextvars
 import json
+import sys
 import threading
 import time
 import warnings
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from time import sleep
-from typing import Any, Callable, Dict, NamedTuple, Union
+from typing import Any, Callable, Dict, NamedTuple, Tuple, Union
 from urllib.parse import parse_qsl, quote, urlencode, urlparse
 
 import pandas as pd
@@ -124,6 +126,37 @@ _call_log_lock = threading.Lock()
 _MAX_CALL_LOG_ENTRIES = 500
 _MAX_PARAMS_CHARS = 2000
 
+# Pagination fetches pages on worker threads, whose stacks don't contain the
+# user-facing SDK method. The worker sets this from the (class, method) resolved
+# on the calling thread; everything else resolves from the stack.
+_caller_override: contextvars.ContextVar[Tuple[str, str]] = contextvars.ContextVar(
+    "spgci_caller", default=("", "")
+)
+
+
+def _resolve_caller() -> Tuple[str, str]:
+    """Return ``(class, method)`` of the user-facing SDK method on the current
+    stack, e.g. ``("MarketData", "get_symbols")``, or ``("", "")`` if the call
+    didn't come through one. Class is empty for a module-level function.
+
+    This is the *outermost* `spgci.*` frame (ignoring this module), so a method
+    that delegates to another method or a private helper is attributed to the
+    one the user actually called.
+    """
+    caller = ("", "")
+    frame = sys._getframe(1)
+    while frame is not None:
+        module = frame.f_globals.get("__name__", "")
+        if module.startswith("spgci.") and module != __name__:
+            owner = frame.f_locals.get("self")
+            # type(self) names the instantiated class, even for inherited methods.
+            caller = (
+                type(owner).__name__ if owner is not None else "",
+                frame.f_code.co_name,
+            )
+        frame = frame.f_back
+    return caller
+
 
 def _record_call(
     url: str,
@@ -148,6 +181,9 @@ def _record_call(
         params = json.dumps(payload, default=str)[:_MAX_PARAMS_CHARS]
     except Exception:
         params = ""
+    cls, method = _caller_override.get()
+    if not method:
+        cls, method = _resolve_caller()
     entry = {
         "endpoint": urlparse(url).path or url,
         "status_code": status_code,
@@ -155,6 +191,8 @@ def _record_call(
         "duration_ms": (time.perf_counter() - start_perf) * 1000,
         "error": error,
         "params": params,
+        "class": cls,
+        "method": method,
     }
     with _call_log_lock:
         _call_log.append(entry)
@@ -360,8 +398,10 @@ def _fetch_page_worker(
     params: Dict[Any, Any],
     pagination: Paginator,
     df_fn: Callable[[requests.Response], DataFrame],
+    caller: Tuple[str, str] = ("", ""),
 ) -> tuple[int, DataFrame]:
     """Fetch and convert a single page from a pagination worker thread."""
+    _caller_override.set(caller)  # worker threads are pooled per call; no reset needed
     local_params = params.copy()
 
     if pagination.pg_type == "odata":
@@ -454,6 +494,7 @@ def get_data(
     page_results: Dict[int, DataFrame] = {}
     pages_to_fetch = list(range(2, total_pages + 1))
     workers = spgci.config.parallelism
+    caller = _resolve_caller() if spgci.config.record_calls else ("", "")
 
     with ThreadPoolExecutor(max_workers=workers) as executor:
         future_to_page = {
@@ -464,6 +505,7 @@ def get_data(
                 params,
                 pagination,
                 df_fn,
+                caller,
             ): page
             for page in pages_to_fetch
         }

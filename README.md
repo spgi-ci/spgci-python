@@ -590,6 +590,23 @@ sm.get_reference_data_pipelines(pipeline_name="Colonial", origin_state="TX")
 # DataFrame of pipelines named "Colonial" originating in Texas.
 ```
 
+### Refinery Cost and Margin Analysis (RCMA)
+
+```python
+import spgci as ci
+from datetime import date
+
+rcma = ci.Rcma()
+
+rcma.get_cost(
+    country="Germany",
+    subcategory="Operating Metrics ($/bbl)",
+    metric="Net Margin",
+    yield_date_gte=date(2026, 1, 1),
+)
+# DataFrame of quarterly net margin ($/bbl) for German refineries from 2026-Q1.
+```
+
 ### Road Fuel
 
 ```python

@@ -52,6 +52,7 @@ from .scenario_manager import ScenarioManager
 from .utilities import parallel
 from .smart_heards import SmartHeards
 from .rsm import Rsm
+from .rcma import Rcma
 from .cet_economic_outlooks import CetEconomicOutlooks
 from .cet_market_outlooks import CetMarketOutlooks
 from .cet_policies import CetPolicies
@@ -101,6 +102,7 @@ __all__ = [
     "SmartHeards",
     "parallel",
     "Rsm",
+    "Rcma",
     "CetEconomicOutlooks",
     "CetMarketOutlooks",
     "CetPolicies",
