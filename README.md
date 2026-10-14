@@ -607,6 +607,22 @@ rcma.get_cost(
 # DataFrame of quarterly net margin ($/bbl) for German refineries from 2026-Q1.
 ```
 
+### Chemicals Cost and Margin Analysis (CCMA)
+
+```python
+import spgci as ci
+from datetime import date
+
+ccma = ci.ChemicalsCostMargin()
+
+ccma.get_details(
+    country="Germany",
+    category="Margin",
+    period_gte=date(2026, 1, 1),
+)
+# DataFrame of chemicals margin metrics for German sites from 2026-01-01.
+```
+
 ### Road Fuel
 
 ```python
