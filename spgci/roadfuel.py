@@ -103,9 +103,9 @@ class RoadFuel:
         "obligation-data",
     ]
 
-    _path_calculate_price = "fuel-calculator/v1/roadblending/calculate-price-api"
-    _path_ref_biofuel = "api/v1/calculators/road-fuel/reference/biofuel-data"
-    _path_ref_obligation = "api/v1/calculators/road-fuel/reference/obligation-data"
+    _path_calculate_price = "fuel-calculator/v1/redIII-compliance/calculate-price-api"
+    _path_ref_biofuel = "api/v1/calculators/redIII-compliance/reference/biofuel-data"
+    _path_ref_obligation = "api/v1/calculators/redIII-compliance/reference/obligation-data"
 
     def get_unique_values(
         self,
