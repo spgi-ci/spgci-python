@@ -117,3 +117,30 @@ class CurvesTest(unittest.TestCase):
         fc = self.fc.get_assessments(curve_code=rfc["curve_code"], page_size=10)  # type: ignore
         # print(fc.info())
         self.assertGreater(len(fc), 0)  # type: ignore
+
+    @pytest.mark.integtest
+    def test_historical_assessments(self):
+        d1= date(2026, 10, 1)
+        d2= date(2026, 10, 26)
+        fc = self.fc.get_history_assessments(curve_code=["CNMCF"], assess_date_gte=d1, assess_date_lte=d2,page_size=100)  # type: ignore
+        # print(fc.info())
+        self.assertGreater(len(fc), 0)  # type: ignore
+
+    @pytest.mark.integtest
+    def test_historical_assessments_multiple_curves(self):
+        self.assertRaises(InvalidCurveCodeError, self.fc.get_history_assessments, curve_code=["CNMCF","CN006"], page_size=100)
+    
+    @pytest.mark.integtest
+    def test_historical_assessments_no_asOfDate(self):
+        fc = self.fc.get_history_assessments(curve_code=["CNMCF"],
+                                             page_size=100)  # type: ignore
+        self.assertGreater(len(fc), 0)  # type: ignore
+        
+    @pytest.mark.integtest
+    def test_filter_param_historical_assessments(self):
+        d = date(2026, 10, 1)
+        filt = 'bate: "c"'
+        fc = self.fc.get_history_assessments(
+            curve_code=["CNMCF"], assess_date=d, filter_exp=filt, page_size=10
+        )
+        self.assertGreater(len(fc), 1)  # type: ignore
