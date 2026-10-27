@@ -35,3 +35,10 @@ class DailyLimitError(Exception):
     """
 
     pass
+
+class InvalidCurveCodeError(ValueError):
+    """
+    Invalid curve_code input for a method that only accepts a single code.
+    """
+
+    pass
