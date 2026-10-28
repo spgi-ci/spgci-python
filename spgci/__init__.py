@@ -54,6 +54,8 @@ from .smart_heards import SmartHeards
 from .rsm import Rsm
 from .rcma import Rcma
 from .chemicals_cost_margin import ChemicalsCostMargin
+from .dckb import DataCenterKnowledgeBase
+from .emissions_performance_analytics import EmissionsPerformanceAnalytics
 from .cet_economic_outlooks import CetEconomicOutlooks
 from .cet_market_outlooks import CetMarketOutlooks
 from .cet_policies import CetPolicies
@@ -105,6 +107,8 @@ __all__ = [
     "Rsm",
     "Rcma",
     "ChemicalsCostMargin",
+    "DataCenterKnowledgeBase",
+    "EmissionsPerformanceAnalytics",
     "CetEconomicOutlooks",
     "CetMarketOutlooks",
     "CetPolicies",

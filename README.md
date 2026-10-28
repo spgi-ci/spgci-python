@@ -623,6 +623,49 @@ ccma.get_details(
 # DataFrame of chemicals margin metrics for German sites from 2026-01-01.
 ```
 
+### Data Center Knowledge Base (DCKB)
+
+```python
+import spgci as ci
+
+dckb = ci.DataCenterKnowledgeBase()
+
+dckb.get_geospatial_map(
+    country="Ireland",
+    company="Meta",
+    operational_status="Operational",
+)
+# DataFrame of operational Meta data center facilities in Ireland, with coordinates.
+
+dckb.get_geospatial_map(
+    region="North America",
+    operational_status="Operational",
+    filter_exp='dataCenterMarket: "Northern Virginia"',
+    paginate=True,
+)
+# All operational facilities in the Northern Virginia market.
+```
+
+### Emissions Performance Analytics
+
+```python
+import spgci as ci
+
+epa = ci.EmissionsPerformanceAnalytics()
+
+epa.get_asset_emissions(
+    emissions_intensity_unit="kgCO2e/boe",
+    sector_name="Upstream",
+    region="Russia",
+    year_gte=2020,
+    paginate=True,
+)
+# DataFrame of asset-level scope 1/2 emissions and intensity for Russian upstream assets since 2020.
+
+epa.get_asset_units()
+# DataFrame of the emissions intensity unit used for each sector.
+```
+
 ### Road Fuel
 
 ```python
