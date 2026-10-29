@@ -20,6 +20,7 @@ from requests import Response
 from spgci.utilities import list_to_filter
 from pandas import Series, DataFrame, to_datetime  # type: ignore
 from enum import Enum
+from spgci.exceptions import InvalidCurveCodeError
 
 
 class ForwardCurves:
@@ -231,6 +232,131 @@ class ForwardCurves:
             "pageSize": page_size,
         }
 
+        response = get_data(
+            path=f"{self._path}{endpoint_path}",
+            params=params,
+            raw=raw,
+            paginate=paginate,
+            df_fn=self._convert_to_df,
+            paginate_fn=self._paginate,
+        )
+
+        return response
+
+    def get_history_assessments(
+        self,
+        *,
+        curve_code: Optional[Union["list[str]", "Series[str]", str]] = None,
+        derivative_maturity_frequency: Optional[
+            Union["list[str]", "list[MatFrequency]", "Series[str]", str, MatFrequency]
+        ] = None,
+        derivative_position: Optional[Union["list[int]", "Series[int]", int]] = None,
+        assess_date: Optional[date] = None,
+        assess_date_gt: Optional[date] = None,
+        assess_date_gte: Optional[date] = None,
+        assess_date_lt: Optional[date] = None,
+        assess_date_lte: Optional[date] = None,
+        filter_exp: Optional[str] = None,
+        page: int = 1,
+        page_size: int = 10000,
+        raw: bool = False,
+        paginate: bool = False,
+    ) -> Union[DataFrame, Response]:
+        """
+        Fetch Forward Curves Metadata from the Market Data API.
+
+        See ``get_curves()`` to search for curve codes.\n
+
+        Parameters
+        ----------
+        curve_code : Optional[Union[list[str], Series[str], str]], optional
+            fitler by curve code, by default None
+        derivative_maturity_frequency : Optional[ Union[list[str], list[MatFrequency], Series[str], str, MatFrequency] ], optional
+            fitler by maturity frequency, by default None
+        derivative_position : Optional[Union[list[int], Series[int], int]], optional
+            filter by derivative position, by default None
+        assess_date : Optional[date], optional
+            filter by ``assessDate = x`` , by default None
+        assess_date_lt : Optional[date], optional
+            filter by ``assessDate < x``, by default None
+        assess_date_lte : Optional[date], optional
+            filter by ``assessDate <= x``, by default None
+        assess_date_gt : Optional[date], optional
+            filter by ``assessDate > x``, by default None
+        assess_date_gte : Optional[date], optional
+            filter by ``assessDate >= x``, by default None
+        filter_exp : Optional[str], optional
+            pass-thru ``filter`` query param to use a handcrafted filter expression, by default None
+        page : int, optional
+            pass-thru ``page`` query param to request a particular page of results, by default 1
+        page_size : int, optional
+            pass-thru ``pageSize`` query param to request a particular page size, by default 1000
+        paginate : bool, optional
+            whether to auto-paginate the response, by default False
+        raw : bool, optional
+            return a ``requests.Response`` instead of a ``DataFrame``, by default False
+
+        Returns
+        -------
+        Union[pd.DataFrame, Response]
+            DataFrame
+                DataFrame of the ``response.json()``
+            Response
+                Raw ``requests.Response`` object
+
+        Examples
+        --------
+        **Get Historical Asssments Curve**
+        >>> ci.ForwardCurves().get_history_assessments(curve_code="CN003")
+
+        **Get Monthly Contracts**
+        >>> ci.ForwardCurves().get_history_assessments(curve_code=["CN003"], derivative_maturity_frequency="Month")
+
+        **Get Assessments for a Curve on a particular date**
+        >>> ci.ForwardCurves().get_history_assessments(curve_code=["CN003"], assess_date=date(2023,2,13))
+        """
+        if curve_code is not None and isinstance(curve_code, (list, tuple, Series)):
+            if len(curve_code) > 1:
+                raise InvalidCurveCodeError( "Only 1 curve_code is accepted." )
+            if len(curve_code) == 1:
+                curve_code = curve_code.iloc[0] if isinstance(curve_code, Series) else curve_code[0]
+
+        endpoint_path = "history/curve-codes"
+
+        filter_params: List[str] = []
+
+        filter_params.append(list_to_filter("curve_code", curve_code))
+        filter_params.append(
+            list_to_filter(
+                "derivative_maturity_frequency", derivative_maturity_frequency
+            )
+        )
+        filter_params.append(list_to_filter("derivative_position", derivative_position))
+
+        if assess_date:
+            filter_params.append(f'assessDate: "{assess_date}"')
+        if assess_date_gt:
+            filter_params.append(f'assessDate > "{assess_date_gt}"')
+        if assess_date_gte:
+            filter_params.append(f'assessDate >= "{assess_date_gte}"')
+        if assess_date_lt:
+            filter_params.append(f'assessDate < "{assess_date_lt}"')
+        if assess_date_lte:
+            filter_params.append(f'assessDate <= "{assess_date_lte}"')
+
+        filter_params = [fp for fp in filter_params if fp != ""]
+
+        if filter_exp is None:
+            filter_exp = " AND ".join(filter_params)
+        elif len(filter_params) > 0:
+            filter_exp = " AND ".join(filter_params) + " AND (" + filter_exp + ")"
+
+        params = {
+            "filter": filter_exp,
+            "page": page,
+            "pageSize": page_size,
+        }
+        print(filter_exp)
         response = get_data(
             path=f"{self._path}{endpoint_path}",
             params=params,
