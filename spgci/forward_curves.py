@@ -15,7 +15,7 @@
 from spgci.api_client import Paginator, get_data
 from spgci.config import is_agent
 from typing import List, Union, Optional
-from datetime import date, timedelta
+from datetime import date
 from requests import Response
 from spgci.utilities import list_to_filter
 from pandas import Series, DataFrame, to_datetime  # type: ignore
@@ -320,20 +320,6 @@ class ForwardCurves:
                 raise InvalidCurveCodeError( "Only 1 curve_code is accepted." )
             if len(curve_code) == 1:
                 curve_code = curve_code.iloc[0] if isinstance(curve_code, Series) else curve_code[0]
-
-        if all(
-            value is None
-            for value in (
-                assess_date,
-                assess_date_gt,
-                assess_date_gte,
-                assess_date_lt,
-                assess_date_lte,
-            )
-        ):
-            today = date.today()
-            assess_date_gte = today - timedelta(days=2)
-            assess_date_lte = today
 
         endpoint_path = "history/curve-codes"
 
